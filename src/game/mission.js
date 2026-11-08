@@ -81,7 +81,7 @@ function makeCC(phase, isDead) {
 // ---------- Pausa ----------
 let pauseEl = null;
 function pauseMenu() {
-  if (pauseEl || !M) return; const solo = M.mode === 'solo'; if (solo) setPaused(true); sfx('open', { vol: 0.5 });
+  if (pauseEl || !M) return; document.exitPointerLock?.(); const solo = M.mode === 'solo'; if (solo) setPaused(true); sfx('open', { vol: 0.5 });
   pauseEl = h(`<div class="screen" style="position:fixed;inset:0;z-index:40;background:#03050ccc;backdrop-filter:blur(6px)"><div class="panel dialog" style="text-align:center;width:min(360px,100%)">
     <h2 data-i="pause">${t('pause')}</h2><div style="display:grid;gap:8px">
     <button class="btn go" data-a="resume">${t('resume')}</button><button class="btn" data-a="restart">${t('restartPhase')}</button><button class="btn" data-a="quit">${t('quit')}</button></div></div></div>`);

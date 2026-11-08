@@ -21,6 +21,8 @@ function hovers(el) { $$('.mbtn,.btn,.opt,.country,.seg button', el).forEach((b)
 
 // ---------------- INTRO ----------------
 const SUBS = [[1, 8, 'intro.s1'], [12, 20, 'intro.s2'], [33, 42, 'intro.s3'], [46, 55, 'intro.s4'], [70, 78.5, 'intro.s5']];
+let playedThisDocument = false;
+export const introPlayed = () => playedThisDocument;
 export function introScreen(done) {
   const slow = /(^|-)2g$/.test(navigator.connection?.effectiveType || '');
   const mobile = isMobile || slow, src = mobile ? '/video/intro_480.mp4' : '/video/intro_720.mp4';
@@ -32,11 +34,14 @@ export function introScreen(done) {
   music(null, { fade: 400 });
   const volume = () => { v.volume = Math.max(0, Math.min(1, store.get('vol').voice)); }; volume();
   const offVol = on('store:vol', volume);
-  const finish = () => { if (finished) return; finished = true; cleanup(); store.set('introSeen', true); done(); };
+  const finish = () => { if (finished) return; finished = true; playedThisDocument = true; cleanup(); done(); };
   const blocked = () => { if (finished) return; snd.hidden = false; snd.textContent = t('intro.play'); };
-  const play = () => v.play().catch(blocked);
+  const failed = () => { if (finished || !(v.networkState === HTMLMediaElement.NETWORK_NO_SOURCE || v.error)) return; toast(t('intro.failed'), 'info'); finish(); };
+  const play = () => v.play().catch((err) => { if (err?.name === 'NotAllowedError') blocked(); else failed(); });
   const key = e => { if (['Escape','Enter','Space'].includes(e.code) && e.target.tagName !== 'BUTTON') { e.preventDefault(); finish(); } };
-  cleanup = () => { v.pause(); v.onended = v.onerror = v.ontimeupdate = null; v.removeAttribute('src'); v.querySelectorAll('source').forEach(s => s.removeAttribute('src')); v.load(); offVol(); removeEventListener('keydown', key); };
+  const stall = setTimeout(() => { if (finished) return; if (v.networkState === HTMLMediaElement.NETWORK_NO_SOURCE || v.error) failed(); else if (v.paused || v.readyState < 2) blocked(); }, 4000);
+  v.querySelectorAll('source').forEach((s) => s.addEventListener('error', () => queueMicrotask(failed)));
+  cleanup = () => { clearTimeout(stall); v.pause(); v.onended = v.onerror = v.ontimeupdate = null; v.removeAttribute('src'); v.querySelectorAll('source').forEach(s => s.removeAttribute('src')); v.load(); offVol(); removeEventListener('keydown', key); };
   v.muted = true; play();
   snd.onclick = () => { unlock(); volume(); v.muted = false; v.play().then(() => { if (!finished) snd.hidden = true; }).catch(() => { v.muted = true; blocked(); }); };
   if (navigator.userActivation?.hasBeenActive) { v.muted = false; v.play().then(() => { if (!finished) snd.hidden = true; }).catch(() => { v.muted = true; play(); }); }

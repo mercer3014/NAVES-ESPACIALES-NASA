@@ -6,7 +6,7 @@ import { sfx, music, voice, engine, stopEngine, rumble, stopRumble } from '../..
 import { axis, down, pressed, bindBtn, bdown, bpressed, makeStick, makeThrottle, input } from '../../core/input.js';
 import { isTouch, DEBUG, dbg, AUTO } from '../../core/store.js';
 import { makePad, H, BASE_Y } from '../../scenes/pad.js';
-import { trackFov } from '../launch-camera.js';
+import { trackFov, sideAxis, chaseStand, trackStand } from '../launch-camera.js';
 extend({
   'l.tminus': ['T-', 'T-'], 'l.skip': ['Saltar cuenta', 'Skip countdown'], 'l.stress': ['ESTRÉS', 'STRESS'], 'l.thr': ['EMPUJE', 'THRUST'],
   'l.les': ['¡Expulsa la torre de escape!', 'Jettison the escape tower!'], 'l.waitcc': ['Esperando que Control de Misión separe…', 'Waiting for Mission Control to stage…'],
@@ -49,7 +49,7 @@ export default async function launch(ctx) {
   let padCam = null; if (DEBUG) window.__padDbg = { W, cam: (p, l) => (padCam = p ? { p, l } : null), S: () => S, ct: (v) => (v == null ? ct : (ct = v)) };
   const applyPadCam = () => { if (!padCam) return false; const o = padCam.l ? new THREE.Vector3() : W.rocket.position; cam.position.set(...padCam.p).add(o); cam.lookAt(new THREE.Vector3(...(padCam.l || [0, 50, 0])).add(o)); return true; };
   // planos: órbita lenta durante la cuenta; desde la ignición, cámara baja a 270 m con un leve acercamiento (el plano clásico de la película de 70 mm)
-  const DY = BASE_Y - 7.62, LOWCAM = new THREE.Vector3(75, W.env ? 6.5 : 8 + DY, 262), lowLook = new THREE.Vector3(0, 52 + DY, 0), orbP = new THREE.Vector3(); let shotA = 0, toLow = 0;
+  const DY = BASE_Y - 7.62, LOWCAM = new THREE.Vector3(75, W.env ? BASE_Y + 8 : 8 + DY, 262), lowLook = new THREE.Vector3(0, 52 + DY, 0), orbP = new THREE.Vector3(); let shotA = 0, toLow = 0;
   ctx.loop((dt) => { if (applyPadCam()) return; if (S.phase === 'count') { shotA += dt * 0.05; orbP.set(Math.sin(shotA + 0.9) * 290, 30 + DY, Math.cos(shotA + 0.9) * 290);
     if (S.ign) toLow = Math.min(1, toLow + dt * 0.6); const e = toLow * toLow * (3 - 2 * toLow); const push = 1 - Math.max(0, ct - (LIFT - 8.9)) * 0.012;
     cam.position.lerpVectors(orbP, LOWCAM, e); if (e > 0) { const k = 1 - (1 - push) * e; cam.position.x *= k; cam.position.z *= k; } cam.lookAt(new THREE.Vector3(0, 62 + DY, 0).lerp(lowLook, e)); } });
@@ -99,42 +99,48 @@ export default async function launch(ctx) {
     S.coast = 1.0; // segundo de inercia antes de la siguiente ignición
   }
   // ---------- director de cámara del ascenso: plano fijo en tierra hasta librar la torre, luego persecución cercana con cortes ----------
-  // chase: persecución con retardo (suelta y cinematográfica) · track: cámara de seguimiento en tierra con teleobjetivo · onboard: cámara en el fuselaje mirando abajo · tail: desde la estela
+  // chase: costado del vehículo · track: teleobjetivo al costado (el plano de tierra atraviesa la Tierra) · onboard: primer plano lateral · tail: tres cuartos trasero
   const PLAN = [[9, 'chase'], [17, 'track'], [23.5, 'chase'], [30, 'onboard'], [36, 'chase'], [44, 'tail'], [49.5, 'chase'], [58, 'onboard'], [64, 'chase']];
-  const MAN = ['chase', 'track', 'onboard', 'tail']; let man = -1, shot = 'pad', shotT = 0;
-  const gY = W.env ? 0 : DY, TRACK = new THREE.Vector3(-700, gY + 2.2, 1500);
-  const relC = new THREE.Vector3(), lookC = new THREE.Vector3(), _u = new THREE.Vector3(), _c = new THREE.Vector3(), _r = new THREE.Vector3(), _l = new THREE.Vector3(), Y = new THREE.Vector3(0, 1, 0);
+  const MAN = ['chase', 'track', 'onboard', 'tail']; let man = -1, shot = 'pad';
+  const lookC = new THREE.Vector3(), _u = new THREE.Vector3(), _c = new THREE.Vector3(), _r = new THREE.Vector3(), _l = new THREE.Vector3(), side = new THREE.Vector3(), Y = new THREE.Vector3(0, 1, 0);
   const lens = (fov, near, far = 60000) => { if (Math.abs(cam.fov - fov) > 1e-3 || cam.near !== near || Math.abs(cam.far - far) > 1) { cam.fov = fov; cam.near = near; cam.far = far; cam.updateProjectionMatrix(); } };
+  // Place the camera beside the airframe. `dist` is lateral (never down the exhaust), `along` is metres up the stack.
+  const beside = (rocket, dist, along) => {
+    const ax = sideAxis(_u.x, _u.y, _u.z); side.set(ax[0], ax[1], ax[2]);
+    _c.copy(rocket.position).addScaledVector(_u, along);
+    _r.copy(_c).addScaledVector(side, dist);
+  };
   function director(dt, R) {
     if (pressed('KeyC')) man = man + 1 >= MAN.length ? -1 : man + 1; // C: recorre los planos a mano; tras el último vuelve al automático
     let want = 'pad'; for (const [t0, n] of PLAN) if (S.s >= t0) want = n;
     if (want !== 'pad' && (waitingStage !== null || S.coast > 0)) want = 'chase'; // separaciones siempre en persecución
     if (man >= 0 && want !== 'pad') want = MAN[man];
-    const cut = want !== shot; if (cut) { shot = want; shotT = 0; } shotT += dt;
-    _u.set(0, 1, 0).applyQuaternion(R.quaternion); _c.copy(R.position).addScaledVector(_u, 52); cam.up.copy(Y);
-    if (shot === 'pad') { // plano fijo bajo: ve cómo libra la torre y gira suavemente hacia el cohete
+    if (want !== shot) shot = want;
+    _u.set(0, 1, 0).applyQuaternion(R.quaternion); cam.up.copy(Y);
+    if (shot === 'pad') { // plano fijo bajo: ve cómo libra la torre
       const gb = clamp((S.s - 4) / 5, 0, 1), ge = gb * gb * (3 - 2 * gb); cam.position.copy(LOWCAM);
+      _c.copy(R.position).addScaledVector(_u, 48);
       lookC.copy(R.position).add(_l.set(0, 45 - Math.min(25, S.s * 6), 0)).lerp(_c, ge); cam.lookAt(lookC); lens(50 - ge * 12, 1); return;
     }
-    if (shot === 'chase') { // a ~190 m, por detrás y al costado; el desfase se amortigua → la cámara "llega tarde" a los cabeceos
-      const a = 0.42 + 0.22 * Math.sin(S.s * 0.09) , D = 175 + 25 * Math.sin(S.s * 0.05 + 1);
-      _r.set(-Math.sin(a) * D, -D * (0.18 + 0.1 * Math.sin(S.s * 0.07)), Math.cos(a) * D).addScaledVector(_u, -28);
-      if (cut) relC.copy(_r); else relC.lerp(_r, 1 - Math.exp(-dt * 1.6));
-      _l.copy(_c).addScaledVector(_u, -34); if (cut) lookC.copy(_l); else lookC.lerp(_l, 1 - Math.exp(-dt * 5));
-      cam.position.copy(_c).add(relC); cam.lookAt(lookC); lens(44, 1); return;
+    if (shot === 'chase') { // el objetivo va anclado al fuselaje: un retardo en coordenadas de mundo deja el cohete fuera cuando acelera
+      const stand = chaseStand(waitingStage !== null || S.coast > 0);
+      beside(R, stand.lateral, stand.along);
+      cam.position.copy(_r); cam.lookAt(_c); lens(stand.fov, 0.8); return;
     }
-    if (shot === 'track') { // teleobjetivo desde tierra: la focal crece con la distancia para mantener cohete + penacho en cuadro
-      cam.position.copy(TRACK); _l.copy(_c).addScaledVector(_u, -70); if (cut) lookC.copy(_l); else lookC.lerp(_l, 1 - Math.exp(-dt * 3.5));
-      lookC.y += Math.sin(shotT * 2.3) * 0.0006 * cam.position.distanceTo(_c); // pulso del operador
-      cam.lookAt(lookC); const d = cam.position.distanceTo(_c); lens(trackFov(d), Math.max(0.5, Math.min(30, d * 0.008)), Math.max(8000, d * 3)); return;
+    if (shot === 'track') { // teleobjetivo al costado: el plano de tierra atraviesa la Tierra decorativa y pierde el cohete
+      const stand = trackStand();
+      beside(R, stand.lateral, stand.along);
+      cam.position.copy(_r); cam.lookAt(_c);
+      const d = cam.position.distanceTo(_c); lens(trackFov(d), Math.max(0.5, Math.min(8, d * 0.004)), Math.max(8000, d * 4)); return;
     }
-    if (shot === 'onboard') { // cámara en el faldón de la S-II mirando hacia atrás: tierra que se aleja, penacho y estela
-      _r.set(0, 66, 6.6).applyMatrix4(R.matrixWorld); cam.position.copy(_r); cam.up.copy(_u);
-      _l.set(0, -600, 95).applyMatrix4(R.matrixWorld); cam.lookAt(_l); lens(78, 0.3); return;
+    if (shot === 'onboard') { // primer plano lateral: se ve el casco, no solo el penacho
+      beside(R, 46, 70);
+      cam.position.copy(_r); cam.lookAt(_c); lens(50, 0.35); return;
     }
-    // tail: desde un lado de la estela, por debajo, mirando hacia arriba al cohete
-    _r.copy(R.position).addScaledVector(_u, -300).add(_l.set(120, 0, 160)); if (cut) relC.copy(_r).sub(R.position); else relC.lerp(_l.copy(_r).sub(R.position), 1 - Math.exp(-dt * 1.2));
-    cam.position.copy(R.position).add(relC); cam.lookAt(_c); lens(40, 1);
+    // tail: tres cuartos trasero, al costado de la estela, con el cohete entero en cuadro
+    beside(R, 170, 36); _r.addScaledVector(_u, -24);
+    lookC.copy(R.position).addScaledVector(_u, 50);
+    cam.position.copy(_r); cam.lookAt(lookC); lens(38, 0.8);
   }
   if (DEBUG) window.__padDbg.man = (i) => (man = i);
   let prompting = false;

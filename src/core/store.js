@@ -2,7 +2,7 @@
 const KEY = 'plb.v1';
 const defaults = {
   lang: (navigator.language || 'es').toLowerCase().startsWith('es') ? 'es' : 'en',
-  name: '', introSeen: false, quality: 'auto', vol: { music: 0.6, sfx: 0.8, voice: 1 }, tts: true,
+  name: '', introSeen: false, quality: 'auto', vol: { music: 0.6, sfx: 0.8, voice: 1 }, tts: true, // introSeen is leftover storage; the intro is not gated by it
   flag: null, achievements: {}, best: 0, difficulty: 'normal', assist: false, cardboard: false,
 };
 let data;

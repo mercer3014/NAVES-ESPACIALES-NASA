@@ -17,7 +17,7 @@ const mk = async (w, h, mob, name) => {
 const st = (P) => P.p.evaluate(() => { const r = window.__radio; return { state: r.state, link: r.link, muted: r.muted, mode: r.mode, me: r.me, peer: r.peer, inB: r.stats.inBytes, outB: r.stats.outBytes, vad: r.vadOpen, pill: !document.querySelector('.radio').classList.contains('hidden'), peerCls: document.querySelector('.radio').className, talkCard: document.querySelectorAll('.crewcard.talking').length }; });
 const A = await mk(1280, 720, false, 'Alex'), B = await mk(390, 844, true, 'Lucia');
 let ok = true; const check = (c, msg) => { console.log(c ? 'PASS' : 'FAIL', msg); if (!c) ok = false; };
-await A.p.goto('http://localhost:8787/?nosky&debug', { waitUntil: 'domcontentloaded' });
+await A.p.goto('http://localhost:8787/?nosky&debug&nointro', { waitUntil: 'domcontentloaded' });
 await A.p.waitForSelector('[data-a=create]', { timeout: 60000 }); await sleep(800); await A.p.click('[data-a=create]');
 await A.p.waitForFunction(() => /^\d{4,6}$/.test(document.querySelector('.bigcode')?.textContent || ''), { timeout: 30000 });
 const code = await A.p.$eval('.bigcode', (e) => e.textContent); console.log('room', code);

@@ -3,6 +3,7 @@
 import { THREE, model, modelAnim, fit, Q, renderer } from '../core/engine.js';
 import { twinkleStars, dotTex, earth, tickAll } from './space.js';
 import { makePuffs, makePlume, makeFlashes, makePost, puffTex } from './fx.js';
+import { sphereOccludes } from '../game/launch-camera.js';
 export const H = 110; // altura del Saturno V en m (unidades de escena)
 export const CUTS = [0.385, 0.615, 0.93]; // S-IC | S-II | S-IVB+naves | torre de escape (solo modelo antiguo)
 export const BASE_Y = 26.53; // cubierta del Mobile Launcher = salida de las toberas F-1 (origen común de saturn-v / launch-tower / lc39a-*.glb); terreno del LC-39A en y = 0
@@ -207,7 +208,7 @@ export function makePad() {
     setThrust(k) {
       this.thrust = k; const p = plumes[active];
       // Vacuum growth is real, but uncapped it becomes a screen-filling cone and hides the vehicle.
-      const vac = Math.min(0.48, active ? 0.75 : Math.min(1, (this.alt / 32000) ** 0.75));
+      const vac = Math.min(0.32, active ? 0.55 : Math.min(1, (this.alt / 32000) ** 0.75));
       p.set(k, { vac, t: shT });
       if (p.I0 == null) { p.I0 = [p.coreM.uniforms.I.value, p.outM.uniforms.I.value]; } p.coreM.uniforms.I.value = p.I0[0] * (1 + vac * 0.35); p.outM.uniforms.I.value = p.I0[1] * (1 + vac * 0.8);
       if (active === 0) p.setEngines(fx.engines.map((e) => (this.phase === 'count' ? e : 1)));
@@ -221,19 +222,19 @@ export function makePad() {
       rocket.updateWorldMatrix(true, true); up.set(0, 1, 0).applyQuaternion(rocket.quaternion);
       if (i < 2) { flashes.fire(toWorld(0, this.newModel ? SEP_Y[i] : CUTS[i] * H, 0).clone(), i ? 26 : 42, 0.45); plumes[active].set(0); active = i + 1; }
       if (i === 0) { fx.ullage = 3.7; fx.retro = 0.8; } if (i === 1) fx.aps = 3; if (i === 3) fx.les = 1.2;
-      if (p.node) { // modelo nuevo: se suelta el empty de la etapa conservando su pose en el mundo
-        if (!p.g) return; p.free = true; scene.attach(p.g);
-        p.v.copy(up).multiplyScalar(i === 3 ? 30 : -8); p.w.set((R() - 0.5) * 0.4, 0, (R() - 0.5) * 0.4 + 0.2);
+      const holdNear = () => { p.rel = p.g.getWorldPosition(new THREE.Vector3()).sub(rocket.position); p.v.copy(up).multiplyScalar(i === 3 ? 45 : -40); };
+      if (p.node) { // modelo nuevo: se suelta el empty, pero sigue al cohete visual (la altitud comprimida si no lo deja atrás en un frame)
+        if (!p.g) return; p.free = true; scene.attach(p.g); holdNear(); p.w.set((R() - 0.5) * 0.4, 0, (R() - 0.5) * 0.4 + 0.2);
         if (i === 3) fx.lesG = p.g;
         if (i === 0) setTimeout(() => { // ~30 s reales en Apollo: aquí 1.5 s después cae el anillo interetapa de la S-II
           const ring = rocket.getObjectByName('s2-aft-interstage'); if (!ring || !parts[1] || parts[1].free) return; rocket.updateWorldMatrix(true, true);
           flashes.fire(toWorld(0, 43, 0).clone(), 16, 0.3, 0xffe0c0); for (let k = 0; k < 14; k++) { const a = (k / 14) * 6.283; steam.emit(toWorld(Math.cos(a) * 5.2, 43, Math.sin(a) * 5.2).clone(), v4.set(Math.cos(a) * 6, -2, Math.sin(a) * 6), 1.6, { grow: 1.6, life: 2.5, col: [0.95, 0.95, 0.95], a: 0.6 }); }
-          scene.attach(ring); sep.push({ g: ring, v: up.clone().multiplyScalar(-6), w: new THREE.Vector3(0.3, 0, -0.2) });
+          scene.attach(ring); sep.push({ g: ring, rel: ring.getWorldPosition(new THREE.Vector3()).sub(rocket.position), v: up.clone().multiplyScalar(-24), w: new THREE.Vector3(0.3, 0, -0.2) });
         }, 1500);
         return;
       }
       p.free = true; rocket.remove(p.g); scene.add(p.g); p.g.position.copy(rocket.position); p.g.quaternion.copy(rocket.quaternion);
-      p.v.copy(up).multiplyScalar(i === 3 ? 30 : -8); p.w.set((R() - 0.5) * 0.6, 0, (R() - 0.5) * 0.6 + 0.3);
+      holdNear(); p.w.set((R() - 0.5) * 0.6, 0, (R() - 0.5) * 0.6 + 0.3);
       if (i < 2) plumes[active].group.position.y = CUTS[i] * H;
       if (i === 3) fx.lesG = p.g;
     },
@@ -290,10 +291,10 @@ export function makePad() {
     update(dt, t) {
       const fr = renderer.info.render.frame; if (fr === lastFrame) return; lastFrame = fr; shT += dt; // el motor y la fase lo llaman: una vez por frame
       if (mixer) mixer.update(dt);
-      for (const q of sep) { q.g.position.addScaledVector(q.v, dt); q.v.y -= 9 * dt; q.g.rotation.x += q.w.x * dt; q.g.rotation.z += q.w.z * dt; }
+      for (const q of sep) { if (q.rel) { q.rel.addScaledVector(q.v, dt); q.v.y -= 6 * dt; q.g.position.copy(rocket.position).add(q.rel); } else { q.g.position.addScaledVector(q.v, dt); q.v.y -= 9 * dt; } q.g.rotation.x += q.w.x * dt; q.g.rotation.z += q.w.z * dt; }
       for (const p of parts) { if (!p.g || p.node) continue; p.g.updateWorldMatrix(true, false); p.pl.forEach((q, k) => q.copy(p.loc[k]).applyMatrix4(p.g.matrixWorld)); }
       tickAll(scene, dt, t);
-      for (const p of parts) if (p.free && p.g) { p.g.position.addScaledVector(p.v, dt); p.v.y -= 9 * dt; p.g.rotation.x += p.w.x * dt; p.g.rotation.z += p.w.z * dt; }
+      for (const p of parts) if (p.free && p.g) { if (p.rel) { p.rel.addScaledVector(p.v, dt); p.v.y -= 6 * dt; p.g.position.copy(rocket.position).add(p.rel); } else { p.g.position.addScaledVector(p.v, dt); p.v.y -= 9 * dt; } p.g.rotation.x += p.w.x * dt; p.g.rotation.z += p.w.z * dt; }
       // hielo
       for (let i = 0; i < NI; i++) { const q = iceP[i]; if (q.on) { q.v.y -= 9.8 * dt; q.p.addScaledVector(q.v, dt); q.r.x += q.w.x * dt; q.r.y += q.w.y * dt; const deck = Math.abs(q.p.x) < 24 && Math.abs(q.p.z) < 20 ? BASE_Y : this.env ? 0 : FB_DY; if (q.p.y < deck) q.on = false; }
         dm.position.copy(q.p); dm.rotation.copy(q.r); dm.scale.setScalar(q.on ? q.s : 0); dm.updateMatrix(); ice.setMatrixAt(i, dm.matrix); }
@@ -310,10 +311,15 @@ export function makePad() {
       skyU.invProj.value.copy(camera.projectionMatrixInverse);
       skyU.camRot.value.setFromMatrix4(camera.matrixWorld);
       stars.position.copy(camera.position);
-      // Keep the vehicle (a few hundred metres away) in clear air. Fog only softens the distant pad.
-      scene.fog.near = Math.max(900, 700 + a * 0.35); scene.fog.far = Math.max(scene.fog.near + 4000, 14000 + a * 1.2);
+      // Fog starts beyond the craft, so a side view is not a grey wall. The sky shader ignores fog.
+      const craftD = Math.max(40, camera.position.distanceTo(rocket.position));
+      scene.fog.near = Math.max(2200, craftD * 2.4); scene.fog.far = scene.fog.near + 24000;
       stars.visible = a > 20000;
-      ground.visible = a < 40000; clouds.visible = a < 30000; E.visible = a > 15000; if (E.visible) E.position.set(rocket.position.x, rocket.position.y - 6371 - (30 + a * 0.004), rocket.position.z - 800);
+      ground.visible = a < 40000; clouds.visible = a < 30000;
+      if (clouds.visible) for (const s of clouds.children) { if (!s.isSprite) continue; const d = camera.position.distanceTo(s.position); s.visible = d > Math.max(1800, s.scale.x * 0.55); }
+      E.position.set(rocket.position.x, rocket.position.y - 6371 - (30 + a * 0.004), rocket.position.z - 800);
+      const shellR = 6371 * 1.09;
+      E.visible = a > 15000 && !sphereOccludes(camera.position.x, camera.position.y, camera.position.z, rocket.position.x, rocket.position.y + 55, rocket.position.z, E.position.x, E.position.y, E.position.z, shellR);
       seaN.offset.x += dt * 0.004; seaN.offset.y += dt * 0.002;
       // temblor de cámara: ruido suave (suma de senos) + un poco de alabeo
       if (this.shake > 0.001) { const s = this.shake, T = shT; camera.position.x += s * (Math.sin(T * 23.1) * 0.5 + Math.sin(T * 41.7 + 1) * 0.3 + (R() - 0.5) * 0.25); camera.position.y += s * (Math.sin(T * 19.3 + 2) * 0.5 + Math.sin(T * 37.9 + 3) * 0.3 + (R() - 0.5) * 0.25); camera.rotateZ(s * 0.0025 * Math.sin(T * 13.7)); }

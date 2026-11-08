@@ -4,6 +4,7 @@ import { t, extend } from '../../core/i18n.js';
 import { $, h, clamp, damp, achieve } from '../../core/util.js';
 import { sfx, music, voice } from '../../core/audio.js';
 import { axis, pressed, down, bindBtn, bdown, bpressed, makeStick } from '../../core/input.js';
+import { attachLook } from '../../core/look.js';
 import { isTouch, on, DEBUG, shared, dbg, AUTO } from '../../core/store.js';
 import { makeMoonSurface } from '../../scenes/moonsurface.js';
 import { makeEASEP } from '../../scenes/easep.js';
@@ -16,7 +17,7 @@ extend({
   'e.ladder': ['Baja la escalera', 'Climb down the ladder'], 'e.ladderK': ['Pulsa S / ↓ en cada peldaño', 'Press S / ↓ for each rung'], 'e.ladderT': ['Toca ↓ en cada peldaño', 'Tap ↓ for each rung'],
   'e.rung': ['Peldaño {n} / 9', 'Rung {n} / 9'], 'e.step': ['Da el primer paso', 'Take the first step'], 'e.stepK': ['Pulsa E', 'Press E'], 'e.stepT': ['Toca PASO', 'Tap STEP'],
   'e.quote': ['«Es un pequeño paso para el hombre, un gran salto para la humanidad.»', '"That\'s one small step for man, one giant leap for mankind."'],
-  'e.walk': ['Explora', 'Explore'], 'e.walkK': ['WASD moverse · Espacio saltar · E acción · arrastra para girar la cámara', 'WASD move · Space jump · E action · drag to turn the camera'],
+  'e.walk': ['Explora', 'Explore'], 'e.walkK': ['WASD moverse · Espacio saltar · E acción · clic para mirar (Esc suelta)', 'WASD move · Space jump · E action · click to look (Esc releases)'],
   'e.walkT': ['Joystick para moverte · arrastra la pantalla para girar', 'Stick to move · drag the screen to look around'],
   'e.t.sample': ['Recoger muestra de contingencia', 'Collect the contingency sample'], 'e.t.flag': ['Plantar la bandera en la zona de la cámara', 'Plant the flag in the TV camera zone'], 'e.t.photo': ['Saludo y foto', 'Salute and photo'],
   'e.hold': ['Mantén E para recoger', 'Hold E to collect'], 'e.holdT': ['Mantén ACCIÓN para recoger', 'Hold ACTION to collect'], 'e.gotSample': ['Muestra a bordo', 'Sample stowed'],
@@ -158,8 +159,10 @@ export default async function eva(ctx) {
   const P = { x: lx, z: eagle ? 2.35 : 2.2, y: ly + (eagle ? 3.38 : 3), vy: 0, yaw: Math.PI, speed: 0, vx: 0, vz: 0, air: false, act: null, actK: 0, mode: 'ladder' };
   let camYaw = 0.35, camPitch = 0.32, camDist = 5.2; const camP = new THREE.Vector3(lx + 2, ly + 4, 10), look = new THREE.Vector3();
   // arrastrar para girar
-  let drag = null; const onDown = (e) => { if (e.target.closest('button,.tc-stick,.tc-btn,.panel')) return; drag = { x: e.clientX, y: e.clientY, id: e.pointerId }; };
-  const onMove = (e) => { if (!drag || e.pointerId !== drag.id) return; camYaw -= (e.clientX - drag.x) * 0.006; camPitch = clamp(camPitch + (e.clientY - drag.y) * 0.004, 0.05, 1.1); drag.x = e.clientX; drag.y = e.clientY; };
+  const pointerLook = attachLook({ onDelta: (dx, dy) => { if (viewMode !== 'follow') return; camYaw -= dx * 0.0022; camPitch = clamp(camPitch + dy * 0.0016, 0.05, 1.1); } });
+  ctx.onCleanup(() => pointerLook.dispose());
+  let drag = null; const onDown = (e) => { if (document.pointerLockElement || e.target.closest('button,.tc-stick,.tc-btn,.panel,.look-chip')) return; drag = { x: e.clientX, y: e.clientY, id: e.pointerId }; };
+  const onMove = (e) => { if (document.pointerLockElement || !drag || e.pointerId !== drag.id) return; camYaw -= (e.clientX - drag.x) * 0.006; camPitch = clamp(camPitch + (e.clientY - drag.y) * 0.004, 0.05, 1.1); drag.x = e.clientX; drag.y = e.clientY; };
   const onUp = (e) => { if (drag && e.pointerId === drag.id) drag = null; };
   addEventListener('pointerdown', onDown); addEventListener('pointermove', onMove); addEventListener('pointerup', onUp); ctx.onCleanup(() => { removeEventListener('pointerdown', onDown); removeEventListener('pointermove', onMove); removeEventListener('pointerup', onUp); });
   let stepSide = 0, autoTarget = null, viewMode = 'follow', tvLook = { yaw: 0, pitch: 0, zoom: 1 };

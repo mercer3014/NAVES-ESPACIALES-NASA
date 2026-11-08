@@ -1,5 +1,5 @@
 // Tests de la física del LM: node tests/sim.test.mjs
-import { create, step, guide, agl, judge, PAD, BOULDERS, ground, slope } from '../src/sim/lander.js';
+import { create, step, guide, agl, judge, PAD, BOULDERS, ground, slope, brakingMargin, vsCue, hoverThr } from '../src/sim/lander.js';
 let fail = 0; const ok = (c, m) => { console.log((c ? '✓ ' : '✗ ') + m); if (!c) fail++; };
 // 1) caída libre sin empuje acelera a g
 { const s = create({ y: 500, vy: 0, vx: 0 }); s.thr = 0.1; s.out = true; for (let i = 0; i < 60; i++) step(s, { thr: 0.1 }, 1 / 60); ok(Math.abs(s.vy + 1.62) < 0.05, `free fall 1 s → vy ${s.vy.toFixed(2)}`); }
@@ -13,4 +13,14 @@ let fail = 0; const ok = (c, m) => { console.log((c ? '✓ ' : '✗ ') + m); if 
 // 5) caer en rocas = crash; demasiado rápido = crash
 { const s = create({ x: 0, y: 0, vy: -1, vx: 0 }); ok(judge(s).res !== 'good', 'boulders never good'); const q = create({ x: PAD.x, vy: -8, vx: 0 }); ok(judge(q).res === 'crash' && judge(q).why === 'vs', 'vs 8 → crash (vs)'); }
 ok(slope(PAD.x) < 5, `pad slope ${slope(PAD.x).toFixed(1)}°`); ok(Number.isFinite(ground(123)), 'ground finite');
+// 6) 10% is below hover, so a climb reverses if the pilot coasts. Zero thrust is coast, not downward thrust.
+{ const s = create({ y: 1080, vy: 2.7, vx: 0, fuel: 300 }); s.thr = 0.1;
+  ok(hoverThr(s) > 0.18 && hoverThr(s) < 0.3, `hover ${hoverThr(s).toFixed(3)}`);
+  ok(vsCue(s.vy) === 'rise', 'positive vy is rising');
+  let peak = s.y;
+  for (let i = 0; i < 30 * 20; i++) { step(s, { thr: 0, burnFuel: false }, 1 / 30); peak = Math.max(peak, s.y); }
+  ok(s.vy < -0.5 && s.y < peak, `coast reverses climb vy ${s.vy.toFixed(2)} y ${s.y.toFixed(0)} peak ${peak.toFixed(0)}`);
+  ok(brakingMargin(create({ y: 400, vy: -2, fuel: 800 })) > 0, 'low slow fall is recoverable');
+  ok(brakingMargin(create({ y: 4000, vy: -40, fuel: 0 })) < 0, 'no fuel and a fast fall is not recoverable');
+}
 process.exit(fail ? 1 : 0);

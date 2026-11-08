@@ -14,7 +14,7 @@ const mk = async (w, h, mob, name) => {
 };
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const A = await mk(process.env.QA_MOBILE_HOST ? 640 : 960, process.env.QA_MOBILE_HOST ? 360 : 600, !!process.env.QA_MOBILE_HOST, 'Alex'), B = await mk(390, 844, true, 'Lucia');
-await A.p.goto(`http://localhost:8787/?from=${from}&debug&ts=6`, { waitUntil: 'domcontentloaded' });
+await A.p.goto(`http://localhost:8787/?from=${from}&debug&nointro&ts=6`, { waitUntil: 'domcontentloaded' });
 await A.p.waitForSelector('[data-a=create]', { timeout: 60000 }); await sleep(800); await A.p.click('[data-a=create]');
 await A.p.waitForFunction(() => /^\d{4,6}$/.test(document.querySelector('.bigcode')?.textContent || ''), { timeout: 30000 });
 const code = await A.p.$eval('.bigcode', (e) => e.textContent); console.log('room', code);

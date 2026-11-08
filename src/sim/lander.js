@@ -16,7 +16,7 @@ export function create({ x = -760, y = 1800, vx = 30, vy = -24, fuel = 900 } = {
 export function step(s, inp, dt) {
   if (s.landed) return s;
   const tt = (inp.tilt || 0) * LM.tiltMax; const dtl = tt - s.tilt; s.tilt += Math.sign(dtl) * Math.min(Math.abs(dtl), LM.tiltRate * dt);
-  const th = Math.min(1, Math.max(0.1, inp.thr ?? s.thr)); const d = th - s.thr; s.thr += Math.sign(d) * Math.min(Math.abs(d), LM.slew * dt);
+  const th = Math.min(1, Math.max(0, inp.thr ?? s.thr)); const d = th - s.thr; s.thr += Math.sign(d) * Math.min(Math.abs(d), LM.slew * dt);
   let thr = s.thr; if (inp.burnFuel) { s.fuel -= LM.burn * thr * dt; if (s.fuel <= 0) { s.fuel = 0; s.out = true; } }
   if (s.out) thr = 0;
   const m = LM.dry + Math.max(0, s.fuel); const a = (thr * LM.thrust) / m; const r = (s.tilt * Math.PI) / 180;
@@ -25,6 +25,23 @@ export function step(s, inp, dt) {
 }
 export const agl = (s) => s.y - ground(s.x);
 export const hoverThr = (s) => ((LM.dry + s.fuel) * LM.g) / LM.thrust;
+// How much altitude is left after a full-thrust stop from the worst fall this state can become.
+// Negative means even 100% thrust cannot cancel the fall: coasting is not enough, offer a retry.
+export function brakingMargin(s) {
+  if (!(s.fuel > 0)) return -1;
+  const hNow = Math.max(0, agl(s));
+  const h = hNow + (s.vy > 0 ? (s.vy * s.vy) / (2 * LM.g) : 0);
+  const m = LM.dry + Math.max(0, s.fuel);
+  const aUp = LM.thrust / m - LM.g;
+  if (!(aUp > 0.05) || !(h > 0)) return -1;
+  const vFall = Math.sqrt((s.vy < 0 ? s.vy * s.vy : 0) + 2 * LM.g * h);
+  return h - (vFall * vFall) / (2 * aUp);
+}
+export function vsCue(vy) {
+  if (vy > 0.4) return 'rise';
+  if (vy < -0.4) return 'fall';
+  return 'hold';
+}
 // guiado simple hacia tx (usado por P64 y por el autopiloto de QA). Devuelve {tilt, thr}
 export function guide(s, tx, { vyMax = 25, rod = false } = {}) {
   const h = agl(s), dx = tx - s.x;

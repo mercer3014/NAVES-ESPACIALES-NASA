@@ -1,11 +1,12 @@
 import './style.css';
-import { store, DEBUG } from './core/store.js';
+import { DEBUG } from './core/store.js';
 import { t, applyI18n } from './core/i18n.js';
 import { show } from './ui/router.js';
 import { $ } from './core/util.js';
 import { unlock } from './core/audio.js';
 import './core/engine.js';
-import { introScreen, startScreen, joinScreen, lobbyBg } from './ui/screens.js';
+import { introScreen, introPlayed, startScreen, joinScreen, lobbyBg } from './ui/screens.js';
+import { shouldPlayIntro } from './ui/intro-policy.js';
 import './ui/radio.js';
 import './scenes/skyevents.js';
 
@@ -29,7 +30,7 @@ async function boot() {
       crew: [{ name: getName(), flag: getFlag(), role: 'pilot' }, { name: 'Pancho', flag: null, role: 'capcom', bot: true }], mode: 'solo', diff: 'normal', date: Date.now() }, { menu: () => location.assign('/'), retry: () => location.assign('/?phase=prep') });
   }
   if (room) return joinScreen(room.replace(/\D/g, '').slice(0, 6));
-  if (!store.get('introSeen') && !params.has('nointro')) return introScreen(() => startScreen());
+  if (shouldPlayIntro({ played: introPlayed(), nointro: params.has('nointro'), reconnect: !!room })) return introScreen(() => startScreen());
   startScreen();
 }
 boot();

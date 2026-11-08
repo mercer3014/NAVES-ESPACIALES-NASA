@@ -2,7 +2,7 @@
 // Juega desde el menú (Solo con Pancho) con el piloto automático de ?debug, audita la UI cada pocos segundos:
 // errores de página, textos fuera de pantalla, solapes, claves i18n sin traducir y texto del otro idioma; detecta bloqueos.
 import puppeteer from 'puppeteer-core'; import fs from 'fs';
-const [lang, w, hh, mob, out, maxMin = '60', path = '/?debug'] = process.argv.slice(2);
+const [lang, w, hh, mob, out, maxMin = '60', path = '/?debug&nointro'] = process.argv.slice(2);
 fs.mkdirSync(out, { recursive: true }); const log = (...a) => { const s = a.join(' '); console.log(s); fs.appendFileSync(out + '/qa.log', s + '\n'); };
 const b = await puppeteer.launch({ executablePath: '/usr/bin/google-chrome', headless: 'new', protocolTimeout: 180000, args: ['--no-sandbox', '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--autoplay-policy=no-user-gesture-required'] });
 const p = await b.newPage(); let runtimeErrors = 0;
