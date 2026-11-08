@@ -3,7 +3,6 @@
 import { THREE, model, modelAnim, fit, Q, renderer } from '../core/engine.js';
 import { twinkleStars, dotTex, earth, tickAll } from './space.js';
 import { makePuffs, makePlume, makeFlashes, makePost, puffTex } from './fx.js';
-import { sphereOccludes } from '../game/launch-camera.js';
 export const H = 110; // altura del Saturno V en m (unidades de escena)
 export const CUTS = [0.385, 0.615, 0.93]; // S-IC | S-II | S-IVB+naves | torre de escape (solo modelo antiguo)
 export const BASE_Y = 26.53; // cubierta del Mobile Launcher = salida de las toberas F-1 (origen común de saturn-v / launch-tower / lc39a-*.glb); terreno del LC-39A en y = 0
@@ -40,16 +39,24 @@ export function makePad() {
   // Fullscreen sky in clip space. A fixed sphere is left behind above ~30 km and its
   // coarse triangles are clipped away by the ground telephoto (sub-degree FOV), which
   // clears the whole view to black or to an untextured grey.
-  const skyU = { alt: { value: 0 }, sun: { value: sunDir }, invProj: { value: new THREE.Matrix4() }, camRot: { value: new THREE.Matrix3() } };
+  // earthRel is the horizon-sphere center minus the camera. A 6371 km mesh is not used:
+  // its triangles are hundreds of kilometres wide, and a 60 km far plane clips them into a solid black wall.
+  const skyU = { alt: { value: 0 }, sun: { value: sunDir }, invProj: { value: new THREE.Matrix4() }, camRot: { value: new THREE.Matrix3() }, earthRel: { value: new THREE.Vector3() }, earthR: { value: 1800 }, earthK: { value: 0 } };
   const skyGeo = new THREE.BufferGeometry();
   skyGeo.setAttribute('position', new THREE.Float32BufferAttribute([-1, -1, 0, 3, -1, 0, -1, 3, 0], 3));
   const sky = new THREE.Mesh(skyGeo, new THREE.ShaderMaterial({ depthTest: false, depthWrite: false, fog: false, toneMapped: false, uniforms: skyU,
     vertexShader: `uniform mat4 invProj; uniform mat3 camRot; varying vec3 vD;
-      void main(){ gl_Position=vec4(position.xy,1.,1.); vec4 r=invProj*vec4(position.xy,1.,1.); vD=normalize(camRot*r.xyz); }`,
-    fragmentShader: `uniform float alt; uniform vec3 sun; varying vec3 vD;
+      void main(){ gl_Position=vec4(position.xy,0.,1.); vec4 r=invProj*vec4(position.xy,1.,1.); vD=normalize(camRot*r.xyz); }`,
+    fragmentShader: `uniform float alt, earthR, earthK; uniform vec3 sun, earthRel; varying vec3 vD;
       void main(){ float h=clamp(vD.y,-.2,1.); vec3 zen=mix(vec3(.2,.38,.68),vec3(.0,.0,.02),smoothstep(.15,.8,alt)); vec3 hor=mix(vec3(.86,.8,.74),vec3(.25,.45,.85),smoothstep(.0,.6,alt));
       hor=mix(hor,vec3(.02,.03,.08),smoothstep(.6,1.,alt)); vec3 c=mix(hor,zen,pow(max(h,0.),.5)); float s=max(dot(vD,sun),0.); c+=vec3(1.,.8,.55)*pow(s,8.)*.45*(1.-alt*.6)+vec3(1.)*pow(s,500.)*3.;
-      if(vD.y<0.) c=mix(c,vec3(.6,.62,.66),smoothstep(0.,-.05,vD.y)*(1.-alt)); gl_FragColor=vec4(c,1.);
+      if(vD.y<0.) c=mix(c,vec3(.6,.62,.66),smoothstep(0.,-.05,vD.y)*(1.-alt));
+      if(earthK>0.001){ float b=dot(vD,earthRel); float h2=b*b-(dot(earthRel,earthRel)-earthR*earthR);
+        if(h2>0.){ float t=b-sqrt(h2); if(t<0.) t=b+sqrt(h2);
+          if(t>0.){ vec3 n=normalize(t*vD-earthRel); float nd=max(dot(n,sun),0.); float fr=pow(1.-max(dot(n,-vD),0.),2.4);
+            vec3 g=mix(vec3(.04,.1,.22), vec3(.45,.62,.55), nd); g=mix(g, vec3(.55,.72,.9), smoothstep(.15,.85,fr));
+            c=mix(c,g,earthK); } } }
+      gl_FragColor=vec4(c,1.);
       #include <tonemapping_fragment>
       #include <colorspace_fragment>
       }` }));
@@ -317,9 +324,12 @@ export function makePad() {
       stars.visible = a > 20000;
       ground.visible = a < 40000; clouds.visible = a < 30000;
       if (clouds.visible) for (const s of clouds.children) { if (!s.isSprite) continue; const d = camera.position.distanceTo(s.position); s.visible = d > Math.max(1800, s.scale.x * 0.55); }
-      E.position.set(rocket.position.x, rocket.position.y - 6371 - (30 + a * 0.004), rocket.position.z - 800);
-      const shellR = 6371 * 1.09;
-      E.visible = a > 15000 && !sphereOccludes(camera.position.x, camera.position.y, camera.position.z, rocket.position.x, rocket.position.y + 55, rocket.position.z, E.position.x, E.position.y, E.position.z, shellR);
+      // The mesh stays out of the scene. The sky pass draws a small horizon sphere instead.
+      E.visible = false;
+      const gap = 30 + a * 0.004, Rearth = 1800;
+      skyU.earthR.value = Rearth;
+      skyU.earthK.value = THREE.MathUtils.smoothstep(a, 12000, 22000);
+      skyU.earthRel.value.set(rocket.position.x, rocket.position.y - gap - Rearth, rocket.position.z - 180).sub(camera.position);
       seaN.offset.x += dt * 0.004; seaN.offset.y += dt * 0.002;
       // temblor de cámara: ruido suave (suma de senos) + un poco de alabeo
       if (this.shake > 0.001) { const s = this.shake, T = shT; camera.position.x += s * (Math.sin(T * 23.1) * 0.5 + Math.sin(T * 41.7 + 1) * 0.3 + (R() - 0.5) * 0.25); camera.position.y += s * (Math.sin(T * 19.3 + 2) * 0.5 + Math.sin(T * 37.9 + 3) * 0.3 + (R() - 0.5) * 0.25); camera.rotateZ(s * 0.0025 * Math.sin(T * 13.7)); }

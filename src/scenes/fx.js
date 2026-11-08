@@ -184,9 +184,10 @@ export function makeFlashes(scene, n = 4) {
 // ---- Post-proceso: bloom + distorsión de calor (máscara elíptica en pantalla). Solo calidad alta. ----
 export function makePost(scene, camera) {
   if (!Q.high) return null;
-  // MSAA en el destino del composer: sin él la celosía fina de la torre se rompe en píxeles sueltos a distancia
-  const rt = new THREE.WebGLRenderTarget(innerWidth * renderer.getPixelRatio(), innerHeight * renderer.getPixelRatio(), { type: THREE.HalfFloatType, samples: 4 });
-  const comp = new EffectComposer(renderer, rt); comp.setPixelRatio(renderer.getPixelRatio()); comp.setSize(innerWidth, innerHeight);
+  // The composer owns its buffers. A hand-sized target is treated as CSS pixels and then multiplied by the pixel ratio again.
+  const comp = new EffectComposer(renderer);
+  comp.renderTarget1.samples = 4; comp.renderTarget2.samples = 4;
+  comp.setPixelRatio(renderer.getPixelRatio()); comp.setSize(innerWidth, innerHeight);
   comp.addPass(new RenderPass(scene, camera));
   const haze = new ShaderPass({
     uniforms: { tDiffuse: { value: null }, uT: { value: 0 }, uC: { value: new THREE.Vector2(0.5, 0.3) }, uR: { value: new THREE.Vector2(0.1, 0.2) }, uK: { value: 0 }, uAsp: { value: 1 } },
