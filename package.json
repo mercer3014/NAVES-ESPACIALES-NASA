@@ -1,0 +1,28 @@
+{
+  "name": "planta-la-bandera",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "start": "node server/index.js",
+    "serve": "vite build && node server/index.js",
+    "test": "node tests/sim.test.mjs && node tests/assets.test.mjs",
+    "test:eva": "node tests/eva-assets.mjs",
+    "test:qa": "node tests/qa.mjs",
+    "test:expeditions": "node tests/expeditions-sim.test.mjs && node tests/horizon-sim.test.mjs"
+  },
+  "dependencies": {
+    "howler": "2.2.4",
+    "qrcode": "1.5.4",
+    "three": "0.187.0",
+    "ws": "8.22.1"
+  },
+  "devDependencies": {
+    "jsqr": "^1.4.0",
+    "pngjs": "^7.0.0",
+    "puppeteer-core": "^25.16.0",
+    "vite": "8.3.5"
+  }
+}

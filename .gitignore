@@ -1,0 +1,15 @@
+node_modules/
+dist/
+dist-*/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials*.json
+secrets*.json
+*.log
+tests/out/
+screenshots/
+coverage/
+.DS_Store

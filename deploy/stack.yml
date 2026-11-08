@@ -1,0 +1,58 @@
+# Own Swarm service for nasa.nickzar.online.
+# This is not a Dokploy application. It only joins the existing Traefik network.
+# Do not add ports, volumes, bind mounts, or docker.sock.
+# Build planta-la-bandera:local for linux/arm64 on the VPS before the coordinator deploys this file.
+# Container limits are not a hosting-cost quote. The Oracle VPS is billed separately.
+services:
+  game:
+    image: planta-la-bandera:local
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: "8787"
+      STATIC_DIR: dist-expeditions
+      PUBLIC_URL: https://nasa.nickzar.online
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    networks:
+      - dokploy-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8787/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 20s
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+      restart_policy:
+        condition: any
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=dokploy-network
+        - traefik.http.routers.nasa-game.rule=Host(`nasa.nickzar.online`)
+        - traefik.http.routers.nasa-game.entrypoints=websecure
+        - traefik.http.routers.nasa-game.tls=true
+        - traefik.http.routers.nasa-game.tls.certresolver=letsencrypt
+        - traefik.http.routers.nasa-game.service=nasa-game
+        - traefik.http.services.nasa-game.loadbalancer.server.port=8787
+        - traefik.http.services.nasa-game.loadbalancer.passhostheader=true
+        - traefik.http.routers.nasa-game-web.rule=Host(`nasa.nickzar.online`) && !PathPrefix(`/.well-known/acme-challenge`)
+        - traefik.http.routers.nasa-game-web.entrypoints=web
+        - traefik.http.routers.nasa-game-web.middlewares=nasa-game-https
+        - traefik.http.routers.nasa-game-web.service=nasa-game
+        - traefik.http.middlewares.nasa-game-https.redirectscheme.scheme=https
+        - traefik.http.middlewares.nasa-game-https.redirectscheme.permanent=true
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  dokploy-network:
+    external: true
