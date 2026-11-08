@@ -6,6 +6,7 @@ import { sfx, music, voice, engine, stopEngine, rumble, stopRumble } from '../..
 import { axis, down, pressed, bindBtn, bdown, bpressed, makeStick, makeThrottle, input } from '../../core/input.js';
 import { isTouch, DEBUG, dbg, AUTO } from '../../core/store.js';
 import { makePad, H, BASE_Y } from '../../scenes/pad.js';
+import { trackFov } from '../launch-camera.js';
 extend({
   'l.tminus': ['T-', 'T-'], 'l.skip': ['Saltar cuenta', 'Skip countdown'], 'l.stress': ['ESTRÉS', 'STRESS'], 'l.thr': ['EMPUJE', 'THRUST'],
   'l.les': ['¡Expulsa la torre de escape!', 'Jettison the escape tower!'], 'l.waitcc': ['Esperando que Control de Misión separe…', 'Waiting for Mission Control to stage…'],
@@ -103,7 +104,7 @@ export default async function launch(ctx) {
   const MAN = ['chase', 'track', 'onboard', 'tail']; let man = -1, shot = 'pad', shotT = 0;
   const gY = W.env ? 0 : DY, TRACK = new THREE.Vector3(-700, gY + 2.2, 1500);
   const relC = new THREE.Vector3(), lookC = new THREE.Vector3(), _u = new THREE.Vector3(), _c = new THREE.Vector3(), _r = new THREE.Vector3(), _l = new THREE.Vector3(), Y = new THREE.Vector3(0, 1, 0);
-  const lens = (fov, near) => { if (Math.abs(cam.fov - fov) > 1e-3 || cam.near !== near) { cam.fov = fov; cam.near = near; cam.updateProjectionMatrix(); } };
+  const lens = (fov, near, far = 60000) => { if (Math.abs(cam.fov - fov) > 1e-3 || cam.near !== near || Math.abs(cam.far - far) > 1) { cam.fov = fov; cam.near = near; cam.far = far; cam.updateProjectionMatrix(); } };
   function director(dt, R) {
     if (pressed('KeyC')) man = man + 1 >= MAN.length ? -1 : man + 1; // C: recorre los planos a mano; tras el último vuelve al automático
     let want = 'pad'; for (const [t0, n] of PLAN) if (S.s >= t0) want = n;
@@ -125,7 +126,7 @@ export default async function launch(ctx) {
     if (shot === 'track') { // teleobjetivo desde tierra: la focal crece con la distancia para mantener cohete + penacho en cuadro
       cam.position.copy(TRACK); _l.copy(_c).addScaledVector(_u, -70); if (cut) lookC.copy(_l); else lookC.lerp(_l, 1 - Math.exp(-dt * 3.5));
       lookC.y += Math.sin(shotT * 2.3) * 0.0006 * cam.position.distanceTo(_c); // pulso del operador
-      cam.lookAt(lookC); const d = cam.position.distanceTo(_c); lens(clamp((2 * Math.atan(90 / d) * 180) / Math.PI, 0.5, 40), 2); return;
+      cam.lookAt(lookC); const d = cam.position.distanceTo(_c); lens(trackFov(d), Math.max(0.5, Math.min(30, d * 0.008)), Math.max(8000, d * 3)); return;
     }
     if (shot === 'onboard') { // cámara en el faldón de la S-II mirando hacia atrás: tierra que se aleja, penacho y estela
       _r.set(0, 66, 6.6).applyMatrix4(R.matrixWorld); cam.position.copy(_r); cam.up.copy(_u);

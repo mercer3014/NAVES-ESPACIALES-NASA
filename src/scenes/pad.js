@@ -36,9 +36,15 @@ export function makePad() {
   scene.fog = new THREE.Fog(0xb9bcc4, 700, 12000);
   const sunDir = new THREE.Vector3(0.8, 0.26, -0.35).normalize();
   // cielo con gradiente controlado por altitud (0 suelo → 1 espacio)
-  const skyU = { alt: { value: 0 }, sun: { value: sunDir } };
-  const sky = new THREE.Mesh(new THREE.SphereGeometry(30000, 32, 16), new THREE.ShaderMaterial({ side: THREE.BackSide, depthWrite: false, fog: false, uniforms: skyU,
-    vertexShader: `varying vec3 vD; void main(){ vD=normalize(position); vec4 p=projectionMatrix*modelViewMatrix*vec4(position,1.); gl_Position=p.xyww; }`,
+  // Fullscreen sky in clip space. A fixed sphere is left behind above ~30 km and its
+  // coarse triangles are clipped away by the ground telephoto (sub-degree FOV), which
+  // clears the whole view to black or to an untextured grey.
+  const skyU = { alt: { value: 0 }, sun: { value: sunDir }, invProj: { value: new THREE.Matrix4() }, camRot: { value: new THREE.Matrix3() } };
+  const skyGeo = new THREE.BufferGeometry();
+  skyGeo.setAttribute('position', new THREE.Float32BufferAttribute([-1, -1, 0, 3, -1, 0, -1, 3, 0], 3));
+  const sky = new THREE.Mesh(skyGeo, new THREE.ShaderMaterial({ depthTest: false, depthWrite: false, fog: false, toneMapped: false, uniforms: skyU,
+    vertexShader: `uniform mat4 invProj; uniform mat3 camRot; varying vec3 vD;
+      void main(){ gl_Position=vec4(position.xy,1.,1.); vec4 r=invProj*vec4(position.xy,1.,1.); vD=normalize(camRot*r.xyz); }`,
     fragmentShader: `uniform float alt; uniform vec3 sun; varying vec3 vD;
       void main(){ float h=clamp(vD.y,-.2,1.); vec3 zen=mix(vec3(.2,.38,.68),vec3(.0,.0,.02),smoothstep(.15,.8,alt)); vec3 hor=mix(vec3(.86,.8,.74),vec3(.25,.45,.85),smoothstep(.0,.6,alt));
       hor=mix(hor,vec3(.02,.03,.08),smoothstep(.6,1.,alt)); vec3 c=mix(hor,zen,pow(max(h,0.),.5)); float s=max(dot(vD,sun),0.); c+=vec3(1.,.8,.55)*pow(s,8.)*.45*(1.-alt*.6)+vec3(1.)*pow(s,500.)*3.;
@@ -46,7 +52,7 @@ export function makePad() {
       #include <tonemapping_fragment>
       #include <colorspace_fragment>
       }` }));
-  sky.renderOrder = -10; scene.add(sky);
+  sky.frustumCulled = false; sky.renderOrder = -1000; scene.add(sky);
   const stars = twinkleStars(Q.high ? 4000 : 1800, 20000); scene.add(stars); stars.visible = false;
   scene.add(new THREE.HemisphereLight(0xc4dcff, 0x4a4632, 1.15));
   const sunL = new THREE.DirectionalLight(0xfff0dc, 3.1); sunL.target.position.set(0, BASE_Y - 12, 0); sunL.position.copy(sunDir).multiplyScalar(400).add(sunL.target.position); scene.add(sunL, sunL.target);
@@ -199,7 +205,10 @@ export function makePad() {
     thrust: 0, shake: 0, alt: 0, phase: 'count',
     // empuje global de la etapa activa (0..1); las toberas individuales se encienden con setEngines()
     setThrust(k) {
-      this.thrust = k; const p = plumes[active]; const vac = active ? 1 : Math.min(1, (this.alt / 32000) ** 0.75); p.set(k, { vac, t: shT }); // el aire se enrarece: el penacho se abre y crece
+      this.thrust = k; const p = plumes[active];
+      // Vacuum growth is real, but uncapped it becomes a screen-filling cone and hides the vehicle.
+      const vac = Math.min(0.48, active ? 0.75 : Math.min(1, (this.alt / 32000) ** 0.75));
+      p.set(k, { vac, t: shT });
       if (p.I0 == null) { p.I0 = [p.coreM.uniforms.I.value, p.outM.uniforms.I.value]; } p.coreM.uniforms.I.value = p.I0[0] * (1 + vac * 0.35); p.outM.uniforms.I.value = p.I0[1] * (1 + vac * 0.8);
       if (active === 0) p.setEngines(fx.engines.map((e) => (this.phase === 'count' ? e : 1)));
       glow.material.opacity = k * (active ? 0.25 : 0.45); flameLight.intensity = k * (active ? 900 : 3800); glow.position.y = FLAME_Y[active] - 6; flameLight.position.y = FLAME_Y[active] - 12;
@@ -297,7 +306,13 @@ export function makePad() {
       const k = this.thrust; smoke.U.uGlowK.value = steam.U.uGlowK.value = 0.6 * k * (active === 0 ? 1 : 0) * THREE.MathUtils.clamp(1 - (rocket.position.y - BASE_Y) / 160, 0, 1) * (0.85 + 0.15 * Math.sin(t * 31));
       plumes.forEach((p) => p.coreM.uniforms.t.value = p.outM.uniforms.t.value = shT);
       flashes.update(dt); landU.uT.value = shT;
-      const a = this.alt; skyU.alt.value = Math.min(1, a / 60000); scene.fog.far = 12000 + a * 2; scene.fog.near = 700 + a; stars.visible = a > 20000;
+      const a = this.alt; skyU.alt.value = Math.min(1, a / 60000);
+      skyU.invProj.value.copy(camera.projectionMatrixInverse);
+      skyU.camRot.value.setFromMatrix4(camera.matrixWorld);
+      stars.position.copy(camera.position);
+      // Keep the vehicle (a few hundred metres away) in clear air. Fog only softens the distant pad.
+      scene.fog.near = Math.max(900, 700 + a * 0.35); scene.fog.far = Math.max(scene.fog.near + 4000, 14000 + a * 1.2);
+      stars.visible = a > 20000;
       ground.visible = a < 40000; clouds.visible = a < 30000; E.visible = a > 15000; if (E.visible) E.position.set(rocket.position.x, rocket.position.y - 6371 - (30 + a * 0.004), rocket.position.z - 800);
       seaN.offset.x += dt * 0.004; seaN.offset.y += dt * 0.002;
       // temblor de cámara: ruido suave (suma de senos) + un poco de alabeo

@@ -2,6 +2,7 @@
 // El juego mueve el root (root motion en código) y elige clips con crossfade según el estado de juego.
 // Visor dorado con entorno lunar PMREM (sin seis renders extra por frame); FlagPatch = bandera del jugador (3:2, flipY=false).
 import { THREE, renderer, modelAnim, getWorld, Q } from '../core/engine.js';
+import { locomotionClip } from '../game/locomotion.js';
 import { renderFlag } from '../ui/flag.js';
 import { makeAstronaut as makePrim } from './astronaut_prim.js';
 
@@ -37,7 +38,7 @@ function makeTool(env) {
 
 function flagTex(flag) { const c = document.createElement('canvas'); renderFlag(c, flag || undefined, 768, 512); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.flipY = false; t.anisotropy = 4; return t; }
 
-// estados de juego -> clips. pose(dt, { speed m/s, air, act, k }) con act: climb|step|scoop|hammer|hold|salute|swing|wave|point|fall|null
+// estados de juego -> clips. pose(dt, { speed m/s, jump, act, k }) con act: climb|step|scoop|hammer|hold|salute|swing|wave|point|fall|null
 export async function makeAstronaut(flag, name = '', { commander = false } = {}) {
   flag = flag || undefined;
   const fallback = () => { const a = makePrim(flag, name); a.model = 'fallback'; a.dispose = () => a.root.traverse(o => { o.geometry?.dispose(); o.material?.map?.dispose(); o.material?.dispose(); }); return a; };
@@ -76,7 +77,7 @@ export async function makeAstronaut(flag, name = '', { commander = false } = {})
   play('idle', 0);
   let lastAct = null, stroke = -1, idleT = 0, climbT = 0, lastK = 0; const hp = new THREE.Vector3(), cp = new THREE.Vector3();
   const api = { root, body, tool, bones: B, head, handR, model: 'a7l-v2', ladderStep: 0.25, A, mixer };
-  api.pose = (dt, { speed = 0, air = false, act = null, k = 0 } = {}) => {
+  api.pose = (dt, { speed = 0, jump = false, act = null, k = 0 } = {}) => {
     dt = Math.min(dt, 0.1); let ts = 1;
     if (act !== lastAct) { if (act === 'hammer') stroke = (stroke + 1) % 3; lastK = 0; }
     tool.visible = act === 'scoop';
@@ -89,9 +90,11 @@ export async function makeAstronaut(flag, name = '', { commander = false } = {})
     else if (act === 'wave') play('wave', 0.3);
     else if (act === 'point' || act === 'swing') { const a = play('point', 0.2); ts = act === 'swing' ? 2.2 : 1; if (a) a.paused = false; }
     else if (act === 'fall') play('fall-and-get-up', 0.15);
-    else if (air || speed > 1.05) { const a = play('bunny-hop', 0.25, false); a.paused = false; ts = Math.max(0.6, speed / 0.75); }
-    else if (speed > 0.08) { const a = play('walk', 0.25, false); a.paused = false; ts = Math.max(0.4, speed / 0.77); }
-    else { idleT += dt; if (curName === 'wave' && cur && !act && cur.time > 1.9) { play('idle', 0.4); idleT = 0; } else if (curName !== 'wave') { if (idleT > 9 && lastAct === null) { play('wave', 0.35); } else play('idle', 0.35, false); } }
+    else {
+      const loco = locomotionClip({ speed, jump });
+      if (loco.clip === 'idle') { idleT += dt; if (curName === 'wave' && cur && !act && cur.time > 1.9) { play('idle', 0.4); idleT = 0; } else if (curName !== 'wave') { if (idleT > 9 && lastAct === null) { play('wave', 0.35); } else play('idle', 0.35, false); } }
+      else { const a = play(loco.clip, loco.clip === 'walk' ? 0.28 : 0.2, false); if (a) { a.paused = false; ts = loco.timeScale; } }
+    }
     if (speed > 0.08 || act) idleT = 0; lastAct = act;
     if (cur && !cur.paused) cur.timeScale = ts; mixer.update(dt);
     // LOD por distancia (LOD1 en móvil o a más de 12 m)
