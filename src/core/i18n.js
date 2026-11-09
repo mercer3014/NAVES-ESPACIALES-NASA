@@ -40,6 +40,7 @@ const T = {
   'set.title': ['Ajustes', 'Settings'], 'set.music': ['Música', 'Music'], 'set.sfx': ['Efectos', 'Effects'], 'set.voice': ['Voces', 'Voices'],
   'set.quality': ['Calidad gráfica', 'Graphics quality'], 'set.q.auto': ['Auto', 'Auto'], 'set.q.low': ['Baja', 'Low'], 'set.q.high': ['Alta', 'High'],
   'set.diff': ['Dificultad', 'Difficulty'], 'd.cadet': ['Cadete', 'Cadet'], 'd.normal': ['Normal', 'Normal'], 'd.veteran': ['Veterano', 'Veteran'],
+  'd.hint': ['Cadete mantiene el cohete en el corredor y enciende el asistente de empuje al tomar el control del Eagle. Normal y Veterano: tú llevas el cabeceo y el empuje.', 'Cadet holds the rocket in the corridor and turns throttle assist on when you take Eagle. Normal and Veteran: you fly pitch and thrust.'],
   'set.tts': ['Voz de Pancho (TTS)', 'Pancho voice (TTS)'], 'set.reload': ['La calidad se aplica al recargar', 'Quality applies on reload'],
   'cred.title': ['Créditos', 'Credits'],
   'prac.title': ['Práctica', 'Practice'], 'prac.d': ['Entrena cualquier fase por separado.', 'Train any phase on its own.'],
@@ -79,7 +80,7 @@ const T = {
   'd.contact': ['¡LUZ DE CONTACTO!', 'CONTACT LIGHT!'], 'd.landed': ['El Eagle ha alunizado', 'The Eagle has landed'], 'd.crash': ['Impacto', 'Crash'],
   'd.crashD': ['Demasiado rápido. Vuelve a intentarlo.', 'Too fast. Try again.'], 'd.fuelout': ['Sin combustible', 'Out of fuel'], 'd.assist': ['Asistente ROD', 'ROD assist'],
   'd.retry': ['Reintentar alunizaje', 'Retry landing'], 'd.dust': ['Polvo lunar', 'Moon dust'],
-  'd.keys': ['A/D inclinar · W/S empuje · R asistente', 'A/D tilt · W/S throttle · R assist'],
+  'd.keys': ['A/D inclinar · W sube empuje · S baja hasta planeo · R asistente', 'A/D tilt · W more thrust · S down to coast · R assist'],
   // eva
   'e.ladder': ['Baja la escalera', 'Climb down the ladder'], 'e.step': ['Toca para bajar cada peldaño', 'Tap to step down each rung'],
   'e.walk': ['Camina hacia el punto marcado', 'Walk to the marker'], 'e.sample': ['Mantén para recoger muestra', 'Hold to collect sample'],

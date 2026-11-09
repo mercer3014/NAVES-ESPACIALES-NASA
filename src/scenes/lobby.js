@@ -16,10 +16,10 @@ export function makeLobby() {
   const sun = glowSprite(0xfff1d0, 60); sun.position.copy(sunDir).multiplyScalar(500); scene.add(sun);
   // estrella secreta (7 clics)
   const secret = glowSprite(0xaee3ff, 4); secret.position.set(-30, 18, -60); scene.add(secret);
-  let lm = null; model('lm').then((o) => { lm = fit(o, 4, { axis: 'max', ground: false }); lm.position.set(-8, -3, 8); scene.add(lm); }).catch(() => {});
+  let lm = null; model('lm').then((o) => { lm = fit(o, 3.4, { axis: 'max', ground: false }); lm.position.set(9.2, -5.4, 2); scene.add(lm); }).catch(() => {});
   // astronauta A7L flotando junto al LM, saludando con la bandera del jugador en el hombro (carga diferida)
   let ast = null, offFlag = null, disposed = false; const astT = setTimeout(() => import('./astronaut.js').then((m) => m.makeAstronaut(store.get('flag'))).then((a) => {
-    if (disposed) { a.dispose?.(); return; } ast = a; a.root.position.set(-3.4, -2.6, 15); a.root.rotation.set(0.15, 0.55, -0.12); scene.add(a.root); offFlag = on('flag', (f) => a.setFlag?.(f)); }).catch(() => {}), 900);
+    if (disposed) { a.dispose?.(); return; } ast = a; a.root.position.set(12.4, -4.6, 10); a.root.rotation.set(0.15, -0.7, -0.08); scene.add(a.root); offFlag = on('flag', (f) => a.setFlag?.(f)); }).catch(() => {}), 900);
   let mx = 0, my = 0; const onMove = (e) => { mx = e.clientX / innerWidth - 0.5; my = e.clientY / innerHeight - 0.5; };
   addEventListener('pointermove', onMove);
   // raycast para la estrella secreta
@@ -36,8 +36,8 @@ export function makeLobby() {
     update(dt, t) {
       tickAll(scene, dt, t);
       camera.position.x += (mx * 4 - camera.position.x) * dt * 0.8; camera.position.y += (2 - my * 3 - camera.position.y) * dt * 0.8; camera.lookAt(0, 0, -10);
-      if (lm) { lm.rotation.y += dt * 0.15; lm.position.y = -3 + Math.sin(t * 0.6) * 0.4; lm.rotation.z = Math.sin(t * 0.4) * 0.1; }
-      if (ast) { ast.pose(dt, { act: 'wave' }); ast.root.position.y = -2.6 + Math.sin(t * 0.5 + 1) * 0.25; ast.root.rotation.z = -0.12 + Math.sin(t * 0.35) * 0.06; ast.root.rotation.y = 0.55 + Math.sin(t * 0.2) * 0.15; }
+      if (lm) { lm.rotation.y += dt * 0.15; lm.position.y = -5.4 + Math.sin(t * 0.6) * 0.35; lm.rotation.z = Math.sin(t * 0.4) * 0.08; }
+      if (ast) { ast.pose(dt, { act: 'wave' }); ast.root.position.y = -4.6 + Math.sin(t * 0.5 + 1) * 0.22; ast.root.rotation.z = -0.08 + Math.sin(t * 0.35) * 0.05; ast.root.rotation.y = -0.7 + Math.sin(t * 0.2) * 0.12; }
       secret.material.opacity = 0.6 + 0.4 * Math.sin(t * 3);
       if (secretGalaxy) secretGalaxy.rotation.y = Math.sin(t * 0.3) * 0.3;
     },

@@ -116,7 +116,7 @@ export function briefingScreen({ mode }) {
   const el = show(`<div class="screen"><button class="back" data-i="back"></button><div class="panel dialog">
     <h2 data-i="m1"></h2><p data-i="m1.d"></p>${nameAndFlagBlock()}
     <h3 class="chakra" style="font-size:.75rem;letter-spacing:.2em;color:var(--dim)" data-i="set.diff"></h3>
-    <div class="seg diff">${['cadet', 'normal', 'veteran'].map((d) => `<button data-d="${d}" class="${d === diff ? 'on' : ''}" data-i="d.${d}"></button>`).join('')}</div>
+    <div class="seg diff">${['cadet', 'normal', 'veteran'].map((d) => `<button data-d="${d}" class="${d === diff ? 'on' : ''}" data-i="d.${d}"></button>`).join('')}</div><p class="diffhint" data-i="d.hint"></p>
     <div class="btns"><button class="btn go big-action" data-a="go" data-i="lobby.start"></button></div></div></div>`, 'briefing');
   wireNameFlag(el, () => briefingScreen({ mode }));
   $$('.diff button', el).forEach((b) => (b.onclick = ui(() => { store.set('difficulty', b.dataset.d); $$('.diff button', el).forEach((x) => x.classList.toggle('on', x === b)); })));
@@ -130,12 +130,12 @@ export async function createScreen(role = 'pilot', mission = 'apollo') {
   lobbyBg();
   const el = show(`<div class="screen lobby"><button class="back" data-i="back"></button><div class="panel dialog" style="width:min(720px,100%)">
     <h2 data-i="lobby.title"></h2>
-    <div class="grid"><div class="qr"><div style="display:grid;place-items:center;height:100%" class="mono">···</div></div>
+    <div class="lobby-fit"><div class="grid"><div class="qr"><div style="display:grid;place-items:center;height:100%" class="mono">···</div></div>
       <div><div class="phase-tag" data-i="lobby.code"></div><div class="bigcode">····</div><p style="margin:.5em 0 0;font-size:.85rem"><span data-i="lobby.scan"></span><br><span class="mono joinurl" style="color:var(--blue);font-size:.75rem;word-break:break-all"></span></p></div></div>
-    <label class="phase-tag" for="room-mission" data-i="ex.select"></label><select id="room-mission" class="txt" style="width:100%;min-height:44px;margin:8px 0">${['apollo','mars','horizon'].map(m=>`<option value="${m}">${t('ex.'+m)}</option>`).join('')}</select><div class="crew"></div>
+    <div class="lobby-rest"><label class="phase-tag" for="room-mission" data-i="ex.select"></label><select id="room-mission" class="txt" style="width:100%;min-height:44px;margin:8px 0">${['apollo','mars','horizon'].map(m=>`<option value="${m}">${t('ex.'+m)}</option>`).join('')}</select><div class="crew"></div>
     <div class="phase-tag" data-i="lobby.role"></div><div class="seg role" style="margin:6px 0"><button data-r="pilot" data-i="role.pilot"></button><button data-r="capcom" data-i="role.capcom"></button></div>
     <p class="roled" style="margin:.3em 0 0;font-size:.85rem"></p>${nameAndFlagBlock()}
-    <div class="btns"><button class="btn go" data-a="start" disabled data-i="lobby.start"></button><button class="btn" data-a="bot" data-i="lobby.bot"></button></div></div></div>`, 'lobby', () => offs.forEach((f) => f()));
+    <div class="btns"><button class="btn go" data-a="start" disabled data-i="lobby.start"></button><button class="btn" data-a="bot" data-i="lobby.bot"></button></div></div></div></div></div>`, 'lobby', () => offs.forEach((f) => f()));
   const offs = [];
   wireNameFlag(el, () => lobbyScreenAgain());
   $('.back', el).onclick = ui(() => { leaveRoom(); startScreen(); });
@@ -282,7 +282,7 @@ export function missionsScreen() {
       <button class="mbtn" data-exp="horizon"><span class="led"></span><span><span data-i="m3"></span><small data-i="ex.horizon"></small></span></button>
     </div>
     <h3 class="phase-tag" style="margin-top:18px" data-i="prac.title"></h3><p style="margin:.2em 0 .6em;font-size:.85rem" data-i="prac.d"></p>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px">${phases.map((p, i) => `<button class="btn" data-p="${p}">${i + 1}. <span data-i="ph.${p}"></span></button>`).join('')}</div></div></div>`, 'missions');
+    <div class="prac">${phases.map((p, i) => `<button class="btn" data-p="${p}">${i + 1}. <span data-i="ph.${p}"></span></button>`).join('')}</div></div></div>`, 'missions');
   $('.back', el).onclick = ui(startScreen);
   $('[data-a=m1]', el).onclick = ui(() => briefingScreen({ mode: 'solo' }));
   $$('[data-exp]',el).forEach(b=>b.onclick=ui(async()=>{const m=await import('../game/expeditions/index.js');m.expeditionBriefing(b.dataset.exp);}));
