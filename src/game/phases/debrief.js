@@ -107,11 +107,11 @@ function roundRect(x, a, b, w, hh, r) { x.beginPath(); x.roundRect(a, b, w, hh, 
 function wrap(x, s, a, b, w, lh) { const words = s.split(' '); let line = '', lines = []; for (const wd of words) { const tt = line ? line + ' ' + wd : wd; if (x.measureText(tt).width > w && line) { lines.push(line); line = wd; } else line = tt; } lines.push(line); lines.forEach((l, i) => x.fillText(l, a, b - (lines.length - 1 - i) * lh)); }
 
 export function practiceScreen(phase, r, { retry, next, menu } = {}) {
-  lobbyBg(); const best = (store.get('best') || {})[phase] || 0; const sc = r?.score ?? 0; const last = phase === 'eva';
+  lobbyBg(); const best = (store.get('best') || {})[phase] || 0; const sc = r?.score ?? 0;
   const el = show(`<div class="screen"><div class="panel dialog" style="text-align:center;width:min(440px,100%)">
     <div class="phase-tag">${t('d.pr')} · ${t('ph.' + phase)}</div><div class="mono" style="font-size:clamp(56px,14vw,92px);color:var(--go);line-height:1.1;margin:.2em 0" data-n="${sc}">0</div>
     <div style="color:var(--dim);font-family:Mono;font-size:.8rem">${statLine(phase, r)}</div><div style="margin-top:8px;font-family:Chakra;color:var(--amber)">${sc >= best ? '★ ' + t('d.newbest') : t('d.best') + ': ' + best}</div>
-    <div class="btns"><button class="btn" data-a="retry">↻ ${t('d.retry')}</button>${last ? '' : `<button class="btn go" data-a="next">${t('d.next')} →</button>`}<button class="btn" data-a="menu">${t('d.menu')}</button></div></div></div>`, 'practice');
+    <div class="btns"><button class="btn" data-a="retry">↻ ${t('d.retry')}</button><button class="btn" data-a="menu">${t('d.menu')}</button></div></div></div>`, 'practice');
   countUp($('[data-n]', el), sc, 900); sfx(sc >= 60 ? 'jingle_win' : 'beep');
   el.onclick = (e) => { const a = e.target.closest('[data-a]')?.dataset.a; if (!a) return; sfx('click'); ({ retry, next, menu })[a]?.(); };
 }
