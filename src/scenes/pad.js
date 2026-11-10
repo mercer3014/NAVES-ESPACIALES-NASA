@@ -213,6 +213,7 @@ export function makePad() {
     thrust: 0, shake: 0, alt: 0, phase: 'count',
     // empuje global de la etapa activa (0..1); las toberas individuales se encienden con setEngines()
     setThrust(k) {
+      if (!Number.isFinite(k)) k = 0; k = Math.max(0, Math.min(1, k));
       this.thrust = k; const p = plumes[active];
       // Vacuum growth is real, but uncapped it becomes a screen-filling cone and hides the vehicle.
       const vac = Math.min(0.32, active ? 0.55 : Math.min(1, (this.alt / 32000) ** 0.75));
@@ -335,10 +336,42 @@ export function makePad() {
       if (this.shake > 0.001) { const s = this.shake, T = shT; camera.position.x += s * (Math.sin(T * 23.1) * 0.5 + Math.sin(T * 41.7 + 1) * 0.3 + (R() - 0.5) * 0.25); camera.position.y += s * (Math.sin(T * 19.3 + 2) * 0.5 + Math.sin(T * 37.9 + 3) * 0.3 + (R() - 0.5) * 0.25); camera.rotateZ(s * 0.0025 * Math.sin(T * 13.7)); }
       // calima sobre la zanja y detrás del penacho (en pantalla)
       if (post) { const hz = post.haze.uniforms; const hb = rocket.position.y - BASE_Y; v3.copy(rocket.position).add(v4.set(0, -14, 0)); if (hb > 50) toWorld(0, FLAME_Y[active] - 30, 0, v3); v3.project(camera);
-        const dist = camera.position.distanceTo(rocket.position); hz.uC.value.set(v3.x * 0.5 + 0.5, v3.y * 0.5 + 0.5); const sz = 45 / Math.max(30, dist) / Math.tan((camera.fov * Math.PI) / 360);
-        hz.uR.value.set(sz * 0.7 / camera.aspect, sz * 1.1); hz.uK.value = v3.z < 1 ? k * (active === 0 ? 1 : 0.2) * (0.5 + 0.5 * THREE.MathUtils.clamp(1 - hb / 300, 0, 1)) : 0; }
+        const dist = camera.position.distanceTo(rocket.position); const cx = Number.isFinite(v3.x) ? v3.x * 0.5 + 0.5 : 0.5, cy = Number.isFinite(v3.y) ? v3.y * 0.5 + 0.5 : 0.5;
+        hz.uC.value.set(cx, cy); const sz = 45 / Math.max(30, dist) / Math.tan((camera.fov * Math.PI) / 360);
+        hz.uR.value.set(sz * 0.7 / camera.aspect, sz * 1.1); hz.uK.value = Number.isFinite(v3.z) && v3.z < 1 ? k * (active === 0 ? 1 : 0.2) * (0.5 + 0.5 * THREE.MathUtils.clamp(1 - hb / 300, 0, 1)) : 0; }
     },
-    render(dt) { if (post) post.render(dt); else renderer.render(scene, camera); },
+    // Plume meshes and the heat-haze pass stay hidden until ignition. Compiling them on that
+    // first draw is what blanks the framebuffer on a real GPU. Draw them once offscreen now.
+    warmShaders() {
+      for (const p of plumes) { p.group.visible = true; p.set(1, { vac: 0.15, t: 1 }); }
+      const haze = post?.haze; if (haze) { haze.uniforms.uK.value = 0.25; haze.enabled = true; }
+      const screen = post ? post.comp.renderToScreen : true;
+      const scratch = new THREE.WebGLRenderTarget(16, 16);
+      try {
+        renderer.compile(scene, camera);
+        renderer.setRenderTarget(scratch);
+        renderer.render(scene, camera);
+        renderer.setRenderTarget(null);
+        if (post) { post.comp.renderToScreen = false; post.render(1 / 60); }
+      } finally {
+        renderer.setRenderTarget(null);
+        scratch.dispose();
+        if (post) post.comp.renderToScreen = screen !== false;
+        if (haze) { haze.uniforms.uK.value = 0; haze.enabled = false; }
+        for (const p of plumes) p.set(0);
+      }
+      if (![camera.position.x, camera.position.y, camera.position.z].every(Number.isFinite)) {
+        camera.position.set(75, BASE_Y + 8, 262); camera.lookAt(0, BASE_Y + 40, 0); camera.updateProjectionMatrix();
+      }
+      return renderer.compileAsync(scene, camera);
+    },
+    render(dt) {
+      if (![camera.position.x, camera.position.y, camera.position.z, camera.quaternion.x].every(Number.isFinite)) {
+        camera.position.set(75, (this.env ? BASE_Y + 8 : 8 + FB_DY), 262); camera.up.set(0, 1, 0); camera.lookAt(0, BASE_Y + 40, 0);
+        camera.near = 1; camera.far = 60000; camera.fov = 50; camera.updateProjectionMatrix();
+      }
+      if (post) post.render(dt); else renderer.render(scene, camera);
+    },
     resize(w, h) { post?.setSize(w, h); },
     dispose() { post?.dispose(); },
   };

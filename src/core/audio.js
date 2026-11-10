@@ -1,6 +1,7 @@
 // Audio: Howler para archivos (unlock iOS), WebAudio para el rugido procedural del motor.
 import { Howl, Howler } from 'howler';
 import { store, on, dbg } from './store.js';
+import { commsMode } from './comms.js';
 const S = {}; const M = {}; const V = {};
 const SFX = ['click','hover','switch','toggle','ok','error','glitch','open','close','tick','bong','computer','field','door','explosion','boom','thruster','clunk','hammer','step1','step2','powerup','stage','ping','beep','highup','lowdown','jingle_win','jingle_pancho','jingle_fail','achievement','thud'];
 const VOICES = { countdown:'a11_countdown_liftoff', eagle:'a11_eagle_has_landed', smallstep:'a11_one_small_step', jfk:'jfk_we_choose_the_moon', houston:'a13_houston_problem', christmas:'a8_merry_christmas', roar:'sts135_launch_roar' };
@@ -28,7 +29,10 @@ export function music(name, { loop = true, fade = 1500, vol: v = 0.5 } = {}) {
   curMusicId = curMusic.play(); curMusic.volume(0, curMusicId); curMusic.fade(0, v * vol().music * duck, fade, curMusicId);
 }
 export function setMusicVol() { if (curMusic && curMusicId != null) curMusic.volume(curMusic._base * vol().music * duck, curMusicId); }
+const MIN_VOICE = new Set(['countdown', 'eagle', 'smallstep']);
 export function voice(name, { vol: v = 1, onend } = {}) {
+  const mode = commsMode();
+  if (mode === 'off' || (mode === 'min' && !MIN_VOICE.has(name))) return { stop() {} };
   const f = VOICES[name] || name;
   if (!V[name]) V[name] = new Howl({ src: [`/audio/voice/${f}.mp3`], preload: true });
   const h = V[name], id = h.play(), key = name + ':' + id;
@@ -44,7 +48,7 @@ export function preloadVoice(...names) { for (const n of names) if (!V[n]) V[n] 
 
 // --- TTS callouts (opcional) ---
 export function say(text, lang) {
-  if (!store.get('tts') || !('speechSynthesis' in window)) return;
+  if (commsMode() === 'off' || !('speechSynthesis' in window)) return;
   try {
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text); u.lang = lang === 'es' ? 'es-ES' : 'en-US'; u.rate = 1.1; u.pitch = 0.9; u.volume = vol().voice;
@@ -102,4 +106,5 @@ export function stopRumble() { rumbleLast = [0,0]; if (rum) { const t = Howler.c
 // Live sliders apply to already-playing media, not only to the next sound.
 on('store:vol', () => { if (vol().music === 0) for (const h of Object.values(M)) h.volume(0); duck = activeVoices.size && vol().voice > 0 ? 0.35 : 1; setMusicVol(); for (const {h,id,base} of activeVoices.values()) h.volume(base * vol().voice, id); for (const {h,id,base} of activeSfx.values()) if (h.playing(id)) h.volume(base * vol().sfx, id); if (eng) engine(engineLast[0], {low:engineLast[1]}); if (rum) rumble(...rumbleLast); if (vol().voice === 0 && 'speechSynthesis' in window) speechSynthesis.cancel(); });
 on('store:tts', enabled => { if (!enabled && 'speechSynthesis' in window) speechSynthesis.cancel(); });
+on('store:comms', (m) => { if (m === 'off') stopVoices(); });
 dbg('audio', { S, M, V, Howler, music, voice, sfx, engine, rumble, stopEngine, stopRumble, stopVoices, unlock, activeVoices, state: () => ({ curName, curMusicId, duck, engine: eng?.g.gain.value, rumble: rum?.gL.gain.value }) });

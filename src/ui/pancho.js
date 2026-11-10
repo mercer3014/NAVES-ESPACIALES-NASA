@@ -1,7 +1,8 @@
 // Pancho: radio vintage original que hace de Control de Misión (bot)
 import { t, lang } from '../core/i18n.js';
-import { store, dbg } from '../core/store.js';
+import { dbg, on } from '../core/store.js';
 import { blip, say as tts } from '../core/audio.js';
+import { commsAllow, commsMode } from '../core/comms.js';
 import { radioBurst } from '../net/radio.js';
 const SVG = `<svg viewBox="0 0 64 72" aria-hidden="true">
  <line x1="44" y1="14" x2="56" y2="1" stroke="#bbb" stroke-width="2"/><circle cx="56" cy="2" r="2.5" fill="#fc3d21" class="ant"/>
@@ -19,14 +20,17 @@ let typing = null, hideT = null, blinkT = setInterval(() => { eyes.style.transfo
 export const pancho = {
   el,
   say(key, { ms = 4200, speak = true, vars, pos } = {}) {
+    if (!commsAllow(key)) return;
     const text = t(key, vars); clearInterval(typing); clearTimeout(hideT);
     el.classList.remove('hidden'); el.classList.toggle('up', pos === 'up'); span.textContent = ''; let i = 0; blip(3);
-    radioBurst(Math.min(4200, 500 + text.length * (speak && store.get('tts') ? 62 : 24))); // misma radio del traje: Quindar + estática
+    const talk = speak && commsMode() !== 'off';
+    radioBurst(Math.min(4200, 500 + text.length * (talk ? 62 : 24))); // misma radio del traje: Quindar + estática
     typing = setInterval(() => { span.textContent = text.slice(0, ++i); if (i % 6 === 0) blip(1); if (i >= text.length) clearInterval(typing); }, 22);
-    if (speak) tts(text.replace(/[♪()]/g, ''), lang());
+    if (talk) tts(text.replace(/[♪()]/g, ''), lang());
     if (ms) hideT = setTimeout(() => el.classList.add('hidden'), ms + text.length * 22);
     dbg('lastPancho', key);
   },
   hide() { clearInterval(typing); el.classList.add('hidden'); },
   lift(on) { el.classList.toggle('lift', !!on); },
 };
+on('store:comms', (m) => { if (m === 'off') pancho.hide(); });

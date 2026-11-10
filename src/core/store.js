@@ -4,10 +4,12 @@ const defaults = {
   lang: (navigator.language || 'es').toLowerCase().startsWith('es') ? 'es' : 'en',
   name: '', introSeen: false, quality: 'auto', vol: { music: 0.6, sfx: 0.8, voice: 1 }, tts: true, // introSeen is leftover storage; the intro is not gated by it
   flag: null, achievements: {}, best: 0, difficulty: 'normal', assist: false, cardboard: false,
+  comms: 'min', // mínimas | normales | desactivadas — voz y subtítulos de Control de Misión
 };
 let data;
 try { data = { ...defaults, ...JSON.parse(localStorage.getItem(KEY) || '{}') }; } catch { data = { ...defaults }; }
 data.vol = { ...defaults.vol, ...(data.vol || {}) };
+if (!['min', 'normal', 'off'].includes(data.comms)) data.comms = 'min';
 const subs = new Map();
 export const store = {
   get: (k) => data[k],

@@ -8,6 +8,7 @@ import { renderFlag, renderPatch, COUNTRIES, PATTERNS, SHIELDS, SYMBOLS, PALETTE
 import { pancho } from './pancho.js';
 import { net, createRoom, joinRoom, leaveRoom, tx, partner } from '../net/room.js';
 import { setWorld } from '../core/engine.js';
+import { offerLook } from '../core/look.js';
 import { makeLobby } from '../scenes/lobby.js';
 import '../game/expeditions/text.js';
 import '../game/expeditions/text-horizon.js';
@@ -121,7 +122,7 @@ export function briefingScreen({ mode }) {
   wireNameFlag(el, () => briefingScreen({ mode }));
   $$('.diff button', el).forEach((b) => (b.onclick = ui(() => { store.set('difficulty', b.dataset.d); $$('.diff button', el).forEach((x) => x.classList.toggle('on', x === b)); })));
   $('.back', el).onclick = ui(startScreen);
-  $('[data-a=go]', el).onclick = ui(async () => { const { startMission } = await import('../game/mission.js'); startMission({ mode: 'solo', role: 'pilot' }); });
+  $('[data-a=go]', el).onclick = (e) => { offerLook('prep'); ui(async () => { const { startMission } = await import('../game/mission.js'); startMission({ mode: 'solo', role: 'pilot' }); })(e); };
   hovers(el); pancho.say('pa.hi', { ms: 5000 });
 }
 
@@ -166,7 +167,7 @@ function wireLobby(el, offs) {
   offs.push(on('net:roster', (ms) => { sel.value=net.mission; sel.disabled=!net.host; const before = el.__n || 1; el.__n = ms.length; if (ms.length > before) { sfx('ok'); scanFx(); } paintRole(); paintCrew(); }));
   offs.push(on('net:role', paintRole));
   offs.push(on('net:start', async (m) => { const { startCoop } = await import('../game/mission.js'); startCoop(m); }));
-  $('[data-a=start]', el).onclick = ui(async () => { $('[data-a=start]', el).disabled = true; const m = { t: 'start', mission:net.mission, seed: (Math.random() * 1e9) | 0, from: (DEBUG && new URLSearchParams(location.search).get('from')) || 'prep', diff: store.get('difficulty') }; tx(m); const { startCoop } = await import('../game/mission.js'); startCoop(m); });
+  $('[data-a=start]', el).onclick = (e) => { const from = (DEBUG && new URLSearchParams(location.search).get('from')) || 'prep'; offerLook(from); ui(async () => { $('[data-a=start]', el).disabled = true; const m = { t: 'start', mission: net.mission, seed: (Math.random() * 1e9) | 0, from, diff: store.get('difficulty') }; tx(m); const { startCoop } = await import('../game/mission.js'); startCoop(m); })(e); };
 }
 
 // ---------------- JOIN ----------------
@@ -240,13 +241,13 @@ export function settingsScreen() {
   const sl = (k) => `<label style="display:grid;grid-template-columns:110px 1fr;align-items:center;gap:10px;margin:8px 0"><span class="chakra" data-i="set.${k}"></span><input type="range" min="0" max="1" step="0.05" value="${v[k]}" data-k="${k}"></label>`;
   const el = show(`<div class="screen"><button class="back" data-i="back"></button><div class="panel dialog"><h2 data-i="set.title"></h2>
     ${sl('music')}${sl('sfx')}${sl('voice')}
-    <label style="display:flex;gap:10px;align-items:center;margin:12px 0"><input type="checkbox" class="tts" ${store.get('tts') ? 'checked' : ''}> <span data-i="set.tts"></span></label>
+    <h3 class="phase-tag" data-i="set.comms"></h3><div class="seg comms">${['min', 'normal', 'off'].map((c) => `<button data-c="${c}" class="${(store.get('comms') || 'min') === c ? 'on' : ''}" data-i="set.comms.${c}"></button>`).join('')}</div>
     <h3 class="phase-tag" data-i="set.quality"></h3><div class="seg q">${['auto', 'low', 'high'].map((q) => `<button data-q="${q}" class="${store.get('quality') === q ? 'on' : ''}" data-i="set.q.${q}"></button>`).join('')}</div><p style="font-size:.8rem" data-i="set.reload"></p>
     <h3 class="phase-tag" data-i="set.diff"></h3><div class="seg diff">${['cadet', 'normal', 'veteran'].map((d) => `<button data-d="${d}" class="${store.get('difficulty') === d ? 'on' : ''}" data-i="d.${d}"></button>`).join('')}</div>
     <h3 class="phase-tag" style="margin-top:16px">🏅</h3><div class="ach" style="display:flex;flex-wrap:wrap;gap:6px"></div></div></div>`, 'settings');
   $$('input[type=range]', el).forEach((r) => (r.oninput = () => { const vv = store.get('vol'); vv[r.dataset.k] = +r.value; store.set('vol', vv); setMusicVol(); }));
   $$('input[type=range]', el).forEach((r) => (r.onchange = () => sfx('tick')));
-  $('.tts', el).onchange = (e) => store.set('tts', e.target.checked);
+  $$('.comms button', el).forEach((b) => (b.onclick = ui(() => { store.set('comms', b.dataset.c); store.set('tts', b.dataset.c !== 'off'); $$('.comms button', el).forEach((x) => x.classList.toggle('on', x === b)); })));
   $$('.q button', el).forEach((b) => (b.onclick = ui(() => { store.set('quality', b.dataset.q); $$('.q button', el).forEach((x) => x.classList.toggle('on', x === b)); })));
   $$('.diff button', el).forEach((b) => (b.onclick = ui(() => { store.set('difficulty', b.dataset.d); $$('.diff button', el).forEach((x) => x.classList.toggle('on', x === b)); })));
   const A = store.get('achievements'); $('.ach', el).innerHTML = ['first', 'nofault', 'soft', 'fuel', 'noassist', 'earthrise', 'sock', 'golf', 'wrinkle', 'galaxy', 'cardboard', 'coop', 'mission1'].map((k) => `<span class="chip" style="${A[k] ? 'border-color:var(--amber)' : 'opacity:.4'}">${A[k] ? '🏅' : '🔒'} ${t('ach.' + k)}</span>`).join('');
@@ -286,6 +287,6 @@ export function missionsScreen() {
   $('.back', el).onclick = ui(startScreen);
   $('[data-a=m1]', el).onclick = ui(() => briefingScreen({ mode: 'solo' }));
   $$('[data-exp]',el).forEach(b=>b.onclick=ui(async()=>{const m=await import('../game/expeditions/index.js');m.expeditionBriefing(b.dataset.exp);}));
-  $$('[data-p]', el).forEach((b) => (b.onclick = ui(async () => { const { startMission } = await import('../game/mission.js'); startMission({ mode: 'solo', role: 'pilot', practice: b.dataset.p }); })));
+  $$('[data-p]', el).forEach((b) => (b.onclick = (e) => { offerLook(b.dataset.p); ui(async () => { const { startMission } = await import('../game/mission.js'); startMission({ mode: 'solo', role: 'pilot', practice: b.dataset.p }); })(e); }));
   hovers(el);
 }

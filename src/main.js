@@ -23,7 +23,7 @@ async function boot() {
   await Promise.race([Promise.all([fonts, ...urls.map((u) => fetch(u).then((r) => r.blob()).catch(() => {}).then(tick))]), new Promise((r) => setTimeout(r, 12000))]);
   lobbyBg();
   const room = params.get('room');
-  if (DEBUG && ['prep','launch','cruise','descent','eva'].includes(params.get('phase'))) { const { startMission } = await import('./game/mission.js'); return startMission({ mode: 'solo', role: 'pilot', practice: params.get('phase') }); }
+  if (DEBUG && ['prep','launch','cruise','descent','eva'].includes(params.get('phase'))) { const { startMission } = await import('./game/mission.js'); const flow = params.has('flow'); return startMission({ mode: 'solo', role: 'pilot', practice: flow ? null : params.get('phase'), resume: flow ? { phase: params.get('phase'), results: {} } : null }); }
   if (DEBUG && params.get('debrief')) { // vista de prueba del informe
     const { default: run } = await import('./game/phases/debrief.js'); const { getFlag, getName } = await import('./ui/screens.js');
     const R = (s, stats) => ({ score: s, stats }); return run({ results: { prep: R(86, { time: 74, mistakes: 1 }), launch: R(91, { corridor: 94, stage: 0.6 }), cruise: R(78, { tli: 88, loi: 81, photo: 70 }), descent: R(83, { result: 'good', vs: -0.9, fuel: 22 }), eva: R(94, { hits: 3, photo: 0.81 }) },

@@ -1,5 +1,5 @@
 // FASE 2 · Lanzamiento: cuenta regresiva, despegue, corredor de cabeceo, Max-Q, 3 separaciones
-import { THREE } from '../../core/engine.js';
+import { THREE, renderer } from '../../core/engine.js';
 import { t, extend } from '../../core/i18n.js';
 import { $, $$, h, toast, achieve, clamp, damp, fmt } from '../../core/util.js';
 import { sfx, music, voice, engine, stopEngine, rumble, stopRumble } from '../../core/audio.js';
@@ -46,13 +46,16 @@ export default async function launch(ctx) {
   const arcPath = (a0, a1) => { const p = (a) => { const r = (a * Math.PI) / 180; return `${(-Math.cos(r) * 100).toFixed(1)} ${(-Math.sin(r) * 100).toFixed(1)}`; }; return `M${p(clamp(a0, 0, 90))} A100 100 0 0 1 ${p(clamp(a1, 0, 90))}`; };
   // ---------- cuenta regresiva ----------
   await W.ready; W.rocket.rotation.set(0, 0, 0); await Promise.race([W.envReady, ctx.wait(4)]);
-  let padCam = null; if (DEBUG) window.__padDbg = { W, cam: (p, l) => (padCam = p ? { p, l } : null), S: () => S, ct: (v) => (v == null ? ct : (ct = v)) };
+  try { await W.warmShaders(); } catch (e) { console.warn('precompile', e); }
+  let padCam = null; if (DEBUG) window.__padDbg = { W, cam: (p, l) => (padCam = p ? { p, l } : null), S: () => S, ct: (v) => (v == null ? ct : (ct = v)), programs: () => renderer.info.programs?.length || 0, exposure: () => renderer.toneMappingExposure };
   const applyPadCam = () => { if (!padCam) return false; const o = padCam.l ? new THREE.Vector3() : W.rocket.position; cam.position.set(...padCam.p).add(o); cam.lookAt(new THREE.Vector3(...(padCam.l || [0, 50, 0])).add(o)); return true; };
   // planos: órbita lenta durante la cuenta; desde la ignición, cámara baja a 270 m con un leve acercamiento (el plano clásico de la película de 70 mm)
   const DY = BASE_Y - 7.62, LOWCAM = new THREE.Vector3(75, W.env ? BASE_Y + 8 : 8 + DY, 262), lowLook = new THREE.Vector3(0, 52 + DY, 0), orbP = new THREE.Vector3(); let shotA = 0, toLow = 0;
   ctx.loop((dt) => { if (applyPadCam()) return; if (S.phase === 'count') { shotA += dt * 0.05; orbP.set(Math.sin(shotA + 0.9) * 290, 30 + DY, Math.cos(shotA + 0.9) * 290);
     if (S.ign) toLow = Math.min(1, toLow + dt * 0.6); const e = toLow * toLow * (3 - 2 * toLow); const push = 1 - Math.max(0, ct - (LIFT - 8.9)) * 0.012;
-    cam.position.lerpVectors(orbP, LOWCAM, e); if (e > 0) { const k = 1 - (1 - push) * e; cam.position.x *= k; cam.position.z *= k; } cam.lookAt(new THREE.Vector3(0, 62 + DY, 0).lerp(lowLook, e)); } });
+    cam.position.lerpVectors(orbP, LOWCAM, e); if (e > 0) { const k = 1 - (1 - push) * e; cam.position.x *= k; cam.position.z *= k; }
+    const look = new THREE.Vector3(0, 62 + DY, 0).lerp(lowLook, e);
+    if ([cam.position.x, cam.position.y, cam.position.z, look.x, look.y, look.z].every(Number.isFinite)) cam.lookAt(look); } });
   const S = { phase: 'count', s: 0, alt: 0, vel: 0, vx: 0, vy: 0, pitch: 90, thr: 1, stage: 0, stress: 0, inCorr: 0, samples: 0, stageDelay: [], maxQ: 0, gust: 0 };
   let skip = false; $('.skipcd', el).onclick = () => (skip = true);
   const v = voice('countdown', { vol: 0.9 }); ctx.onCleanup(() => v.stop());
@@ -116,6 +119,7 @@ export default async function launch(ctx) {
     if (want !== 'pad' && (waitingStage !== null || S.coast > 0)) want = 'chase'; // separaciones siempre en persecución
     if (man >= 0 && want !== 'pad') want = MAN[man];
     if (want !== shot) shot = want;
+    if (DEBUG && window.__padDbg) window.__padDbg.shot = man >= 0 && want !== 'pad' ? MAN[man] : shot;
     _u.set(0, 1, 0).applyQuaternion(R.quaternion); cam.up.copy(Y);
     if (shot === 'pad') { // plano fijo bajo: ve cómo libra la torre
       const gb = clamp((S.s - 4) / 5, 0, 1), ge = gb * gb * (3 - 2 * gb); cam.position.copy(LOWCAM);

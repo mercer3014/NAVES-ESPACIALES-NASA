@@ -4,6 +4,8 @@ import { t } from '../core/i18n.js';
 import { store, on, emit, shared, dbg } from '../core/store.js';
 import { setWorld, onTick, setPaused } from '../core/engine.js';
 import { $, $$, h, sleep, toast, achieve, scanFx, rng } from '../core/util.js';
+import { offerLook, requestLook, lookActive } from '../core/look.js';
+import { commsReset } from '../core/comms.js';
 import { sfx, music, stopEngine, stopRumble, stopVoices } from '../core/audio.js';
 import { clearBtns, pressed } from '../core/input.js';
 import { pancho } from '../ui/pancho.js';
@@ -81,14 +83,19 @@ function makeCC(phase, isDead) {
 // ---------- Pausa ----------
 let pauseEl = null;
 function pauseMenu() {
-  if (pauseEl || !M) return; document.exitPointerLock?.(); const solo = M.mode === 'solo'; if (solo) setPaused(true); sfx('open', { vol: 0.5 });
+  if (pauseEl || !M) return; document.exitPointerLock?.(); const solo = M.mode === 'solo'; if (solo) setPaused(true); document.body.dataset.paused = '1'; sfx('open', { vol: 0.5 });
   pauseEl = h(`<div class="screen" style="position:fixed;inset:0;z-index:40;background:#03050ccc;backdrop-filter:blur(6px)"><div class="panel dialog" style="text-align:center;width:min(360px,100%)">
     <h2 data-i="pause">${t('pause')}</h2><div style="display:grid;gap:8px">
     <button class="btn go" data-a="resume">${t('resume')}</button><button class="btn" data-a="restart">${t('restartPhase')}</button><button class="btn" data-a="quit">${t('quit')}</button></div></div></div>`);
   document.body.append(pauseEl);
-  pauseEl.onclick = (e) => { const a = e.target.closest('[data-a]')?.dataset.a; if (!a) return; sfx('click'); closePause(); if (a === 'restart') { if (M.mode === 'coop') tx({ t: 'restart', ph: M.phase }); runPhase(M.phase); } if (a === 'quit') quitMission(); };
+  pauseEl.onclick = (e) => {
+    const a = e.target.closest('[data-a]')?.dataset.a; if (!a) return; sfx('click'); const phase = M.phase; closePause();
+    if (a === 'resume' && lookActive()) requestLook();
+    if (a === 'restart') { if (M.mode === 'coop') tx({ t: 'restart', ph: phase }); runPhase(phase); }
+    if (a === 'quit') quitMission();
+  };
 }
-function closePause() { pauseEl?.remove(); pauseEl = null; setPaused(false); }
+function closePause() { pauseEl?.remove(); pauseEl = null; setPaused(false); delete document.body.dataset.paused; }
 addEventListener('keydown', (e) => { if (e.code === 'Escape' && M && M.role === 'pilot' && document.body.dataset.screen?.startsWith('phase-')) pauseEl ? closePause() : pauseMenu(); });
 
 export async function quitMission() {
@@ -97,26 +104,21 @@ export async function quitMission() {
 }
 
 // ---------- Fases ----------
-async function phaseCard(phase) {
-  const i = PHASES.indexOf(phase) + 1;
-  const el = show(`<div class="screen" style="pointer-events:none"><div style="text-align:center"><div class="phase-tag">${t('ph.n')} ${i} / 5</div><div class="phase-title" style="font-size:clamp(30px,6vw,64px);margin-top:.2em">${t('ph.' + phase)}</div></div></div>`, 'card');
-  sfx('stage', { vol: 0.35 }); scanFx(); await sleep(1500);
-}
 async function runPhase(phase) {
   if (M.ctx) { M.ctx.kill(); M.ctx.cc.dispose(); }
   M.phase = phase; dbg('phase', phase); if (M.mode === 'coop') tx({ t: 'phase', ph: phase, results: M.results });
-  await phaseCard(phase);
+  commsReset(); sfx('stage', { vol: 0.35 }); scanFx(); offerLook(phase);
   const mod = await loaders[phase](); const ctx = makeCtx(phase); M.ctx = ctx; const myCtx = ctx;
   let res;
   try { res = await mod.default(ctx); } catch (e) { console.error(e); res = { score: 0, stats: { error: String(e) } }; }
   if (myCtx !== M?.ctx) return; // reiniciada o abandonada
-  ctx.kill(); ctx.cc.dispose(); M.ctx = null;
   M.results[phase] = res; store.set('best', { ...store.get('best'), [phase]: Math.max(res.score, store.get('best')[phase] || 0) });
-  next();
-}
-function next() {
+  const i = PHASES.indexOf(phase); const chained = !M.practice && i >= 0 && i < PHASES.length - 1;
+  if (chained) { ctx.banner(t('ph.done'), '', 2400); await sleep(2500); if (myCtx !== M?.ctx || !M) return; }
+  ctx.kill(); ctx.cc.dispose(); M.ctx = null;
+  if (!M) return;
   if (M.practice) return practiceResult();
-  const i = PHASES.indexOf(M.phase); if (i < PHASES.length - 1) return runPhase(PHASES[i + 1]);
+  if (chained) return runPhase(PHASES[i + 1]);
   debrief();
 }
 async function practiceResult() {

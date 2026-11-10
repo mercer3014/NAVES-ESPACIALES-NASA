@@ -5,6 +5,7 @@ import { $, h, clamp, damp, achieve } from '../../core/util.js';
 import { sfx, music, voice } from '../../core/audio.js';
 import { axis, pressed, down, bindBtn, bdown, bpressed, makeStick } from '../../core/input.js';
 import { attachLook } from '../../core/look.js';
+import { commsMode } from '../../core/comms.js';
 import { isTouch, on, DEBUG, shared, dbg, AUTO } from '../../core/store.js';
 import { makeMoonSurface } from '../../scenes/moonsurface.js';
 import { makeEASEP } from '../../scenes/easep.js';
@@ -17,7 +18,7 @@ extend({
   'e.ladder': ['Baja la escalera', 'Climb down the ladder'], 'e.ladderK': ['Pulsa S / ↓ en cada peldaño', 'Press S / ↓ for each rung'], 'e.ladderT': ['Toca ↓ en cada peldaño', 'Tap ↓ for each rung'],
   'e.rung': ['Peldaño {n} / 9', 'Rung {n} / 9'], 'e.step': ['Da el primer paso', 'Take the first step'], 'e.stepK': ['Pulsa E', 'Press E'], 'e.stepT': ['Toca PASO', 'Tap STEP'],
   'e.quote': ['«Es un pequeño paso para el hombre, un gran salto para la humanidad.»', '"That\'s one small step for man, one giant leap for mankind."'],
-  'e.walk': ['Explora', 'Explore'], 'e.walkK': ['WASD moverse · Espacio saltar · E acción · clic para mirar (Esc suelta)', 'WASD move · Space jump · E action · click to look (Esc releases)'],
+  'e.walk': ['Explora', 'Explore'], 'e.walkK': ['WASD moverse · el ratón mira · Espacio saltar · E acción · Esc pausa', 'WASD move · mouse looks · Space jump · E action · Esc pauses'],
   'e.walkT': ['Joystick para moverte · arrastra la pantalla para girar', 'Stick to move · drag the screen to look around'],
   'e.t.sample': ['Recoger muestra de contingencia', 'Collect the contingency sample'], 'e.t.flag': ['Plantar la bandera en la zona de la cámara', 'Plant the flag in the TV camera zone'], 'e.t.photo': ['Saludo y foto', 'Salute and photo'],
   'e.hold': ['Mantén E para recoger', 'Hold E to collect'], 'e.holdT': ['Mantén ACCIÓN para recoger', 'Hold ACTION to collect'], 'e.gotSample': ['Muestra a bordo', 'Sample stowed'],
@@ -161,7 +162,7 @@ export default async function eva(ctx) {
   // arrastrar para girar
   const pointerLook = attachLook({ onDelta: (dx, dy) => { if (viewMode !== 'follow') return; camYaw -= dx * 0.0022; camPitch = clamp(camPitch + dy * 0.0016, 0.05, 1.1); } });
   ctx.onCleanup(() => pointerLook.dispose());
-  let drag = null; const onDown = (e) => { if (document.pointerLockElement || e.target.closest('button,.tc-stick,.tc-btn,.panel,.look-chip')) return; drag = { x: e.clientX, y: e.clientY, id: e.pointerId }; };
+  let drag = null; const onDown = (e) => { if (e.pointerType !== 'touch' || document.pointerLockElement || e.target.closest('button,.tc-stick,.tc-btn,.panel')) return; drag = { x: e.clientX, y: e.clientY, id: e.pointerId }; };
   const onMove = (e) => { if (document.pointerLockElement || !drag || e.pointerId !== drag.id) return; camYaw -= (e.clientX - drag.x) * 0.006; camPitch = clamp(camPitch + (e.clientY - drag.y) * 0.004, 0.05, 1.1); drag.x = e.clientX; drag.y = e.clientY; };
   const onUp = (e) => { if (drag && e.pointerId === drag.id) drag = null; };
   addEventListener('pointerdown', onDown); addEventListener('pointermove', onMove); addEventListener('pointerup', onUp); ctx.onCleanup(() => { removeEventListener('pointerdown', onDown); removeEventListener('pointermove', onMove); removeEventListener('pointerup', onUp); });
@@ -245,8 +246,10 @@ export default async function eva(ctx) {
     const fl = $('.flash', el); fl.style.transition = 'opacity .2s'; fl.style.opacity = 1; await ctx.wait(0.2); fl.style.transition = 'opacity 1.4s'; fl.style.opacity = 0;
     { const tz = padTop.z + 0.38; P.z = tz; P.y = ground(P.x, tz); P.act = 'step'; P.actK = 0; await new Promise((res) => { let k = 0; const off = ctx.loop((dt) => { k = Math.min(1, k + dt / 4); P.actK = k; if (k >= 1) { off(); res(); } }); }); P.act = null; }
     footprint(P.x - 0.1, P.z + 0.05, 0, true); puff(P.x, P.z, 18, 0.8); sfx('step1'); st.step = true; achieve('first'); ctx.cc.log('e.quote', null, 'ok');
-    voice('smallstep'); const qq = $('.quote', el); qq.textContent = t('e.quote'); qq.style.display = ''; prompt('');
-    await ctx.wait(AUTO() ? 3 : 7); qq.style.display = 'none'; ctx.say('pa.eva', { ms: 3500 });
+    const spoken = commsMode() !== 'off'; const qq = $('.quote', el);
+    if (spoken) { voice('smallstep'); qq.textContent = t('e.quote'); qq.style.display = ''; }
+    prompt('');
+    await ctx.wait(AUTO() ? 1.5 : spoken ? 4 : 1.2); qq.style.display = 'none'; ctx.say('pa.eva', { ms: 2200 });
   } else { P.x = lx + 0.2; P.z = padTop.z + 1.3; P.y = ground(P.x, P.z); st.step = true; }
   // ---------- 3) caminar + tareas ----------
   P.mode = 'walk'; P.act = null; camDist = 5.2; camPitch = 0.3; camYaw = 0.25; title('e.walk'); actLabel('e.act');
