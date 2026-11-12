@@ -1,0 +1,11 @@
+{
+  "scanned_files": 181,
+  "credential_or_private_path_findings": [],
+  "glb_json_validated": 23,
+  "media_metadata_inspected": 72,
+  "public_license_copyright_contact_occurrences_preserved": 37,
+  "url_userinfo_validation_count": 307,
+  "not_copied_or_opened": "environment files, credential stores and private RTC configuration",
+  "manual_review": "RTC values use environment variables; public STUN only by default. secret scene identifiers are gameplay easter eggs, not credentials. Public copyright contact addresses retained.",
+  "limitations": "Pattern and metadata scan is not an exhaustive security or license audit; optional TURN endpoint intentionally returns client ICE credentials. No credentials supplied."
+}

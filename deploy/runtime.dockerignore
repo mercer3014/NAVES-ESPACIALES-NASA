@@ -1,0 +1,12 @@
+.git
+**/.git
+**/.gitignore
+**/.env
+**/.env.*
+**/node_modules
+**/*.pem
+**/*.key
+**/credentials*.json
+**/secrets*.json
+**/*.log
+**/*.md
