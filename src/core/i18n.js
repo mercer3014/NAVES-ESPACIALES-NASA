@@ -121,7 +121,7 @@ const T = {
   'pa.control': ['Toma el control.', 'Take control.'],
   'pa.fuel': ['Combustible bajo.', 'Fuel low.'], 'pa.landed': ['Contacto.', 'Contact.'],
   'pa.eva': ['En la superficie.', 'On the surface.'],
-  'pa.idle': ['♪ tararí tarará… ♪ (¿hay alguien ahí?)', '♪ la-di-da… ♪ (anyone there?)'], 'pa.sock': ['¿Eso es… un calcetín flotando?', 'Is that… a floating sock?'],
+  'pa.idle': ['tararí tarará… (¿hay alguien ahí?)', 'la-di-da… (anyone there?)'], 'pa.sock': ['¿Eso es… un calcetín flotando?', 'Is that… a floating sock?'],
   'pa.golf': ['¿Una pelota de golf? ¿Quién juega golf en la Luna?', 'A golf ball? Who plays golf on the Moon?'],
   'pa.slow': ['Más despacio, más despacio…', 'Slower, slower…'], 'pa.tli': ['Inyección translunar.', 'Translunar injection.'],
   'pa.align': ['Toca tres estrellas.', 'Tap three stars.'], 'pa.los': ['Pérdida de señal.', 'Loss of signal.'],

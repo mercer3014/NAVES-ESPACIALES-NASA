@@ -28,7 +28,7 @@ export const pancho = {
     radioBurst(Math.min(4200, 500 + text.length * (talk ? 62 : 24))); // misma radio del traje: Quindar + estática
     chatterPulse(Math.min(2200, 700 + text.length * 28));
     typing = setInterval(() => { span.textContent = text.slice(0, ++i); if (i % 6 === 0) blip(1); if (i >= text.length) clearInterval(typing); }, 22);
-    if (talk) tts(text.replace(/[♪()]/g, ''), lang());
+    if (talk) tts(text.replace(/[()]/g, ''), lang());
     if (ms) hideT = setTimeout(() => el.classList.add('hidden'), ms + text.length * 22);
     dbg('lastPancho', key);
   },

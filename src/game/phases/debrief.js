@@ -41,7 +41,7 @@ export default async function debrief(p, { retry, menu } = {}) {
     <div class="phase-tag" style="text-align:center">${t('d.mission')}</div><h2 style="text-align:center;margin:.3em 0 .2em">${t('d.title')}</h2>
     <div class="scores">${PH.map((k, i) => `<div class="srow"><span>${t('ph.' + k)}<br><small style="color:var(--dim);font-family:Mono;font-size:.68rem">${statLine(k, R[k])}</small></span><div class="track"><i data-w="${scores[i]}"></i></div><span class="num" data-n="${scores[i]}">0</span></div>`).join('')}</div>
     <div style="display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--line);padding-top:10px;font-family:Chakra"><span>${t('d.total')}</span><b class="mono tot" style="font-size:2rem;color:var(--go)">0</b></div>
-    <div class="rank" style="opacity:0;transition:opacity .6s,transform .6s;transform:scale(1.4)">${t('d.r' + rank)}</div><div class="nb" style="text-align:center;color:var(--amber);font-family:Chakra;min-height:1.2em">${newBest ? '★ ' + t('d.newbest') : `${t('d.best')}: ${best}`}</div>
+    <div class="rank" style="opacity:0;transition:opacity .6s,transform .6s;transform:scale(1.4)">${t('d.r' + rank)}</div><div class="nb" style="text-align:center;color:var(--amber);font-family:Chakra;min-height:1.2em">${newBest ? `<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" style="vertical-align:-2px;margin-right:4px"><path fill="currentColor" d="M12 2.8l2.4 6.6h6.8l-5.5 4.2 2.1 6.6L12 16.2 6.2 20.2l2.1-6.6L2.8 9.4h6.8z"/></svg>${t('d.newbest')}` : `${t('d.best')}: ${best}`}</div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:14px;margin-top:10px;align-items:start">
       <div><img class="card-prev" alt="share card"></div>
       <div><div class="phase-tag" style="margin-bottom:6px">${t('d.ach')}</div><div class="achs" style="display:flex;flex-wrap:wrap;gap:6px"></div>
@@ -111,7 +111,7 @@ export function practiceScreen(phase, r, { retry, next, menu } = {}) {
   lobbyBg(); const best = (store.get('best') || {})[phase] || 0; const sc = r?.score ?? 0;
   const el = show(`<div class="screen"><div class="panel dialog" style="text-align:center;width:min(440px,100%)">
     <div class="phase-tag">${t('d.pr')} · ${t('ph.' + phase)}</div><div class="mono" style="font-size:clamp(56px,14vw,92px);color:var(--go);line-height:1.1;margin:.2em 0" data-n="${sc}">0</div>
-    <div style="color:var(--dim);font-family:Mono;font-size:.8rem">${statLine(phase, r)}</div><div style="margin-top:8px;font-family:Chakra;color:var(--amber)">${sc >= best ? '★ ' + t('d.newbest') : t('d.best') + ': ' + best}</div>
+    <div style="color:var(--dim);font-family:Mono;font-size:.8rem">${statLine(phase, r)}</div><div style="margin-top:8px;font-family:Chakra;color:var(--amber)">${sc >= best ? `<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" style="vertical-align:-2px;margin-right:4px"><path fill="currentColor" d="M12 2.8l2.4 6.6h6.8l-5.5 4.2 2.1 6.6L12 16.2 6.2 20.2l2.1-6.6L2.8 9.4h6.8z"/></svg>${t('d.newbest')}` : t('d.best') + ': ' + best}</div>
     <div class="btns"><button class="btn" data-a="retry">↻ ${t('d.retry')}</button><button class="btn" data-a="menu">${t('d.menu')}</button></div></div></div>`, 'practice');
   countUp($('[data-n]', el), sc, 900); sfx(sc >= 60 ? 'jingle_win' : 'beep');
   el.onclick = (e) => { const a = e.target.closest('[data-a]')?.dataset.a; if (!a) return; sfx('click'); ({ retry, next, menu })[a]?.(); };

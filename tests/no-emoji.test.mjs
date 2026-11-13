@@ -26,7 +26,8 @@ for (const file of files) {
   lines.forEach((line, i) => {
     for (const ch of line.matchAll(re)) {
       if (allow.has(ch[0])) continue;
-      hits.push(`${path.relative(root, file)}:${i + 1} ${ch[0]}`);
+      const rel = path.relative(root, file).split(path.sep).join('/');
+      hits.push(`${rel}:${i + 1} ${ch[0]}`);
     }
   });
 }
