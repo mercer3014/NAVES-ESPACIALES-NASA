@@ -29,7 +29,8 @@ export function stepMars(s,input,dt){
  if(s.stage==='landing'){
   const l=s.land;
   if(l.mode==='skycrane'){l.lower=clamp(l.lower+dt/6,0,1);l.alt=14;l.vy=0;l.x*=Math.exp(-dt);l.vx=0;l.fuel=Math.max(0,l.fuel-dt*.15);if(l.lower>=1){s.stage='gather';l.alt=0;}return s;}
-  l.thr=clamp(l.thr+(input.y||0)*dt*.45,0,1);
+  // Vertical stick is throttle only after the chute is gone. During the parachute it was steering the rover off the planned thrust.
+  if(l.mode!=='chute')l.thr=clamp(l.thr+(input.y||0)*dt*.45,0,1);
   const wind=Math.sin(s.t*.37+s.seed)*.7;
   const drag=l.mode==='chute'?.022:.0015;
   const thrust=l.mode==='powered'&&l.fuel>0?l.thr*9:0;
