@@ -15,6 +15,7 @@ https://opengameart.org/content/dark-sci-fi-audio-pack
 https://opengameart.org/content/space-graveyard-ambient-track
 https://opengameart.org/content/persistence
 https://opengameart.org/content/floating-in-space
+Horizonte docking/assembly cue — file public/audio/music/horizon-dock-assembly.mp3: original synthetic pipe organ, clock pulse and crescendo composed for this game. It is not Hans Zimmer's music and not the Interstellar soundtrack. Dedicated to the public domain under CC0 1.0. https://creativecommons.org/publicdomain/zero/1.0/
 Sound effects: Kenney, CC0 1.0. https://kenney.nl/assets (Sci-Fi, Interface, Impact, Digital, UI, Music Jingles).
 
 FONT COPYRIGHT NOTICES (embedded fonts and rasterized Barlow Condensed atlas):
