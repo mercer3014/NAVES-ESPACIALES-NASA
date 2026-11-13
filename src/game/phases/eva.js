@@ -29,7 +29,7 @@ extend({
   'e.bar': ['Extiende la barra: mantén y suelta', 'Extend the crossbar: hold and release'], 'e.wrinkle': ['La barra se trabó a medias… igual que en 1969', 'The bar jammed halfway… just like in 1969'],
   'e.salute': ['Saluda a la bandera', 'Salute the flag'], 'e.photo': ['Encuadra la bandera y pulsa FOTO', 'Frame the flag and press PHOTO'], 'e.photoC': ['CAPCOM encuadra la cámara TV…', 'CAPCOM is framing the TV camera…'],
   'e.done': ['Bandera plantada', 'Flag planted'], 'e.swing': ['E: ¡swing!', 'E: swing!'], 'e.swingT': ['ACCIÓN: ¡swing!', 'ACTION: swing!'], 'e.golf': ['Millas y millas y millas…', 'Miles and miles and miles…'],
-  'e.act': ['ACCIÓN', 'ACTION'], 'e.jump': ['SALTO', 'JUMP'], 'e.down': ['↓', '↓'], 'e.stepB': ['PASO', 'STEP'], 'e.photoB': ['📸 FOTO', '📸 PHOTO'], 'e.o2': ['O₂ EVA', 'EVA O₂'],
+  'e.act': ['ACCIÓN', 'ACTION'], 'e.jump': ['SALTO', 'JUMP'], 'e.down': ['↓', '↓'], 'e.stepB': ['PASO', 'STEP'], 'e.photoB': ['FOTO', 'PHOTO'], 'e.o2': ['O₂ EVA', 'EVA O₂'],
   'e.science': ['Ciencia opcional', 'Optional science'],
   'e.PSEP': ['Desplegar el sismómetro', 'Deploy the seismometer'], 'e.SWC': ['Extender la lámina solar', 'Unroll the solar wind foil'], 'e.LRRR': ['Verificar el reflector láser', 'Check the laser reflector'],
   'e.scienceDone': ['Instrumento listo', 'Instrument ready'], 'e.scienceHint': ['F · {task}', 'F · {task}'],
@@ -49,7 +49,7 @@ export default async function eva(ctx) {
   const el = ctx.hud(`<div class="tl"><span class="phase-tag">${t('ph.n')} 5 · ${t('ph.eva').toUpperCase()}</span><span class="phase-title etitle" style="white-space:normal;max-width:62vw">${t('e.ladder')}</span></div>
     <div class="tr" style="top:calc(66px + var(--safe-t))"><div class="tele etasks" style="min-width:220px">
       <div class="k">${t('e.o2')}</div><div class="fuelbar o2" style="height:5px;border-radius:3px;background:#ffffff18;margin:4px 0 8px;overflow:hidden"><i style="display:block;height:100%;width:100%;background:var(--go)"></i></div>
-      ${['sample', 'flag', 'photo'].map((k) => `<div class="task t-${k}" style="display:flex;gap:8px;align-items:center;font-size:.78rem;margin:3px 0"><b class="box">☐</b><span>${t('e.t.' + k)}</span></div>`).join('')}</div></div>
+      ${['sample', 'flag', 'photo'].map((k) => `<div class="task t-${k}" style="display:flex;gap:8px;align-items:center;font-size:.78rem;margin:3px 0"><b class="box">--</b><span>${t('e.t.' + k)}</span></div>`).join('')}</div></div>
     <div class="bc eprompt" style="bottom:calc(${isTouch ? 210 : 26}px + var(--safe-b));text-align:center;pointer-events:none"><div class="phase-tag ph1" style="font-size:.85rem;color:var(--ink);letter-spacing:.1em"></div><div class="phase-tag ph2" style="margin-top:4px"></div>
       <div class="hold" style="display:none;width:180px;height:6px;border-radius:3px;background:#ffffff22;margin:8px auto 0;overflow:hidden"><i style="display:block;height:100%;width:0;background:var(--amber)"></i></div></div>
     <div class="bc rhythm" style="display:none;bottom:calc(${isTouch ? 240 : 90}px + var(--safe-b));width:min(460px,86vw)"><div style="position:relative;width:100%;height:30px;border-radius:15px;background:#0a0f1acc;border:1px solid var(--line);overflow:hidden">
@@ -64,7 +64,7 @@ export default async function eva(ctx) {
     <button class="btn primary photobtn" style="display:none;position:absolute;left:50%;transform:translateX(-50%);bottom:calc(${isTouch ? 150 : 40}px + var(--safe-b));pointer-events:auto">${t('e.photoB')}</button>`);
   const title = (k) => { $('.etitle', el).textContent = t(k); dbg('eva', k); };
   const prompt = (a = '', b = '') => { $('.ph1', el).textContent = a; $('.ph2', el).textContent = b; };
-  const tick = (k) => { const r = $('.t-' + k, el); r.querySelector('.box').textContent = '☑'; r.style.color = 'var(--go)'; sfx('ok'); };
+  const tick = (k) => { const r = $('.t-' + k, el); r.querySelector('.box').textContent = 'OK'; r.style.color = 'var(--go)'; sfx('ok'); };
   const actBtn = $('.actbtn', el); const actLabel = (k) => (actBtn.textContent = t(k));
   bindBtn(actBtn, 'act'); if (isTouch) { makeStick($('.tc-stick', el)); bindBtn($('.jumpbtn', el), 'jump'); }
   const ACT = () => pressed('KeyE', 'Enter') || bpressed('act'); const ACTD = () => down('KeyE', 'Enter') || bdown('act');

@@ -37,7 +37,7 @@ export default async function launch(ctx) {
       <circle r="6" fill="#ddd"/><text x="-50" y="18" fill="#9aa" font-size="11" font-family="Mono" text-anchor="middle">${t('l.corr')}</text></svg>
       <div class="phase-tag keyshelp" style="${isTouch ? 'display:none' : ''}">${t('l.keys')}</div></div>
     <div class="cdown" style="position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);text-align:center;pointer-events:none"><div class="phase-tag">${t('l.ign')}</div><div class="big" style="font-family:Orbitron;font-weight:900;font-size:clamp(48px,12vw,120px)">T-10</div></div>
-    <button class="btn skipcd" style="position:absolute;right:16px;bottom:calc(16px + var(--safe-b))">${t('l.skip')} ⏭</button>
+    <button class="btn skipcd" style="position:absolute;right:16px;bottom:calc(16px + var(--safe-b))">${t('l.skip')}</button>
     ${isTouch ? `<div class="tc-stick"><i></i></div><div class="tc-throttle"><div class="fill"></div><div class="lab">${t('l.thr')}</div></div><div class="tc-btn big amber stagebtn" style="right:calc(110px + env(safe-area-inset-right,0px));bottom:calc(30px + var(--safe-b));display:none">${t('l.stage')}</div>` : ''}
     <div class="alarmbox"></div>`);
   let thrTouch = null; let thrUI = null;
@@ -175,7 +175,7 @@ export default async function launch(ctx) {
     const qLimit = 130 * D.tol; const over = q * (0.35 + S.thr * 0.65) - qLimit;
     if (q > qLimit * 0.75 && !maxQsaid) { maxQsaid = true; ctx.banner(t('l.maxq'), '', 2200, 'warn'); sfx('computer', { vol: 0.5 }); ctx.cc.log('l.maxq', null, 'warn'); }
     S.stress = clamp(S.stress + (over > 0 ? (over / qLimit) * 0.3 : -0.03) * dt, 0, 1);
-    if (maxQsaid && !S.maxqok && q < qLimit * 0.6 && S.s > 20) { S.maxqok = true; toast('✔ ' + t('l.maxqok'), 'info'); }
+    if (maxQsaid && !S.maxqok && q < qLimit * 0.6 && S.s > 20) { S.maxqok = true; toast(t('l.maxqok'), 'info'); }
     // corredor
     const err = S.pitch - tg; const inC = Math.abs(err) <= tol; S.samples++; if (inC) S.inCorr++;
     // etapas

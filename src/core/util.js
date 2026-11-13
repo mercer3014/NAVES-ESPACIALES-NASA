@@ -10,7 +10,7 @@ export const damp = (a, b, k, dt) => lerp(a, b, 1 - Math.exp(-k * dt));
 export const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 export function rng(seed) { let s = seed >>> 0 || 1; return () => { s ^= s << 13; s >>>= 0; s ^= s >> 17; s ^= s << 5; s >>>= 0; return s / 4294967296; }; }
 export function toast(text, kind = 'ach') {
-  const el = h(`<div class="toast ${kind}">${kind === 'ach' ? '🏅' : 'ℹ️'} <span>${text}</span></div>`);
+  const el = h(`<div class="toast ${kind}"><span>${text}</span></div>`);
   document.getElementById('toasts').append(el); setTimeout(() => el.remove(), 3800);
 }
 export function achieve(id) {

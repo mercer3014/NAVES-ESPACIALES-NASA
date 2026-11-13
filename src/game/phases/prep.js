@@ -68,7 +68,7 @@ export default async function prep(ctx) {
     paint(); const g = { fc2: S.fc2, busb: S.batC, lamp: $('[data-lamp="4"]', el) }[k]; if (innerWidth < 821) g.closest('.cgroup').scrollIntoView({ block: 'center', behavior: 'smooth' });
   };
   const fix = (k) => {
-    const f = faults[k]; if (!f || f.fixed) return; f.fixed = true; faultsFixed++; f.dt = ctx.time - f.at; sfx('ok'); toast('✔ ' + t('prep.fixed'), 'info'); ctx.cc.log('prep.fixed', null, 'ok');
+    const f = faults[k]; if (!f || f.fixed) return; f.fixed = true; faultsFixed++; f.dt = ctx.time - f.at; sfx('ok'); toast(t('prep.fixed'), 'info'); ctx.cc.log('prep.fixed', null, 'ok');
     if (!Object.values(faults).some((x) => !x.fixed)) alarm(false); S.fc2.classList.remove('flash'); paint();
   };
   // interruptores
@@ -78,7 +78,7 @@ export default async function prep(ctx) {
     if (id === 'batC') { setSw(id, !isOn(id)); sfx('switch'); if (isOn(id) && faults.busb) { gv[1] = 0.78; setG(1, 0.78); fix('busb'); } return; }
     const st = STEPS[step]; const belongs = st?.sw?.includes(id);
     if (!belongs) { // fuera de orden: si es de un paso ya hecho y se apaga, o futuro → error
-      mistakes++; sfx('error'); s.classList.add('flash'); setTimeout(() => s.classList.remove('flash'), 1500); toast('⚠ ' + t('prep.wrong'), 'info'); return;
+      mistakes++; sfx('error'); s.classList.add('flash'); setTimeout(() => s.classList.remove('flash'), 1500); toast(t('prep.wrong'), 'info'); return;
     }
     setSw(id, !isOn(id)); sfx('switch'); navigator.vibrate?.(10);
     s.classList.toggle('hint', hints && !isOn(id));

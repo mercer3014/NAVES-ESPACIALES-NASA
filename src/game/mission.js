@@ -1,6 +1,8 @@
 // Orquestador de misión: fases en orden, puente CAPCOM (humano remoto o Pancho), pausa, puntaje
-import { show } from '../ui/router.js';
+import { show, syncCursor } from '../ui/router.js';
 import { t } from '../core/i18n.js';
+import { phaseStamp } from '../ui/presentation.js';
+import { bindUiSfx } from '../ui/ui-sfx.js';
 import { store, on, emit, shared, dbg } from '../core/store.js';
 import { setWorld, onTick, setPaused } from '../core/engine.js';
 import { $, $$, h, sleep, toast, achieve, scanFx, rng } from '../core/util.js';
@@ -33,7 +35,9 @@ function makeCtx(phase) {
     wait: (s) => (dead ? new Promise(() => {}) : new Promise((r) => waits.push({ at: gameT + s, r }))),
     until: (pred) => new Promise((r) => { const off = onTick(() => { if (!dead && pred()) { off(); r(); } }); cleanups.push(off); }),
     hud(html) {
-      const el = show(`<div class="screen hud-screen" style="padding:0"><div class="hud">${html}<div class="tr pausebox" style="z-index:5"><button class="icon-btn" data-pause aria-label="pause">⏸</button></div></div></div>`, 'phase-' + phase);
+      const el = show(`<div class="screen hud-screen" style="padding:0"><div class="hud">${html}<div class="tr pausebox" style="z-index:5"><button class="icon-btn" data-pause aria-label="pause"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M3 2h3.2v12H3zm6.8 0H13v12H9.8z"/></svg></button></div></div></div>`, 'phase-' + phase);
+      bindUiSfx(el);
+      showPhaseStamp(phase);
       $('[data-pause]', el).onclick = () => pauseMenu(); return el;
     },
     banner(text, sub = '', ms = 2200, cls = '') {
@@ -57,7 +61,7 @@ function makeCC(phase, isDead) {
     offs.push(on('net:ev', (m) => {
       if (isDead()) return;
       if (m.k === 'resp' && pending.has(m.id)) { const p = pending.get(m.id); pending.delete(m.id); p.res(m.v); }
-      if (m.k === 'ping') { sfx('ping'); const who = partner()?.name || 'CAPCOM'; toast(`📡 ${who}: ${t('p.' + m.v)}`, 'info'); cc._ping?.(m.v); emit('ping', m.v); }
+      if (m.k === 'ping') { sfx('ping'); const who = partner()?.name || 'CAPCOM'; toast(`${who}: ${t('p.' + m.v)}`, 'info'); cc._ping?.(m.v); emit('ping', m.v); }
     }));
     // si el compañero se cae, Pancho resuelve lo pendiente
     offs.push(on('net:peer', (m) => { if (m.ev !== 'back') for (const [id, p] of pending) { pending.delete(id); p.bot().then(p.res); } }));
@@ -83,11 +87,23 @@ function makeCC(phase, isDead) {
 
 // ---------- Pausa ----------
 let pauseEl = null;
+function showPhaseStamp(phase) {
+  document.querySelector('.phase-stamp')?.remove();
+  const info = phaseStamp(phase);
+  if (!info.key) return;
+  const el = h(`<div class="phase-stamp" aria-hidden="true"><span class="phase-stamp-k">${t('ph.n')} ${String(info.n).padStart(2, '0')}</span><b>${t(info.key)}</b></div>`);
+  document.body.append(el);
+  setTimeout(() => el.isConnected && el.remove(), 3200);
+}
 function pauseMenu() {
-  if (pauseEl || !M) return; document.exitPointerLock?.(); const solo = M.mode === 'solo'; if (solo) setPaused(true); document.body.dataset.paused = '1'; sfx('open', { vol: 0.5 });
-  pauseEl = h(`<div class="screen" style="position:fixed;inset:0;z-index:40;background:#03050ccc;backdrop-filter:blur(6px)"><div class="panel dialog" style="text-align:center;width:min(360px,100%)">
-    <h2 data-i="pause">${t('pause')}</h2><div style="display:grid;gap:8px">
+  if (pauseEl || !M) return; document.exitPointerLock?.(); const solo = M.mode === 'solo'; if (solo) setPaused(true); document.body.dataset.paused = '1'; syncCursor(); sfx('open', { vol: 0.5 });
+  const info = phaseStamp(M.phase);
+  const kicker = info.key ? `${t('ph.n')} ${String(info.n).padStart(2, '0')} · ${t(info.key)}` : '';
+  pauseEl = h(`<div class="screen pause-screen"><div class="panel dialog pause-card">
+    <div class="phase-tag">${kicker}</div>
+    <h2 data-i="pause">${t('pause')}</h2><div class="pause-actions">
     <button class="btn go" data-a="resume">${t('resume')}</button><button class="btn" data-a="restart">${t('restartPhase')}</button><button class="btn" data-a="quit">${t('quit')}</button></div></div></div>`);
+  bindUiSfx(pauseEl);
   document.body.append(pauseEl);
   pauseEl.onclick = (e) => {
     const a = e.target.closest('[data-a]')?.dataset.a; if (!a) return; sfx('click'); const phase = M.phase; closePause();
@@ -96,7 +112,7 @@ function pauseMenu() {
     if (a === 'quit') quitMission();
   };
 }
-function closePause() { pauseEl?.remove(); pauseEl = null; setPaused(false); delete document.body.dataset.paused; }
+function closePause() { pauseEl?.remove(); pauseEl = null; setPaused(false); delete document.body.dataset.paused; syncCursor(); }
 addEventListener('keydown', (e) => {
   if (e.code !== 'Escape' || !M || M.role !== 'pilot' || !document.body.dataset.screen?.startsWith('phase-')) return;
   if (!pauseEl) { pauseMenu(); return; }

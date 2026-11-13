@@ -24,7 +24,7 @@ extend({
   'd.norecover': ['Con el combustible que queda no puedes frenar esta caída. Reintenta desde los 300 m.', 'The fuel left cannot stop this fall. Retry from 300 m.'],
   'd.retry300': ['Reintentar desde 300 m', 'Retry from 300 m'],
   'd.abortNo': ['Era GO: la alarma no era grave.', 'It was GO: the alarm was harmless.'],
-  'd.ffw': ['⏩ Acelerar', '⏩ Speed up'],
+  'd.ffw': ['Acelerar', 'Speed up'],
 });
 const fill = (s, o) => s.replace(/\{(\w+)\}/g, (_, k) => o[k]);
 

@@ -35,7 +35,10 @@ export function makeLobby() {
     scene, camera, onSecret: null,
     update(dt, t) {
       tickAll(scene, dt, t);
-      camera.position.x += (mx * 4 - camera.position.x) * dt * 0.8; camera.position.y += (2 - my * 3 - camera.position.y) * dt * 0.8; camera.lookAt(0, 0, -10);
+      const driftX = Math.sin(t * 0.055) * 1.5, driftY = Math.cos(t * 0.04) * 0.4;
+      camera.position.x += (mx * 3 + driftX - camera.position.x) * dt * 0.45;
+      camera.position.y += (1.6 + driftY - my * 2 - camera.position.y) * dt * 0.45;
+      camera.lookAt(0, 0, -10);
       if (lm) { lm.rotation.y += dt * 0.15; lm.position.y = -5.4 + Math.sin(t * 0.6) * 0.35; lm.rotation.z = Math.sin(t * 0.4) * 0.08; }
       if (ast) { ast.pose(dt, { act: 'wave' }); ast.root.position.y = -4.6 + Math.sin(t * 0.5 + 1) * 0.22; ast.root.rotation.z = -0.08 + Math.sin(t * 0.35) * 0.05; ast.root.rotation.y = -0.7 + Math.sin(t * 0.2) * 0.12; }
       secret.material.opacity = 0.6 + 0.4 * Math.sin(t * 3);

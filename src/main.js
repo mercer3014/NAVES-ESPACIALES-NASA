@@ -4,6 +4,8 @@ import { t, applyI18n } from './core/i18n.js';
 import { show } from './ui/router.js';
 import { $ } from './core/util.js';
 import { unlock } from './core/audio.js';
+import { bootReadout } from './ui/presentation.js';
+import { sfxIfUnlocked } from './ui/ui-sfx.js';
 import './core/engine.js';
 import { introScreen, introPlayed, startScreen, joinScreen, lobbyBg } from './ui/screens.js';
 import { shouldPlayIntro } from './ui/intro-policy.js';
@@ -15,12 +17,26 @@ addEventListener('pointerdown', unlock, { capture: true });
 addEventListener('keydown', unlock, { capture: true });
 
 async function boot() {
-  const el = show(`<div class="screen boot"><div class="dot"></div><div class="txt" data-i="boot.loading"></div><div class="bar"><i></i></div></div>`, 'boot');
-  const bar = $('.bar>i', el);
   const urls = ['/tex/stars_2k.jpg', '/tex/earth_day_2k.jpg', '/tex/earth_night_2k.jpg', '/tex/earth_clouds_2k.jpg', '/tex/moon_2k.jpg', '/audio/sfx/click.mp3'];
-  let done = 0; const tick = () => (bar.style.width = (++done / (urls.length + 1)) * 100 + '%');
-  const fonts = Promise.all(['700 1em Chakra', '400 1em Chakra', '900 1em Orbitron', '1em Mono', '1em Exo'].map((f) => document.fonts.load(f).catch(() => {}))).then(tick);
+  const total = urls.length + 1;
+  const el = show(`<div class="screen boot"><div class="boot-frame">
+    <div class="boot-kicker">LOS ORINALEJOS</div>
+    <div class="boot-word">${t('title.l1')}<br>${t('title.l2')}</div>
+    <div class="boot-status"><i></i><span class="boot-line">${t(bootReadout(0, total).line)}</span></div>
+    <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i></div>
+    <div class="boot-pct">0%</div>
+  </div></div>`, 'boot');
+  const bar = $('.bar>i', el), line = $('.boot-line', el), pct = $('.boot-pct', el), prog = $('.bar', el);
+  let done = 0;
+  const tick = () => {
+    const r = bootReadout(++done, total);
+    bar.style.width = r.pct + '%'; pct.textContent = r.pct + '%'; line.textContent = t(r.line); prog.setAttribute('aria-valuenow', String(r.pct));
+  };
+  const fonts = Promise.all(['700 1em Chakra', '400 1em Chakra', '900 1em Orbitron', '1em Mono', '1em Exo', '1em Audiowide'].map((f) => document.fonts.load(f).catch(() => {}))).then(tick);
   await Promise.race([Promise.all([fonts, ...urls.map((u) => fetch(u).then((r) => r.blob()).catch(() => {}).then(tick))]), new Promise((r) => setTimeout(r, 12000))]);
+  const fin = bootReadout(total, total);
+  bar.style.width = '100%'; pct.textContent = '100%'; line.textContent = t(fin.line); prog.setAttribute('aria-valuenow', '100');
+  sfxIfUnlocked('computer', { vol: 0.28 });
   lobbyBg();
   const room = params.get('room');
   if (DEBUG && ['prep','launch','cruise','descent','eva'].includes(params.get('phase'))) { const { startMission } = await import('./game/mission.js'); const flow = params.has('flow'); return startMission({ mode: 'solo', role: 'pilot', practice: flow ? null : params.get('phase'), resume: flow ? { phase: params.get('phase'), results: {} } : null }); }
