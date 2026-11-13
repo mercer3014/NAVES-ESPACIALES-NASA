@@ -16,7 +16,7 @@ try {
     lod0: ast.body.getObjectByName('Astronaut_LOD0')?.visible, lod1: ast.body.getObjectByName('Astronaut_LOD1')?.visible, stripes: ast.body.getObjectByName('CommanderStripes')?.visible }; });
   console.log('ASSETS', JSON.stringify(info));
   if (fallback === '1') { assert.equal(info.model, 'fallback'); assert.equal(info.sites, undefined); }
-  if (fallback !== '1') { assert.equal(info.model, 'a7l-v2'); assert.equal(info.clips.length, 11); assert.equal(info.variants, 4); assert.equal(info.sites.length, 3); assert.equal(info.stripes, false); if (mobile === '1') { assert.equal(info.lod0, false); assert.equal(info.lod1, true); } }
+  if (fallback !== '1') { assert.equal(info.model, 'a7l-v2'); assert.equal(info.clips.length, 13); assert.ok(info.clips.includes('run') && info.clips.includes('low-g-jump') && info.clips.includes('walk')); assert.equal(info.variants, 4); assert.equal(info.sites.length, 3); assert.equal(info.stripes, false); if (mobile === '1') { assert.equal(info.lod0, false); assert.equal(info.lod1, true); } }
   await p.evaluate(() => { __evaDbg.P.act = null; __evaDbg.P.yaw = 0; __evaDbg.cam(0.35, 0.15, 3.3); });
   await new Promise(r => setTimeout(r, 2000));
   await p.screenshot({ path: `${out}/${process.env.QA_PREFIX || "70"}_A7L_${tag}.png` });
