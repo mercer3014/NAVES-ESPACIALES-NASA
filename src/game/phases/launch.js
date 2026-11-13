@@ -9,6 +9,7 @@ import { launchPrompt, objectiveCardHtml } from '../../ui/flight-hud.js';
 import { paintPrompt } from '../../ui/flight-hud-mount.js';
 import { makePad, H, BASE_Y } from '../../scenes/pad.js';
 import { trackFov, sideAxis, chaseStand, trackStand } from '../launch-camera.js';
+import { playCue } from '../cutscenes/play.js';
 extend({
   'l.tminus': ['T-', 'T-'], 'l.skip': ['Saltar cuenta', 'Skip countdown'], 'l.stress': ['ESTRÉS', 'STRESS'], 'l.thr': ['EMPUJE', 'THRUST'],
   'l.les': ['¡Expulsa la torre de escape!', 'Jettison the escape tower!'], 'l.waitcc': ['Esperando que Control de Misión separe…', 'Waiting for Mission Control to stage…'],
@@ -83,12 +84,14 @@ export default async function launch(ctx) {
   if (isTouch) $('.stagebtn', el).style.display = ''; $('.adibox', el).style.opacity = 1;
   music('launch', { vol: 0.5 }); sfx('explosion', { vol: 0.5 }); sfx('clunk', { vol: 0.7, rate: 0.7 }); W.phase = 'fly'; W.shake = 2.2;
   ctx.banner(t('l.liftoff'), t('l.hdr'), 1800); ctx.cc.log('l.liftoff', null, 'ok'); navigator.vibrate?.([30, 30, 60]);
+  playCue('liftoff', { anchor: () => W.rocket, ctx });
   // ---------- vuelo ----------
   let waitingStage = null, lesDone = false, maxQsaid = false, cleared = false;
   const pitchAxis = () => axis().x;
   const doStage = (i) => {
     if (W.parts[i]?.free) return; W.stage(i); sfx('stage'); sfx('clunk', { vol: 0.6 }); W.shake = 2.5; navigator.vibrate?.(60);
     ctx.banner(t('l.sep'), i === 3 ? 'LES' : STG[i].name, 1300); ctx.cc.log('pa.stage', null, 'ok');
+    if (i === 0) playCue('separation', { anchor: () => W.rocket, ctx });
   };
   async function stagePrompt(i) {
     const t0 = S.s; waitingStage = i; ctx.banner(t('l.stageNow'), '', 1500, 'warn'); sfx('computer', { vol: 0.6 }); ctx.say('pa.stage', { ms: 2000 });

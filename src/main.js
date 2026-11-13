@@ -17,6 +17,7 @@ addEventListener('pointerdown', unlock, { capture: true });
 addEventListener('keydown', unlock, { capture: true });
 
 async function boot() {
+  if (DEBUG && params.get('cue')) { const { previewCue } = await import('./game/cutscenes/preview.js'); return previewCue(params.get('cue')); }
   const urls = ['/tex/stars_2k.jpg', '/tex/earth_day_2k.jpg', '/tex/earth_night_2k.jpg', '/tex/earth_clouds_2k.jpg', '/tex/moon_2k.jpg', '/audio/sfx/click.mp3'];
   const total = urls.length + 1;
   const el = show(`<div class="screen boot"><div class="boot-frame">

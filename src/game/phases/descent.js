@@ -9,6 +9,7 @@ import { objectiveCardHtml } from '../../ui/flight-hud.js';
 import { makeMoonSurface } from '../../scenes/moonsurface.js';
 import { create, step, guide, agl, judge, hoverThr, brakingMargin, vsCue, LM, PAD, BOULDERS, ground } from '../../sim/lander.js';
 import { attachLook } from '../../core/look.js';
+import { playCue } from '../cutscenes/play.js';
 extend({
   'd.p63': ['PROG 63 · Frenado', 'PROG 63 · Braking'], 'd.p64': ['PROG 64 · Aproximación', 'PROG 64 · Approach'], 'd.p66': ['PROG 66 · Manual', 'PROG 66 · Manual'],
   'd.watch': ['La computadora vuela. Observa la telemetría…', 'The computer is flying. Watch the telemetry…'], 'd.pressG': ['Pulsa G o GO', 'Press G or GO'],
@@ -153,7 +154,7 @@ export default async function descent(ctx) {
     await new Promise((res) => { landedCb = res; const off = ctx.loop(() => { if (s.out && agl(s) < 0.1) res(); }); ctx.onCleanup(off); });
     landedCb = null; mode = 'done'; stopEngine(); J = judge(s, D); st.result = J.res; W.setLM(s.x, s.y, s.tilt, 0, false);
     if (s.out && J.res === 'good') J.res = 'hard';
-    if (J.res === 'good') { sfx('thud'); voice('eagle'); ctx.banner(t('d.landed'), 'Tranquility Base', 3200, 'good'); ctx.say('pa.landed', { ms: 3500 }); ctx.cc.log('d.landed', null, 'ok'); if (J.vs < 1 && J.pad < PAD.r) achieve('soft'); if (!rodUsed) achieve('noassist'); if (sec() > 60) achieve('fuel'); break; }
+    if (J.res === 'good') { sfx('thud'); voice('eagle'); ctx.banner(t('d.landed'), 'Tranquility Base', 3200, 'good'); ctx.say('pa.landed', { ms: 3500 }); ctx.cc.log('d.landed', null, 'ok'); playCue('eagle', { anchor: () => W.lm, ctx }); if (J.vs < 1 && J.pad < PAD.r) achieve('soft'); if (!rodUsed) achieve('noassist'); if (sec() > 60) achieve('fuel'); break; }
     if (J.res === 'hard') { sfx('thud'); sfx('clunk'); shake = 0.8; st.hard = true; W.body.rotation.x = 0.08; ctx.banner(t('d.hard'), t('d.hardD'), 2800, 'warn'); ctx.cc.log('d.hard', null, 'warn'); break; }
     // crash
     st.crashes++; sfx('explosion'); shake = 2.2; W.body.visible = false; const why = J.why ? fill(t('d.why.' + J.why), { v: (J.why === 'vs' ? J.vs : J.why === 'hs' ? J.hs : J.why === 'tilt' ? J.tilt : J.slope).toFixed(1), m: J.L[J.why] && (+J.L[J.why]).toFixed(1) }) : t(s.out ? 'd.fuelout' : 'd.crashD');

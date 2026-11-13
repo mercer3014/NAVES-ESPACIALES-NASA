@@ -15,20 +15,21 @@ import {show} from '../../ui/router.js';
 import {lobbyBg,startScreen,createScreen,getFlag} from '../../ui/screens.js';
 import {createMars,stepMars,marsBot,marsSet,marsAutoInput,retryMars,SITES,BASE} from '../../sim/mars.js';
 import {marsHudFields,marsHintKey,marsClimateOpen} from './mars-present.js';
+import {playCue,stopCue} from '../cutscenes/play.js';
 const q=(s,el)=>el.querySelector(s),fmt=(x,n=0)=>Number(x||0).toFixed(n);
 export async function startExpedition({mission='mars',mode='solo',role='pilot',seed=17,resume=null}={}){
  if(mission!=='mars')throw Error('Unexpected Mars mission dispatcher');
  const pilot=role==='pilot',coop=mode==='coop',offs=[];let alive=true,ready=false,world=null,acc=0,snapAt=0,paintAt=0,lastStage='',lastSol=-1,posted=false;
- let state=resume?.aux?.mission===mission?resume.aux:createMars(seed),auto=DEBUG&&new URLSearchParams(location.search).get('autoexp')==='1',rate=DEBUG?Math.min(60,Math.max(1,+new URLSearchParams(location.search).get('xs')||1)):1,pace=1;
+ let state=resume?.aux?.mission===mission?resume.aux:createMars(seed),auto=DEBUG&&new URLSearchParams(location.search).get('autoexp')==='1',rate=DEBUG?Math.min(60,Math.max(1,+new URLSearchParams(location.search).get('xs')||1)):1,pace=1,craneShown=state.land?.mode==='skycrane';
  let hasSnap=pilot,pendingAction=false;
  const el=show(`<div class="expedition mhud ${pilot?'pilot':'capcom'}"><header class="ex-head"><h2>${t('ex.'+mission)}</h2><nav><button class="btn ex-mute">${t('ex.mute')}</button><button class="btn ex-exit">${t('ex.exit')}</button></nav></header><section class="ex-panel mhud-card ${pilot?'':'cc'}" data-obj data-open="1"><button type="button" class="mhud-card-h" data-obj-toggle aria-expanded="true" aria-keyshortcuts="Tab"><span class="mhud-kicker">${t('ex.'+mission)}</span>${icon('chevron')}</button><div class="mhud-card-b"><div class="mhud-clip"><h3 class="ex-stage"></h3><p class="ex-status" aria-live="polite"></p><p class="ex-hint"></p>${pilot?'':'<div class="ex-tele"></div>'}<p class="ex-event" aria-live="polite"></p><section class="ex-climate"><h3>${t('ma.climate')}</h3><p>${t('ma.solar')}</p><div class="ex-sliders">${['water','light','temp','co2'].map(k=>`<label class="ex-slider">${t('ma.'+k)} <output data-out="${k}"></output><input aria-label="${t('ma.'+k)}" data-climate="${k}" type="range" min="${k==='temp'?10:0}" max="${k==='temp'?32:1}" step="${k==='temp'?1:.01}"></label>`).join('')}</div></section></div></div></section>${pilot?'<aside class="mhud-rail"><div class="ex-tele"></div></aside>':''}<aside class="ex-mapbox"><canvas width="300" height="300" aria-label="${t('ma.map')}"></canvas><p>${t('ma.map')}</p></aside>${pilot?`<div class="ex-controls">${isTouch?`<div class="ex-stick" role="application" aria-label="${t('ex.controls')}"><i></i></div>`:''}<div class="ex-actions">${isTouch?`<button class="btn go ex-action" hidden type="button"></button>`:''}<button class="btn ex-pace" hidden type="button">${t('ma.pace')}</button></div></div>`:''}<section class="ex-result"></section><section class="ex-error"></section><div class="ex-loading">${t('ex.loading')}</div></div>`,'expedition',()=>{
-  alive=false;offs.splice(0).forEach(f=>f());clearBtns();stopEngine();stopVoices();world?.dispose?.();dbg('expedition',null);
+  alive=false;stopCue();offs.splice(0).forEach(f=>f());clearBtns();stopEngine();stopVoices();world?.dispose?.();dbg('expedition',null);
  });
  const exit=(peer=false)=>{setPhaseBed(null);if(coop){if(!peer)tx({t:'quit',mission});leaveRoom();}startScreen();};
  q('.ex-exit',el).onclick=()=>exit();q('.ex-mute',el).onclick=()=>{toggleExpeditionAudio();paint();};
  installHudKeys();if(pilot){if(isTouch){makeStick(q('.ex-stick',el));bindBtn(q('.ex-action',el),'exp-action');}const paceBtn=q('.ex-pace',el);if(paceBtn)paceBtn.onclick=()=>{pace=pace>1?1:4;sfx('tick');paint();};}
  const send=force=>{if(coop&&pilot&&(force||performance.now()-snapAt>220)){snapAt=performance.now();tx({t:'snap',ph:mission,d:state});}};
- const reset=()=>{if(!pilot){tx({t:'ev',k:'exp-control',mission,key:'retry'});return;}state=retryMars(state);acc=0;posted=false;lastStage='';lastSol=-1;tx({t:'restart',ph:mission,mission});tx({t:'phase',ph:mission,mission});send(true);paint();};
+ const reset=()=>{if(!pilot){tx({t:'ev',k:'exp-control',mission,key:'retry'});return;}state=retryMars(state);acc=0;posted=false;lastStage='';lastSol=-1;craneShown=false;stopCue();tx({t:'restart',ph:mission,mission});tx({t:'phase',ph:mission,mission});send(true);paint();};
  const control=(key,value)=>{if(!pilot&&coop)tx({t:'ev',k:'exp-control',mission,key,value});};
  el.querySelectorAll('[data-climate]').forEach(x=>x.oninput=()=>{q(`[data-out=${x.dataset.climate}]`,el).textContent=x.dataset.climate==='temp'?x.value+' °C':fmt(+x.value*100)+'%';control(x.dataset.climate,+x.value);});
  if(coop){
@@ -74,6 +75,7 @@ export async function startExpedition({mission='mars',mode='solo',role='pilot',s
  offs.push(onTick(dt=>{if(!alive||!ready)return;if(pilot&&(!coop||net.connected)){
   const a=axis();pendingAction ||= pressed('KeyE','Space')||bpressed('exp-action');acc+=dt*rate*(state.stage==='grow'?pace:1);let first=true;
   while(acc>=1/30){simulate(1/30,auto?marsAutoInput(state):{...a,action:first&&pendingAction});pendingAction=false;first=false;acc-=1/30;}
+  if(state.stage==='landing'&&state.land.mode==='skycrane'&&!craneShown){craneShown=true;playCue('skycrane',{anchor:()=>world?.rover});}
   announce();send(false);if(state.stage==='landing'&&state.land.mode!=='chute')engine(state.land.thr*.35);else stopEngine();
  }if(performance.now()-paintAt>120){paintAt=performance.now();paint();}}));
 }

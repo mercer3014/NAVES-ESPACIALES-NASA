@@ -17,6 +17,7 @@ import { renderFlag } from '../../ui/flag.js';
 import { model, modelAnim } from '../../core/engine.js';
 import { ground, PAD } from '../../sim/lander.js';
 import { dotTex } from '../../scenes/space.js';
+import { playCue } from '../cutscenes/play.js';
 extend({
   'e.ladder': ['Baja la escalera', 'Climb down the ladder'], 'e.ladderK': ['Mantén S / ↓ / Espacio para bajar', 'Hold S / ↓ / Space to climb down'], 'e.ladderT': ['Mantén ↓ para bajar', 'Hold ↓ to climb down'],
   'e.rung': ['Peldaño {n} / 9', 'Rung {n} / 9'], 'e.step': ['Da el primer paso', 'Take the first step'], 'e.stepK': ['Pulsa E', 'Press E'], 'e.stepT': ['Toca PASO', 'Tap STEP'],
@@ -255,7 +256,7 @@ export default async function eva(ctx) {
     ctx.cc.log('e.step', null, 'warn');
     await ctx.until(() => AUTO() || ACT());
     const fl = $('.flash', el); fl.style.transition = 'opacity .2s'; fl.style.opacity = 1; await ctx.wait(0.2); fl.style.transition = 'opacity 1.4s'; fl.style.opacity = 0;
-    { const tz = padTop.z + 0.38; P.z = tz; P.y = ground(P.x, tz); P.act = 'step'; P.actK = 0; await new Promise((res) => { let k = 0; const off = ctx.loop((dt) => { k = Math.min(1, k + dt / 4); P.actK = k; if (k >= 1) { off(); res(); } }); }); P.act = null; }
+    { const tz = padTop.z + 0.38; P.z = tz; P.y = ground(P.x, tz); P.act = 'step'; P.actK = 0; playCue('firststep', { anchor: () => ast.root, ctx }); await new Promise((res) => { let k = 0; const off = ctx.loop((dt) => { k = Math.min(1, k + dt / 4); P.actK = k; if (k >= 1) { off(); res(); } }); }); P.act = null; }
     footprint(P.x - 0.1, P.z + 0.05, 0, true); puff(P.x, P.z, 18, 0.8); sfx('step1'); st.step = true; achieve('first'); ctx.cc.log('e.quote', null, 'ok');
     const spoken = commsMode() !== 'off'; const qq = $('.quote', el);
     if (spoken) { voice('smallstep'); qq.textContent = t('e.quote'); qq.style.display = ''; }
