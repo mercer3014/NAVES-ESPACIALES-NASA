@@ -3,6 +3,7 @@
 import { THREE, model, modelAnim, fit, Q, renderer } from '../core/engine.js';
 import { twinkleStars, dotTex, earth, tickAll } from './space.js';
 import { makePuffs, makePlume, makeFlashes, makePost, puffTex } from './fx.js';
+import { skyVertexShader } from './sky-clip.js';
 export const H = 110; // altura del Saturno V en m (unidades de escena)
 export const CUTS = [0.385, 0.615, 0.93]; // S-IC | S-II | S-IVB+naves | torre de escape (solo modelo antiguo)
 export const BASE_Y = 26.53; // cubierta del Mobile Launcher = salida de las toberas F-1 (origen común de saturn-v / launch-tower / lc39a-*.glb); terreno del LC-39A en y = 0
@@ -45,8 +46,8 @@ export function makePad() {
   const skyGeo = new THREE.BufferGeometry();
   skyGeo.setAttribute('position', new THREE.Float32BufferAttribute([-1, -1, 0, 3, -1, 0, -1, 3, 0], 3));
   const sky = new THREE.Mesh(skyGeo, new THREE.ShaderMaterial({ depthTest: false, depthWrite: false, fog: false, toneMapped: false, uniforms: skyU,
-    vertexShader: `uniform mat4 invProj; uniform mat3 camRot; varying vec3 vD;
-      void main(){ gl_Position=vec4(position.xy,0.,1.); vec4 r=invProj*vec4(position.xy,1.,1.); vD=normalize(camRot*r.xyz); }`,
+    // z = 0.5, not 0: on Windows ANGLE a clip-space z of 0 is the near plane and the sky is discarded (black, flickering at the boundary).
+    vertexShader: skyVertexShader(),
     fragmentShader: `uniform float alt, earthR, earthK; uniform vec3 sun, earthRel; varying vec3 vD;
       void main(){ float h=clamp(vD.y,-.2,1.); vec3 zen=mix(vec3(.2,.38,.68),vec3(.0,.0,.02),smoothstep(.15,.8,alt)); vec3 hor=mix(vec3(.86,.8,.74),vec3(.25,.45,.85),smoothstep(.0,.6,alt));
       hor=mix(hor,vec3(.02,.03,.08),smoothstep(.6,1.,alt)); vec3 c=mix(hor,zen,pow(max(h,0.),.5)); float s=max(dot(vD,sun),0.); c+=vec3(1.,.8,.55)*pow(s,8.)*.45*(1.-alt*.6)+vec3(1.)*pow(s,500.)*3.;
@@ -128,7 +129,7 @@ export function makePad() {
     // las 3 raíces LC39A_* van con la misma transformación que el cohete y la torre; nunca se tocan los nodos de malla (cuantizados)
     const env = new THREE.Group(); env.name = 'lc39a'; env.position.y = BASE_Y;
     for (const g of gs) { g.traverse((o) => {
-      if (o.userData?.lodMaxDistance) { const ms = []; o.traverse((m) => { if (m.isMesh) { m.material = m.material.clone(); ms.push(m.material); } }); lods.push({ o, d: o.userData.lodMaxDistance, ms, f: 1 }); }
+      if (o.userData?.lodMaxDistance) { const ms = []; o.traverse((m) => { if (m.isMesh) { const mat = m.material.clone(); mat.transparent = true; mat.opacity = 1; mat.depthWrite = true; m.material = mat; ms.push(mat); } }); lods.push({ o, d: o.userData.lodMaxDistance, ms, f: 1 }); }
       if (!o.isMesh) return; const nm = (o.name || '') + ' ' + (o.parent?.name || ''); const nn = nm.split(' ');
       o.castShadow = nn.some((n) => SHADOW.test(n)); o.receiveShadow = nn.some((n) => RECV.test(n));
       if (o.material?.name === 'Sea') { envSea = o.material.normalMap; o.material.envMapIntensity = 1.6; }
@@ -308,9 +309,10 @@ export function makePad() {
         dm.position.copy(q.p); dm.rotation.copy(q.r); dm.scale.setScalar(q.on ? q.s : 0); dm.updateMatrix(); ice.setMatrixAt(i, dm.matrix); }
       ice.instanceMatrix.needsUpdate = true;
       for (const P of [smoke, steam, fire, trail]) P.update(dt, camera, scene);
-      // LOD del artista (userData.lodMaxDistance): fundido de opacidad en el último 15 % y oculto más allá; distancia de la cámara al pad
+      // LOD del artista (userData.lodMaxDistance): fundido de opacidad en el último 15 % y oculto más allá.
+      // transparent se fija al cargar. Cambiarlo a mitad del ascenso recompila el shader y Chrome presenta fotogramas negros.
       { const cd = camera.position.distanceTo(v3.set(0, BASE_Y, 0)); for (const L of lods) { const f = THREE.MathUtils.clamp((L.d - cd) / (L.d * 0.15), 0, 1); if (f === L.f) continue;
-        const tr = f < 1; L.o.visible = f > 0; for (const m of L.ms) { if (m.transparent !== tr) { m.transparent = tr; m.needsUpdate = true; } m.opacity = f; m.depthWrite = !tr || f > 0.5; } L.f = f; } }
+        L.o.visible = f > 0; for (const m of L.ms) { m.opacity = f; m.depthWrite = f > 0.5; } L.f = f; } }
       if (envSea) envSea.offset.set(shT * 0.004, shT * 0.0025); if (envSurf) envSurf.offset.y = 0.02 * Math.sin(shT * 0.6);
       const k = this.thrust; smoke.U.uGlowK.value = steam.U.uGlowK.value = 0.6 * k * (active === 0 ? 1 : 0) * THREE.MathUtils.clamp(1 - (rocket.position.y - BASE_Y) / 160, 0, 1) * (0.85 + 0.15 * Math.sin(t * 31));
       plumes.forEach((p) => p.coreM.uniforms.t.value = p.outM.uniforms.t.value = shT);
@@ -370,7 +372,7 @@ export function makePad() {
         camera.position.set(75, (this.env ? BASE_Y + 8 : 8 + FB_DY), 262); camera.up.set(0, 1, 0); camera.lookAt(0, BASE_Y + 40, 0);
         camera.near = 1; camera.far = 60000; camera.fov = 50; camera.updateProjectionMatrix();
       }
-      if (post) post.render(dt); else renderer.render(scene, camera);
+      if (post) { post.comp.renderToScreen = true; post.render(dt); } else renderer.render(scene, camera);
     },
     resize(w, h) { post?.setSize(w, h); },
     dispose() { post?.dispose(); },

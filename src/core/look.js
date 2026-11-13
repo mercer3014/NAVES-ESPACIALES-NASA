@@ -1,8 +1,11 @@
 // Mouse look. Pointer lock is requested from a click or key that enters a 3D view.
-// Until the browser grants it, the camera follows the mouse with no button held.
+// Until the browser grants it, look uses client deltas so a button does not have to be held.
+// The cursor stays hidden during EVA / descent and returns on pause, dialogs, and overlays.
+// Touch drag is unchanged (no lock, no hidden cursor).
 import { isTouch } from './store.js';
 import { t, extend } from './i18n.js';
 import { toast } from './util.js';
+import { lookDelta } from './look-delta.js';
 
 extend({
   'look.refused': ['Mueve el ratón para mirar. Esc pausa.', 'Move the mouse to look. Esc pauses.'],
@@ -18,6 +21,18 @@ let hintShown = false;
 export function releaseLook() { if (document.pointerLockElement) document.exitPointerLock?.(); }
 export function lookActive() { return sessions.size > 0; }
 
+function menuOpen() {
+  if (document.body.dataset.paused) return true;
+  if (document.querySelector('.overlay, .dialog')) return true;
+  const radio = document.querySelector('.r-panel');
+  return !!(radio && !radio.classList.contains('hidden'));
+}
+
+function syncCursor() {
+  const on = sessions.size > 0 && !isTouch && !menuOpen();
+  document.body.classList.toggle('look-on', on);
+}
+
 function noteRefused() {
   if (hintShown || document.pointerLockElement) return;
   hintShown = true;
@@ -25,7 +40,7 @@ function noteRefused() {
 }
 
 export function requestLook() {
-  if (isTouch) return;
+  if (isTouch || menuOpen()) return;
   const canvas = document.querySelector('#gl');
   if (!canvas?.requestPointerLock) { noteRefused(); return; }
   let pending;
@@ -35,13 +50,14 @@ export function requestLook() {
 export function offerLook(phase) { if (LOOK_PHASES.has(phase)) requestLook(); }
 
 document.addEventListener('pointerlockerror', () => noteRefused());
+document.addEventListener('pointerlockchange', () => syncCursor());
 
 export function attachLook({ onDelta }) {
   const canvas = document.querySelector('#gl');
-  let edge = null, raf = 0;
+  let last = null, raf = 0;
   const alive = () => sessions.has(session);
   const turn = (dx, dy) => {
-    if (!alive() || document.body.dataset.paused) return;
+    if (!alive() || menuOpen()) return;
     if (!dx && !dy) return;
     dx = Math.max(-180, Math.min(180, dx));
     dy = Math.max(-180, Math.min(180, dy));
@@ -49,20 +65,21 @@ export function attachLook({ onDelta }) {
   };
   const onMove = (e) => {
     if (!alive() || e.pointerType === 'touch') return;
+    if (menuOpen()) { last = null; return; }
     const locked = document.pointerLockElement === canvas;
-    turn(e.movementX || 0, e.movementY || 0);
-    if (locked) { edge = null; return; }
-    const m = 28;
-    const near = e.clientX < m || e.clientY < m || e.clientX > innerWidth - m || e.clientY > innerHeight - m;
-    edge = near ? { x: (e.clientX - innerWidth / 2) * 0.012, y: (e.clientY - innerHeight / 2) * 0.012 } : null;
+    const d = lookDelta({ locked, movementX: e.movementX, movementY: e.movementY, clientX: e.clientX, clientY: e.clientY, last });
+    last = d.last;
+    turn(d.dx, d.dy);
   };
   const pump = () => {
     raf = requestAnimationFrame(pump);
-    if (edge && !document.pointerLockElement) turn(edge.x, edge.y);
+    if (!alive()) return;
+    if (menuOpen() && document.pointerLockElement) releaseLook();
+    syncCursor();
   };
   raf = requestAnimationFrame(pump);
   const onGesture = (e) => {
-    if (!alive() || document.body.dataset.paused) return;
+    if (!alive() || menuOpen()) return;
     if (e.type === 'keydown' && (e.code === 'Escape' || e.repeat)) return;
     if (e.type === 'pointerdown' && (e.pointerType === 'touch' || lookBlocked(e.target))) return;
     if (document.pointerLockElement === canvas) return;
@@ -73,10 +90,13 @@ export function attachLook({ onDelta }) {
   document.addEventListener('keydown', onGesture, true);
   const session = { release: releaseLook, get locked() { return document.pointerLockElement === canvas; } };
   sessions.add(session);
+  syncCursor();
   session.dispose = () => {
     sessions.delete(session);
     cancelAnimationFrame(raf);
     releaseLook();
+    last = null;
+    if (sessions.size === 0) document.body.classList.remove('look-on');
     document.removeEventListener('mousemove', onMove);
     document.removeEventListener('pointerdown', onGesture, true);
     document.removeEventListener('keydown', onGesture, true);

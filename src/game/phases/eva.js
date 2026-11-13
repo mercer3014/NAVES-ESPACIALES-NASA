@@ -5,6 +5,7 @@ import { $, h, clamp, damp, achieve } from '../../core/util.js';
 import { sfx, music, voice } from '../../core/audio.js';
 import { axis, pressed, down, bindBtn, bdown, bpressed, makeStick } from '../../core/input.js';
 import { attachLook } from '../../core/look.js';
+import { ladderWantsDown } from '../ladder-input.js';
 import { commsMode } from '../../core/comms.js';
 import { isTouch, on, DEBUG, shared, dbg, AUTO } from '../../core/store.js';
 import { makeMoonSurface } from '../../scenes/moonsurface.js';
@@ -15,7 +16,7 @@ import { model, modelAnim } from '../../core/engine.js';
 import { ground, PAD } from '../../sim/lander.js';
 import { dotTex } from '../../scenes/space.js';
 extend({
-  'e.ladder': ['Baja la escalera', 'Climb down the ladder'], 'e.ladderK': ['Pulsa S / ↓ en cada peldaño', 'Press S / ↓ for each rung'], 'e.ladderT': ['Toca ↓ en cada peldaño', 'Tap ↓ for each rung'],
+  'e.ladder': ['Baja la escalera', 'Climb down the ladder'], 'e.ladderK': ['Mantén S / ↓ / Espacio para bajar', 'Hold S / ↓ / Space to climb down'], 'e.ladderT': ['Mantén ↓ para bajar', 'Hold ↓ to climb down'],
   'e.rung': ['Peldaño {n} / 9', 'Rung {n} / 9'], 'e.step': ['Da el primer paso', 'Take the first step'], 'e.stepK': ['Pulsa E', 'Press E'], 'e.stepT': ['Toca PASO', 'Tap STEP'],
   'e.quote': ['«Es un pequeño paso para el hombre, un gran salto para la humanidad.»', '"That\'s one small step for man, one giant leap for mankind."'],
   'e.walk': ['Explora', 'Explore'], 'e.walkK': ['WASD moverse · el ratón mira · Espacio saltar · E acción · Esc pausa', 'WASD move · mouse looks · Space jump · E action · Esc pauses'],
@@ -231,7 +232,7 @@ export default async function eva(ctx) {
     ctx.cc.log('e.ladder');
     for (let i = 0; i < 9; i++) {
       prompt(t('e.rung', { n: i }), t(isTouch ? 'e.ladderT' : 'e.ladderK'));
-      await ctx.until(() => AUTO() || ACT() || pressed('KeyS', 'ArrowDown', 'Space'));
+      await ctx.until(() => ladderWantsDown({ auto: AUTO(), act: ACT() || bdown('act'), held: down('KeyS', 'ArrowDown', 'Space'), tapped: pressed('KeyS', 'ArrowDown', 'Space') }));
       const from = new THREE.Vector3(P.x, P.y, P.z), to = rungs[i].clone().add(new THREE.Vector3(0, -0.36 + LAD.y, (eagle ? 0.42 : -0.12) + LAD.z)); P.act = 'climb'; sfx('clunk', { vol: 0.35, rate: 1 + i * 0.03 });
       await new Promise((res) => { let k = 0; const off = ctx.loop((dt) => { k = Math.min(1, k + dt / 0.38); P.actK = k; P.x = from.x + (to.x - from.x) * k; P.y = from.y + (to.y - from.y) * k; P.z = from.z + (to.z - from.z) * k; if (k >= 1) { off(); res(); } }); });
       ctx.cc.log('e.rung', { n: i + 1 });

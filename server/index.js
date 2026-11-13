@@ -6,10 +6,11 @@ import os from 'node:os';
 import zlib from 'node:zlib';
 import { WebSocketServer } from 'ws';
 import QRCode from 'qrcode';
+import { resolveStaticRoot } from './paths.js';
 
 const HOST = process.env.HOST || '127.0.0.1';
 const PORT = Number(process.env.PORT || 8787);
-const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..', process.env.STATIC_DIR || 'dist');
+const ROOT = resolveStaticRoot(import.meta.url, process.env.STATIC_DIR || 'dist');
 const PUBLIC_URL = process.env.PUBLIC_URL || '';
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.txt': 'text/plain; charset=utf-8', '.json': 'application/json', '.svg': 'image/svg+xml', '.mp4': 'video/mp4', '.webm': 'video/webm', '.jpg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp', '.mp3': 'audio/mpeg', '.glb': 'model/gltf-binary', '.woff2': 'font/woff2', '.vtt': 'text/vtt', '.ico': 'image/x-icon', '.wasm': 'application/wasm' };
 const GZ = new Set(['.html', '.js', '.css', '.json', '.svg', '.vtt']);
