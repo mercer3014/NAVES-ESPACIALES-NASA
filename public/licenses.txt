@@ -17,6 +17,22 @@ https://opengameart.org/content/persistence
 https://opengameart.org/content/floating-in-space
 Sound effects: Kenney, CC0 1.0. https://kenney.nl/assets (Sci-Fi, Interface, Impact, Digital, UI, Music Jingles).
 
+Mission beds and phase layers: original synthesis for this game (sines, noise and tremolo). No third-party samples, no speech and no commercial music. No Hans Zimmer or other copyrighted score is used. CC0 1.0. https://creativecommons.org/publicdomain/zero/1.0/
+public/audio/beds/cockpit-ambience.mp3 — cabin fan and electrical hum. Original, CC0 1.0.
+public/audio/beds/engine-spatial.mp3 — positional engine loop for 3D audio. Original, CC0 1.0.
+public/audio/beds/chatter-bed.mp3 — static bed for the radio filter, no spoken words. Original, CC0 1.0.
+public/audio/music/layer-prep.mp3 — prep music layer. Original, CC0 1.0.
+public/audio/music/layer-ascent.mp3 — ascent music layer. Original, CC0 1.0.
+public/audio/music/layer-coast.mp3 — coast music layer. Original, CC0 1.0.
+public/audio/music/layer-descent.mp3 — descent music layer. Original, CC0 1.0.
+public/audio/music/layer-surface.mp3 — surface music layer. Original, CC0 1.0.
+public/audio/music/layer-mars.mp3 — Huerto rojo music layer. Original, CC0 1.0.
+public/audio/music/layer-drift.mp3 — Horizonte escape music layer. Original, CC0 1.0.
+public/audio/music/layer-resolve.mp3 — closing music layer. Original, CC0 1.0.
+The Horizonte docking/assembly piece (pipe organ, ticking pulse, crescendo) is not in these files. Phase horizon-dock requests no layer here so that separate track can play. That file is not replaced or rewritten.
+
+Procedural engine rumble, cockpit placement, HRTF panners and the radio band-pass live in src/audio/ and are original code, not sampled recordings.
+
 FONT COPYRIGHT NOTICES (embedded fonts and rasterized Barlow Condensed atlas):
 
 
