@@ -93,12 +93,10 @@ export default async function cruise(ctx) {
       if (view) placeInView();
       else if (owner === 'cockpit') { cam.position.lerp(fw, 0.62); cam.lookAt(fw); }
     }
-    // Cámara del acople: en la punta de la sonda de Columbia, mirando a lo largo del eje hacia Eagle en el adaptador.
-    // Así se ve con qué te acoplas; si te desalineas, Eagle se corre en la retícula.
-    if (dockCam) {
+    // Cámara del acople solo en persecución. Órbita y cabina siguen el ciclo C/V.
+    if (dockCam && owner === 'chase') {
       const { csm, yTgt } = dockCam; ship.updateMatrixWorld();
       const gap = csm.position.y - yTgt;
-      // Lejos: en la sonda, sin entrar nunca en Eagle. En contacto (calibración): vista lateral con las dos naves unidas.
       const eye = gap > 0.4 ? ship.localToWorld(new THREE.Vector3(csm.position.x, Math.max(csm.position.y - 1.6, yTgt + 2.2), csm.position.z))
         : ship.localToWorld(new THREE.Vector3(7, yTgt + 3.5, 7));
       const at = gap > 0.4 ? ship.localToWorld(new THREE.Vector3(csm.position.x, yTgt - 2, csm.position.z)) : ship.localToWorld(new THREE.Vector3(0, yTgt + 1, 0));
