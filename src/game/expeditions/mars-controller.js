@@ -11,6 +11,7 @@ import {net,tx,peerOnline,leaveRoom} from '../../net/room.js';
 import {show} from '../../ui/router.js';
 import {lobbyBg,startScreen,createScreen,getFlag} from '../../ui/screens.js';
 import {createMars,stepMars,marsBot,marsSet,marsAutoInput,retryMars,SITES,BASE} from '../../sim/mars.js';
+import {marsHudFields,marsHintKey,marsClimateOpen} from './mars-present.js';
 const q=(s,el)=>el.querySelector(s),fmt=(x,n=0)=>Number(x||0).toFixed(n);
 export async function startExpedition({mission='mars',mode='solo',role='pilot',seed=17,resume=null}={}){
  if(mission!=='mars')throw Error('Unexpected Mars mission dispatcher');
@@ -50,9 +51,11 @@ export async function startExpedition({mission='mars',mode='solo',role='pilot',s
   q('.ex-mute',el).textContent=t(Object.values(store.get('vol')).some(x=>x>0)?'ex.mute':'ex.unmute');
   q('.ex-status',el).textContent=!hasSnap?t('ex.sync'):coop&&!net.connected?t('ex.offline'):!pilot&&!peerOnline()?t('ex.pilot.wait'):!coop||!peerOnline()?t('ex.pancho'):t(pilot?'ex.crew':'ex.pilot.ready');
   q('.ex-stage',el).textContent=t(done?'ex.'+s.stage:'ma.'+s.stage);
-  q('.ex-hint',el).textContent=t('ma.hint.'+(s.stage==='landing'?s.land.mode:s.stage))+(s.stage==='landing'&&s.land.mode==='chute'&&s.land.alt<300?' · '+fmt(s.land.alt)+' m':'');
+  q('.ex-hint',el).textContent=t(marsHintKey({stage:s.stage,mode:s.land.mode,role:pilot?'pilot':'capcom',coop,peer:coop&&peerOnline()}))+(s.stage==='landing'&&s.land.mode==='chute'&&s.land.alt<300?' · '+fmt(s.land.alt)+' m':'');
   const cell=(k,v)=>`<div class="ex-cell"><small>${t('ma.'+k)}</small><b>${v}</b></div>`;
-  q('.ex-tele',el).innerHTML=s.stage==='landing'?cell('alt',fmt(s.land.alt)+' m')+cell('vy',fmt(s.land.vy,1)+' m/s')+cell('offset',fmt(s.land.x,1)+' m')+cell('throttle',fmt(s.land.thr*100)+'%')+cell('fuel',fmt(s.land.fuel)+'%'):cell('water',fmt(s.water,1))+cell('regolith',fmt(s.regolith))+cell('energy',fmt(s.energy)+'%')+cell('sol',Math.min(5,s.sol+1)+'/5 · '+fmt(Math.max(0,90-s.solTime))+' s')+cell('harvest',fmt(s.kg.reduce((a,b)=>a+b,0),1)+' kg')+cell('health',fmt(s.health.reduce((a,b)=>a+b,0)/3*100)+'%');
+  const hud={alt:fmt(s.land.alt)+' m',vy:fmt(s.land.vy,1)+' m/s',offset:fmt(s.land.x,1)+' m',throttle:fmt(s.land.thr*100)+'%',fuel:fmt(s.land.fuel)+'%',water:fmt(s.water,1),regolith:fmt(s.regolith),energy:fmt(s.energy)+'%',sol:Math.min(5,s.sol+1)+'/5 · '+fmt(Math.max(0,90-s.solTime))+' s',harvest:fmt(s.kg.reduce((a,b)=>a+b,0),1)+' kg',health:fmt(s.health.reduce((a,b)=>a+b,0)/3*100)+'%',found:s.collected.length+'/'+SITES.length,progress:fmt(s.built*100)+'%'};
+  q('.ex-tele',el).innerHTML=marsHudFields(s.stage).map(k=>cell(k,hud[k])).join('');
+  q('.ex-climate',el).classList.toggle('is-on',marsClimateOpen(s.stage,pilot?'pilot':'capcom',coop));
   q('.ex-event',el).textContent=s.stage==='grow'?t(s.eventFixed?'ma.fixed':'ma.'+s.event):'';
   const paceBtn=q('.ex-pace',el);if(paceBtn){paceBtn.hidden=s.stage!=='grow';paceBtn.textContent=t(pace>1?'ma.paceOn':'ma.pace');}
   el.querySelectorAll('[data-climate]').forEach(x=>{const k=x.dataset.climate;if(document.activeElement!==x)x.value=s.settings[k];q(`[data-out=${k}]`,el).textContent=k==='temp'?fmt(s.settings[k])+' °C':fmt(s.settings[k]*100)+'%';});
