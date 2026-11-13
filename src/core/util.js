@@ -9,8 +9,12 @@ export const lerp = (a, b, t) => a + (b - a) * t;
 export const damp = (a, b, k, dt) => lerp(a, b, 1 - Math.exp(-k * dt));
 export const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 export function rng(seed) { let s = seed >>> 0 || 1; return () => { s ^= s << 13; s >>>= 0; s ^= s >> 17; s ^= s << 5; s >>>= 0; return s / 4294967296; }; }
+const TOAST_ICO = {
+  ach: '<svg class="mhud-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h8v2a4 4 0 0 1-2.2 3.6V14H16v2H8v-2h2.2v-4.4A4 4 0 0 1 8 6z"/></svg>',
+  info: '<svg class="mhud-svg" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 11v5M12 8h.01" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',
+};
 export function toast(text, kind = 'ach') {
-  const el = h(`<div class="toast ${kind}">${kind === 'ach' ? '🏅' : 'ℹ️'} <span>${text}</span></div>`);
+  const el = h(`<div class="toast ${kind}">${kind === 'ach' ? TOAST_ICO.ach : TOAST_ICO.info} <span>${text}</span></div>`);
   document.getElementById('toasts').append(el); setTimeout(() => el.remove(), 3800);
 }
 export function achieve(id) {

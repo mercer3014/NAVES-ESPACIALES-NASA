@@ -8,6 +8,7 @@ import { makePad, H, BASE_Y } from '../../scenes/pad.js';
 import { makeCabin, SW_MAP } from '../../scenes/cabin.js';
 import { renderer } from '../../core/engine.js';
 import { DEBUG } from '../../core/store.js';
+import { objectiveCardHtml } from '../../ui/flight-hud.js';
 extend({
   'prep.alarm': ['ALARMA MAESTRA', 'MASTER ALARM'], 'prep.askcc': ['¡Pregunta a Control de Misión qué hacer!', 'Ask Mission Control what to do!'],
   'prep.fixed': ['Falla resuelta', 'Fault cleared'], 'prep.wrong': ['Fuera de orden — sigue la lista', 'Out of order — follow the checklist'],
@@ -31,7 +32,7 @@ export default async function prep(ctx) {
   if (DEBUG) window.__prepDbg = { cab };
   music('ambient', { vol: 0.45 });
   const coop = ctx.cc.coop, hints = ctx.diffName !== 'veteran';
-  const el = ctx.hud(`<div class="tl"><span class="phase-tag">${t('ph.n')} 1 · ${t('ph.prep').toUpperCase()}</span><span class="phase-title">${t('prep.title')}</span></div>
+  const el = ctx.hud(`${objectiveCardHtml({ kicker: `${t('ph.n')} 01 · ${t('ph.prep')}`, titleHtml: `<div class="phase-title">${t('prep.title')}</div>` })}
     <div class="cockpit"><div class="cpanel">
       <div class="cgroup checklist panel"><h3>${t('prep.cl')}</h3><ol>${STEPS.map((s, i) => `<li data-step="${i}">${t(s.k)}</li>`).join('')}</ol></div>
       <div class="cgroup"><h4>${t('prep.power')}</h4><div class="sw-row">${SW('batA', 'BAT A')}${SW('batB', 'BAT B')}${SW('batC', 'BAT C')}</div><div class="sw-row" style="margin-top:8px">${GAUGE(t('prep.bus') + ' A')}${GAUGE(t('prep.bus') + ' B')}</div></div>
@@ -68,7 +69,7 @@ export default async function prep(ctx) {
     paint(); const g = { fc2: S.fc2, busb: S.batC, lamp: $('[data-lamp="4"]', el) }[k]; if (innerWidth < 821) g.closest('.cgroup').scrollIntoView({ block: 'center', behavior: 'smooth' });
   };
   const fix = (k) => {
-    const f = faults[k]; if (!f || f.fixed) return; f.fixed = true; faultsFixed++; f.dt = ctx.time - f.at; sfx('ok'); toast('✔ ' + t('prep.fixed'), 'info'); ctx.cc.log('prep.fixed', null, 'ok');
+    const f = faults[k]; if (!f || f.fixed) return; f.fixed = true; faultsFixed++; f.dt = ctx.time - f.at; sfx('ok'); toast(t('prep.fixed'), 'info'); ctx.cc.log('prep.fixed', null, 'ok');
     if (!Object.values(faults).some((x) => !x.fixed)) alarm(false); S.fc2.classList.remove('flash'); paint();
   };
   // interruptores
@@ -78,7 +79,7 @@ export default async function prep(ctx) {
     if (id === 'batC') { setSw(id, !isOn(id)); sfx('switch'); if (isOn(id) && faults.busb) { gv[1] = 0.78; setG(1, 0.78); fix('busb'); } return; }
     const st = STEPS[step]; const belongs = st?.sw?.includes(id);
     if (!belongs) { // fuera de orden: si es de un paso ya hecho y se apaga, o futuro → error
-      mistakes++; sfx('error'); s.classList.add('flash'); setTimeout(() => s.classList.remove('flash'), 1500); toast('⚠ ' + t('prep.wrong'), 'info'); return;
+      mistakes++; sfx('error'); s.classList.add('flash'); setTimeout(() => s.classList.remove('flash'), 1500); toast(t('prep.wrong'), 'info'); return;
     }
     setSw(id, !isOn(id)); sfx('switch'); navigator.vibrate?.(10);
     s.classList.toggle('hint', hints && !isOn(id));

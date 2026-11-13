@@ -105,7 +105,7 @@ const ACTIONS = {
 function nameAndFlagBlock() {
   return `<div style="display:flex;gap:14px;align-items:center;margin:12px 0"><canvas class="patch-prev"></canvas>
     <div style="flex:1;display:grid;gap:8px"><input class="txt" maxlength="16" data-iph="name.ph" value="${(store.get('name') || '').replace(/"/g, '')}">
-    <button class="btn" data-a="editflag">🏳️ <span data-i="menu.flag"></span></button></div></div>`;
+    <button class="btn" data-a="editflag"><span data-i="menu.flag"></span></button></div></div>`;
 }
 function wireNameFlag(el, back) {
   const pc = $('.patch-prev', el), inp = $('input.txt', el); const paint = () => renderPatch(pc, getFlag(), inp.value || getName(), 192); paint();
@@ -154,7 +154,7 @@ function wireLobby(el, offs) {
   const paintRole = () => { $$('.role button', el).forEach((b) => b.classList.toggle('on', b.dataset.r === net.role)); $('.roled', el).textContent = t(net.mission==='apollo'?`role.${net.role}.d`:`ex.role.${net.mission}.${net.role}`); };
   const paintCrew = () => {
     const me = net.members.find((m) => m.id === net.id), p = partner();
-    const card = (m, label) => m ? `<div class="crewcard ready"><canvas data-f="${m.id}"></canvas><div><b>${(m.name || '—').replace(/</g, '')}</b><span>${label} · ${t('role.' + m.role)}${m.online ? '' : ' · ⏳'}</span></div></div>`
+    const card = (m, label) => m ? `<div class="crewcard ready"><canvas data-f="${m.id}"></canvas><div><b>${(m.name || '—').replace(/</g, '')}</b><span>${label} · ${t('role.' + m.role)}${m.online ? '' : ' · ...'}</span></div></div>`
       : `<div class="crewcard empty"><canvas></canvas><div><b data-i="lobby.waiting">${t('lobby.waiting')}</b><span>${t('lobby.partner')}</span></div></div>`;
     $('.crew', el).innerHTML = card(me, t('lobby.you')) + card(p, t('lobby.partner'));
     $$('canvas[data-f]', el).forEach((c) => { const m = net.members.find((x) => x.id === c.dataset.f); renderPatch(c, m.flag || defaultFlag(), m.name, 88); });
@@ -245,13 +245,13 @@ export function settingsScreen() {
     <h3 class="phase-tag" data-i="set.comms"></h3><div class="seg comms">${['min', 'normal', 'off'].map((c) => `<button data-c="${c}" class="${(store.get('comms') || 'min') === c ? 'on' : ''}" data-i="set.comms.${c}"></button>`).join('')}</div>
     <h3 class="phase-tag" data-i="set.quality"></h3><div class="seg q">${['auto', 'low', 'high'].map((q) => `<button data-q="${q}" class="${store.get('quality') === q ? 'on' : ''}" data-i="set.q.${q}"></button>`).join('')}</div><p style="font-size:.8rem" data-i="set.reload"></p>
     <h3 class="phase-tag" data-i="set.diff"></h3><div class="seg diff">${['cadet', 'normal', 'veteran'].map((d) => `<button data-d="${d}" class="${store.get('difficulty') === d ? 'on' : ''}" data-i="d.${d}"></button>`).join('')}</div>
-    <h3 class="phase-tag" style="margin-top:16px">🏅</h3><div class="ach" style="display:flex;flex-wrap:wrap;gap:6px"></div></div></div>`, 'settings');
+    <h3 class="phase-tag" style="margin-top:16px" data-i="set.ach"></h3><div class="ach" style="display:flex;flex-wrap:wrap;gap:6px"></div></div></div>`, 'settings');
   $$('input[type=range]', el).forEach((r) => (r.oninput = () => { const vv = store.get('vol'); vv[r.dataset.k] = +r.value; store.set('vol', vv); setMusicVol(); }));
   $$('input[type=range]', el).forEach((r) => (r.onchange = () => sfx('tick')));
   $$('.comms button', el).forEach((b) => (b.onclick = ui(() => { store.set('comms', b.dataset.c); store.set('tts', b.dataset.c !== 'off'); $$('.comms button', el).forEach((x) => x.classList.toggle('on', x === b)); })));
   $$('.q button', el).forEach((b) => (b.onclick = ui(() => { setQualityPref(b.dataset.q); $$('.q button', el).forEach((x) => x.classList.toggle('on', x === b)); })));
   $$('.diff button', el).forEach((b) => (b.onclick = ui(() => { store.set('difficulty', b.dataset.d); $$('.diff button', el).forEach((x) => x.classList.toggle('on', x === b)); })));
-  const A = store.get('achievements'); $('.ach', el).innerHTML = ['first', 'nofault', 'soft', 'fuel', 'noassist', 'earthrise', 'sock', 'golf', 'wrinkle', 'galaxy', 'cardboard', 'coop', 'mission1'].map((k) => `<span class="chip" style="${A[k] ? 'border-color:var(--amber)' : 'opacity:.4'}">${A[k] ? '🏅' : '🔒'} ${t('ach.' + k)}</span>`).join('');
+  const A = store.get('achievements'); $('.ach', el).innerHTML = ['first', 'nofault', 'soft', 'fuel', 'noassist', 'earthrise', 'sock', 'golf', 'wrinkle', 'galaxy', 'cardboard', 'coop', 'mission1'].map((k) => `<span class="chip" style="${A[k] ? 'border-color:var(--amber)' : 'opacity:.4'}">${t('ach.' + k)}</span>`).join('');
   $('.back', el).onclick = ui(startScreen);
 }
 

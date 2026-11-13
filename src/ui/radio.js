@@ -17,8 +17,8 @@ extend({
   'r.muted': ['Silenciado', 'Muted'],
   'r.denied': ['Sin micrófono · usa llamadas', 'No mic · use callouts'],
   'r.unsup': ['Requiere HTTPS · usa llamadas', 'Needs HTTPS · use callouts'],
-  'r.deniedT': ['No hay permiso de micrófono. Puedes seguir oyendo a tu compañero y usar las llamadas rápidas 📣.', 'Microphone permission denied. You can still hear your partner and use quick callouts 📣.'],
-  'r.unsupT': ['El micrófono necesita una conexión segura (HTTPS). Usa las llamadas rápidas 📣.', 'The microphone needs a secure (HTTPS) connection. Use quick callouts 📣.'],
+  'r.deniedT': ['No hay permiso de micrófono. Puedes seguir oyendo a tu compañero y usar las llamadas rápidas.', 'Microphone permission denied. You can still hear your partner and use quick callouts.'],
+  'r.unsupT': ['El micrófono necesita una conexión segura (HTTPS). Usa las llamadas rápidas.', 'The microphone needs a secure (HTTPS) connection. Use quick callouts.'],
   'r.link.connecting': ['enlazando…', 'linking…'], 'r.link.connected': ['enlace OK', 'link OK'], 'r.link.failed': ['sin enlace de voz', 'no voice link'], 'r.link.idle': ['', ''],
   'r.calls': ['Llamadas rápidas', 'Quick callouts'],
   'r.mode': ['Modo', 'Mode'], 'r.mode.open': ['Mic abierto', 'Open mic'], 'r.mode.ptt': ['Pulsar para hablar', 'Push to talk'],
@@ -36,15 +36,26 @@ extend({
   'pc.reply.ok': ['Recibido, fuerte y claro.', 'Copy, loud and clear.'],
   'c.bh': ['¡Se formó un agujero negro!', 'A black hole just formed!'],
 });
-export const CALLS = [['did', '❓'], ['help', '🆘'], ['bring', '📦'], ['press', '👆'], ['do', '🙏'], ['meteor', '☄️'], ['star', '🌠'], ['bh', '🕳️']];
+const glyph = (d) => `<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">${d}</svg>`;
+export const CALLS = [
+  ['did', glyph('<circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M9.2 9.2a2.8 2.8 0 1 1 3.5 2.7c-.9.4-1.3.9-1.3 1.8V15" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="17.4" r=".8" fill="currentColor"/>')],
+  ['help', glyph('<circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 8v5M12 16.5h.01" fill="none" stroke="currentColor" stroke-width="1.6"/>')],
+  ['bring', glyph('<path d="M4 8h16v11H4zM8 8V6h8v2" fill="none" stroke="currentColor" stroke-width="1.6"/>')],
+  ['press', glyph('<path d="M12 4v10M8 10l4 4 4-4M6 20h12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>')],
+  ['do', glyph('<path d="M5 12h12M13 7l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>')],
+  ['meteor', glyph('<path d="M5 16l8-8M8 6l2 2M6 9l2 2M14 14l5 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>')],
+  ['star', glyph('<path d="M12 4l1.8 4.8L19 10l-4 3.2L16.2 19 12 16.2 7.8 19 9 13.2 5 10l5.2-1.2z" fill="none" stroke="currentColor" stroke-width="1.4"/>')],
+  ['bh', glyph('<circle cx="12" cy="12" r="3" fill="currentColor"/><path d="M4 12h4M16 12h4M12 4v4M12 16v4" fill="none" stroke="currentColor" stroke-width="1.6"/>')],
+];
 const MIC = `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4M8.5 21h7" fill="none"/><line class="slash" x1="4" y1="4" x2="20" y2="20"/></svg>`;
+const CALL = `<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 10a7 7 0 0 1 14 0" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 10a4 4 0 0 1 8 0" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="14" r="2" fill="currentColor"/></svg>`;
 
 const el = document.createElement('div'); el.className = 'radio hidden'; el.setAttribute('role', 'group');
 el.innerHTML = `<button class="r-mic">${MIC}</button>
   <div class="r-lab"><b></b><small></small></div>
   <span class="r-me" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
   <span class="r-peer" aria-hidden="true"><canvas width="56" height="56"></canvas><i class="ring"></i></span>
-  <button class="r-call" aria-haspopup="true">📣</button>`;
+  <button class="r-call" aria-haspopup="true" aria-label="callouts">${CALL}</button>`;
 const panel = document.createElement('div'); panel.className = 'r-panel hidden';
 const ptt = document.createElement('button'); ptt.className = 'r-ptt hidden';
 const bubble = document.createElement('div'); bubble.className = 'r-bubble';
@@ -87,7 +98,7 @@ ptt.addEventListener('pointerdown', (e) => { e.preventDefault(); ptt.setPointerC
 // llamadas rápidas
 let bubT = 0;
 function showBubble(who, text, mine) {
-  bubble.innerHTML = `<b>📻 ${who.replace(/</g, '')}</b><span>${text}</span>`; bubble.classList.toggle('mine', !!mine);
+  bubble.innerHTML = `<b>${who.replace(/</g, '')}</b><span>${text}</span>`; bubble.classList.toggle('mine', !!mine);
   bubble.classList.remove('show'); void bubble.offsetWidth; bubble.classList.add('show');
   clearTimeout(bubT); bubT = setTimeout(() => bubble.classList.remove('show'), 3600);
 }

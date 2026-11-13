@@ -5,6 +5,7 @@ import { $, h, clamp, damp, toast, achieve, fmt } from '../../core/util.js';
 import { sfx, music, voice, engine, stopEngine } from '../../core/audio.js';
 import { axis, down, pressed, bindBtn, bdown, bpressed, makeStick, makeThrottle, input } from '../../core/input.js';
 import { isTouch, DEBUG, shared, AUTO } from '../../core/store.js';
+import { objectiveCardHtml } from '../../ui/flight-hud.js';
 import { makeMoonSurface } from '../../scenes/moonsurface.js';
 import { create, step, guide, agl, judge, hoverThr, brakingMargin, vsCue, LM, PAD, BOULDERS, ground } from '../../sim/lander.js';
 import { attachLook } from '../../core/look.js';
@@ -24,27 +25,25 @@ extend({
   'd.norecover': ['Con el combustible que queda no puedes frenar esta caída. Reintenta desde los 300 m.', 'The fuel left cannot stop this fall. Retry from 300 m.'],
   'd.retry300': ['Reintentar desde 300 m', 'Retry from 300 m'],
   'd.abortNo': ['Era GO: la alarma no era grave.', 'It was GO: the alarm was harmless.'],
-  'd.ffw': ['⏩ Acelerar', '⏩ Speed up'],
+  'd.ffw': ['Acelerar', 'Speed up'],
 });
 const fill = (s, o) => s.replace(/\{(\w+)\}/g, (_, k) => o[k]);
 
 export default async function descent(ctx) {
   const D = ctx.diff, coop = ctx.cc.coop; const W = makeMoonSurface({ seed: ctx.seed }); ctx.world(W); const cam = W.camera;
   music('tension', { vol: 0.35 });
-  const el = ctx.hud(`<div class="tl"><span class="phase-tag">${t('ph.n')} 4 · ${t('ph.descent').toUpperCase()}</span><span class="phase-title prog">${t('d.p63')}</span></div>
-    <div class="tc" style="top:calc(70px + var(--safe-t));max-width:min(560px,90vw)"><div class="phase-tag hint" style="font-size:.75rem;letter-spacing:.12em;color:var(--ink)">${t('d.watch')}</div></div>
-    <div class="tr" style="top:calc(66px + var(--safe-t))"><div class="tele dtele"><div class="tele-grid">
+  const el = ctx.hud(`${objectiveCardHtml({ kicker: `${t('ph.n')} 04 · ${t('ph.descent')}`, titleHtml: `<div class="phase-title prog">${t('d.p63')}</div>`, bodyHtml: `<p class="mhud-note hint">${t('d.watch')}</p>` })}
+    <aside class="mhud-rail"><div class="tele dtele"><div class="tele-grid">
       <div><div class="k">${t('d.alt')}</div><div class="v alt">—</div></div><div><div class="k">${t('d.vs')}</div><div class="v vs">—</div></div>
       <div><div class="k">${t('d.hs')}</div><div class="v hs">—</div></div><div><div class="k">${t('d.tilt')}</div><div class="v tlt">—</div></div>
       <div><div class="k">${t('d.thr')}</div><div class="v th">—</div></div><div><div class="k">${t('d.fuel')}</div><div class="v fu">—</div></div></div>
       <div class="vscue"> </div>
-      <div class="fuelbar" style="height:5px;border-radius:3px;background:#ffffff18;margin-top:6px;overflow:hidden"><i style="display:block;height:100%;width:100%;background:var(--go)"></i></div>
-      <div class="lamps" style="display:flex;gap:6px;margin-top:6px"><span class="lampx l-prog">PROG</span><span class="lampx l-cont">CONTACT</span><span class="lampx l-rod">ROD</span></div></div>
-      <button class="btn ffw" style="margin-top:8px;padding:.35em .8em;align-self:flex-end">${t('d.ffw')}</button></div>
-    <div class="bc lpd" style="display:none;width:min(560px,${isTouch ? 86 : 70}vw);${isTouch ? 'top:calc(236px + var(--safe-t));bottom:auto' : 'bottom:calc(18px + var(--safe-b))'}"><div class="strip" style="position:relative;height:26px;width:100%;border-radius:13px;background:#0a0f1acc;border:1px solid var(--line);overflow:hidden">
-      <i class="rk" style="position:absolute;top:0;bottom:0;background:repeating-linear-gradient(45deg,#fc3d2155 0 6px,#0000 6px 12px)"></i><i class="pd" style="position:absolute;top:0;bottom:0;background:#3ddc8466;border-left:2px solid var(--go);border-right:2px solid var(--go)"></i>
-      <i class="me" style="position:absolute;top:3px;width:18px;height:18px;margin-left:-9px;border-radius:50%;background:#fff;box-shadow:0 0 10px #9cf"></i></div><div class="phase-tag topad" style="margin-top:4px"></div>
-      <div class="phase-tag keyshelp" style="${isTouch ? 'display:none' : ''}">${t('d.keysF')}</div></div>
+      <div class="fuelbar" style="height:4px;background:rgba(186,206,212,.18);margin-top:6px;overflow:hidden"><i style="display:block;height:100%;width:100%;background:var(--mhud-go,#8fbf9b)"></i></div>
+      <div class="lamps"><span class="lampx l-prog">PROG</span><span class="lampx l-cont">CONTACT</span><span class="lampx l-rod">ROD</span></div></div>
+      <button class="btn ffw">${t('d.ffw')}</button></aside>
+    <div class="bc lpd" style="display:none;width:min(420px,${isTouch ? 86 : 70}vw);${isTouch ? 'top:calc(168px + var(--safe-t));bottom:auto' : 'bottom:calc(18px + var(--safe-b))'}"><div class="strip" style="position:relative;height:8px;width:100%;background:rgba(7,12,16,.72);border:1px solid rgba(186,206,212,.32);overflow:hidden">
+      <i class="rk" style="position:absolute;top:0;bottom:0;background:repeating-linear-gradient(45deg,rgba(211,106,92,.45) 0 6px,#0000 6px 12px)"></i><i class="pd" style="position:absolute;top:0;bottom:0;background:rgba(143,191,155,.4)"></i>
+      <i class="me" style="position:absolute;top:0;width:8px;height:8px;margin-left:-4px;background:#e6eef1"></i></div><div class="phase-tag topad" style="margin-top:4px"></div></div>
     ${isTouch ? `<div class="tc-stick" style="display:none"><i></i></div><div class="tc-throttle" style="display:none"><div class="fill"></div><div class="lab">${t('d.thr')}</div></div>
       <button class="tc-btn mid rodbtn" style="display:none;right:calc(110px + env(safe-area-inset-right,0px));bottom:calc(150px + var(--safe-b))">${t('d.rod')}</button>` : ''}
     <button class="tc-btn mid viewbtn" style="display:none;right:calc(${isTouch ? 110 : 24}px + env(safe-area-inset-right,0px));bottom:calc(${isTouch ? 60 : 24}px + var(--safe-b))">${t('d.view')}</button>

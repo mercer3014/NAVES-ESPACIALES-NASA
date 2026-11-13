@@ -5,6 +5,8 @@ import { $, $$, h, toast, achieve, clamp, damp, lerp, fmt } from '../../core/uti
 import { sfx, music, engine, stopEngine, voice } from '../../core/audio.js';
 import { down, pressed, bindBtn, bdown } from '../../core/input.js';
 import { isTouch, shared, dbg, AUTO, AUTO1 } from '../../core/store.js';
+import { burnPrompt, objectiveCardHtml } from '../../ui/flight-hud.js';
+import { paintPrompt } from '../../ui/flight-hud-mount.js';
 import { makeCruise } from '../../scenes/ship.js';
 extend({
   'c.dv': ['Δv', 'Δv'], 'c.ok': ['¡Quemado perfecto!', 'Perfect burn!'], 'c.short': ['Un poco corto — corrección de curso', 'A bit short — course correction'], 'c.long': ['Te pasaste — corrección de curso', 'Overburn — course correction'],
@@ -21,20 +23,19 @@ const NAMES = ['Sirius', 'Vega', 'Rigel', 'Canopus', 'Antares', 'Altair'];
 export default async function cruise(ctx) {
   const W = makeCruise(); ctx.world(W); const { camera: cam, ship, E, M } = W; const coop = ctx.cc.coop, D = ctx.diff;
   music('cruise', { vol: 0.45 });
-  const el = ctx.hud(`<div class="tl"><span class="phase-tag">${t('ph.n')} 3 · ${t('ph.cruise').toUpperCase()}</span><span class="phase-title st-title">${t('c.tli')}</span><button class="btn viewbtn" style="display:none;width:max-content;margin-top:6px;padding:.35em .8em;font-size:.8rem;pointer-events:auto"></button></div>
-    <div class="tc stage-hint" style="top:calc(70px + var(--safe-t));max-width:min(560px,90vw)"><div class="phase-tag hint" style="font-size:.75rem;letter-spacing:.12em;color:var(--ink)"></div></div>
-    <div class="bc burnbox" style="display:none;width:min(520px,92vw)"><div class="burnmeter" style="position:relative;width:100%;height:22px;border-radius:11px;background:#0a0f1acc;border:1px solid var(--line);overflow:hidden">
-      <i class="zone" style="position:absolute;top:0;bottom:0;background:#3ddc8455;border-left:2px solid var(--go);border-right:2px solid var(--go)"></i><i class="fillb" style="position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,#2a5bff,#9fc6ff)"></i></div>
+  const el = ctx.hud(`${objectiveCardHtml({ kicker: `${t('ph.n')} 03 · ${t('ph.cruise')}`, titleHtml: `<div class="phase-title st-title">${t('c.tli')}</div><button class="btn viewbtn" style="display:none;width:max-content;margin-top:8px;padding:.35em .7em;font-size:.75rem;pointer-events:auto"></button>`, bodyHtml: '<p class="mhud-note hint"></p>' })}
+    <div class="bc burnbox" style="display:none;width:min(420px,88vw)"><div class="burnmeter" style="position:relative;width:100%;height:10px;background:rgba(7,12,16,.72);border:1px solid rgba(186,206,212,.32);overflow:hidden">
+      <i class="zone" style="position:absolute;top:0;bottom:0;background:rgba(143,191,155,.35)"></i><i class="fillb" style="position:absolute;left:0;top:0;bottom:0;width:0;background:#c6a36a"></i></div>
       <div class="phase-tag dvlab" style="margin-top:4px">Δv 0 m/s</div>
-      <button class="tc-btn big go burnbtn" style="position:relative;margin-top:8px">${t('c.burn')}</button></div>
-    <div class="days" style="position:absolute;right:16px;top:calc(70px + var(--safe-t));font-family:Mono;text-align:right;display:none"><div class="phase-tag">${t('c.days')}</div><div class="d" style="font-size:1.6rem">1</div><button class="btn ffw" style="margin-top:6px;padding:.4em .8em">⏩ ${t('c.skip')}</button></div>
+      <button class="tc-btn big go burnbtn">${t('c.burn')}</button></div>
+    <div class="days" style="display:none"><div class="phase-tag">${t('c.days')}</div><div class="d">1</div><button class="btn ffw" style="margin-top:6px">${t('c.skip')}</button></div>
     <div class="starlayer" style="position:absolute;inset:0;pointer-events:none"></div>
     <div class="photoframe" style="display:none;position:absolute;inset:12% 18%;border:2px solid #fff8;border-radius:6px;pointer-events:none"><span style="position:absolute;left:50%;top:50%;width:26px;height:26px;margin:-13px;border:2px solid #fff8;border-radius:50%"></span></div>
-    <button class="tc-btn big amber photobtn" style="display:none;position:absolute;right:24px;bottom:calc(24px + var(--safe-b))">📷 ${t('c.snap')}</button>
+    <button class="btn photobtn" style="display:none;position:absolute;right:16px;bottom:calc(18px + var(--safe-b))">${t('c.snap')}</button>
     <div class="los" style="display:none;position:absolute;inset:0;pointer-events:none"></div>`);
   const hint = (k) => { $('.hint', el).textContent = k ? t(k) : ''; };
   const title = (k) => { dbg('cr', k); $('.st-title', el).textContent = t(k); };
-  bindBtn($('.burnbtn', el), 'burn'); if (!isTouch) $('.burnbtn', el).insertAdjacentHTML('afterend', `<div class="phase-tag" style="margin-top:6px">${t('c.space')}</div>`);
+  bindBtn($('.burnbtn', el), 'burn');
   ship.rotation.set(0, 0, -Math.PI / 2); // nariz (+y) hacia +x
   const st = { tli: null, align: null, loi: null, photo: null, sock: false, wrong: 0 };
   let camOff = new THREE.Vector3(-22, 7, 18), camLook = new THREE.Vector3(2, 0, 0), shake = 0;
@@ -42,7 +43,7 @@ export default async function cruise(ctx) {
   // ---------- vista interior (cm-interior.glb): ojo del CDR o detrás de una ventana; las ventanas muestran la escena real ----------
   const VIEWS = { cdr: { n: 'eye-CDR', back: 0.06, fov: 74 }, win: { n: 'win-rdz-left', back: 0.2, fov: 62 }, photo: { n: 'win-side-left', back: 0.24, fov: 56, free: true } };
   let view = null, inView = 'cdr', viewLock = false, baseFov = cam.fov; const vbtn = $('.viewbtn', el);
-  const paintV = () => { const I = ship.userData.interior; vbtn.style.display = I && !viewLock ? '' : 'none'; vbtn.textContent = '🎥 ' + t(view ? 'c.vout' : 'c.vin') + (isTouch ? '' : ' (C)'); };
+  const paintV = () => { const I = ship.userData.interior; vbtn.style.display = I && !viewLock ? '' : 'none'; vbtn.textContent = t(view ? 'c.vout' : 'c.vin') + (isTouch ? '' : ' · C'); };
   const setView = (v) => { const I = ship.userData.interior; if (v && !I) v = null; if (!view && v) baseFov = cam.fov; view = v ? VIEWS[v] : null; if (v) inView = v; I?.set(!!view);
     cam.near = view ? 0.006 : 0.1; cam.fov = view ? (cam.aspect < 1 ? view.fov + 14 : view.fov) : baseFov; cam.updateProjectionMatrix(); if (photoMode) ship.visible = !!view; paintV(); };
   const lockView = (v, lock = true) => { viewLock = lock; setView(v); };
@@ -59,7 +60,7 @@ export default async function cruise(ctx) {
 
   // ---------- quemado (TLI / LOI) ----------
   async function burn(kind, showZone) {
-    const box = $('.burnbox', el); box.style.display = ''; const w = 0.055 * D.tol; const z0 = 0.74 + (ctx.rand() - 0.5) * 0.1, z1 = z0 + w;
+    const box = $('.burnbox', el); box.style.display = ''; if (!isTouch) { const pr = burnPrompt(true); paintPrompt(el, pr, t(pr.labelKey)); } const w = 0.055 * D.tol; const z0 = 0.74 + (ctx.rand() - 0.5) * 0.1, z1 = z0 + w;
     const zone = $('.zone', el); zone.style.left = z0 * 100 + '%'; zone.style.width = w * 100 + '%'; zone.style.opacity = showZone ? 1 : 0;
     let v = 0, burning = false, started = false, relT = 0; const rate = 0.16 / D.time;
     await new Promise((res) => { const off = ctx.loop((dt) => {
@@ -71,7 +72,7 @@ export default async function cruise(ctx) {
       if (started && !burning) { relT += dt; if (relT > 0.35) { off(); res(); } } else relT = 0;
       if (v >= 1.08) { off(); res(); }
     }); });
-    ship.userData.burn(0); stopEngine(); shake = 0; box.style.display = 'none';
+    ship.userData.burn(0); stopEngine(); shake = 0; box.style.display = 'none'; paintPrompt(el, null, '');
     const mid = (z0 + z1) / 2; const err = Math.abs(v - mid) / (w / 2); const score = clamp(1 - Math.max(0, err - 1) * 0.35, 0, 1);
     if (err <= 1) { sfx('ok'); ctx.banner(t('c.ok'), '', 1600); ctx.cc.log('c.ok', null, 'ok'); } else { sfx('error'); ctx.banner(t(v < mid ? 'c.short' : 'c.long'), '', 1800, 'warn'); ctx.cc.log(v < mid ? 'c.short' : 'c.long', null, 'warn'); }
     return { v, score, err };
