@@ -1,4 +1,47 @@
-.ho-fiction{display:block;font-size:10px;letter-spacing:.15em;color:#efc78a}.ho-radio{margin:12px 0;border-left:2px solid #6eacbe;padding:8px 10px;background:#0b151c}.ho-radio small{font-size:10px;letter-spacing:.08em;color:#92c1ca}.ho-radio p{font-family:monospace;font-size:12px;line-height:1.4;margin:6px 0;min-height:2.8em}.ho-go-buttons{display:flex;gap:10px;flex-wrap:wrap}.ho-go-buttons button{min-height:48px;flex:1}.ho-result-flag{width:120px;height:80px;float:right;margin:0 0 12px 14px;border:1px solid #f5d18a55;border-radius:4px}.horizon .ex-panel{max-height:calc(100% - 235px)}.horizon .ex-panel.cc{max-height:calc(100% - 104px)}.horizon .ex-fineprint{line-height:1.45}
-@media(max-width:600px){.horizon .ex-panel{max-height:38vh}.horizon .ex-panel.cc{max-height:calc(100% - 88px)}.horizon .ex-actions{max-width:220px}.horizon .ex-actions button{min-width:90px;max-width:124px}.horizon .ex-keys{max-width:210px}.horizon .ex-mapbox p{display:none}body.has-radio[data-screen="expedition"] .horizon .ex-panel.cc{max-height:calc(100% - 150px)}}
-/* The orbital view is already a radar. Avoid a redundant inset covering the actual craft. */
+.ho-fiction{display:block;font-size:10px;letter-spacing:.16em;color:#efc78a}
+.horizon .ex-head h2{display:flex;flex-direction:column;align-items:flex-start;gap:2px;line-height:1.05;max-width:none}
+.horizon .ex-panel{top:62px;left:14px;width:min(232px,calc(100% - 28px));max-height:none;overflow:visible;padding:10px 12px 8px;background:linear-gradient(180deg,#0c1418d0,#0c141890);border-color:#ffffff22}
+.horizon .ex-panel.cc{width:min(260px,calc(100% - 28px));max-height:none}
+.horizon .ex-stage{font-size:15px;margin:0}
+.horizon .ex-status{margin:3px 0 0;font-size:11px}
+.horizon .ex-event{margin:6px 0 8px;font-size:12px}
+.horizon .ho-key{grid-template-columns:1fr 1fr;gap:2px 12px;margin:8px 0 4px}
+.horizon .ho-key .ex-cell{padding:3px 0}
+.horizon .ho-key b{font-size:16px}
+.horizon .ho-more{width:100%;min-height:44px}
+.horizon .ex-panel .ho-details,.horizon .ex-panel .ex-hint,.horizon .ex-panel .ho-radio,.horizon .ex-panel .ex-fineprint,.horizon .ex-panel .ho-extra,.horizon .ex-panel .ho-cc{display:none}
+.horizon .ex-panel.open{max-height:min(68vh,540px);overflow:auto}
+.horizon .ex-panel.open .ho-details{display:block}
+.horizon .ex-panel.open .ex-hint,.horizon .ex-panel.open .ho-radio,.horizon .ex-panel.open .ex-fineprint,.horizon .ex-panel.open .ho-extra,.horizon .ex-panel.open .ho-cc{display:block}
+.horizon .ho-radio{margin:10px 0;border-left:2px solid #6eacbe;padding:8px 10px;background:#0b151c}
+.horizon .ho-radio small{font-size:10px;letter-spacing:.08em;color:#92c1ca}
+.horizon .ho-radio p{font-family:monospace;font-size:12px;line-height:1.4;margin:6px 0;min-height:2.8em}
+.horizon .ho-go-buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.horizon .ho-go-buttons button{min-height:44px;flex:1}
+.horizon .ex-fineprint{line-height:1.45}
+.horizon .ho-dock{position:absolute;left:62%;top:46%;transform:translate(-50%,-50%);width:min(280px,70vw);text-align:center;pointer-events:none;background:transparent;border:0;padding:0}
+.horizon .ho-cross{position:relative;height:78px;margin:0 auto;width:78px}
+.horizon .ho-cross i,.horizon .ho-cross b{position:absolute;background:#b7ecffcc;box-shadow:0 0 8px #7fdfff}
+.horizon .ho-cross i{left:50%;top:6px;width:1px;height:66px}
+.horizon .ho-cross b{top:50%;left:6px;height:1px;width:66px}
+.horizon .ho-dock.ok .ho-cross i,.horizon .ho-dock.ok .ho-cross b{background:#3dff9a;box-shadow:0 0 10px #3dff9a}
+.horizon .ho-dock.near:not(.ok) .ho-cross i,.horizon .ho-dock.near:not(.ok) .ho-cross b{background:#ffc14a}
+.horizon .ho-dock-read{margin:2px 0 0;font-size:12px;letter-spacing:.03em;color:#f4fbff;text-shadow:0 1px 6px #000}
+.horizon .ex-controls{justify-content:flex-end}
+.horizon .ex-stick,.horizon .ex-yaw-l,.horizon .ex-yaw-r{display:none}
+.horizon.ho-touch .ex-controls{justify-content:space-between}
+.horizon.ho-touch .ex-stick{display:block}
+.horizon.ho-touch .ex-yaw-l,.horizon.ho-touch .ex-yaw-r{display:inline-flex}
+.horizon .ex-actions{max-width:none}
+.horizon .ex-actions button{min-height:44px;min-width:72px;padding:8px 14px}
 .horizon .ex-mapbox{display:none}
+.ho-result-flag{width:120px;height:80px;float:right;margin:0 0 12px 14px;border:1px solid #f5d18a55;border-radius:4px}
+@media(max-width:700px){
+ .horizon .ex-head h2{max-width:52%;font-size:15px}
+ .horizon .ex-panel,.horizon .ex-panel.cc{left:10px;width:calc(100% - 20px);padding:8px 10px}
+ .horizon .ho-key,.horizon.cc .ho-key{grid-template-columns:1fr 1fr}
+ .horizon .ex-panel.open{max-height:58vh}
+ .horizon .ho-dock{left:50%;top:58%}
+ .horizon.ho-touch .ex-actions{max-width:210px}
+ .horizon.ho-touch .ex-actions button{min-width:84px;max-width:none}
+}
