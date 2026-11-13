@@ -1,7 +1,7 @@
 // Read-only contracts for artist exports copied verbatim into public/models.
 import fs from 'node:fs';
 import { createHash } from 'node:crypto';
-const exportHashes = {"public/models/astronaut-a7l.glb": "bcc0d73370dcfa3eb80befee4c46cabaec474b0ff1e08bf978c4411dda5e8e8d", "public/models/easep-props.glb": "6f2e942e164f73845411b84ffdaf3d451f689dbc56cf5c82aa637b16c47dfb11"};
+const exportHashes = {"public/models/astronaut-a7l.glb": "4b772a34061649b57d34495a300b43e2d58adeed80b0112a6f2d4fe732ebe3d2", "public/models/easep-props.glb": "6f2e942e164f73845411b84ffdaf3d451f689dbc56cf5c82aa637b16c47dfb11"};
 import assert from 'node:assert/strict';
 const read = name => {
   const assetPath = `public/models/${name}.glb`, a = fs.readFileSync(assetPath);

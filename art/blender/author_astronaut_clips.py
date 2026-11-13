@@ -1,6 +1,8 @@
 """Author in-place A7L clips on the imported rig. Pose rotations are degrees, XYZ euler, relative to rest.
 
 Build-machine only (Blender). Do not install Blender in the production Docker image.
+The lunar overshoe mesh and the final ground contact are applied afterwards by
+art/blender/author_lunar_overshoe.py.
 """
 import bpy, math, os
 from mathutils import Euler
