@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const re = /\p{Extended_Pictographic}/gu;
-// Legal attribution marks, not emoji.
+// Legal attribution marks in the credits, not interface emoji.
 const allow = new Set(['\u00A9', '\u00AE']);
 
 function walk(dir, out = []) {

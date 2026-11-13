@@ -55,6 +55,12 @@ const T = {
   'ph.prep': ['Preparación', 'Prep'], 'ph.launch': ['Lanzamiento', 'Launch'], 'ph.cruise': ['Viaje', 'Transit'], 'ph.descent': ['Alunizaje', 'Landing'], 'ph.eva': ['Caminata', 'Moonwalk'], 'ph.debrief': ['Informe', 'Debrief'],
   'ph.done': ['Logro conseguido', 'Objective complete'],
   'ph.n': ['FASE', 'PHASE'],
+  'hud.chute': ['Soltar paracaídas', 'Release parachute'], 'hud.crane': ['Iniciar grúa', 'Start the crane'],
+  'hud.ice': ['Recoger hielo', 'Collect ice'], 'hud.soil': ['Recoger regolito', 'Collect regolith'],
+  'hud.build': ['Construir', 'Build'], 'hud.repair': ['Reparar', 'Repair'],
+  'hud.dock': ['Acoplar', 'Dock'], 'hud.depart': ['Salir', 'Depart'],
+  'hud.stage': ['Separar etapa', 'Stage'], 'hud.les': ['Soltar torre', 'Jettison tower'],
+  'hud.burn': ['Mantener encendido', 'Hold to burn'],
   // prep
   'prep.title': ['Cabina del Módulo de Mando', 'Command Module cockpit'], 'prep.power': ['Energía', 'Power'], 'prep.fuel': ['Celdas de combustible', 'Fuel cells'],
   'prep.env': ['Ambiente', 'Environment'], 'prep.gnc': ['Guiado', 'Guidance'], 'prep.comm': ['Comunicaciones', 'Comms'], 'prep.cl': ['Lista de verificación', 'Checklist'],
@@ -78,7 +84,7 @@ const T = {
   'c.loi': ['Inserción en órbita lunar', 'Lunar orbit insertion'], 'c.los': ['Pérdida de señal detrás de la Luna', 'Loss of signal behind the Moon'], 'c.aos': ['Señal recuperada', 'Signal acquired'],
   'c.days': ['Día', 'Day'], 'c.skip': ['Acelerar', 'Fast forward'],
   // descent
-  'd.alt': ['ALT', 'ALT'], 'd.vs': ['V/S', 'V/S'], 'd.hs': ['H/S', 'H/S'], 'd.fuel': ['COMB.', 'FUEL'], 'd.thr': ['EMPUJE', 'THROTTLE'], 'd.tilt': ['INCL.', 'TILT'],
+  'd.alt': ['ALT', 'ALT'], 'd.vs': ['V/S', 'V/S'], 'd.hs': ['H/S', 'H/S'], 'd.fuel': ['Combustible', 'Propellant'], 'd.thr': ['EMPUJE', 'THROTTLE'], 'd.tilt': ['INCL.', 'TILT'],
   'd.auto': ['Piloto automático', 'Autopilot'], 'd.1202': ['ALARMA 1202', '1202 ALARM'], 'd.1202d': ['Sobrecarga de la computadora. ¿Continuamos?', 'Computer overload. Do we continue?'],
   'd.go': ['GO', 'GO'], 'd.abort': ['ABORTAR', 'ABORT'], 'd.waitCapcom': ['Esperando decisión de Control…', 'Waiting for Mission Control…'],
   'd.control': ['¡Tienes el control! El piloto automático va hacia rocas.', 'You have control! Autopilot is heading for boulders.'],
@@ -97,7 +103,7 @@ const T = {
   // capcom
   'cc.title': ['CONTROL DE MISIÓN', 'MISSION CONTROL'], 'cc.tele': ['Telemetría', 'Telemetry'], 'cc.events': ['Eventos', 'Events'], 'cc.ping': ['Enviar aviso', 'Send ping'],
   'p.cut': ['Corta motor', 'Cut engine'],
-  'p.good': ['Bien', 'Good'], 'p.slow': ['Más lento', 'Slower'], 'p.left': ['Izquierda', 'Left'], 'p.right': ['Derecha', 'Right'], 'p.fuel': ['Combustible', 'Fuel'], 'p.go': ['GO', 'GO'],
+  'p.good': ['Bien', 'Good'], 'p.slow': ['Más lento', 'Slower'], 'p.left': ['Izquierda', 'Left'], 'p.right': ['Derecha', 'Right'], 'p.fuel': ['Combustible', 'Propellant'], 'p.go': ['GO', 'GO'],
   'cc.stage': ['SEPARAR ETAPA', 'STAGE'], 'cc.go': ['DAR GO', 'GIVE GO'], 'cc.idle': ['Monitoreando…', 'Monitoring…'], 'cc.photo': ['FOTO', 'PHOTO'],
   'cc.los': ['SIN SEÑAL', 'NO SIGNAL'], 'cc.ack': ['RECONOCER 1202', 'ACK 1202'], 'cc.waitPilot': ['Esperando al piloto…', 'Waiting for pilot…'],
   // debrief

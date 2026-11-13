@@ -35,6 +35,8 @@
 .horizon .ex-actions{max-width:none}
 .horizon .ex-actions button{min-height:44px;min-width:72px;padding:8px 14px}
 .horizon .ex-mapbox{display:none}
+.horizon.mhud .ex-panel{top:calc(10px + var(--safe-t));left:12px;width:min(280px,calc(100vw - 176px));max-height:none;padding:0;overflow:visible;background:var(--mhud-bg,rgba(7,12,16,.58));border:1px solid var(--mhud-line,rgba(186,206,212,.32))}
+.horizon.mhud .ex-panel .ho-details,.horizon.mhud .ex-panel .ex-hint,.horizon.mhud .ex-panel .ho-radio,.horizon.mhud .ex-panel .ex-fineprint,.horizon.mhud .ex-panel .ho-extra,.horizon.mhud .ex-panel .ho-cc{display:block}
 .ho-result-flag{width:120px;height:80px;float:right;margin:0 0 12px 14px;border:1px solid #f5d18a55;border-radius:4px}
 @media(max-width:700px){
  .horizon .ex-head h2{max-width:52%;font-size:15px}

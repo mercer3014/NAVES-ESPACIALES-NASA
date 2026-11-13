@@ -8,6 +8,7 @@ import { makePad, H, BASE_Y } from '../../scenes/pad.js';
 import { makeCabin, SW_MAP } from '../../scenes/cabin.js';
 import { renderer } from '../../core/engine.js';
 import { DEBUG } from '../../core/store.js';
+import { objectiveCardHtml } from '../../ui/flight-hud.js';
 extend({
   'prep.alarm': ['ALARMA MAESTRA', 'MASTER ALARM'], 'prep.askcc': ['¡Pregunta a Control de Misión qué hacer!', 'Ask Mission Control what to do!'],
   'prep.fixed': ['Falla resuelta', 'Fault cleared'], 'prep.wrong': ['Fuera de orden — sigue la lista', 'Out of order — follow the checklist'],
@@ -31,7 +32,7 @@ export default async function prep(ctx) {
   if (DEBUG) window.__prepDbg = { cab };
   music('ambient', { vol: 0.45 });
   const coop = ctx.cc.coop, hints = ctx.diffName !== 'veteran';
-  const el = ctx.hud(`<div class="tl"><span class="phase-tag">${t('ph.n')} 1 · ${t('ph.prep').toUpperCase()}</span><span class="phase-title">${t('prep.title')}</span></div>
+  const el = ctx.hud(`${objectiveCardHtml({ kicker: `${t('ph.n')} 01 · ${t('ph.prep')}`, titleHtml: `<div class="phase-title">${t('prep.title')}</div>` })}
     <div class="cockpit"><div class="cpanel">
       <div class="cgroup checklist panel"><h3>${t('prep.cl')}</h3><ol>${STEPS.map((s, i) => `<li data-step="${i}">${t(s.k)}</li>`).join('')}</ol></div>
       <div class="cgroup"><h4>${t('prep.power')}</h4><div class="sw-row">${SW('batA', 'BAT A')}${SW('batB', 'BAT B')}${SW('batC', 'BAT C')}</div><div class="sw-row" style="margin-top:8px">${GAUGE(t('prep.bus') + ' A')}${GAUGE(t('prep.bus') + ' B')}</div></div>

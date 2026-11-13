@@ -5,6 +5,8 @@ import { $, $$, h, toast, achieve, clamp, damp, fmt } from '../../core/util.js';
 import { sfx, music, voice, engine, stopEngine, rumble, stopRumble } from '../../core/audio.js';
 import { axis, down, pressed, bindBtn, bdown, bpressed, makeStick, makeThrottle, input } from '../../core/input.js';
 import { isTouch, DEBUG, dbg, AUTO } from '../../core/store.js';
+import { launchPrompt, objectiveCardHtml } from '../../ui/flight-hud.js';
+import { paintPrompt } from '../../ui/flight-hud-mount.js';
 import { makePad, H, BASE_Y } from '../../scenes/pad.js';
 import { trackFov, sideAxis, chaseStand, trackStand } from '../launch-camera.js';
 extend({
@@ -23,21 +25,20 @@ export default async function launch(ctx) {
   const W = makePad(); ctx.world(W); ctx.onCleanup(() => { W.dispose(); stopRumble(); }); const cam = W.camera; cam.far = 60000; cam.near = 1; cam.updateProjectionMatrix();
   const coop = ctx.cc.coop, D = ctx.diff, tol = 7 * D.tol;
   music('tension', { vol: 0.4 });
-  const el = ctx.hud(`<div class="tl"><span class="phase-tag">${t('ph.n')} 2 · ${t('ph.launch').toUpperCase()}</span><span class="phase-title">Saturn V</span></div>
-    <div class="tr" style="top:calc(66px + var(--safe-t))"><div class="tele"><div class="tele-grid">
+  const el = ctx.hud(`${objectiveCardHtml({ kicker: `${t('ph.n')} 02 · ${t('ph.launch')}`, titleHtml: '<div class="phase-title">Saturn V</div>', bodyHtml: `<p class="mhud-note">${t('l.hint')}</p>` })}
+    <aside class="mhud-rail"><div class="tele"><div class="tele-grid">
       <div><div class="k">${t('l.alt')}</div><div class="v v-alt">0 km</div></div><div><div class="k">${t('l.vel')}</div><div class="v v-vel">0 m/s</div></div>
       <div><div class="k">${t('l.pitch')}</div><div class="v v-pitch">90°</div></div><div><div class="k">${t('l.stage')}</div><div class="v v-stage">S-IC</div></div>
-      <div><div class="k">${t('l.thr')}</div><div class="meter"><i class="m-thr" style="width:0;background:var(--amber)"></i></div></div>
-      <div><div class="k">${t('l.stress')}</div><div class="meter"><i class="m-str" style="width:0;background:var(--red)"></i></div></div></div></div></div>
-    <div class="${isTouch ? 'tc' : 'bl'} adibox" style="opacity:0;transition:opacity .6s;${isTouch ? 'top:calc(64px + var(--safe-t))' : ''}"><svg class="adi" viewBox="-110 -110 130 130" width="${isTouch ? 110 : 170}">
-      <path d="M-110 0 L-110 -110 L0 -110" fill="none"/><path d="M-100 0 A100 100 0 0 1 0 -100 L0 0Z" fill="#05080fbb"/><path d="M-100 0 A100 100 0 0 1 0 -100" fill="none" stroke="#ffffff33" stroke-width="16"/>
-      <path class="corr" fill="none" stroke="#3ddc84aa" stroke-width="16"/>
-      <line class="ndl" x1="0" y1="0" x2="0" y2="-104" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
-      <line class="tgt" x1="0" y1="-84" x2="0" y2="-116" stroke="#ffb000" stroke-width="3"/>
-      <circle r="6" fill="#ddd"/><text x="-50" y="18" fill="#9aa" font-size="11" font-family="Mono" text-anchor="middle">${t('l.corr')}</text></svg>
-      <div class="phase-tag keyshelp" style="${isTouch ? 'display:none' : ''}">${t('l.keys')}</div></div>
-    <div class="cdown" style="position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);text-align:center;pointer-events:none"><div class="phase-tag">${t('l.ign')}</div><div class="big" style="font-family:Orbitron;font-weight:900;font-size:clamp(48px,12vw,120px)">T-10</div></div>
-    <button class="btn skipcd" style="position:absolute;right:16px;bottom:calc(16px + var(--safe-b))">${t('l.skip')}</button>
+      <div><div class="k">${t('l.thr')}</div><div class="meter"><i class="m-thr" style="width:0;background:var(--mhud-warn,#d4a24c)"></i></div></div>
+      <div><div class="k">${t('l.stress')}</div><div class="meter"><i class="m-str" style="width:0;background:var(--mhud-bad,#d36a5c)"></i></div></div></div></div></aside>
+    <div class="${isTouch ? 'tc' : 'bl'} adibox" style="opacity:0;transition:opacity .35s;${isTouch ? 'top:calc(64px + var(--safe-t))' : ''}"><svg class="adi" viewBox="-110 -110 130 130" width="${isTouch ? 96 : 132}">
+      <path d="M-110 0 L-110 -110 L0 -110" fill="none"/><path d="M-100 0 A100 100 0 0 1 0 -100 L0 0Z" fill="#070c10bb"/><path d="M-100 0 A100 100 0 0 1 0 -100" fill="none" stroke="#ffffff22" stroke-width="10"/>
+      <path class="corr" fill="none" stroke="#8fbf9baa" stroke-width="10"/>
+      <line class="ndl" x1="0" y1="0" x2="0" y2="-104" stroke="#e6eef1" stroke-width="2" stroke-linecap="round"/>
+      <line class="tgt" x1="0" y1="-84" x2="0" y2="-116" stroke="#c6a36a" stroke-width="2"/>
+      <circle r="4" fill="#e6eef1"/><text x="-50" y="16" fill="#93a4ab" font-size="10" font-family="Chakra,sans-serif" text-anchor="middle">${t('l.corr')}</text></svg></div>
+    <div class="cdown" style="position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);text-align:center;pointer-events:none"><div class="phase-tag">${t('l.ign')}</div><div class="big" style="font-family:Chakra,sans-serif;font-weight:700;font-size:clamp(48px,12vw,96px)">T-10</div></div>
+    <button class="btn skipcd" style="position:absolute;left:50%;bottom:calc(16px + var(--safe-b));transform:translateX(-50%)">${t('l.skip')}</button>
     ${isTouch ? `<div class="tc-stick"><i></i></div><div class="tc-throttle"><div class="fill"></div><div class="lab">${t('l.thr')}</div></div><div class="tc-btn big amber stagebtn" style="right:calc(110px + env(safe-area-inset-right,0px));bottom:calc(30px + var(--safe-b));display:none">${t('l.stage')}</div>` : ''}
     <div class="alarmbox"></div>`);
   let thrTouch = null; let thrUI = null;
@@ -192,11 +193,14 @@ export default async function launch(ctx) {
     W.update(dt, ctx.time);
     // HUD
     $('.v-alt', el).textContent = fmt(S.alt / 1000, 1) + ' km'; $('.v-vel', el).textContent = fmt(S.vel * 1.3) + ' m/s'; const vp = $('.v-pitch', el); vp.textContent = fmt(S.pitch) + '°'; vp.className = 'v v-pitch ' + (inC ? 'good' : Math.abs(err) < tol * 2 ? 'warn' : 'bad');
+    const cue = launchPrompt({ waiting: waitingStage !== null, les: waitingStage === null && !lesDone && S.stage === 1 && S.s > STG[0].end + 3 && S.s < STG[0].end + 9, blocked: !!(coop && ctx.cc.remote() && waitingStage !== null) });
+    paintPrompt(el, cue, cue ? t(cue.labelKey) : '');
     $('.v-stage', el).textContent = STG[S.stage]?.name || '—'; $('.m-thr', el).style.width = thrust * 100 + '%'; $('.m-str', el).style.width = S.stress * 100 + '%'; thrUI?.show((S.thr - 0.4) / 0.6);
     adiN.setAttribute('transform', `rotate(${S.pitch - 90})`); adiT.setAttribute('transform', `rotate(${tg - 90})`); corr.setAttribute('d', arcPath(tg - tol, tg + tol));
     ctx.cc.snap({ s: S.s, alt: S.alt, vel: S.vel, pitch: S.pitch, tg, tol, q, stress: S.stress, thr: thrust, stage: S.stage, wait: waitingStage });
     if (S.s >= DUR) { S.phase = 'orbit'; res(); }
   }));
+  paintPrompt(el, null, '');
   W.setThrust(0); stopEngine(); stopRumble(); sfx('powerup'); music('cruise', { vol: 0.4 });
   ctx.banner(t('l.orbit'), `${fmt(S.alt / 1000)} km · ${fmt(S.vel * 1.3)} m/s`, 2600); ctx.cc.log('l.orbit', null, 'ok');
   let tt = 0; ctx.loop((dt) => { tt += dt; W.update(dt, ctx.time); });

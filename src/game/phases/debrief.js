@@ -72,7 +72,7 @@ export default async function debrief(p, { retry, menu } = {}) {
 function download(url) { const a = document.createElement('a'); a.href = url; a.download = 'planta-la-bandera.jpg'; document.body.append(a); a.click(); a.remove(); toast(t('d.copied'), 'info'); }
 const esc = (s) => String(s || '').replace(/[<>&"]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' })[c]);
 function countUp(el, to, ms) { const s = performance.now(); const f = (n) => { const k = Math.min(1, (n - s) / ms); el.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(f); }; requestAnimationFrame(f); }
-function drawPancho(c) { const x = c.getContext('2d'), s = c.width; x.fillStyle = '#1a2234'; x.beginPath(); x.arc(s / 2, s / 2, s / 2, 0, 7); x.fill(); x.fillStyle = '#d7dde8'; x.beginPath(); x.arc(s / 2, s * 0.42, s * 0.18, 0, 7); x.fill(); x.fillStyle = '#8fd0ff'; x.beginPath(); x.arc(s / 2, s * 0.4, s * 0.1, 0, 7); x.fill(); x.fillStyle = '#3a455c'; x.fillRect(s * 0.28, s * 0.62, s * 0.44, s * 0.14); }
+function drawPancho(c) { const x = c.getContext('2d'), s = c.width; x.fillStyle = '#1a2234'; x.beginPath(); x.arc(s / 2, s / 2, s / 2, 0, 7); x.fill(); x.strokeStyle = '#c6a36a'; x.lineWidth = Math.max(2, s * 0.05); x.beginPath(); x.arc(s / 2, s * 0.46, s * 0.22, Math.PI, 0); x.stroke(); x.fillStyle = '#c6a36a'; x.fillRect(s * 0.28, s * 0.44, s * 0.44, s * 0.08); x.beginPath(); x.arc(s / 2, s * 0.66, s * 0.14, 0, 7); x.fill(); }
 const loadImg = (src) => new Promise((r) => { if (!src) return r(null); const i = new Image(); i.onload = () => r(i); i.onerror = () => r(null); i.src = src; });
 
 export async function makeCard(p, total, rank) {

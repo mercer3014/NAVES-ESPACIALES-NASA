@@ -3,6 +3,8 @@ import { show, syncCursor } from '../ui/router.js';
 import { t } from '../core/i18n.js';
 import { phaseStamp } from '../ui/presentation.js';
 import { bindUiSfx } from '../ui/ui-sfx.js';
+import { icon } from '../ui/flight-hud.js';
+import { installHudKeys } from '../ui/flight-hud-mount.js';
 import { store, on, emit, shared, dbg } from '../core/store.js';
 import { setWorld, onTick, setPaused } from '../core/engine.js';
 import { $, $$, h, sleep, toast, achieve, scanFx, rng } from '../core/util.js';
@@ -35,8 +37,9 @@ function makeCtx(phase) {
     wait: (s) => (dead ? new Promise(() => {}) : new Promise((r) => waits.push({ at: gameT + s, r }))),
     until: (pred) => new Promise((r) => { const off = onTick(() => { if (!dead && pred()) { off(); r(); } }); cleanups.push(off); }),
     hud(html) {
-      const el = show(`<div class="screen hud-screen" style="padding:0"><div class="hud">${html}<div class="tr pausebox" style="z-index:5"><button class="icon-btn" data-pause aria-label="pause"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M3 2h3.2v12H3zm6.8 0H13v12H9.8z"/></svg></button></div></div></div>`, 'phase-' + phase);
+      const el = show(`<div class="screen hud-screen" style="padding:0"><div class="hud mhud">${html}<div class="pausebox"><button class="icon-btn" data-pause aria-label="${t('pause')}">${icon('pause')}</button></div></div></div>`, 'phase-' + phase);
       bindUiSfx(el);
+      installHudKeys();
       showPhaseStamp(phase);
       $('[data-pause]', el).onclick = () => pauseMenu(); return el;
     },
