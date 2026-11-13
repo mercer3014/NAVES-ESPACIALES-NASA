@@ -6,13 +6,16 @@ import { ground, BOULDERS, PAD } from '../sim/lander.js';
 import { lunarEnv } from './astronaut.js';
 import { rng } from '../core/util.js';
 import { makePlume, makePuffs } from './fx.js';
+import { earthshine, regolithLook } from '../render/grade.js';
 export function makeMoonSurface({ seed = 7 } = {}) {
   const scene = new THREE.Scene(); const camera = new THREE.PerspectiveCamera(55, innerWidth / innerHeight, 0.1, 6000);
-  renderer.shadowMap.enabled = !Q.mobile || Q.high; renderer.shadowMap.type = THREE.PCFShadowMap;
+  renderer.shadowMap.enabled = !Q.mobile || Q.high;
   scene.fog = new THREE.FogExp2(0x030407, 0.00016);
   const sunDir = new THREE.Vector3(-0.95, 0.205, 0.18).normalize(); // ~12° de elevación (Apolo 11: 10–14°) → sombras largas y duras
-  scene.add(new THREE.HemisphereLight(0x9aa0b0, 0x2a2a30, 0.5));
+  scene.add(new THREE.HemisphereLight(0x9aa0b0, 0x2a2a30, 0.38));
   const sun = new THREE.DirectionalLight(0xfff4e6, 4.8); sun.position.copy(sunDir).multiplyScalar(200); scene.add(sun); scene.add(sun.target);
+  const es = earthshine(); const earthFill = new THREE.DirectionalLight(new THREE.Color().setRGB(es.color[0], es.color[1], es.color[2]), es.intensity);
+  earthFill.position.set(900, 1100, -2600); scene.add(earthFill);
   if (Q.high || !Q.mobile) { sun.castShadow = true; const S = sun.shadow; S.mapSize.set(Q.high ? 2048 : 1024, Q.high ? 2048 : 1024); Object.assign(S.camera, { left: -70, right: 70, top: 70, bottom: -70, near: 1, far: 600 }); S.bias = -0.0006; S.normalBias = 0.4; }
   scene.add(skySphere(4000)); scene.add(twinkleStars(undefined, 3800));
   const E = earth(46, new THREE.Vector3(-1, 0.1, 0.2).normalize()); E.position.set(900, 1100, -2600); E.rotation.z = 0.4; scene.add(E);
@@ -24,7 +27,7 @@ export function makeMoonSurface({ seed = 7 } = {}) {
   const terrM = new THREE.MeshStandardMaterial({ map, normalMap: nrm, normalScale: new THREE.Vector2(0.75, 0.75), roughness: 0.97, metalness: 0, color: 0xb9b6b0 });
   terrM.polygonOffset = true; terrM.polygonOffsetFactor = 2; terrM.polygonOffsetUnits = 2; // el tile del artista gana en la franja de solape
   const patchU = { value: new THREE.Vector4(0, 0, -1, 0) }; // (cx, cz, medio lado del hueco, —): el terreno procedural se recorta bajo el tile
-  regolithShader(terrM, patchU);
+  regolithShader(terrM, patchU, sunDir);
   const terr = new THREE.Mesh(geo, terrM);
   terr.receiveShadow = true; scene.add(terr);
   { const fm = tex('/tex/regolith.jpg?far', { repeat: 700 }); const fg = new THREE.PlaneGeometry(30000, 30000, 96, 96); fg.rotateX(-Math.PI / 2); const q = fg.attributes.position;
@@ -201,13 +204,19 @@ export function makeMoonSurface({ seed = 7 } = {}) {
 
 // Regolito: rompe el mosaico de la textura (2ª escala rotada mezclada con ruido), suaviza los bordes de los cráteres
 // horneados, añade variación de albedo a gran escala y grano fino + micro-relieve cerca de la cámara.
-function regolithShader(m, patchU) {
+function regolithShader(m, patchU, sunDir) {
+  const look = regolithLook();
   m.onBeforeCompile = (sh) => {
     sh.uniforms.uPatch = patchU;
+    sh.uniforms.uSun = { value: sunDir };
+    sh.uniforms.uSurge = { value: look.surge };
+    sh.uniforms.uMacro = { value: look.macroAmp };
+    sh.uniforms.uGrain = { value: look.grainAmp };
+    sh.uniforms.uGain = { value: look.normalGain };
     sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vWP;')
       .replace('#include <project_vertex>', '#include <project_vertex>\nvWP = (modelMatrix * vec4(transformed, 1.0)).xyz;');
     sh.fragmentShader = sh.fragmentShader.replace('#include <common>', `#include <common>
-varying vec3 vWP; uniform vec4 uPatch;
+varying vec3 vWP; uniform vec4 uPatch; uniform vec3 uSun; uniform float uSurge, uMacro, uGrain, uGain;
 float rh(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 float vn(vec2 p){ vec2 i = floor(p), f = fract(p); f = f*f*(3.-2.*f); return mix(mix(rh(i), rh(i+vec2(1,0)), f.x), mix(rh(i+vec2(0,1)), rh(i+vec2(1,1)), f.x), f.y); }
 float fbm(vec2 p){ float a = .5, s = 0.; for (int i = 0; i < 4; i++) { s += a * vn(p); p = p * 2.03 + 17.1; a *= .5; } return s; }`)
@@ -217,18 +226,19 @@ float fbm(vec2 p){ float a = .5, s = 0.; for (int i = 0; i < 4; i++) { s += a * 
   vec3 t1 = texture2D(map, vMapUv).rgb;
   vec3 t2 = texture2D(map, mat2(.8,-.6,.6,.8) * wq * 0.0291 + .37).rgb;
   vec3 tc = mix(t1, t2, smoothstep(.35, .65, vn(wq * .045)));
-  tc = mix(vec3(.458), tc, .62);                                  // menos contraste → bordes de cráter más suaves
-  float macro = .86 + .28 * fbm(wq * .012) + .06 * (vn(wq * .11) - .5);
+  tc = mix(vec3(.42), tc, .7);
+  float macro = .82 + uMacro * fbm(wq * .012) + .08 * (vn(wq * .11) - .5);
   float fade = 1. - smoothstep(6., 40., camD);
-  float grain = 1. + fade * (.10 * (rh(floor(wq * 38.)) - .5) + .08 * (vn(wq * 9.) - .5));
-  diffuseColor.rgb *= tc * macro * grain;`)
+  float grain = 1. + fade * (uGrain * (rh(floor(wq * 38.)) - .5) + .08 * (vn(wq * 9.) - .5));
+  float surge = pow(clamp(dot(normalize(cameraPosition - vWP), uSun), 0., 1.), 6.);
+  diffuseColor.rgb *= tc * macro * grain * (1. + uSurge * surge);`)
       .replace('#include <normal_fragment_maps>', `#include <normal_fragment_maps>
   { float fd = 1. - smoothstep(4., 30., length(vWP - cameraPosition)); vec2 wp = vWP.xz * 3.1;
     float e = .05, h0 = fbm(wp), hx = fbm(wp + vec2(e, 0.)), hz = fbm(wp + vec2(0., e));
-    vec3 dn = vec3(-(hx - h0) / e, 0., -(hz - h0) / e) * .22 * fd;   // micro-relieve en espacio mundo (suelo casi horizontal)
+    vec3 dn = vec3(-(hx - h0) / e, 0., -(hz - h0) / e) * uGain * fd;
     normal = normalize(normal + (viewMatrix * vec4(dn, 0.)).xyz); }`);
   };
-  m.customProgramCacheKey = () => 'regolith3';
+  m.customProgramCacheKey = () => 'regolith4';
 }
 
 // Rocas que se interponen entre la cámara y el foco (LM o astronauta), o pegadas a la cámara: se disuelven con un tramado

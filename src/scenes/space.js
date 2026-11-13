@@ -1,5 +1,6 @@
 // Entorno espacial reutilizable: cielo, estrellas que titilan, galaxias procedurales, Tierra con día/noche, Luna, Sol
 import { THREE, tex, Q } from '../core/engine.js';
+import { STAR_POINT } from '../render/grade.js';
 export function skySphere(r = 900) {
   const m = new THREE.Mesh(new THREE.SphereGeometry(r, 48, 24), new THREE.MeshBasicMaterial({ map: tex(`/tex/stars_${Q.high ? '4k' : '2k'}.jpg`), side: THREE.BackSide, depthWrite: false, color: 0x8899aa }));
   m.renderOrder = -10; return m;
@@ -13,11 +14,13 @@ export function twinkleStars(n = Q.high ? 6000 : 2500, r = 800) {
   }
   g.setAttribute('position', new THREE.BufferAttribute(p, 3)); g.setAttribute('seed', new THREE.BufferAttribute(s, 1)); g.setAttribute('color', new THREE.BufferAttribute(c, 3));
   const mat = new THREE.ShaderMaterial({
-    uniforms: { t: { value: 0 }, px: { value: Math.min(devicePixelRatio, 2) }, warp: { value: 0 } }, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, vertexColors: true,
-    vertexShader: `attribute float seed; uniform float t,px; varying float a; varying vec3 vc;
+    uniforms: { t: { value: 0 }, px: { value: Math.min(devicePixelRatio, 2) }, uStar: { value: new THREE.Vector2(STAR_POINT.base, STAR_POINT.gain) } }, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, vertexColors: true,
+    vertexShader: `attribute float seed; uniform float t,px; uniform vec2 uStar; varying float a; varying vec3 vc;
       void main(){ vc=color; vec4 mv=modelViewMatrix*vec4(position,1.); gl_Position=projectionMatrix*mv;
-      float tw=.55+.45*sin(t*(1.+seed*3.)+seed*40.); a=tw*(.35+.65*seed); gl_PointSize=(1.+2.6*seed*seed)*px; }`,
-    fragmentShader: `varying float a; varying vec3 vc; void main(){ vec2 d=gl_PointCoord-.5; float r=length(d); if(r>.5) discard; gl_FragColor=vec4(vc,a*smoothstep(.5,0.,r)); }`,
+      float tw=.55+.45*sin(t*(1.+seed*3.)+seed*40.); a=tw*(.35+.65*seed); gl_PointSize=(uStar.x+uStar.y*seed*seed)*px; }`,
+    fragmentShader: `varying float a; varying vec3 vc; void main(){ vec2 d=gl_PointCoord-.5; float r=length(d);
+      float core=smoothstep(.5,.04,r);       float spike=pow(max(0.,1.-abs(d.x)*2.),26.)+pow(max(0.,1.-abs(d.y)*2.),26.);
+      float alpha=a*(core+spike*.22*a); if(alpha<.025) discard; gl_FragColor=vec4(vc,alpha); }`,
   });
   const pts = new THREE.Points(g, mat); pts.frustumCulled = false; pts.userData.tick = (dt, t) => (mat.uniforms.t.value = t); return pts;
 }
@@ -44,29 +47,41 @@ export function glowSprite(color = 0xffeecc, size = 40, opacity = 1) {
 }
 export function earth(radius = 10, sunDir = new THREE.Vector3(1, 0.2, 0.4).normalize()) {
   const grp = new THREE.Group();
+  const cloudsTex = tex('/tex/earth_clouds_2k.jpg', { srgb: false });
   const mat = new THREE.ShaderMaterial({
-    uniforms: { day: { value: tex(`/tex/earth_day_${Q.high ? '4k' : '2k'}.jpg`) }, night: { value: tex('/tex/earth_night_2k.jpg') }, sun: { value: sunDir } },
+    uniforms: { day: { value: tex(`/tex/earth_day_${Q.high ? '4k' : '2k'}.jpg`) }, night: { value: tex('/tex/earth_night_2k.jpg') }, clouds: { value: cloudsTex }, sun: { value: sunDir } },
     vertexShader: `varying vec2 vUv; varying vec3 vN; varying vec3 vV; void main(){ vUv=uv; vN=normalize(mat3(modelMatrix)*normal); vec4 wp=modelMatrix*vec4(position,1.); vV=normalize(cameraPosition-wp.xyz); gl_Position=projectionMatrix*viewMatrix*wp; }`,
-    fragmentShader: `uniform sampler2D day,night; uniform vec3 sun; varying vec2 vUv; varying vec3 vN; varying vec3 vV;
-      void main(){ float l=dot(vN,sun); float k=smoothstep(-.15,.25,l); vec3 d=texture2D(day,vUv).rgb; vec3 n=texture2D(night,vUv).rgb*vec3(1.,.85,.6)*1.4;
-      vec3 c=mix(n*(1.-k),d*(.15+1.1*max(l,0.)),k); float f=pow(1.-max(dot(vN,vV),0.),3.); c+=vec3(.3,.55,1.)*f*k*.8;
-      vec3 h=normalize(sun+vV); c+=vec3(.6,.7,.8)*pow(max(dot(vN,h),0.),40.)*k*.25; gl_FragColor=vec4(c,1.); }`,
+    fragmentShader: `uniform sampler2D day,night,clouds; uniform vec3 sun; varying vec2 vUv; varying vec3 vN; varying vec3 vV;
+      void main(){ float l=dot(vN,sun); float k=smoothstep(-.18,.28,l); vec3 d=texture2D(day,vUv).rgb; vec3 n=texture2D(night,vUv).rgb*vec3(1.,.82,.55)*1.55;
+      float cl=texture2D(clouds,vUv).r; vec3 ground=mix(n*(1.-k), d*(.12+1.15*max(l,0.)), k); ground*=mix(vec3(1.), vec3(.55,.62,.72), cl*k*.72);
+      float ocean=smoothstep(.15,.45,d.b-max(d.r,d.g)); vec3 h=normalize(sun+vV);
+      ground+=vec3(.75,.85,.95)*pow(max(dot(vN,h),0.), 48.)*k*ocean*.55;
+      float fres=pow(1.-max(dot(vN,vV),0.), 3.1); vec3 c=ground+vec3(.22,.48,1.)*fres*k*.35; gl_FragColor=vec4(c,1.); }`,
   });
   mat.uniforms.day.value.colorSpace = THREE.SRGBColorSpace;
   const e = new THREE.Mesh(new THREE.SphereGeometry(radius, 64, 48), mat); grp.add(e);
-  const clouds = new THREE.Mesh(new THREE.SphereGeometry(radius * 1.012, 64, 48), new THREE.MeshLambertMaterial({ alphaMap: tex('/tex/earth_clouds_2k.jpg', { srgb: false }), transparent: true, opacity: 0.85, depthWrite: false, color: 0xffffff }));
+  const clouds = new THREE.Mesh(new THREE.SphereGeometry(radius * 1.012, 64, 48), new THREE.MeshLambertMaterial({ alphaMap: cloudsTex, transparent: true, opacity: 0.9, depthWrite: false, color: 0xffffff }));
   grp.add(clouds);
-  const atm = new THREE.Mesh(new THREE.SphereGeometry(radius * 1.08, 48, 32), new THREE.ShaderMaterial({
+  const atm = new THREE.Mesh(new THREE.SphereGeometry(radius * 1.02, 64, 40), new THREE.ShaderMaterial({
     uniforms: { sun: { value: sunDir } }, side: THREE.BackSide, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false,
     vertexShader: `varying vec3 vN; varying vec3 vP; void main(){ vN=normalize(mat3(modelMatrix)*normal); vec4 wp=modelMatrix*vec4(position,1.); vP=wp.xyz; gl_Position=projectionMatrix*viewMatrix*wp; }`,
-    fragmentShader: `uniform vec3 sun; varying vec3 vN; varying vec3 vP; void main(){ vec3 v=normalize(cameraPosition-vP); float d=max(0.,-dot(vN,v)); float f=pow(d,2.)*2.2; float s=.2+.8*smoothstep(-.35,.5,dot(vN,sun)); gl_FragColor=vec4(vec3(.35,.6,1.)*f*s,1.); }`,
+    fragmentShader: `uniform vec3 sun; varying vec3 vN; varying vec3 vP; void main(){ vec3 v=normalize(cameraPosition-vP); vec3 n=normalize(vN);
+      float rim=pow(clamp(1.-abs(dot(n,v)),0.,1.), 5.5); float mu=dot(n,sun);
+      vec3 col=mix(vec3(1.,.5,.22), vec3(.25,.55,1.), smoothstep(0.,.55,mu));
+      float f=rim*(.25+.75*smoothstep(-.2,.5,mu)); if(f<.03) discard; gl_FragColor=vec4(col*f*.9,1.); }`,
   }));
   grp.add(atm);
   grp.userData.tick = (dt) => { e.rotation.y += dt * 0.02; clouds.rotation.y += dt * 0.026; };
   return grp;
 }
 export function moon(radius = 2.7) {
-  const m = new THREE.Mesh(new THREE.SphereGeometry(radius, 64, 48), new THREE.MeshStandardMaterial({ map: tex('/tex/moon_2k.jpg'), roughness: 1, metalness: 0, bumpMap: tex('/tex/moon_2k.jpg', { srgb: false }), bumpScale: 0.6 }));
+  const mat = new THREE.MeshStandardMaterial({ map: tex('/tex/moon_2k.jpg'), roughness: 0.94, metalness: 0, bumpMap: tex('/tex/moon_2k.jpg', { srgb: false }), bumpScale: 1.15, color: 0xe8e4dc });
+  mat.onBeforeCompile = (sh) => {
+    sh.fragmentShader = sh.fragmentShader.replace('#include <opaque_fragment>',
+      `outgoingLight += diffuseColor.rgb * pow(saturate(dot(normalize(normal), normalize(geometryViewDir))), 5.0) * 0.2;\n#include <opaque_fragment>`);
+  };
+  mat.customProgramCacheKey = () => 'moon-surge';
+  const m = new THREE.Mesh(new THREE.SphereGeometry(radius, 64, 48), mat);
   m.userData.tick = (dt) => (m.rotation.y += dt * 0.01); return m;
 }
 export function tickAll(root, dt, t) { root.traverse((o) => o.userData.tick && o.userData.tick(dt, t)); }
