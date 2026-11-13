@@ -27,10 +27,10 @@ export default async function cruise(ctx) {
       <i class="zone" style="position:absolute;top:0;bottom:0;background:#3ddc8455;border-left:2px solid var(--go);border-right:2px solid var(--go)"></i><i class="fillb" style="position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,#2a5bff,#9fc6ff)"></i></div>
       <div class="phase-tag dvlab" style="margin-top:4px">Δv 0 m/s</div>
       <button class="tc-btn big go burnbtn" style="position:relative;margin-top:8px">${t('c.burn')}</button></div>
-    <div class="days" style="position:absolute;right:16px;top:calc(70px + var(--safe-t));font-family:Mono;text-align:right;display:none"><div class="phase-tag">${t('c.days')}</div><div class="d" style="font-size:1.6rem">1</div><button class="btn ffw" style="margin-top:6px;padding:.4em .8em">⏩ ${t('c.skip')}</button></div>
+    <div class="days" style="position:absolute;right:16px;top:calc(70px + var(--safe-t));font-family:Mono;text-align:right;display:none"><div class="phase-tag">${t('c.days')}</div><div class="d" style="font-size:1.6rem">1</div><button class="btn ffw" style="margin-top:6px;padding:.4em .8em">${t('c.skip')}</button></div>
     <div class="starlayer" style="position:absolute;inset:0;pointer-events:none"></div>
     <div class="photoframe" style="display:none;position:absolute;inset:12% 18%;border:2px solid #fff8;border-radius:6px;pointer-events:none"><span style="position:absolute;left:50%;top:50%;width:26px;height:26px;margin:-13px;border:2px solid #fff8;border-radius:50%"></span></div>
-    <button class="tc-btn big amber photobtn" style="display:none;position:absolute;right:24px;bottom:calc(24px + var(--safe-b))">📷 ${t('c.snap')}</button>
+    <button class="tc-btn big amber photobtn" style="display:none;position:absolute;right:24px;bottom:calc(24px + var(--safe-b))">${t('c.snap')}</button>
     <div class="los" style="display:none;position:absolute;inset:0;pointer-events:none"></div>`);
   const hint = (k) => { $('.hint', el).textContent = k ? t(k) : ''; };
   const title = (k) => { dbg('cr', k); $('.st-title', el).textContent = t(k); };
@@ -42,7 +42,7 @@ export default async function cruise(ctx) {
   // ---------- vista interior (cm-interior.glb): ojo del CDR o detrás de una ventana; las ventanas muestran la escena real ----------
   const VIEWS = { cdr: { n: 'eye-CDR', back: 0.06, fov: 74 }, win: { n: 'win-rdz-left', back: 0.2, fov: 62 }, photo: { n: 'win-side-left', back: 0.24, fov: 56, free: true } };
   let view = null, inView = 'cdr', viewLock = false, baseFov = cam.fov; const vbtn = $('.viewbtn', el);
-  const paintV = () => { const I = ship.userData.interior; vbtn.style.display = I && !viewLock ? '' : 'none'; vbtn.textContent = '🎥 ' + t(view ? 'c.vout' : 'c.vin') + (isTouch ? '' : ' (C)'); };
+  const paintV = () => { const I = ship.userData.interior; vbtn.style.display = I && !viewLock ? '' : 'none'; vbtn.textContent = t(view ? 'c.vout' : 'c.vin') + (isTouch ? '' : ' (C)'); };
   const setView = (v) => { const I = ship.userData.interior; if (v && !I) v = null; if (!view && v) baseFov = cam.fov; view = v ? VIEWS[v] : null; if (v) inView = v; I?.set(!!view);
     cam.near = view ? 0.006 : 0.1; cam.fov = view ? (cam.aspect < 1 ? view.fov + 14 : view.fov) : baseFov; cam.updateProjectionMatrix(); if (photoMode) ship.visible = !!view; paintV(); };
   const lockView = (v, lock = true) => { viewLock = lock; setView(v); };

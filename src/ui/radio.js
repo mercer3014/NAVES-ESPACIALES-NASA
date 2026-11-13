@@ -17,8 +17,8 @@ extend({
   'r.muted': ['Silenciado', 'Muted'],
   'r.denied': ['Sin micrófono · usa llamadas', 'No mic · use callouts'],
   'r.unsup': ['Requiere HTTPS · usa llamadas', 'Needs HTTPS · use callouts'],
-  'r.deniedT': ['No hay permiso de micrófono. Puedes seguir oyendo a tu compañero y usar las llamadas rápidas 📣.', 'Microphone permission denied. You can still hear your partner and use quick callouts 📣.'],
-  'r.unsupT': ['El micrófono necesita una conexión segura (HTTPS). Usa las llamadas rápidas 📣.', 'The microphone needs a secure (HTTPS) connection. Use quick callouts 📣.'],
+  'r.deniedT': ['No hay permiso de micrófono. Puedes seguir oyendo a tu compañero y usar las llamadas rápidas.', 'Microphone permission denied. You can still hear your partner and use quick callouts.'],
+  'r.unsupT': ['El micrófono necesita una conexión segura (HTTPS). Usa las llamadas rápidas.', 'The microphone needs a secure (HTTPS) connection. Use quick callouts.'],
   'r.link.connecting': ['enlazando…', 'linking…'], 'r.link.connected': ['enlace OK', 'link OK'], 'r.link.failed': ['sin enlace de voz', 'no voice link'], 'r.link.idle': ['', ''],
   'r.calls': ['Llamadas rápidas', 'Quick callouts'],
   'r.mode': ['Modo', 'Mode'], 'r.mode.open': ['Mic abierto', 'Open mic'], 'r.mode.ptt': ['Pulsar para hablar', 'Push to talk'],
@@ -36,7 +36,7 @@ extend({
   'pc.reply.ok': ['Recibido, fuerte y claro.', 'Copy, loud and clear.'],
   'c.bh': ['¡Se formó un agujero negro!', 'A black hole just formed!'],
 });
-export const CALLS = [['did', '❓'], ['help', '🆘'], ['bring', '📦'], ['press', '👆'], ['do', '🙏'], ['meteor', '☄️'], ['star', '🌠'], ['bh', '🕳️']];
+export const CALLS = [['did', '01'], ['help', '02'], ['bring', '03'], ['press', '04'], ['do', '05'], ['meteor', '06'], ['star', '07'], ['bh', '08']];
 const MIC = `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4M8.5 21h7" fill="none"/><line class="slash" x1="4" y1="4" x2="20" y2="20"/></svg>`;
 
 const el = document.createElement('div'); el.className = 'radio hidden'; el.setAttribute('role', 'group');
@@ -44,7 +44,7 @@ el.innerHTML = `<button class="r-mic">${MIC}</button>
   <div class="r-lab"><b></b><small></small></div>
   <span class="r-me" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
   <span class="r-peer" aria-hidden="true"><canvas width="56" height="56"></canvas><i class="ring"></i></span>
-  <button class="r-call" aria-haspopup="true">📣</button>`;
+  <button class="r-call" aria-haspopup="true" aria-label="callouts"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M4 9.5v5h3.2L12 19V5L7.2 9.5H4zm11.2 2.5a3.4 3.4 0 0 0-1.7-3v6a3.4 3.4 0 0 0 1.7-3z"/></svg></button>`;
 const panel = document.createElement('div'); panel.className = 'r-panel hidden';
 const ptt = document.createElement('button'); ptt.className = 'r-ptt hidden';
 const bubble = document.createElement('div'); bubble.className = 'r-bubble';
@@ -68,6 +68,7 @@ function paint() {
   el.dataset.st = live ? (radio.muted ? 'muted' : 'on') : st;
   el.classList.toggle('me', radio.me); el.classList.toggle('peer', radio.peer);
   $('.r-mic').setAttribute('aria-label', live && !radio.muted ? t('r.mute') : t('r.unmute'));
+  $('.r-call').setAttribute('aria-label', t('r.calls'));
   ptt.textContent = t('r.ptt'); ptt.classList.toggle('hidden', !(visible && live && radio.mode === 'ptt' && isTouch));
 }
 $('.r-mic').onclick = async () => {
@@ -87,7 +88,7 @@ ptt.addEventListener('pointerdown', (e) => { e.preventDefault(); ptt.setPointerC
 // llamadas rápidas
 let bubT = 0;
 function showBubble(who, text, mine) {
-  bubble.innerHTML = `<b>📻 ${who.replace(/</g, '')}</b><span>${text}</span>`; bubble.classList.toggle('mine', !!mine);
+  bubble.innerHTML = `<b>${who.replace(/</g, '')}</b><span>${text}</span>`; bubble.classList.toggle('mine', !!mine);
   bubble.classList.remove('show'); void bubble.offsetWidth; bubble.classList.add('show');
   clearTimeout(bubT); bubT = setTimeout(() => bubble.classList.remove('show'), 3600);
 }

@@ -12,7 +12,7 @@ extend({
   'cx.wait': ['Esperando al piloto…', 'Waiting for the pilot…'], 'cx.prDone': ['Práctica terminada · {ph}', 'Practice complete · {ph}'], 'cx.prScore': ['{s} puntos', '{s} points'], 'cx.prWait': ['El piloto está eligiendo: reintentar, siguiente fase o menú…', 'The pilot is choosing: retry, next phase or menu…'], 'cx.link': ['Enlace', 'Link'], 'cx.req': ['Pedido del piloto', 'Pilot request'], 'cx.none': ['Sin pedidos. Vigila la telemetría y envía avisos.', 'No requests. Watch telemetry and send pings.'],
   'cx.poll': ['Ronda GO/NO-GO: toca cada consola', 'GO/NO-GO poll: tap each console'], 'cx.stage': ['¡Separa la etapa ahora!', 'Stage now!'], 'cx.1202': ['ALARMA 1202 · ¿GO o ABORT?', '1202 ALARM · GO or ABORT?'],
   'cx.1202h': ['Ejecutivo sobrecargado: la computadora reinicia y sigue. Es seguro.', 'Executive overflow: the computer restarts and keeps going. It\'s safe.'], 'cx.abort': ['ABORTAR', 'ABORT'],
-  'cx.photo': ['Encuadra la cámara TV: la bandera y el astronauta', 'Frame the TV camera: the flag and the astronaut'], 'cx.shoot': ['📸 DISPARAR', '📸 SHOOT'], 'cx.left': ['◀', '◀'], 'cx.right': ['▶', '▶'], 'cx.up': ['▲', '▲'], 'cx.dn': ['▼', '▼'],
+  'cx.photo': ['Encuadra la cámara TV: la bandera y el astronauta', 'Frame the TV camera: the flag and the astronaut'], 'cx.shoot': ['DISPARAR', 'SHOOT'], 'cx.left': ['IZQ', 'LEFT'], 'cx.right': ['DER', 'RIGHT'], 'cx.up': ['ARR', 'UP'], 'cx.dn': ['ABA', 'DOWN'],
   'cx.zoomI': ['＋', '＋'], 'cx.zoomO': ['－', '－'], 'cx.map': ['Mapa del sitio', 'Site map'], 'cx.leave': ['Salir', 'Leave'], 'cx.done': ['¡Listo!', 'Done!'], 'cx.offline': ['Piloto desconectado… Pancho toma el control', 'Pilot offline… Pancho takes over'],
   'cx.k.window': ['CORTE DE MOTOR', 'ENGINE CUTOFF'], 'cx.k.targets': ['ESTRELLAS OBJETIVO', 'TARGET STARS'], 'cx.k.burn': ['QUEMADO', 'BURN'], 'cx.k.align': ['ALINEACIÓN', 'ALIGNMENT'], 'cx.k.poll': ['RONDA', 'POLL'], 'cx.k.tasks': ['TAREAS', 'TASKS'],
   'cx.k.alt': ['ALT', 'ALT'], 'cx.k.vel': ['VEL', 'VEL'], 'cx.k.vs': ['V/S', 'V/S'], 'cx.k.hs': ['H/S', 'H/S'], 'cx.k.fuel': ['COMB', 'FUEL'], 'cx.k.thr': ['ACEL', 'THR'], 'cx.k.tilt': ['INCL', 'TILT'],
@@ -49,7 +49,7 @@ export async function runCapcom(M) {
     <div class="phase-title" style="font-size:clamp(28px,6vw,48px);color:var(--amber)">${t('cx.prScore', { s: Math.round(m.score || 0) })}</div><p class="mono" style="color:var(--dim);font-size:.8rem;margin:14px 0 18px">${t('cx.prWait')}</p>
     <button class="btn prleave">${t('quit')}</button></div></div>`); el.append(o); $('.prleave', o).onclick = () => { sfx('click'); quitMission(); }; sfx('ok'); log(t('cx.prDone', { ph: t('ph.' + m.ph) }) + ' · ' + t('cx.prScore', { s: Math.round(m.score || 0) }), 'ok'); };
   offs.push(on('net:practice', prDone));
-  offs.push(on('net:phase', (m) => { $('.prwait', el)?.remove(); C.phase = m.ph; C.hist = []; C.snap = {}; clearReqs(); $('.cph', el).textContent = `${PH.indexOf(m.ph) + 1}/5 · ${t('ph.' + m.ph)}`; log('▶ ' + t('ph.' + m.ph), 'ok'); sfx('stage', { vol: 0.3 }); $('.los', el).style.display = 'none'; dbg('ccPhase', m.ph); }));
+  offs.push(on('net:phase', (m) => { $('.prwait', el)?.remove(); C.phase = m.ph; C.hist = []; C.snap = {}; clearReqs(); $('.cph', el).textContent = `${PH.indexOf(m.ph) + 1}/5 · ${t('ph.' + m.ph)}`; log(t('ph.' + m.ph), 'ok'); sfx('stage', { vol: 0.3 }); $('.los', el).style.display = 'none'; dbg('ccPhase', m.ph); }));
   offs.push(on('net:snap', (m) => { if (m.ph !== C.phase) { C.phase = m.ph; $('.cph', el).textContent = `${PH.indexOf(m.ph) + 1}/5 · ${t('ph.' + m.ph)}`; } C.snap = m.d; C.hist.push([performance.now(), m.d]); if (C.hist.length > 400) C.hist.shift(); $('.los', el).style.display = m.d.los ? '' : 'none'; paintTele(); }));
   offs.push(on('net:log', (m) => { C.logs++; log(t(m.k, m.vars || undefined), m.kind); }));
   offs.push(on('net:req', (m) => addReq(m)));
@@ -62,11 +62,11 @@ export async function runCapcom(M) {
   function cell(k, v, cls = '') { return `<div class="tele" style="padding:6px 8px"><div class="k">${t('cx.k.' + k) !== 'cx.k.' + k ? t('cx.k.' + k) : k.toUpperCase()}</div><div class="v mono ${cls}" style="font-size:1.05rem">${v}</div></div>`; }
   function paintTele() {
     const d = C.snap, f = (n, p = 0) => (n == null ? '—' : Number(n).toFixed(p)); let html = '';
-    if (C.phase === 'prep') html = cell('step', `${(d.step ?? 0) + 1}/${d.n ?? '?'}`) + cell('faults', d.faults?.length ? `<span style="color:var(--red)">${d.faults.length}</span>` : '0') + cell('poll', d.poll ? d.poll.length + '/7' : '—') + (d.faults || []).map((k) => `<div class="fault" style="grid-column:1/-1"><b>⚠</b> ${safe(t('fault.' + k))}</div>`).join('');
+    if (C.phase === 'prep') html = cell('step', `${(d.step ?? 0) + 1}/${d.n ?? '?'}`) + cell('faults', d.faults?.length ? `<span style="color:var(--red)">${d.faults.length}</span>` : '0') + cell('poll', d.poll ? d.poll.length + '/7' : '—') + (d.faults || []).map((k) => `<div class="fault" style="grid-column:1/-1"><b>!</b> ${safe(t('fault.' + k))}</div>`).join('');
     else if (C.phase === 'launch') html = cell('alt', f((d.alt || 0) / 1000, 1) + ' km') + cell('vel', f(d.vel, 0) + ' m/s') + cell('pitch', f(d.pitch, 1) + '°') + cell('stress', f((d.stress || 0) * 100) + '%', d.stress > 0.7 ? 'bad' : '') + cell('stage', safe(d.stage ?? '—')) + cell('thr', f((d.thr || 0) * 100) + '%');
     else if (C.phase === 'cruise') html = cell('stage', safe(d.stage || '—')) + (d.targets ? cell('align', `${d.got?.length || 0}/${d.targets.length}`) : '') + (d.v != null ? cell('burn', f(d.v * 100) + '%') : '') + (Number.isFinite(d.z0) && Number.isFinite(d.z1) ? cell('window', `${f(d.z0*100)}–${f(d.z1*100)}%`, 'cutoff') : '') + (Array.isArray(d.targets) ? `<div style="grid-column:1/-1">${cell('targets', d.targets.filter(n => ['Sirius','Vega','Rigel','Canopus','Antares','Altair'].includes(n)).map(n => (d.got?.includes(n) ? '✓ ' : '') + n).join(' · '))}</div>` : '') + (d.los ? `<div class="fault" style="grid-column:1/-1">${t('cc.los')}</div>` : '');
     else if (C.phase === 'descent') html = cell('alt', f(d.alt) + ' m') + cell('vs', f(d.vs, 1), Math.abs(d.vs) > 3 && d.alt < 50 ? 'bad' : '') + cell('hs', f(d.hs, 1)) + cell('fuel', d.fuel == null ? 'AUTO' : f(d.fuel) + ' s', d.fuel != null && d.fuel < 20 ? 'bad' : '') + cell('thr', f((d.thr || 0) * 100) + '%') + cell('mode', (d.alarm ? '<span style="color:var(--red)">1202</span>' : '') + safe(d.mode || '—'));
-    else if (C.phase === 'eva') html = cell('o2', f((d.o2 ?? 1) * 100) + '%') + cell('mode', safe(d.mode || '—')) + cell('tasks', `${d.sample ? '☑' : '☐'} ${d.flag ? '☑' : '☐'}`);
+    else if (C.phase === 'eva') html = cell('o2', f((d.o2 ?? 1) * 100) + '%') + cell('mode', safe(d.mode || '—')) + cell('tasks', `${d.sample ? 'OK' : '--'} ${d.flag ? 'OK' : '--'}`);
     $('.tg', el).innerHTML = html;
   }
   function drawPlot() {
@@ -76,13 +76,13 @@ export async function runCapcom(M) {
     if (!hs.length) { px.fillText(t('cc.idle'), 16, 28); return; }
     if (C.phase === 'eva') { // mapa del sitio, vista cenital
       const s = 9; px.save(); px.translate(W / 2, H / 2 - 40); px.strokeStyle = '#ffb000'; px.strokeRect(-2.3 * s, -2.3 * s, 4.6 * s, 4.6 * s); px.fillStyle = '#ffb000'; px.fillText('LM', -10, 6);
-      px.strokeStyle = '#4fc3f7'; px.beginPath(); px.arc(2.5 * s, 12.5 * s, 3.2 * s, 0, 7); px.stroke(); px.fillStyle = '#4fc3f7'; px.fillText('⚑', 2.5 * s - 5, 12.5 * s + 5);
+      px.strokeStyle = '#4fc3f7'; px.beginPath(); px.arc(2.5 * s, 12.5 * s, 3.2 * s, 0, 7); px.stroke(); px.fillStyle = '#4fc3f7'; px.fillText('F', 2.5 * s - 4, 12.5 * s + 5);
       px.strokeStyle = '#3ddc8466'; px.beginPath(); hs.forEach(([, d], i) => (i ? px.lineTo(d.x * s, d.z * s) : px.moveTo(d.x * s, d.z * s))); px.stroke();
       const d = hs[hs.length - 1][1]; px.fillStyle = '#fff'; px.beginPath(); px.arc(d.x * s, d.z * s, 5, 0, 7); px.fill(); px.restore(); return;
     }
     if (C.phase === 'prep') { const d = hs[hs.length - 1][1], n = d.n || 8, st = d.step ?? 0, bw = (W - 40) / n;
       for (let i = 0; i < n; i++) { px.fillStyle = i < st ? '#3ddc84' : i === st ? '#ffb000' : '#1b3a28'; px.fillRect(20 + i * bw + 3, H / 2 - 30, bw - 6, 60); }
-      px.fillStyle = '#3ddc84'; px.fillText(`${t('prep.cl').toUpperCase()} ${Math.min(st, n)}/${n}`, 20, 40); if (d.faults?.length) { px.fillStyle = '#ff4d4d'; px.fillText('⚠ ' + d.faults.map((k) => k.toUpperCase()).join(' · '), 20, H - 30); } return; }
+      px.fillStyle = '#3ddc84'; px.fillText(`${t('prep.cl').toUpperCase()} ${Math.min(st, n)}/${n}`, 20, 40); if (d.faults?.length) { px.fillStyle = '#ff4d4d'; px.fillText('! ' + d.faults.map((k) => k.toUpperCase()).join(' · '), 20, H - 30); } return; }
     const key = { launch: 'alt', descent: 'alt', cruise: 'v', prep: 'step' }[C.phase] || 'alt'; const vals = hs.map(([, d]) => d[key]).filter((v) => v != null); if (!vals.length) return;
     const mx = Math.max(...vals, 1), mn = Math.min(0, ...vals); px.strokeStyle = '#3ddc84'; px.lineWidth = 2; px.beginPath();
     vals.forEach((v, i) => { const x = (i / Math.max(1, vals.length - 1)) * W, y = H - 10 - ((v - mn) / (mx - mn || 1)) * (H - 30); i ? px.lineTo(x, y) : px.moveTo(x, y); }); px.stroke();
@@ -91,7 +91,7 @@ export async function runCapcom(M) {
   // ---------- pedidos ----------
   function clearReqs() { for (const id of [...C.reqs.keys()]) dropReq(id); }
   function dropReq(id) { const r = C.reqs.get(id); if (!r) return; r.el.remove(); C.reqs.delete(id); $('.idle', reqBox).style.display = C.reqs.size ? 'none' : ''; }
-  function respond(id, v) { if (!C.reqs.has(id)) return; tx({ t: 'ev', k: 'resp', id, v }); sfx('ok'); dropReq(id); log('✔ ' + t('cx.done'), 'ok'); }
+  function respond(id, v) { if (!C.reqs.has(id)) return; tx({ t: 'ev', k: 'resp', id, v }); sfx('ok'); dropReq(id); log(t('cx.done'), 'ok'); }
   function addReq(m) {
     if (C.reqs.has(m.id)) return;
     sfx('computer', { vol: 0.5 }); navigator.vibrate?.(120); $('.idle', reqBox).style.display = 'none'; let box;
