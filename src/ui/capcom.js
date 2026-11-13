@@ -4,6 +4,7 @@ import { t, extend } from '../core/i18n.js';
 import { on, store, shared, dbg } from '../core/store.js';
 import { $, $$, h, toast, mmss, clamp } from '../core/util.js';
 import { sfx, music, voice } from '../core/audio.js';
+import { setPhaseBed } from '../audio/runtime.js';
 import { tx, net, partner, peerOnline } from '../net/room.js';
 import { lobbyBg } from './screens.js';
 import { quitMission } from '../game/mission.js';
@@ -24,7 +25,7 @@ const STATIONS = ['booster', 'retro', 'fido', 'guidance', 'eecom', 'surgeon', 'n
 export async function runCapcom(M) {
   // carga los textos de cada fase para traducir los eventos del piloto
   await Promise.all([import('../game/phases/prep.js'), import('../game/phases/launch.js'), import('../game/phases/cruise.js'), import('../game/phases/descent.js'), import('../game/phases/eva.js')]).catch(() => {});
-  lobbyBg(); music('cruise', { vol: 0.25 });
+  lobbyBg(); music('cruise', { vol: 0.25 }); setPhaseBed('cruise');
   const C = { phase: null, snap: {}, hist: [], reqs: new Map(), t0: performance.now(), logs: 0 };
   const el = show(`<div class="screen" style="padding:0"><div class="hud">
     <div class="tl"><span class="phase-tag">${t('cc.title')}</span><span class="phase-title cph">${t('cx.wait')}</span></div>
@@ -47,7 +48,7 @@ export async function runCapcom(M) {
     <div class="phase-title" style="font-size:clamp(28px,6vw,48px);color:var(--amber)">${t('cx.prScore', { s: Math.round(m.score || 0) })}</div><p class="mono" style="color:var(--dim);font-size:.8rem;margin:14px 0 18px">${t('cx.prWait')}</p>
     <button class="btn prleave">${t('quit')}</button></div></div>`); el.append(o); $('.prleave', o).onclick = () => { sfx('click'); quitMission(); }; sfx('ok'); log(t('cx.prDone', { ph: t('ph.' + m.ph) }) + ' · ' + t('cx.prScore', { s: Math.round(m.score || 0) }), 'ok'); };
   offs.push(on('net:practice', prDone));
-  offs.push(on('net:phase', (m) => { $('.prwait', el)?.remove(); C.phase = m.ph; C.hist = []; C.snap = {}; clearReqs(); $('.cph', el).textContent = `${PH.indexOf(m.ph) + 1}/5 · ${t('ph.' + m.ph)}`; log('▶ ' + t('ph.' + m.ph), 'ok'); sfx('stage', { vol: 0.3 }); $('.los', el).style.display = 'none'; dbg('ccPhase', m.ph); }));
+  offs.push(on('net:phase', (m) => { $('.prwait', el)?.remove(); C.phase = m.ph; setPhaseBed(m.ph); C.hist = []; C.snap = {}; clearReqs(); $('.cph', el).textContent = `${PH.indexOf(m.ph) + 1}/5 · ${t('ph.' + m.ph)}`; log('▶ ' + t('ph.' + m.ph), 'ok'); sfx('stage', { vol: 0.3 }); $('.los', el).style.display = 'none'; dbg('ccPhase', m.ph); }));
   offs.push(on('net:snap', (m) => { if (m.ph !== C.phase) { C.phase = m.ph; $('.cph', el).textContent = `${PH.indexOf(m.ph) + 1}/5 · ${t('ph.' + m.ph)}`; } C.snap = m.d; C.hist.push([performance.now(), m.d]); if (C.hist.length > 400) C.hist.shift(); $('.los', el).style.display = m.d.los ? '' : 'none'; paintTele(); }));
   offs.push(on('net:log', (m) => { C.logs++; log(t(m.k, m.vars || undefined), m.kind); }));
   offs.push(on('net:req', (m) => addReq(m)));

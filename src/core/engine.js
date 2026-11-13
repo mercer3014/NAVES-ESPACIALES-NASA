@@ -6,6 +6,7 @@ import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.j
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { store, isMobile, dbg, DEBUG } from './store.js';
 import { endFrame } from './input.js';
+import { afterWorldUpdate } from '../audio/runtime.js';
 
 export const canvas = document.getElementById('gl');
 export const renderer = new THREE.WebGLRenderer({ canvas, antialias: !isMobile, powerPreference: 'high-performance', preserveDrawingBuffer: false });
@@ -34,7 +35,7 @@ function frame() {
   timer.update(); const dt = Math.min(timer.getDelta(), DT_MAX) * (DEBUG && stats.slow ? stats.slow : 1), t = timer.getElapsed(); // stats.slow: congelar casi el juego en QA
   fpsAcc += dt; fpsN++; if (fpsAcc > 1) { stats.fps = fpsN / fpsAcc; fpsAcc = 0; fpsN = 0; }
   if (!paused) for (const f of tickers) f(dt, t);
-  if (world) { if (!paused) world.update?.(dt, t); if (world.render) world.render(dt); else renderer.render(world.scene, world.camera); }
+  if (world) { if (!paused) world.update?.(dt, t); if (!paused) afterWorldUpdate(world, t); if (world.render) world.render(dt); else renderer.render(world.scene, world.camera); }
   endFrame();
 }
 requestAnimationFrame(frame);

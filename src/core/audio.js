@@ -2,6 +2,8 @@
 import { Howl, Howler } from 'howler';
 import { store, on, dbg } from './store.js';
 import { commsMode } from './comms.js';
+import { noteEngine, noteRumble } from '../audio/rumble-shake.js';
+import { resumeBeds } from '../audio/runtime.js';
 const S = {}; const M = {}; const V = {};
 const SFX = ['click','hover','switch','toggle','ok','error','glitch','open','close','tick','bong','computer','field','door','explosion','boom','thruster','clunk','hammer','step1','step2','powerup','stage','ping','beep','highup','lowdown','jingle_win','jingle_pancho','jingle_fail','achievement','thud'];
 const VOICES = { countdown:'a11_countdown_liftoff', eagle:'a11_eagle_has_landed', smallstep:'a11_one_small_step', jfk:'jfk_we_choose_the_moon', houston:'a13_houston_problem', christmas:'a8_merry_christmas', roar:'sts135_launch_roar' };
@@ -60,6 +62,7 @@ export function say(text, lang) {
 let eng = null;
 export function engine(level, { low = 1 } = {}) {
   engineLast = [level, low];
+  noteEngine(level);
   const ctx = Howler.ctx; if (!ctx) return;
   if (!eng) {
     const len = ctx.sampleRate * 2, buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
@@ -75,14 +78,15 @@ export function engine(level, { low = 1 } = {}) {
   eng.lp.frequency.setTargetAtTime(120 + 900 * level * low, t, 0.1);
   eng.src.playbackRate.setTargetAtTime(0.7 + 0.5 * level, t, 0.1);
 }
-export function stopEngine() { engineLast[0] = 0; if (eng) eng.g.gain.setTargetAtTime(0, Howler.ctx.currentTime, 0.2); }
-export function unlock() { try { Howler.ctx && Howler.ctx.state === 'suspended' && Howler.ctx.resume(); } catch {} }
+export function stopEngine() { engineLast[0] = 0; noteEngine(0); if (eng) eng.g.gain.setTargetAtTime(0, Howler.ctx.currentTime, 0.2); }
+export function unlock() { try { Howler.ctx && Howler.ctx.state === 'suspended' && Howler.ctx.resume(); } catch {} resumeBeds(); }
 export function blip(n = 3) { for (let i = 0; i < n; i++) setTimeout(() => sfx('beep', { vol: 0.25, rate: 0.8 + Math.random() * 0.9 }), i * 70); }
 
 // --- Retumbo de lanzamiento: sub-graves (ruido marrón < 90 Hz) + crepitar de las F-1 (impulsos dispersos filtrados) ---
 let rum = null;
 export function rumble(level, crackle = level) {
   rumbleLast = [level, crackle];
+  noteRumble(level);
   const ctx = Howler.ctx; if (!ctx) return;
   if (!rum) {
     const sr = ctx.sampleRate, len = sr * 3;
@@ -101,7 +105,7 @@ export function rumble(level, crackle = level) {
   rum.gL.gain.setTargetAtTime(Math.min(1, level) * 0.9 * v, t, 0.25);
   rum.gC.gain.setTargetAtTime(Math.min(1, crackle) ** 2 * 0.45 * v, t, 0.15);
 }
-export function stopRumble() { rumbleLast = [0,0]; if (rum) { const t = Howler.ctx.currentTime; rum.gL.gain.setTargetAtTime(0, t, 0.6); rum.gC.gain.setTargetAtTime(0, t, 0.3); } }
+export function stopRumble() { rumbleLast = [0, 0]; noteRumble(0); if (rum) { const t = Howler.ctx.currentTime; rum.gL.gain.setTargetAtTime(0, t, 0.6); rum.gC.gain.setTargetAtTime(0, t, 0.3); } }
 
 // Live sliders apply to already-playing media, not only to the next sound.
 on('store:vol', () => { if (vol().music === 0) for (const h of Object.values(M)) h.volume(0); duck = activeVoices.size && vol().voice > 0 ? 0.35 : 1; setMusicVol(); for (const {h,id,base} of activeVoices.values()) h.volume(base * vol().voice, id); for (const {h,id,base} of activeSfx.values()) if (h.playing(id)) h.volume(base * vol().sfx, id); if (eng) engine(engineLast[0], {low:engineLast[1]}); if (rum) rumble(...rumbleLast); if (vol().voice === 0 && 'speechSynthesis' in window) speechSynthesis.cancel(); });

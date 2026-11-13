@@ -4,6 +4,7 @@ import { t, extend, lang } from '../../core/i18n.js';
 import { store, shared, dbg } from '../../core/store.js';
 import { $, $$, h, sleep, achieve, mmss, toast } from '../../core/util.js';
 import { sfx, music, voice } from '../../core/audio.js';
+import { setPhaseBed } from '../../audio/runtime.js';
 import { renderFlag, renderPatch } from '../../ui/flag.js';
 import { lobbyBg } from '../../ui/screens.js';
 import { pancho } from '../../ui/pancho.js';
@@ -32,7 +33,7 @@ function statLine(ph, r) {
 const ALL_ACH = ['first', 'mission1', 'soft', 'fuel', 'nofault', 'noassist', 'wrinkle', 'golf', 'sock', 'earthrise', 'galaxy', 'cardboard', 'coop'];
 
 export default async function debrief(p, { retry, menu } = {}) {
-  lobbyBg(); music('victory', { vol: 0.5, loop: false });
+  lobbyBg(); setPhaseBed('debrief'); music('victory', { vol: 0.5, loop: false });
   const R = p.results || {}; const scores = PH.map((k) => R[k]?.score ?? 0); const total = Math.round(scores.reduce((a, b) => a + b, 0) / PH.length);
   const rank = rankOf(total); const best = store.get('bestTotal') || 0; const newBest = total > best; if (newBest) store.set('bestTotal', total);
   const t0 = Date.now() - 1000; achieve('mission1'); if (p.diff !== 'cadet') achieve('noassist');

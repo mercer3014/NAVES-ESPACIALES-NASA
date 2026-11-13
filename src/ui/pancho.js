@@ -4,6 +4,7 @@ import { dbg, on } from '../core/store.js';
 import { blip, say as tts } from '../core/audio.js';
 import { commsAllow, commsMode } from '../core/comms.js';
 import { radioBurst } from '../net/radio.js';
+import { chatterPulse } from '../audio/radio-chatter.js';
 const SVG = `<svg viewBox="0 0 64 72" aria-hidden="true">
  <line x1="44" y1="14" x2="56" y2="1" stroke="#bbb" stroke-width="2"/><circle cx="56" cy="2" r="2.5" fill="#fc3d21" class="ant"/>
  <rect x="4" y="14" width="56" height="50" rx="10" fill="#c8823a" stroke="#6b3d14" stroke-width="2"/>
@@ -25,6 +26,7 @@ export const pancho = {
     el.classList.remove('hidden'); el.classList.toggle('up', pos === 'up'); span.textContent = ''; let i = 0; blip(3);
     const talk = speak && commsMode() !== 'off';
     radioBurst(Math.min(4200, 500 + text.length * (talk ? 62 : 24))); // misma radio del traje: Quindar + estática
+    chatterPulse(Math.min(2200, 700 + text.length * 28));
     typing = setInterval(() => { span.textContent = text.slice(0, ++i); if (i % 6 === 0) blip(1); if (i >= text.length) clearInterval(typing); }, 22);
     if (talk) tts(text.replace(/[♪()]/g, ''), lang());
     if (ms) hideT = setTimeout(() => el.classList.add('hidden'), ms + text.length * 22);

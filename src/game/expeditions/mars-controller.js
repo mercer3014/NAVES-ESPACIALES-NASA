@@ -7,6 +7,7 @@ import {store,on,dbg,DEBUG} from '../../core/store.js';
 import {axis,pressed,makeStick,bindBtn,bpressed,clearBtns} from '../../core/input.js';
 import {setWorld,onTick,invalidateModel} from '../../core/engine.js';
 import {sfx,music,engine,stopEngine,stopVoices,unlock,say} from '../../core/audio.js';
+import {setPhaseBed} from '../../audio/runtime.js';
 import {net,tx,peerOnline,leaveRoom} from '../../net/room.js';
 import {show} from '../../ui/router.js';
 import {lobbyBg,startScreen,createScreen,getFlag} from '../../ui/screens.js';
@@ -20,7 +21,7 @@ export async function startExpedition({mission='mars',mode='solo',role='pilot',s
  const el=show(`<div class="expedition ${pilot?'pilot':'capcom'}"><header class="ex-head"><h2>${t('ex.'+mission)}</h2><nav><button class="btn ex-mute">${t('ex.mute')}</button><button class="btn ex-exit">${t('ex.exit')}</button></nav></header><section class="ex-panel ${pilot?'':'cc'}"><h3 class="ex-stage"></h3><p class="ex-status" aria-live="polite"></p><p class="ex-hint"></p><div class="ex-tele"></div><p class="ex-event" aria-live="polite"></p><section class="ex-climate"><h3>${t('ma.climate')}</h3><p>${t('ma.solar')}</p><div class="ex-sliders">${['water','light','temp','co2'].map(k=>`<label class="ex-slider">${t('ma.'+k)} <output data-out="${k}"></output><input aria-label="${t('ma.'+k)}" data-climate="${k}" type="range" min="${k==='temp'?10:0}" max="${k==='temp'?32:1}" step="${k==='temp'?1:.01}"></label>`).join('')}</div></section></section><aside class="ex-mapbox"><canvas width="300" height="300" aria-label="${t('ma.map')}"></canvas><p>${t('ma.map')}</p></aside>${pilot?`<div class="ex-controls"><div class="ex-stick" role="application" aria-label="${t('ex.controls')}"><i></i></div><div><p class="ex-keys">${t('ex.controls')}</p><div class="ex-actions"><button class="btn go ex-action">${t('ex.action')}</button><button class="btn ex-pace" hidden type="button">${t('ma.pace')}</button></div></div></div>`:''}<section class="ex-result"></section><section class="ex-error"></section><div class="ex-loading">${t('ex.loading')}</div></div>`,'expedition',()=>{
   alive=false;offs.splice(0).forEach(f=>f());clearBtns();stopEngine();stopVoices();world?.dispose?.();dbg('expedition',null);
  });
- const exit=(peer=false)=>{if(coop){if(!peer)tx({t:'quit',mission});leaveRoom();}startScreen();};
+ const exit=(peer=false)=>{setPhaseBed(null);if(coop){if(!peer)tx({t:'quit',mission});leaveRoom();}startScreen();};
  q('.ex-exit',el).onclick=()=>exit();q('.ex-mute',el).onclick=()=>{toggleExpeditionAudio();paint();};
  if(pilot){makeStick(q('.ex-stick',el));bindBtn(q('.ex-action',el),'exp-action');const paceBtn=q('.ex-pace',el);if(paceBtn)paceBtn.onclick=()=>{pace=pace>1?1:4;sfx('tick');paint();};}
  const send=force=>{if(coop&&pilot&&(force||performance.now()-snapAt>220)){snapAt=performance.now();tx({t:'snap',ph:mission,d:state});}};
@@ -36,7 +37,7 @@ export async function startExpedition({mission='mars',mode='solo',role='pilot',s
   offs.push(on('net:lost',paint),on('net:peer',paint),on('net:roster',paint));
  }
  function announce(){
-  if(state.stage!==lastStage){lastStage=state.stage;const key=state.stage==='landing'?'tension':state.stage==='gather'?'eva':state.stage==='done'?'victory':'ambient';music(key,{fade:500,vol:.38});sfx(state.stage==='failed'?'jingle_fail':state.stage==='done'?'jingle_win':'stage',{vol:.35});say(t(['done','failed'].includes(state.stage)?'ex.'+state.stage:'ma.'+state.stage),store.get('lang'));send(true);}
+  if(state.stage!==lastStage){lastStage=state.stage;const key=state.stage==='landing'?'tension':state.stage==='gather'?'eva':state.stage==='done'?'victory':'ambient';music(key,{fade:500,vol:.38});setPhaseBed('mars-'+state.stage);sfx(state.stage==='failed'?'jingle_fail':state.stage==='done'?'jingle_win':'stage',{vol:.35});say(t(['done','failed'].includes(state.stage)?'ex.'+state.stage:'ma.'+state.stage),store.get('lang'));send(true);}
   if(state.sol!==lastSol){if(lastSol>=0)sfx('bong',{vol:.35});lastSol=state.sol;send(true);}
   if(state.stage==='done'&&!posted){posted=true;if(coop&&pilot){send(true);tx({t:'debrief',mission,state});}}
  }

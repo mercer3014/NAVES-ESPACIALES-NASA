@@ -7,6 +7,7 @@ import { $, $$, h, sleep, toast, achieve, scanFx, rng } from '../core/util.js';
 import { offerLook, requestLook, lookActive } from '../core/look.js';
 import { commsReset } from '../core/comms.js';
 import { sfx, music, stopEngine, stopRumble, stopVoices } from '../core/audio.js';
+import { setPhaseBed } from '../audio/runtime.js';
 import { clearBtns, pressed } from '../core/input.js';
 import { pancho } from '../ui/pancho.js';
 import { net, tx, partner, peerOnline, leaveRoom } from '../net/room.js';
@@ -100,13 +101,13 @@ addEventListener('keydown', (e) => { if (e.code === 'Escape' && M && M.role === 
 
 export async function quitMission() {
   if (M) { M.ctx?.kill(); M.ctx?.cc.dispose(); M.offs.forEach((f) => f()); if (M.mode === 'coop') { tx({ t: 'quit' }); leaveRoom(); } }
-  M = null; closePause(); music('title'); const s = await import('../ui/screens.js'); s.startScreen();
+  M = null; closePause(); setPhaseBed(null); music('title'); const s = await import('../ui/screens.js'); s.startScreen();
 }
 
 // ---------- Fases ----------
 async function runPhase(phase) {
   if (M.ctx) { M.ctx.kill(); M.ctx.cc.dispose(); }
-  M.phase = phase; dbg('phase', phase); if (M.mode === 'coop') tx({ t: 'phase', ph: phase, results: M.results });
+  M.phase = phase; dbg('phase', phase); setPhaseBed(phase); if (M.mode === 'coop') tx({ t: 'phase', ph: phase, results: M.results });
   commsReset(); sfx('stage', { vol: 0.35 }); scanFx(); offerLook(phase);
   const mod = await loaders[phase](); const ctx = makeCtx(phase); M.ctx = ctx; const myCtx = ctx;
   let res;
@@ -122,6 +123,7 @@ async function runPhase(phase) {
   debrief();
 }
 async function practiceResult() {
+  setPhaseBed(null);
   const r = M.results[M.phase]; const { practiceScreen } = await import('./phases/debrief.js');
   if (M.mode === 'coop') tx({ t: 'practice', ph: M.phase, score: r?.score || 0 });
   practiceScreen(M.phase, r, { retry: () => runPhase(M.phase), next: () => { const i = PHASES.indexOf(M.phase); if (i < 4) { M.practice = PHASES[i + 1]; runPhase(M.practice); } else quitMission(); }, menu: quitMission });
@@ -146,7 +148,7 @@ function crewList() {
 export async function startMission({ mode = 'solo', role = 'pilot', practice = null, seed, diff, resume = null } = {}) {
   if (M) { M.ctx?.kill(); M.offs.forEach((f) => f()); }
   M = { mode, role, practice, seed: seed ?? ((Math.random() * 1e9) | 0), diff: diff || store.get('difficulty'), results: resume?.results || {}, offs: [], phase: null };
-  M.crew = crewList(); music(null, { fade: 800 });
+  M.crew = crewList(); setPhaseBed(null); music(null, { fade: 800 });
   if (mode === 'coop') {
     M.offs.push(on('net:restart', (m) => { if (M.role !== 'pilot') return; if (m.ph === 'prep') M.results = {}; runPhase(m.ph); }));
     M.offs.push(on('net:quit', () => { toast(t('net.left'), 'info'); quitMission(); }));
