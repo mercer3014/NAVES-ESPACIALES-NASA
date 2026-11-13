@@ -50,7 +50,8 @@ export function makePad() {
     vertexShader: skyVertexShader(),
     fragmentShader: `uniform float alt, earthR, earthK; uniform vec3 sun, earthRel; varying vec3 vD;
       void main(){ float h=clamp(vD.y,-.2,1.); vec3 zen=mix(vec3(.2,.38,.68),vec3(.0,.0,.02),smoothstep(.15,.8,alt)); vec3 hor=mix(vec3(.86,.8,.74),vec3(.25,.45,.85),smoothstep(.0,.6,alt));
-      hor=mix(hor,vec3(.02,.03,.08),smoothstep(.6,1.,alt)); vec3 c=mix(hor,zen,pow(max(h,0.),.5)); float s=max(dot(vD,sun),0.); c+=vec3(1.,.8,.55)*pow(s,8.)*.45*(1.-alt*.6)+vec3(1.)*pow(s,500.)*3.;
+      hor=mix(hor,vec3(.02,.03,.08),smoothstep(.6,1.,alt)); vec3 c=mix(hor,zen,pow(max(h,0.),.5)); float s=max(dot(vD,sun),0.);
+      c+=vec3(1.,.78,.48)*pow(s,28.)*.42*(1.-alt*.45)+vec3(1.,.9,.7)*pow(s,8.)*.18*(1.-alt*.35)+vec3(1.)*pow(s,420.)*4.2;
       if(vD.y<0.) c=mix(c,vec3(.6,.62,.66),smoothstep(0.,-.05,vD.y)*(1.-alt));
       if(earthK>0.001){ float b=dot(vD,earthRel); float h2=b*b-(dot(earthRel,earthRel)-earthR*earthR);
         if(h2>0.){ float t=b-sqrt(h2); if(t<0.) t=b+sqrt(h2);
@@ -65,7 +66,7 @@ export function makePad() {
   const stars = twinkleStars(Q.high ? 4000 : 1800, 20000); scene.add(stars); stars.visible = false;
   scene.add(new THREE.HemisphereLight(0xc4dcff, 0x4a4632, 1.15));
   const sunL = new THREE.DirectionalLight(0xfff0dc, 3.1); sunL.target.position.set(0, BASE_Y - 12, 0); sunL.position.copy(sunDir).multiplyScalar(400).add(sunL.target.position); scene.add(sunL, sunL.target);
-  if (Q.high) { sunL.castShadow = true; sunL.shadow.mapSize.set(2048, 2048); sunL.shadow.bias = -0.0004; Object.assign(sunL.shadow.camera, { left: -140, right: 140, top: 160, bottom: -60, far: 1200 }); }
+  if (Q.high) { renderer.shadowMap.enabled = true; sunL.castShadow = true; sunL.shadow.mapSize.set(2048, 2048); sunL.shadow.bias = -0.00035; sunL.shadow.normalBias = 0.04; Object.assign(sunL.shadow.camera, { left: -140, right: 140, top: 160, bottom: -60, far: 1200 }); }
   // ---------- entorno: matorral costero, playa, Atlántico, caminos, edificios lejanos, línea de árboles, nubes ----------
   const ground = new THREE.Group(); scene.add(ground); const landU = { uT: { value: 0 } };
   const landG = new THREE.PlaneGeometry(26000, 26000, 1, 1); landG.rotateX(-Math.PI / 2);

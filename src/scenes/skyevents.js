@@ -82,6 +82,12 @@ function spawn(k, seed) {
   } else if (k === 'bh') {
     const dir0 = skyDir(W, R, [0.4, 0.6], 0.45), P = dir0.clone().multiplyScalar(D * 0.9), r = D * 0.035;
     const hole = new THREE.Mesh(new THREE.SphereGeometry(r, 48, 24), new THREE.MeshBasicMaterial({ color: 0x000000, fog: false })); hole.renderOrder = 2;
+    const atmo = new THREE.Mesh(new THREE.SphereGeometry(r * 2.4, 40, 20), new THREE.ShaderMaterial({
+      ...ADD, side: THREE.BackSide, uniforms: { uA: { value: 0 } },
+      vertexShader: `varying vec3 vN; varying vec3 vV; void main(){ vec4 w=modelMatrix*vec4(position,1.); vN=normalize(mat3(modelMatrix)*normal); vV=normalize(cameraPosition-w.xyz); gl_Position=projectionMatrix*viewMatrix*w; }`,
+      fragmentShader: `uniform float uA; varying vec3 vN; varying vec3 vV; void main(){ float d=pow(clamp(1.-abs(dot(normalize(vN),normalize(vV))),0.,1.),1.7);
+        vec3 col=mix(vec3(1.,.4,.12), vec3(.28,.48,1.), d); gl_FragColor=vec4(col*d*uA*1.6,1.); }`,
+    })); atmo.renderOrder = 1;
     const diskMat = new THREE.ShaderMaterial({ ...ADD, side: THREE.DoubleSide, uniforms: { uT: { value: 0 }, uA: { value: 0 } },
       vertexShader: 'uniform float uR; varying vec2 vP; void main(){ vP=position.xy/uR; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }',
       fragmentShader: `uniform float uT; uniform float uA; uniform float uR; varying vec2 vP;
@@ -102,12 +108,12 @@ function spawn(k, seed) {
         vec3 c=vec3(1.,.8,.55)*(ph+arc)+vec3(.4,.5,.9)*halo; gl_FragColor=vec4(c*uA*step(1.0,rr+.04),1.); }` });
     const ring = new THREE.Mesh(new THREE.PlaneGeometry(r * 6, r * 6), ringMat);
     const shock = new THREE.Mesh(new THREE.RingGeometry(0.96, 1, 96), new THREE.MeshBasicMaterial({ color: 0x9fc4ff, ...ADD, opacity: 0, side: THREE.DoubleSide }));
-    const bh = new THREE.Group(); bh.position.copy(P); bh.add(hole, disk, ring, shock); g.add(bh);
+    const bh = new THREE.Group(); bh.position.copy(P); bh.add(atmo, hole, disk, ring, shock); g.add(bh);
     disk.rotation.x = -Math.PI / 2 + 0.22; ev.dur = 20;
     ev.update = (p, dt) => {
       const tt = p * ev.dur, grow = THREE.MathUtils.smoothstep(tt, 0, 3) * (1 - THREE.MathUtils.smoothstep(tt, ev.dur - 2.2, ev.dur));
       bh.scale.setScalar(Math.max(0.001, grow)); bh.lookAt(g.worldToLocal(W.camera.position.clone())); // el plano del anillo mira a la cámara
-      diskMat.uniforms.uT.value += dt; diskMat.uniforms.uA.value = grow; ringMat.uniforms.uA.value = grow;
+      diskMat.uniforms.uT.value += dt; diskMat.uniforms.uA.value = grow; ringMat.uniforms.uA.value = grow; atmo.material.uniforms.uA.value = grow;
       const s = THREE.MathUtils.clamp((tt - 0.4) / 2.2, 0, 1); shock.scale.setScalar(r * (1.2 + s * 6)); shock.material.opacity = s > 0 && s < 1 ? (1 - s) * 0.35 : 0;
     };
     sfx('lowdown', { vol: 0.35 });

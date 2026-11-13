@@ -2,6 +2,7 @@
 import { THREE, model, modelAnim, fit, Q, renderer } from '../core/engine.js';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { skySphere, twinkleStars, galaxy, earth, moon, glowSprite, tickAll, dotTex } from './space.js';
+import { makePost } from './fx.js';
 import { isTouch } from '../core/store.js';
 export function makeCSM() {
   const g = new THREE.Group();
@@ -34,7 +35,9 @@ export function makeCruise() {
   const M = moon(16); scene.add(M);
   const sun = glowSprite(0xfff1d0, 220); sun.position.copy(sunDir).multiplyScalar(1500); scene.add(sun);
   const ship = makeStack(); scene.add(ship); let lastFrame = -1;
-  return { scene, camera, ship, E, M, sun, sunDir, stars, update(dt, t) { const fr = renderer.info.render.frame; if (fr === lastFrame) return; lastFrame = fr; tickAll(scene, dt, t); } };
+  const post = makePost(scene, camera, { strength: 0.2, radius: 0.36, threshold: 1.2, msaa: false });
+  return { scene, camera, ship, E, M, sun, sunDir, stars, update(dt, t) { const fr = renderer.info.render.frame; if (fr === lastFrame) return; lastFrame = fr; tickAll(scene, dt, t); },
+    render(dt) { if (post) post.render(dt); else renderer.render(scene, camera); }, resize(w, h) { post?.setSize(w, h); } };
 }
 
 // Pila real del artista para TLI → transposición, acople y extracción: S-IVB/IU/SLA (s4b-sla.glb) + CSM Columbia + LM.

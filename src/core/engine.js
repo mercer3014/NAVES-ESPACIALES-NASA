@@ -11,7 +11,9 @@ import { afterWorldUpdate } from '../audio/runtime.js';
 export const canvas = document.getElementById('gl');
 export const renderer = new THREE.WebGLRenderer({ canvas, antialias: !isMobile, powerPreference: 'high-performance', preserveDrawingBuffer: false });
 renderer.outputColorSpace = THREE.SRGBColorSpace;
-renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.localClippingEnabled = true; renderer.toneMappingExposure = 1.0;
+// AgX conserva el color del foil y del penacho mejor que ACES (hombro más suave). Las sombras, si una luz las pide, son suaves.
+renderer.toneMapping = THREE.AgXToneMapping; renderer.localClippingEnabled = true; renderer.toneMappingExposure = 1.02;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 export const Q = { high: !isMobile && store.get('quality') !== 'low', mobile: isMobile };
 if (store.get('quality') === 'high') Q.high = true;
 const maxDPR = Q.high ? 2 : 1.5;

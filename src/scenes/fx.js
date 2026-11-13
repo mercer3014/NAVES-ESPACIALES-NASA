@@ -1,6 +1,7 @@
 // Efectos compartidos: humo/vapor/polvo por GPU (sprites suaves instanciados), penacho de escape por capas,
 // destellos y post-proceso (bloom + calor) solo en calidad alta. Todo pensado para que en móvil cueste poco.
 import { THREE, renderer, Q } from '../core/engine.js';
+import { plumeBloom } from '../render/grade.js';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
@@ -149,7 +150,11 @@ export function makePlume({ layout, r0, len = 30, outerR = 6, outerLen = 70, hot
         float prof=smoothstep(0.,.025,s)*pow(1.-s, ${'1.6'})*(.55+.6*n)*(.85+.3*n2*flick);
         float sh=mix(1., smoothstep(.02,.12,s), sheath); // película oscura rica en combustible a la salida de la F-1
         vec3 c=mix(cH, cW, smoothstep(.0,.55,s+n*.25)); c=mix(c, c*vec3(.55,.75,1.25), vac);
-        float a=prof*pow(fr, 1.4-.7*vb*vac)*vK*sh*(1.+.6*vb*vac); gl_FragColor=vec4(c*I*(1.+vb*vac)*a, clamp(a*1.6,0.,1.)*.85);
+        float x=clamp(s,0.,1.); float frc=fract(x*6.5); float band=exp(-pow(frc-.22,2.)*28.); float gate=smoothstep(.06,.2,x)*(1.-x);
+        float mach=band*(1.-clamp(vac,0.,1.))*gate; // discos de Mach: misma curva que machDisk() en render/grade.js
+        float core=exp(-pow(1.-fr,2.)*3.2)*(1.-smoothstep(0.,.5,s));
+        c=mix(c, vec3(1.,.97,.93), clamp(core*.7,0.,.75)); c+=vec3(1.,.92,.72)*mach*.95;
+        float a=prof*pow(fr, 1.4-.7*vb*vac)*vK*sh*(1.+.6*vb*vac); a=clamp(a+mach*.28*(1.-vac),0.,1.); gl_FragColor=vec4(c*I*(1.+vb*vac)*a, clamp(a*1.6,0.,1.)*.85);
         ${TAIL} }`,
   });
   const coreM = mkMat(0), outM = mkMat(1);
@@ -174,20 +179,40 @@ function flareTex() {
   x.fillStyle = g; x.fillRect(0, 0, 128, 128); return (_flareT = new THREE.CanvasTexture(c));
 }
 export function makeFlashes(scene, n = 4) {
-  const pool = Array.from({ length: n }, () => { const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: flareTex(), color: 0xffffff, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0 })); s.visible = false; s.renderOrder = 5; scene.add(s); return { s, t: 9, d: 1, size: 1 }; });
+  const pool = Array.from({ length: n }, () => {
+    const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: flareTex(), color: 0xffffff, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0, toneMapped: false }));
+    s.visible = false; s.renderOrder = 5; scene.add(s);
+    const ring = new THREE.Mesh(new THREE.RingGeometry(0.72, 1, 64), new THREE.MeshBasicMaterial({ color: 0xffe2b8, transparent: true, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending, opacity: 0, toneMapped: false }));
+    ring.rotation.x = -Math.PI / 2; ring.visible = false; ring.renderOrder = 5; scene.add(ring);
+    return { s, ring, t: 9, d: 1, size: 1 };
+  });
   const light = new THREE.PointLight(0xffd8a0, 0, 400, 1.5); scene.add(light); let k = 0;
   return {
-    fire(pos, size = 30, dur = 0.5, color = 0xffffff) { const f = pool[k = (k + 1) % n]; f.s.position.copy(pos); f.t = 0; f.d = dur; f.size = size; f.s.material.color.set(color); f.s.visible = true; light.position.copy(pos); light.intensity = 9000 * (size / 30); },
-    update(dt) { let any = false; for (const f of pool) { if (!f.s.visible) continue; f.t += dt; const u = f.t / f.d; if (u >= 1) { f.s.visible = false; continue; } any = true; f.s.material.opacity = Math.pow(1 - u, 1.6); f.s.scale.setScalar(f.size * (0.6 + u * 0.8)); } light.intensity *= Math.exp(-dt * 9); if (!any && light.intensity < 1) light.intensity = 0; },
+    fire(pos, size = 30, dur = 0.5, color = 0xffffff) {
+      const f = pool[k = (k + 1) % n]; f.s.position.copy(pos); f.ring.position.copy(pos); f.t = 0; f.d = dur; f.size = size;
+      f.s.material.color.set(color); f.ring.material.color.set(color); f.s.visible = f.ring.visible = true; light.position.copy(pos); light.intensity = 9000 * (size / 30);
+    },
+    update(dt) {
+      let any = false;
+      for (const f of pool) {
+        if (!f.s.visible && !f.ring.visible) continue;
+        f.t += dt; const u = f.t / f.d; const ur = f.t / (f.d * 1.35);
+        if (u >= 1) f.s.visible = false; else { any = true; f.s.material.opacity = Math.pow(1 - u, 1.6); f.s.scale.setScalar(f.size * (0.6 + u * 0.8)); }
+        if (ur >= 1) f.ring.visible = false; else { any = true; f.ring.material.opacity = Math.pow(1 - ur, 1.5) * 0.9; f.ring.scale.setScalar(f.size * (0.28 + ur * 1.7)); }
+      }
+      light.intensity *= Math.exp(-dt * 9); if (!any && light.intensity < 1) light.intensity = 0;
+    },
   };
 }
 
 // ---- Post-proceso: bloom + distorsión de calor (máscara elíptica en pantalla). Solo calidad alta. ----
-export function makePost(scene, camera) {
-  if (!Q.high) return null;
+export function makePost(scene, camera, opts = {}) {
+  const tuned = plumeBloom(!!Q.high);
+  if (!tuned) return null;
   // The composer owns its buffers. A hand-sized target is treated as CSS pixels and then multiplied by the pixel ratio again.
   const comp = new EffectComposer(renderer);
   // Half-float MSAA resolves to black or flickers on Windows ANGLE. See post-samples.js.
+  // opts.msaa is ignored: bloom tuning from the lighting pass stays, the sample count does not.
   comp.renderTarget1.samples = COMPOSER_SAMPLES; comp.renderTarget2.samples = COMPOSER_SAMPLES;
   comp.setPixelRatio(renderer.getPixelRatio()); comp.setSize(innerWidth, innerHeight);
   comp.addPass(new RenderPass(scene, camera));
@@ -200,7 +225,7 @@ export function makePost(scene, camera) {
         gl_FragColor=texture2D(tDiffuse,uv); }`,
   });
   comp.addPass(haze);
-  const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth / 2, innerHeight / 2), 0.42, 0.5, 1.35); comp.addPass(bloom);
+  const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth / 2, innerHeight / 2), opts.strength ?? tuned.strength, opts.radius ?? tuned.radius, opts.threshold ?? tuned.threshold); comp.addPass(bloom);
   comp.addPass(new OutputPass());
   return {
     comp, haze, bloom,
