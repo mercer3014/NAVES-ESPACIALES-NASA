@@ -1,0 +1,66 @@
+.plb-letterbox {
+  position: fixed;
+  inset: 0;
+  z-index: 72;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.plb-letterbox-bar {
+  pointer-events: auto;
+  background: #000;
+  color: #f4f7fb;
+  height: 12vh;
+  min-height: 58px;
+  max-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 22px calc(0px + env(safe-area-inset-bottom, 0px));
+  box-sizing: border-box;
+  transform-origin: center bottom;
+  animation: plbBar 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.plb-letterbox-bar.top {
+  transform-origin: center top;
+  padding-bottom: 0;
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.plb-letterbox-copy { min-width: 0; }
+.plb-letterbox-copy strong {
+  display: block;
+  font-family: Orbitron, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  font-size: clamp(13px, 1.7vw, 20px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.plb-letterbox-copy small {
+  display: block;
+  font-family: Chakra, sans-serif;
+  letter-spacing: 0.06em;
+  color: #b7c3d4;
+  font-size: clamp(11px, 1.2vw, 14px);
+}
+.plb-letterbox-skip {
+  pointer-events: auto;
+  flex: none;
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 999px;
+  padding: 0.45em 1em;
+  min-height: 40px;
+  font-family: Chakra, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+}
+@keyframes plbBar { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@media (prefers-reduced-motion: reduce) {
+  .plb-letterbox-bar { animation: none; }
+}

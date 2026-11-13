@@ -6,6 +6,7 @@ import { sfx, music, engine, stopEngine, voice } from '../../core/audio.js';
 import { down, pressed, bindBtn, bdown } from '../../core/input.js';
 import { isTouch, shared, dbg, AUTO, AUTO1 } from '../../core/store.js';
 import { makeCruise } from '../../scenes/ship.js';
+import { playCue } from '../cutscenes/play.js';
 extend({
   'c.dv': ['Δv', 'Δv'], 'c.ok': ['¡Quemado perfecto!', 'Perfect burn!'], 'c.short': ['Un poco corto — corrección de curso', 'A bit short — course correction'], 'c.long': ['Te pasaste — corrección de curso', 'Overburn — course correction'],
   'c.cczone': ['Control de Misión ve la zona verde. ¡Escúchalo!', 'Mission Control sees the green zone. Listen!'], 'c.wrong': ['Esa no es', 'Not that one'],
@@ -83,6 +84,7 @@ export default async function cruise(ctx) {
   await ctx.wait(1.2); await ctx.until(() => ship.userData.interior || ctx.time > 6); setView('cdr'); // TLI desde el asiento del CDR
   { const I = ship.userData.interior; if (I) { I.guard(4); [8, 9, 10].forEach((i) => I.sw(i, true)); } }
   st.tli = await burn('tli', !(coop && ctx.cc.remote()));
+  playCue('tli', { anchor: () => ship, ctx });
   await ctx.wait(1.4);
   // ---------- transposición, acople y extracción del LM (cinemática) ----------
   if (ship.userData.transpose) {
