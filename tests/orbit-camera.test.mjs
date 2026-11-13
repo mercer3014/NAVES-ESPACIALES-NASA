@@ -111,6 +111,13 @@ for (let i = 0; i < 16; i++) {
   assert.ok(dist >= 3.15, dist);
 }
 
+const lander = resolveOrbitPosition({ x: -40, y: 12, z: 0 }, 1.1, -0.4, 4, {
+  subjectRadius: 6.2, minDistance: 11, margin: 0.6, floorAt: () => 1.2,
+});
+const landerGap = Math.hypot(lander.x + 40, lander.y - 12, lander.z);
+assert.ok(landerGap >= 6.2, landerGap);
+assert.ok(lander.y >= 1.2, lander.y);
+
 const canopy = { x: 0, y: 7.8, z: 0, r: 5.3 };
 const underChute = resolveOrbitPosition({ x: 0, y: 1.1, z: 0 }, 0.9, PITCH_LIMIT, 12, {
   spheres: [canopy], margin: 0.35, minDistance: 4.2, subjectRadius: 2.4,
