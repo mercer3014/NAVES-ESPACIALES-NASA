@@ -6,6 +6,28 @@ import {renderFlag,defaultFlag} from '../ui/flag.js';
 import {RoundedBoxGeometry} from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import {SITES,BASE} from '../sim/mars.js';
 import {marsFlightVisual,marsDress,MARS_GLASS_OPACITY,CHUTE_LIFT} from '../game/expeditions/mars-present.js';
+import {resolveOrbitPosition,stepOrbit} from '../game/orbit-camera.js';
+function frameMarsCamera(camera,rover,dt,world,greenhouse,chute){
+ const p=rover.position,mode=world.camMode||'chase',orbit=world.orbit;
+ if(mode==='orbit'&&orbit){
+  stepOrbit(orbit,dt);
+  const target={x:p.x,y:p.y+1.1,z:p.z};
+  const spheres=[];
+  if(greenhouse?.visible)spheres.push({x:greenhouse.position.x,y:greenhouse.position.y+2.2,z:greenhouse.position.z,r:5.4});
+  if(chute?.visible)spheres.push({x:chute.position.x,y:chute.position.y,z:chute.position.z,r:5.3});
+  const pos=resolveOrbitPosition(target,orbit.smoothYaw,orbit.smoothPitch,orbit.smoothDistance,{up:'y',minDistance:orbit.minDistance,subjectRadius:2.4,margin:.35,spheres,floorAt:(x,_y,z)=>marsGround(x,z)+.55});
+  camera.position.set(pos.x,pos.y,pos.z);camera.up.set(0,1,0);camera.lookAt(target.x,target.y,target.z);return;
+ }
+ if(mode==='cockpit'){
+  const fwd=new THREE.Vector3();rover.getWorldDirection(fwd);
+  camera.position.set(p.x-fwd.x*5.4,p.y+2.5,p.z-fwd.z*5.4);
+  const gy=marsGround(camera.position.x,camera.position.z)+.5;if(camera.position.y<gy)camera.position.y=gy;
+  camera.up.set(0,1,0);camera.lookAt(p.x+fwd.x*9,p.y+1.4,p.z+fwd.z*9);return;
+ }
+ const dist=camera.aspect<1?19:14;
+ camera.position.lerp(new THREE.Vector3(p.x+dist*.65,p.y+dist*.6,p.z+dist),1-Math.exp(-dt*3));
+ camera.lookAt(p.x,p.y+1,p.z);
+}
 export const marsGround=(x,z)=>.25*Math.sin(x*.18)*Math.cos(z*.15)+.12*Math.sin(x*.49+z*.26);
 export async function makeMarsWorld(state,flag){
  const roverAsset=await model('rover'); // Fail before allocating the scene/GPU environment if this required model is unavailable.
@@ -42,5 +64,5 @@ export async function makeMarsWorld(state,flag){
  const sites=SITES.map((p,i)=>{const g=new THREE.Group();g.position.set(p.x,marsGround(p.x,p.z),p.z);const m=mesh(new THREE.DodecahedronGeometry(p.k==='ice'?1.1:.9,1),new THREE.MeshStandardMaterial({color:p.k==='ice'?0xa9b3ac:0x9f603b,roughness:.8}),g);m.scale.y=.55;const ring=mesh(new THREE.RingGeometry(1.6,1.8,p.k==='ice'?40:6),new THREE.MeshBasicMaterial({color:p.k==='ice'?0x9ce6ff:0xffb052,side:THREE.DoubleSide}),g);ring.rotation.x=-Math.PI/2;ring.position.y=.06;scene.add(g);return g;});
  const baseMark=mesh(new THREE.RingGeometry(.65,.77,32),new THREE.MeshBasicMaterial({color:0xcbdde0,side:THREE.DoubleSide}));baseMark.rotation.x=-Math.PI/2;baseMark.position.set(BASE.x,marsGround(BASE.x,BASE.z)+.04,BASE.z);
  renderer.shadowMap.enabled=Q.high;sun.castShadow=Q.high;sun.shadow.mapSize.set(Q.high?2048:1024,Q.high?2048:1024);Object.assign(sun.shadow.camera,{left:-32,right:32,top:32,bottom:-32,near:1,far:140});sun.shadow.bias=-.0003;sun.shadow.normalBias=.04;scene.traverse(o=>{if(o.isMesh){o.castShadow=Q.high;o.receiveShadow=Q.high;}});
- let t=0;return{scene,camera,rover,greenhouse,kind:'mars',update(dt){t+=dt;const s=state(),l=s.land,land=s.stage==='landing';const gx=land?l.x:s.rover.x,gz=land?0:s.rover.z,gy=marsGround(gx,gz);const pose=land?marsFlightVisual(l,gy):null;rover.position.set(gx,land?pose.roverY:gy,gz);rover.rotation.y=s.rover.yaw;crane.visible=!!pose?.showCrane;if(pose)crane.position.set(gx,pose.craneY,gz);chute.visible=!!pose?.showChute;if(pose)chute.position.set(gx,pose.roverY+pose.chuteLift,gz);cables.forEach((m,i)=>{if(!crane.visible){m.visible=false;return;}const [tx,tz]=TANKS[i],[dx,dy,dz]=DECK[i];span(m,gx+tx,pose.craneY,gz+tz,gx+dx,pose.roverY+dy,gz+dz);});jets.forEach(j=>j.scale.setScalar(.35+(l?.thr||0)*.7));greenhouse.visible=s.built>0;greenhouse.scale.y=Math.max(.02,s.built);const dress=marsDress(s.built);pole.visible=flagMesh.visible=panel.visible=dress;blue.color.setHex(s.stage==='grow'&&s.event==='panel'&&!s.eventFixed?0x3a2218:0x071b35);sites.forEach((o,i)=>o.visible=!s.collected.includes(i));crops.forEach((g,i)=>g.scale.setScalar(.4+Math.min(1,s.kg[i]/3)*.6));const storm=s.stage==='grow'&&s.event==='storm';scene.fog.density=storm?.017:.005;sun.intensity=storm?1.1:2.7;const p=rover.position,dist=camera.aspect<1?19:14;camera.position.lerp(new THREE.Vector3(p.x+dist*.65,p.y+dist*.6,p.z+dist),1-Math.exp(-dt*3));camera.lookAt(p.x,p.y+1,p.z);if(dress)flagMesh.rotation.y=Math.sin(t*1.4)*.04;},dispose(){env.dispose();fabricTex.dispose();fTex.dispose();scene.traverse(o=>{o.geometry?.dispose();if(o.material){for(const m of Array.isArray(o.material)?o.material:[o.material])m.dispose();}});}};
+ let t=0;return{scene,camera,rover,greenhouse,kind:'mars',update(dt){t+=dt;const s=state(),l=s.land,land=s.stage==='landing';const gx=land?l.x:s.rover.x,gz=land?0:s.rover.z,gy=marsGround(gx,gz);const pose=land?marsFlightVisual(l,gy):null;rover.position.set(gx,land?pose.roverY:gy,gz);rover.rotation.y=s.rover.yaw;crane.visible=!!pose?.showCrane;if(pose)crane.position.set(gx,pose.craneY,gz);chute.visible=!!pose?.showChute;if(pose)chute.position.set(gx,pose.roverY+pose.chuteLift,gz);cables.forEach((m,i)=>{if(!crane.visible){m.visible=false;return;}const [tx,tz]=TANKS[i],[dx,dy,dz]=DECK[i];span(m,gx+tx,pose.craneY,gz+tz,gx+dx,pose.roverY+dy,gz+dz);});jets.forEach(j=>j.scale.setScalar(.35+(l?.thr||0)*.7));greenhouse.visible=s.built>0;greenhouse.scale.y=Math.max(.02,s.built);const dress=marsDress(s.built);pole.visible=flagMesh.visible=panel.visible=dress;blue.color.setHex(s.stage==='grow'&&s.event==='panel'&&!s.eventFixed?0x3a2218:0x071b35);sites.forEach((o,i)=>o.visible=!s.collected.includes(i));crops.forEach((g,i)=>g.scale.setScalar(.4+Math.min(1,s.kg[i]/3)*.6));const storm=s.stage==='grow'&&s.event==='storm';scene.fog.density=storm?.017:.005;sun.intensity=storm?1.1:2.7;frameMarsCamera(camera,rover,dt,this,greenhouse,chute);if(dress)flagMesh.rotation.y=Math.sin(t*1.4)*.04;},dispose(){env.dispose();fabricTex.dispose();fTex.dispose();scene.traverse(o=>{o.geometry?.dispose();if(o.material){for(const m of Array.isArray(o.material)?o.material:[o.material])m.dispose();}});}};
 }

@@ -16,6 +16,8 @@ import {lobbyBg,startScreen,createScreen,getFlag} from '../../ui/screens.js';
 import {createMars,stepMars,marsBot,marsSet,marsAutoInput,retryMars,SITES,BASE} from '../../sim/mars.js';
 import {marsHudFields,marsHintKey,marsClimateOpen} from './mars-present.js';
 import {playCue,stopCue} from '../cutscenes/play.js';
+import {bindOrbitControls} from '../orbit-view.js';
+import {createOrbitState} from '../orbit-camera.js';
 const q=(s,el)=>el.querySelector(s),fmt=(x,n=0)=>Number(x||0).toFixed(n);
 export async function startExpedition({mission='mars',mode='solo',role='pilot',seed=17,resume=null}={}){
  if(mission!=='mars')throw Error('Unexpected Mars mission dispatcher');
@@ -72,7 +74,9 @@ export async function startExpedition({mission='mars',mode='solo',role='pilot',s
  paint();
  try{if(pilot){const {makeMarsWorld}=await import('../../scenes/mars.js');world=await makeMarsWorld(()=>state,getFlag());if(!alive){world.dispose();return;}setWorld(world);}else lobbyBg();ready=true;q('.ex-loading',el).remove();}catch(e){if(!alive)return;console.error('Mars required asset',e);q('.ex-loading',el).remove();const err=q('.ex-error',el);err.style.display='flex';err.innerHTML=`<div class="panel"><p>${t('ex.asset')}</p><button class="btn ex-reload">${t('ex.reload')}</button><button class="btn ex-menu">${t('ex.menu')}</button></div>`;q('.ex-reload',err).onclick=()=>{invalidateModel('rover');startExpedition({mission,mode,role,seed,resume:{aux:state}});};q('.ex-menu',err).onclick=()=>exit();return;}
  if(coop){if(pilot){tx({t:'phase',ph:mission,mission});send(true);}else tx({t:'sync'});}
- offs.push(onTick(dt=>{if(!alive||!ready)return;if(pilot&&(!coop||net.connected)){
+ let camRig=null;
+ if(pilot&&world){const orbitCam=createOrbitState({yaw:.9,pitch:.42,distance:16,minDistance:4.2,maxDistance:70,damp:6});world.orbit=orbitCam;camRig=bindOrbitControls(orbitCam,{allow:()=>alive});offs.push(()=>camRig.dispose());}
+ offs.push(onTick(dt=>{if(camRig&&world){camRig.poll();world.camMode=camRig.owner();}if(!alive||!ready)return;if(pilot&&(!coop||net.connected)){
   const a=axis();pendingAction ||= pressed('KeyE','Space')||bpressed('exp-action');acc+=dt*rate*(state.stage==='grow'?pace:1);let first=true;
   while(acc>=1/30){simulate(1/30,auto?marsAutoInput(state):{...a,action:first&&pendingAction});pendingAction=false;first=false;acc-=1/30;}
   if(state.stage==='landing'&&state.land.mode==='skycrane'&&!craneShown){craneShown=true;playCue('skycrane',{anchor:()=>world?.rover});}
