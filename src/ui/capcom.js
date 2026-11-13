@@ -7,6 +7,7 @@ import { sfx, music, voice } from '../core/audio.js';
 import { tx, net, partner, peerOnline } from '../net/room.js';
 import { lobbyBg } from './screens.js';
 import { quitMission } from '../game/mission.js';
+import { bindUiSfx } from './ui-sfx.js';
 extend({
   'cx.wait': ['Esperando al piloto…', 'Waiting for the pilot…'], 'cx.prDone': ['Práctica terminada · {ph}', 'Practice complete · {ph}'], 'cx.prScore': ['{s} puntos', '{s} points'], 'cx.prWait': ['El piloto está eligiendo: reintentar, siguiente fase o menú…', 'The pilot is choosing: retry, next phase or menu…'], 'cx.link': ['Enlace', 'Link'], 'cx.req': ['Pedido del piloto', 'Pilot request'], 'cx.none': ['Sin pedidos. Vigila la telemetría y envía avisos.', 'No requests. Watch telemetry and send pings.'],
   'cx.poll': ['Ronda GO/NO-GO: toca cada consola', 'GO/NO-GO poll: tap each console'], 'cx.stage': ['¡Separa la etapa ahora!', 'Stage now!'], 'cx.1202': ['ALARMA 1202 · ¿GO o ABORT?', '1202 ALARM · GO or ABORT?'],
@@ -35,6 +36,7 @@ export async function runCapcom(M) {
       <div class="panel box"><h3>${t('cc.ping')}</h3><div class="pings">${['good', 'slow', 'left', 'right', 'fuel', 'go', 'cut'].map((k) => `<button class="btn" data-p="${k}">${t('p.' + k)}</button>`).join('')}</div></div>
       <div class="panel box"><h3>${t('cc.events')}</h3><div class="log mono" style="max-height:220px;overflow:auto;font-size:.74rem;display:flex;flex-direction:column-reverse;gap:3px"></div></div>
     </div><div class="static los" style="display:none"></div></div></div>`, 'capcom');
+  bindUiSfx(el);
   dbg('capcom', C);
   const plot = $('.plot', el), px = plot.getContext('2d'); const reqBox = $('.reqs', el), logBox = $('.log', el);
   $('.leave', el).onclick = () => { sfx('click'); quitMission(); };

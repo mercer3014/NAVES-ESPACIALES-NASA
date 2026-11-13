@@ -9,6 +9,7 @@ import { pancho } from './pancho.js';
 import { net, createRoom, joinRoom, leaveRoom, tx, partner } from '../net/room.js';
 import { setWorld } from '../core/engine.js';
 import { offerLook } from '../core/look.js';
+import { setQualityPref } from './quality-pref.js';
 import { makeLobby } from '../scenes/lobby.js';
 import '../game/expeditions/text.js';
 import '../game/expeditions/text-horizon.js';
@@ -248,7 +249,7 @@ export function settingsScreen() {
   $$('input[type=range]', el).forEach((r) => (r.oninput = () => { const vv = store.get('vol'); vv[r.dataset.k] = +r.value; store.set('vol', vv); setMusicVol(); }));
   $$('input[type=range]', el).forEach((r) => (r.onchange = () => sfx('tick')));
   $$('.comms button', el).forEach((b) => (b.onclick = ui(() => { store.set('comms', b.dataset.c); store.set('tts', b.dataset.c !== 'off'); $$('.comms button', el).forEach((x) => x.classList.toggle('on', x === b)); })));
-  $$('.q button', el).forEach((b) => (b.onclick = ui(() => { store.set('quality', b.dataset.q); $$('.q button', el).forEach((x) => x.classList.toggle('on', x === b)); })));
+  $$('.q button', el).forEach((b) => (b.onclick = ui(() => { setQualityPref(b.dataset.q); $$('.q button', el).forEach((x) => x.classList.toggle('on', x === b)); })));
   $$('.diff button', el).forEach((b) => (b.onclick = ui(() => { store.set('difficulty', b.dataset.d); $$('.diff button', el).forEach((x) => x.classList.toggle('on', x === b)); })));
   const A = store.get('achievements'); $('.ach', el).innerHTML = ['first', 'nofault', 'soft', 'fuel', 'noassist', 'earthrise', 'sock', 'golf', 'wrinkle', 'galaxy', 'cardboard', 'coop', 'mission1'].map((k) => `<span class="chip" style="${A[k] ? 'border-color:var(--amber)' : 'opacity:.4'}">${A[k] ? '🏅' : '🔒'} ${t('ach.' + k)}</span>`).join('');
   $('.back', el).onclick = ui(startScreen);

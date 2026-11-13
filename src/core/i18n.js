@@ -2,6 +2,10 @@ import { store, emit } from './store.js';
 // key: [ES, EN]
 const T = {
   'boot.loading': ['Cargando sistemas', 'Loading systems'],
+  'boot.line.bus': ['Bus eléctrico', 'Power bus'],
+  'boot.line.nav': ['Plataforma de guiado', 'Guidance platform'],
+  'boot.line.comm': ['Enlace de voz', 'Voice link'],
+  'boot.line.cabin': ['Cabina en línea', 'Cabin online'],
   'intro.play': ['▶ Reproducir intro', '▶ Play intro'], 'intro.failed': ['No se pudo cargar el video; puedes continuar y volver a intentarlo desde el menú.', 'Video unavailable; continue and replay it from the menu.'],
   'intro.skip': ['Saltar ▸▸', 'Skip ▸▸'], 'intro.sound': ['🔊 Activar sonido', '🔊 Sound on'],
   'intro.s1': ['16 de julio de 1969 — Centro Espacial Kennedy', 'July 16, 1969 — Kennedy Space Center'],
@@ -42,7 +46,7 @@ const T = {
   'set.diff': ['Dificultad', 'Difficulty'], 'd.cadet': ['Cadete', 'Cadet'], 'd.normal': ['Normal', 'Normal'], 'd.veteran': ['Veterano', 'Veteran'],
   'd.hint': ['Cadete mantiene el cohete en el corredor y enciende el asistente de empuje al tomar el control del Eagle. Normal y Veterano: tú llevas el cabeceo y el empuje.', 'Cadet holds the rocket in the corridor and turns throttle assist on when you take Eagle. Normal and Veteran: you fly pitch and thrust.'],
   'set.comms': ['Comunicaciones', 'Comms'], 'set.comms.min': ['Mínimas', 'Minimal'], 'set.comms.normal': ['Normales', 'Normal'], 'set.comms.off': ['Desactivadas', 'Off'],
-  'set.tts': ['Voz de Pancho (TTS)', 'Pancho voice (TTS)'], 'set.reload': ['La calidad se aplica al recargar', 'Quality applies on reload'],
+  'set.tts': ['Voz de Pancho (TTS)', 'Pancho voice (TTS)'], 'set.reload': ['Se guarda la preferencia. El render la aplica al arrancar.', 'Preference is saved. The renderer applies it at startup.'],
   'cred.title': ['Créditos', 'Credits'],
   'prac.title': ['Práctica', 'Practice'], 'prac.d': ['Entrena cualquier fase por separado.', 'Train any phase on its own.'],
   'missions.title': ['Misiones', 'Missions'], 'm1': ['Misión 1 · Apolo 11', 'Mission 1 · Apollo 11'], 'm1.d': ['Lleva al Eagle a la Luna y planta tu bandera.', 'Fly Eagle to the Moon and plant your flag.'],
