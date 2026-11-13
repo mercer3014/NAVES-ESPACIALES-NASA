@@ -96,7 +96,12 @@ function pauseMenu() {
   };
 }
 function closePause() { pauseEl?.remove(); pauseEl = null; setPaused(false); delete document.body.dataset.paused; }
-addEventListener('keydown', (e) => { if (e.code === 'Escape' && M && M.role === 'pilot' && document.body.dataset.screen?.startsWith('phase-')) pauseEl ? closePause() : pauseMenu(); });
+addEventListener('keydown', (e) => {
+  if (e.code !== 'Escape' || !M || M.role !== 'pilot' || !document.body.dataset.screen?.startsWith('phase-')) return;
+  if (!pauseEl) { pauseMenu(); return; }
+  closePause();
+  if (lookActive()) requestLook();
+});
 
 export async function quitMission() {
   if (M) { M.ctx?.kill(); M.ctx?.cc.dispose(); M.offs.forEach((f) => f()); if (M.mode === 'coop') { tx({ t: 'quit' }); leaveRoom(); } }

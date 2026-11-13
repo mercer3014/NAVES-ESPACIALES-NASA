@@ -435,6 +435,8 @@ body.touch .pancho.lift{bottom:calc(200px + var(--safe-b))}
 @media(max-height:500px) and (orientation:landscape){.sciencebtn{bottom:12px!important;right:150px!important;max-width:38vw!important}.pancho.lift{bottom:140px!important}}
 .look-chip{position:fixed;left:50%;bottom:calc(72px + var(--safe-b));transform:translateX(-50%);z-index:8;pointer-events:auto;max-width:min(92vw,520px)}
 body.touch .look-chip{display:none}
+/* Pointer lock: hide the cursor during EVA / descent. Menus clear .look-on so it comes back. */
+body.look-on:not(.touch), body.look-on:not(.touch) *{cursor:none !important}
 .vscue{grid-column:1/-1;font-size:12px;line-height:1.35;letter-spacing:.02em}
 .vscue.rise{color:var(--amber)}
 .vscue.fall{color:var(--go)}

@@ -6,6 +6,7 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
+import { COMPOSER_SAMPLES } from './post-samples.js';
 
 const TAIL = `#include <tonemapping_fragment>
 #include <colorspace_fragment>`;
@@ -186,7 +187,8 @@ export function makePost(scene, camera) {
   if (!Q.high) return null;
   // The composer owns its buffers. A hand-sized target is treated as CSS pixels and then multiplied by the pixel ratio again.
   const comp = new EffectComposer(renderer);
-  comp.renderTarget1.samples = 4; comp.renderTarget2.samples = 4;
+  // Half-float MSAA resolves to black or flickers on Windows ANGLE. See post-samples.js.
+  comp.renderTarget1.samples = COMPOSER_SAMPLES; comp.renderTarget2.samples = COMPOSER_SAMPLES;
   comp.setPixelRatio(renderer.getPixelRatio()); comp.setSize(innerWidth, innerHeight);
   comp.addPass(new RenderPass(scene, camera));
   const haze = new ShaderPass({
@@ -202,7 +204,11 @@ export function makePost(scene, camera) {
   comp.addPass(new OutputPass());
   return {
     comp, haze, bloom,
-    render(dt) { haze.uniforms.uT.value += dt; haze.enabled = haze.uniforms.uK.value > 0.002; comp.render(dt); },
+    render(dt) {
+      if (comp.renderTarget1.samples !== COMPOSER_SAMPLES) { comp.renderTarget1.samples = COMPOSER_SAMPLES; comp.renderTarget1.dispose(); }
+      if (comp.renderTarget2.samples !== COMPOSER_SAMPLES) { comp.renderTarget2.samples = COMPOSER_SAMPLES; comp.renderTarget2.dispose(); }
+      haze.uniforms.uT.value += dt; haze.enabled = haze.uniforms.uK.value > 0.002; comp.render(dt);
+    },
     setSize(w, h) { comp.setPixelRatio(renderer.getPixelRatio()); comp.setSize(w, h); },
     dispose() { comp.dispose(); },
   };
