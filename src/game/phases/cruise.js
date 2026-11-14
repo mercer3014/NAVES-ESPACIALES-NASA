@@ -3,12 +3,14 @@ import { THREE, renderer } from '../../core/engine.js';
 import { t, extend } from '../../core/i18n.js';
 import { $, $$, h, toast, achieve, clamp, damp, lerp, fmt } from '../../core/util.js';
 import { sfx, music, engine, stopEngine, voice } from '../../core/audio.js';
-import { down, pressed, bindBtn, bdown } from '../../core/input.js';
+import { down, bindBtn, bdown } from '../../core/input.js';
 import { isTouch, shared, dbg, AUTO, AUTO1 } from '../../core/store.js';
 import { burnPrompt, objectiveCardHtml } from '../../ui/flight-hud.js';
 import { paintPrompt } from '../../ui/flight-hud-mount.js';
 import { makeCruise } from '../../scenes/ship.js';
-import { playCue } from '../cutscenes/play.js';
+import { playCue, cueActive } from '../cutscenes/play.js';
+import { bindOrbitControls } from '../orbit-view.js';
+import { createOrbitState, resolveOrbitPosition, stepOrbit } from '../orbit-camera.js';
 extend({
   'c.dv': ['Δv', 'Δv'], 'c.ok': ['¡Quemado perfecto!', 'Perfect burn!'], 'c.short': ['Un poco corto — corrección de curso', 'A bit short — course correction'], 'c.long': ['Te pasaste — corrección de curso', 'Overburn — course correction'],
   'c.cczone': ['Control de Misión ve la zona verde. ¡Escúchalo!', 'Mission Control sees the green zone. Listen!'], 'c.wrong': ['Esa no es', 'Not that one'],
@@ -17,7 +19,7 @@ extend({
   'c.space': ['Mantén ESPACIO', 'Hold SPACE'], 'c.tap3': ['Toca las 3 estrellas marcadas en ámbar', 'Tap the 3 stars ringed in amber'], 'c.coast': ['Rumbo a la Luna', 'Coasting to the Moon'], 'c.retro': ['Quemado retrógrado', 'Retrograde burn'],
   'c.td': ['Transposición y acople', 'Transposition and docking'], 'c.td0': ['Separación del CSM · paneles del SLA fuera', 'CSM separation · SLA panels away'], 'c.td1': ['Giro de 180°', '180° turnaround'],
   'c.td2': ['Aproximación al LM', 'Closing on the LM'], 'c.tdc': ['¡Contacto! Pestillos cerrados', 'Contact! Latches closed'], 'c.td4': ['Extrayendo el LM', 'Extracting the LM'], 'c.td5': ['Despliegue del tren de aterrizaje del LM', 'Deploying the LM landing legs'],
-  'c.vin': ['Cabina', 'Cabin'], 'c.vout': ['Exterior', 'Outside'], 'c.vkey': ['C: cambiar vista', 'C: switch view'],
+  'c.vin': ['Cabina', 'Cabin'], 'c.vout': ['Exterior', 'Outside'], 'c.vkey': ['C/V: órbita, persecución o cabina', 'C/V: orbit, chase or cockpit'],
 });
 const NAMES = ['Sirius', 'Vega', 'Rigel', 'Canopus', 'Antares', 'Altair'];
 
@@ -44,19 +46,46 @@ export default async function cruise(ctx) {
   // ---------- vista interior (cm-interior.glb): ojo del CDR o detrás de una ventana; las ventanas muestran la escena real ----------
   const VIEWS = { cdr: { n: 'eye-CDR', back: 0.06, fov: 74 }, win: { n: 'win-rdz-left', back: 0.2, fov: 62 }, photo: { n: 'win-side-left', back: 0.24, fov: 56, free: true } };
   let view = null, inView = 'cdr', viewLock = false, baseFov = cam.fov; const vbtn = $('.viewbtn', el);
-  const paintV = () => { const I = ship.userData.interior; vbtn.style.display = I && !viewLock ? '' : 'none'; vbtn.textContent = t(view ? 'c.vout' : 'c.vin') + (isTouch ? '' : ' · C'); };
+  const paintV = () => { vbtn.style.display = 'none'; };
   const setView = (v) => { const I = ship.userData.interior; if (v && !I) v = null; if (!view && v) baseFov = cam.fov; view = v ? VIEWS[v] : null; if (v) inView = v; I?.set(!!view);
     cam.near = view ? 0.006 : 0.1; cam.fov = view ? (cam.aspect < 1 ? view.fov + 14 : view.fov) : baseFov; cam.updateProjectionMatrix(); if (photoMode) ship.visible = !!view; paintV(); };
   const lockView = (v, lock = true) => { viewLock = lock; setView(v); };
-  vbtn.onclick = () => { if (!viewLock) { sfx('tick'); setView(view ? null : inView); } };
+  vbtn.onclick = () => { if (!viewLock && !photoMode) camRig.cycle(); };
+  const orbit = createOrbitState({ yaw: -0.89, pitch: 0.24, distance: 30, minDistance: 11, maxDistance: 90, damp: 7 });
+  let orbitLens = false;
+  const camRig = bindOrbitControls(orbit, {
+    allow: () => !photoMode && !viewLock,
+    onMode: (mode) => { if (photoMode || viewLock) return; setView(mode === 'cockpit' ? (inView || 'cdr') : null); },
+  });
+  ctx.onCleanup(() => camRig.dispose());
   dbg('crDbg', { cam, ship, VIEWS, setView, lockView });
-  ctx.loop(() => { if (pressed('KeyC') && !viewLock) vbtn.onclick(); if (vbtn.style.display === 'none' && ship.userData.interior && !viewLock) paintV(); });
+  ctx.loop(() => { camRig.poll(); if (camRig.state.mode === 'cockpit' && !view && !viewLock && !photoMode && ship.userData.interior) setView(inView || 'cdr'); });
   ctx.onCleanup(() => { ship.userData.interior?.set(false); cam.near = 0.1; cam.updateProjectionMatrix(); });
   const _ws = new THREE.Vector3();
   const placeInView = () => { const n = ship.userData.interior.node(view.n); if (!n) return; n.updateWorldMatrix(true, false); n.getWorldPosition(cam.position); n.getWorldQuaternion(cam.quaternion); cam.translateZ(view.back * n.getWorldScale(_ws).x); if (view.free) { const d = new THREE.Vector3(0, 0, -1).applyQuaternion(cam.quaternion); cam.up.set(0, 1, 0); cam.lookAt(cam.position.clone().add(d)); }
     if (shake > 0) { cam.position.x += (Math.random() - 0.5) * shake * 0.05; cam.position.y += (Math.random() - 0.5) * shake * 0.05; cam.rotateZ((Math.random() - 0.5) * shake * 0.08); } };
   const fw = new THREE.Vector3(); // punto de la nave que sigue la cámara (cambia durante la transposición)
-  ctx.loop((dt) => { const pz = !photoMode && cam.aspect < 1 ? 1.9 : 1; if (photoMode) fw.set(0, 0, 0); else { ship.updateMatrixWorld(); fw.copy(ship.userData.focus || ship.position); if (ship.userData.focus) ship.localToWorld(fw); } cam.position.copy(fw).addScaledVector(camOff, pz); if (shake > 0) { cam.position.x += (Math.random() - 0.5) * shake; cam.position.y += (Math.random() - 0.5) * shake; } cam.lookAt(fw.clone().add(camLook)); if (view) placeInView(); W.update(dt, ctx.time); });
+  ctx.loop((dt) => {
+    const pz = !photoMode && cam.aspect < 1 ? 1.9 : 1; if (photoMode) fw.set(0, 0, 0); else { ship.updateMatrixWorld(); fw.copy(ship.userData.focus || ship.position); if (ship.userData.focus) ship.localToWorld(fw); }
+    cam.position.copy(fw).addScaledVector(camOff, pz); if (shake > 0) { cam.position.x += (Math.random() - 0.5) * shake; cam.position.y += (Math.random() - 0.5) * shake; } cam.lookAt(fw.clone().add(camLook));
+    const scripted = photoMode || viewLock || cueActive();
+    const owner = scripted ? 'rail' : camRig.owner();
+    if (owner === 'orbit') {
+      stepOrbit(orbit, dt);
+      const pos = resolveOrbitPosition(fw, orbit.smoothYaw, orbit.smoothPitch, orbit.smoothDistance, {
+        up: 'y', minDistance: orbit.minDistance, subjectRadius: 11, margin: 0.8,
+        spheres: [{ x: E.position.x, y: E.position.y, z: E.position.z, r: 62 }, { x: M.position.x, y: M.position.y, z: M.position.z, r: 18 }],
+      });
+      cam.position.set(pos.x, pos.y, pos.z); cam.up.set(0, 1, 0); cam.lookAt(fw);
+      const fov = cam.aspect < 1 ? 64 : 50;
+      if (!orbitLens || Math.abs(cam.fov - fov) > 0.5) { orbitLens = true; cam.fov = fov; cam.near = 0.15; cam.updateProjectionMatrix(); }
+    } else {
+      if (orbitLens && !view) { orbitLens = false; cam.fov = baseFov; cam.near = 0.1; cam.updateProjectionMatrix(); }
+      if (view) placeInView();
+      else if (owner === 'cockpit') { cam.position.lerp(fw, 0.62); cam.lookAt(fw); }
+    }
+    W.update(dt, ctx.time);
+  });
   E.position.set(-10, -78, 0); M.position.set(2600, 120, -500);
 
   // ---------- quemado (TLI / LOI) ----------

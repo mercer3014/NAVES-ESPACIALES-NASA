@@ -1,6 +1,7 @@
 // Original fictional rescue hardware and an illustrative 2-D lensing backdrop, not a GR renderer.
 import {THREE,Q,renderer} from '../core/engine.js';
 import {WORLD_SCALE,SHIP_SCALE,STATION_SCALE,STATION_PORT_LOCAL,STATION_COLLAR_R,DOCK_DIST} from '../sim/horizon.js';
+import {resolveOrbitPosition,stepOrbit} from '../game/orbit-camera.js';
 import {RoomEnvironment} from 'three/examples/jsm/environments/RoomEnvironment.js';
 import {renderFlag,defaultFlag} from '../ui/flag.js';
 const vertex=`varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.9999,1.0);}`;
@@ -114,7 +115,11 @@ export function makeHorizonWorld(state,flag,getSafeArea=null){
   let lo=span*.7,hi=Math.max(span*2.2,70);place(hi);if(!fits()){for(let i=0;i<7&&!fits();i++){hi*=1.28;place(hi);}}else{for(let i=0;i<9;i++){const m=(lo+hi)/2;place(m);if(fits())hi=m;else lo=m;}place(hi);}
   zoom=hi/Math.max(1,span);
   const blend=reduced||!camReady?1:1-Math.exp(-Math.max(0,dt)*1.8);camPos.lerp(idealPos,blend);lookS.lerp(idealLook,blend);camReady=true;
-  camera.position.copy(camPos);camera.up.set(0,0,1);camera.lookAt(lookS);camera.updateMatrixWorld(true);syncLens();
+  camera.position.copy(camPos);camera.up.set(0,0,1);camera.lookAt(lookS);camera.updateMatrixWorld(true);
+  const free=world.camMode;
+  if(free==='orbit'&&world.orbit){const orbit=world.orbit;stepOrbit(orbit,dt);const target={x:ship.position.x,y:ship.position.y,z:ship.position.z+1};const pos=resolveOrbitPosition(target,orbit.smoothYaw,orbit.smoothPitch,orbit.smoothDistance,{up:'z',minDistance:orbit.minDistance,subjectRadius:SHIP_SCALE*2.55,margin:.8,spheres:[{x:probe.position.x,y:probe.position.y,z:probe.position.z,r:STATION_SCALE*2.15}]});camera.position.set(pos.x,pos.y,pos.z);camera.up.set(0,0,1);camera.lookAt(target.x,target.y,target.z);camera.updateMatrixWorld(true);}
+  else if(free==='cockpit'){const hd=s.heading||0,fx=Math.cos(hd),fy=Math.sin(hd),back=SHIP_SCALE*3.15,rise=SHIP_SCALE*.9;camera.position.set(ship.position.x-fx*back,ship.position.y-fy*back,rise);camera.up.set(0,0,1);camera.lookAt(ship.position.x+fx*36,ship.position.y+fy*36,rise*.3);camera.updateMatrixWorld(true);}
+  syncLens();
   if(!history.length||history[history.length-1].distanceToSquared(ship.position)>.08){history.push(ship.position.clone());if(history.length>600)history.shift();history.forEach((p,i)=>p.toArray(trailA,i*3));trailG.attributes.position.needsUpdate=true;trailG.setDrawRange(0,history.length);trailG.computeBoundingSphere();}},dispose(){env.dispose();ft.dispose();radTex.dispose();scene.traverse(o=>{o.geometry?.dispose();for(const m of Array.isArray(o.material)?o.material:o.material?[o.material]:[])m.dispose();});}};
  world.layout=()=>world.resize(innerWidth,innerHeight);world.positions=()=>{const p=o=>{const v=o.position.clone().project(camera);return{x:(v.x+1)*innerWidth/2,y:(1-v.y)*innerHeight/2};};return{ship:p(ship),probe:p(probe),safe:world.safeArea};};world.resize(innerWidth,innerHeight);return world;
 }
