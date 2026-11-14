@@ -10,6 +10,12 @@ NASA does not endorse this game; its insignia is not the game brand.
 
 Planet textures © Solar System Scope (https://www.solarsystemscope.com/textures/), CC BY 4.0 https://creativecommons.org/licenses/by/4.0/ — resized/recompressed for web.
 
+Mars regolith PBR (albedo, normal, roughness) used on the Huerto rojo surface:
+ambientCG "Ground 054" by Lennart Demes, CC0 1.0. https://ambientcg.com/view?id=Ground054
+https://creativecommons.org/publicdomain/zero/1.0/
+The albedo was multiplied by the set's ambient-occlusion map and hue-graded toward Martian dust. Shipped as public/tex/mars/regolith_albedo.ktx2 (UASTC, sRGB), regolith_normal.ktx2 (UASTC, linear OpenGL normal) and regolith_rough.ktx2, with WebP siblings as a fallback. The distant boulders in public/models/mars-boulder.glb are original geometry, CC0, stored with EXT_meshopt_compression.
+public/tex/basis/ is the Basis Universal transcoder (Binomial LLC), Apache License 2.0, as shipped with three.js. https://github.com/BinomialLLC/basis_universal
+
 Music: SRG774 (Dark Sci-Fi Audio Pack), TinyWorlds (Space Graveyard), cinameng / James Gargette (Persistence), Umplix (Floating in Space), CC0 1.0.
 https://opengameart.org/content/dark-sci-fi-audio-pack
 https://opengameart.org/content/space-graveyard-ambient-track
