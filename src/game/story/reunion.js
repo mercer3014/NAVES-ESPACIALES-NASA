@@ -81,9 +81,9 @@ async function hatchPart() {
   // tres hombres flotando (gravedad cero): Collins espera; Armstrong y Aldrin bajan por el túnel
   const load = (n, at, yaw) => character(n, 'idle', { at, yaw }).catch(() => null);
   const [col, arm, ald] = await Promise.all([
-    load('collins-civil', [c.x - 0.45, c.y - 1.05, c.z - 0.15], 0.5),
-    load('armstrong-civil', [c.x + 0.05, top + 0.6, c.z], Math.PI),
-    load('aldrin-civil', [c.x + 0.35, top + 1.9, c.z + 0.1], Math.PI + 0.3),
+    load('collins-vuelo', [c.x - 0.45, c.y - 1.05, c.z - 0.15], 0.5),
+    load('armstrong-vuelo', [c.x + 0.05, top + 0.6, c.z], Math.PI),
+    load('aldrin-vuelo', [c.x + 0.35, top + 1.9, c.z + 0.1], Math.PI + 0.3),
   ]);
   const crew = [col, arm, ald].filter(Boolean); crew.forEach((k) => scene.add(k.root));
   const yArm = c.y - 0.85, yAld = c.y - 0.95; let hug = 0, saidThere = false;
@@ -94,8 +94,8 @@ async function hatchPart() {
     id: 'reunion', world, title: TITLE, minHold: 16,
     shots: [
       { d: 6, pos: P(0.75, -0.55, 0.95), look: [c.x, top, c.z], fov: 62, to: { pos: P(0.6, -0.45, 0.8), look: [c.x, top - 0.2, c.z], fov: 56 } }, // Collins mira el túnel
-      { d: 7, pos: P(-0.9, 0.1, 0.9), look: P(0, -0.2, 0), fov: 58, to: { pos: P(-0.7, 0.05, 0.75), look: P(0, -0.25, 0), fov: 52 } },
-      { d: 30, pos: P(0.2, 0.15, 1.15), look: P(-0.05, -0.35, 0), fov: 50, to: { pos: P(0.15, 0.1, 1.0), look: P(-0.05, -0.35, 0), fov: 46 } },
+      { d: 7, pos: P(-0.6, 0.1, 0.55), look: P(0, -0.2, 0), fov: 58, to: { pos: P(-0.5, 0.05, 0.5), look: P(0, -0.25, 0), fov: 52 } },
+      { d: 30, pos: P(0.15, 0.1, 0.72), look: P(-0.05, -0.35, 0), fov: 50, to: { pos: P(0.12, 0.08, 0.66), look: P(-0.05, -0.35, 0), fov: 46 } },
     ],
     lines: [
       { at: 0.4, who: 'COLLINS', text: ['Ahí están. Ahí están los dos.', 'There they are! There they both are!'] },

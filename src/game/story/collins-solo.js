@@ -32,7 +32,7 @@ export default async function collinsSolo() {
   let W = null; const cleanup = [];
   try {
     W = await makeColumbia({ light: 'dark', spin: 0, withEarth: false, withMoon: false });
-    const mike = await floater(W, 'collins-civil', { x: 0.9, y: 2.3, z: 0.0, tilt: Math.PI / 2, phase: 0.8 });
+    const mike = await floater(W, 'collins-vuelo', { x: 0.15, y: 1.45, z: -0.35, tilt: Math.PI / 2, phase: 0.8 });
     // Luna grande con brillo propio (la cabina sigue a oscuras) y sus marcas
     const lunaMat = new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xd8d2c6, emissiveMap: tex('/tex/moon_2k.jpg'), emissiveIntensity: 0.85, roughness: 1 });
     const luna = new THREE.Mesh(new THREE.SphereGeometry(R, 96, 64), lunaMat); luna.position.copy(CEN); W.scene.add(luna);
@@ -43,7 +43,7 @@ export default async function collinsSolo() {
     });
     let sweep = null; // { r } mientras pasan las marcas
     const view = (a) => (a ? { pos: [a.head.x + 0.18, a.head.y - 0.32, a.head.z + 0.78], look: [a.head.x, a.head.y, a.head.z], fov: 42 } : null);
-    const WIDE = { pos: [0.55, 1.5, 1.42], look: [-0.15, 2.0, -0.1], fov: 72 };
+    const WIDE = { pos: [0.42, 1.5, 0.92], look: [-0.15, 2.0, -0.1], fov: 72 };
     const HATCH = { pos: [0, 1.2, 1.22], look: [0, 0.55, 3.2], fov: 54 };
     const STARS = { pos: [-0.82, 1.24, 0.45], look: [-3.2, 1.6, 1.4], fov: 56 };
     W.setShot(WIDE, { cut: true });
