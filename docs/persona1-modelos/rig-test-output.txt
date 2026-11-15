@@ -1,0 +1,90 @@
+== armstrong-civil
+  OK   raíz Armature en origen, sin rot/escala
+  OK   huesos 22
+  OK   mismos nombres/orden de huesos que el resto
+  OK   todos los huesos existen en astronaut-a7l
+  OK   ≤4 influencias normalizadas
+  OK   10 morph targets en cada primitiva tras meshopt
+  OK   pelo: alphaTest + DoubleSide
+  OK   pelo rígido al hueso Head
+  OK   morphTargetInfluences por nombre (smile, blink-l)
+  OK   clips kebab-case: idle,walk,sit,talk,point,wave
+  OK   clips: solo rotaciones + Hips.position
+  OK   clip idle 3.00s en sitio (alto 1.81, centro xz 0.00,0.04)
+  OK   clip walk 1.00s en sitio (alto 1.81, centro xz -0.00,0.21)
+  OK   clip sit 2.00s en sitio (alto 1.38, centro xz -0.00,0.22)
+  OK   clip talk 3.00s en sitio (alto 1.81, centro xz -0.02,0.21)
+  OK   clip point 2.00s en sitio (alto 1.81, centro xz -0.00,0.06)
+  OK   clip wave 2.50s en sitio (alto 1.81, centro xz -0.00,0.04)
+  OK   crossFade idle→walk (peso a mitad 0.50)
+== aldrin-civil
+  OK   raíz Armature en origen, sin rot/escala
+  OK   huesos 22
+  OK   mismos nombres/orden de huesos que el resto
+  OK   todos los huesos existen en astronaut-a7l
+  OK   ≤4 influencias normalizadas
+  OK   10 morph targets en cada primitiva tras meshopt
+  OK   pelo: alphaTest + DoubleSide
+  OK   pelo rígido al hueso Head
+  OK   morphTargetInfluences por nombre (smile, blink-l)
+  OK   clips kebab-case: idle,walk,sit,talk,point,wave
+  OK   clips: solo rotaciones + Hips.position
+  OK   clip idle 3.00s en sitio (alto 1.78, centro xz 0.00,0.04)
+  OK   clip walk 1.00s en sitio (alto 1.78, centro xz -0.00,0.21)
+  OK   clip sit 2.00s en sitio (alto 1.35, centro xz -0.00,0.21)
+  OK   clip talk 3.00s en sitio (alto 1.78, centro xz -0.01,0.21)
+  OK   clip point 2.00s en sitio (alto 1.78, centro xz -0.00,0.06)
+  OK   clip wave 2.50s en sitio (alto 1.78, centro xz -0.00,0.04)
+  OK   crossFade idle→walk (peso a mitad 0.50)
+== collins-civil
+  OK   raíz Armature en origen, sin rot/escala
+  OK   huesos 22
+  OK   mismos nombres/orden de huesos que el resto
+  OK   todos los huesos existen en astronaut-a7l
+  OK   ≤4 influencias normalizadas
+  OK   10 morph targets en cada primitiva tras meshopt
+  OK   pelo: alphaTest + DoubleSide
+  OK   pelo rígido al hueso Head
+  OK   morphTargetInfluences por nombre (smile, blink-l)
+  OK   clips kebab-case: idle,walk,sit,talk,point,wave
+  OK   clips: solo rotaciones + Hips.position
+  OK   clip idle 3.00s en sitio (alto 1.81, centro xz 0.00,0.04)
+  OK   clip walk 1.00s en sitio (alto 1.81, centro xz -0.00,0.21)
+  OK   clip sit 2.00s en sitio (alto 1.38, centro xz 0.00,0.22)
+  OK   clip talk 3.00s en sitio (alto 1.81, centro xz -0.01,0.21)
+  OK   clip point 2.00s en sitio (alto 1.81, centro xz -0.00,0.06)
+  OK   clip wave 2.50s en sitio (alto 1.81, centro xz -0.00,0.04)
+  OK   crossFade idle→walk (peso a mitad 0.50)
+== civil-base
+  OK   raíz Armature en origen, sin rot/escala
+  OK   huesos 22
+  OK   mismos nombres/orden de huesos que el resto
+  OK   todos los huesos existen en astronaut-a7l
+  OK   ≤4 influencias normalizadas
+  OK   10 morph targets en cada primitiva tras meshopt
+  OK   pelo: alphaTest + DoubleSide
+  OK   pelo rígido al hueso Head
+  OK   morphTargetInfluences por nombre (smile, blink-l)
+  OK   clips kebab-case: idle,walk,sit,talk,point,wave
+  OK   clips: solo rotaciones + Hips.position
+  OK   clip idle 3.00s en sitio (alto 1.81, centro xz 0.00,0.05)
+  OK   clip walk 1.00s en sitio (alto 1.81, centro xz -0.00,0.21)
+  OK   clip sit 2.00s en sitio (alto 1.37, centro xz 0.00,0.22)
+  OK   clip talk 3.00s en sitio (alto 1.81, centro xz -0.02,0.22)
+  OK   clip point 2.00s en sitio (alto 1.81, centro xz -0.00,0.07)
+  OK   clip wave 2.50s en sitio (alto 1.81, centro xz -0.00,0.05)
+  OK   crossFade idle→walk (peso a mitad 0.50)
+  OK   clips de armstrong-civil → aldrin-civil: huesos 100% enlazados (178/178; 0 pistas de morph de primitivas que aldrin-civil no tiene se filtran), wave alto 1.91
+  OK   clips de armstrong-civil → collins-civil: huesos 100% enlazados (178/178; 0 pistas de morph de primitivas que collins-civil no tiene se filtran), wave alto 1.92
+  OK   clips de armstrong-civil → civil-base: huesos 100% enlazados (173/178; 5 pistas de morph de primitivas que civil-base no tiene se filtran), wave alto 1.93
+  OK   clips de aldrin-civil → armstrong-civil: huesos 100% enlazados (178/178; 0 pistas de morph de primitivas que armstrong-civil no tiene se filtran), wave alto 1.93
+  OK   clips de aldrin-civil → collins-civil: huesos 100% enlazados (178/178; 0 pistas de morph de primitivas que collins-civil no tiene se filtran), wave alto 1.92
+  OK   clips de aldrin-civil → civil-base: huesos 100% enlazados (173/178; 5 pistas de morph de primitivas que civil-base no tiene se filtran), wave alto 1.93
+  OK   clips de collins-civil → armstrong-civil: huesos 100% enlazados (178/178; 0 pistas de morph de primitivas que armstrong-civil no tiene se filtran), wave alto 1.93
+  OK   clips de collins-civil → aldrin-civil: huesos 100% enlazados (178/178; 0 pistas de morph de primitivas que aldrin-civil no tiene se filtran), wave alto 1.91
+  OK   clips de collins-civil → civil-base: huesos 100% enlazados (173/178; 5 pistas de morph de primitivas que civil-base no tiene se filtran), wave alto 1.93
+  OK   clips de civil-base → armstrong-civil: huesos 100% enlazados (173/173; 0 pistas de morph de primitivas que armstrong-civil no tiene se filtran), wave alto 1.93
+  OK   clips de civil-base → aldrin-civil: huesos 100% enlazados (173/173; 0 pistas de morph de primitivas que aldrin-civil no tiene se filtran), wave alto 1.91
+  OK   clips de civil-base → collins-civil: huesos 100% enlazados (173/173; 0 pistas de morph de primitivas que collins-civil no tiene se filtran), wave alto 1.93
+  OK   retargetClip astronaut-a7l 'walk' → armstrong-civil (alto 1.95)
+TODO OK

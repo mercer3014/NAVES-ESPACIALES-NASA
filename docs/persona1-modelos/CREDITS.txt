@@ -1,0 +1,14 @@
+Persona 1 · v02 — créditos y licencias
+- Malla base humana, targets de forma/edad/rasgos, unidades de expresión (morph targets) y proxy de ojos:
+  MakeHuman 1.x assets (Data Collection AB / MakeHuman team), licencia CC0 1.0. https://github.com/makehumancommunity/makehuman
+- Parches de misión / bandera de los trajes: texturas propias del proyecto (art/src/astronaut-a7l/tex, CC0).
+- Aluminio cepillado de props: art/src/props/tex/alu_* del proyecto (CC0).
+- Tipografía en etiquetas: Barlow Condensed (SIL OFL 1.1), del proyecto (art/src/props/fonts).
+- Resto (ropa, pelo, materiales, rig, animaciones, props, Laika): procedural, CC0 1.0, autor Persona 1.
+
+v03 — referencias fotográficas (dominio público, NASA; ver /workspace/p1-modelos/refs/SOURCES.txt):
+- Retratos oficiales 1969: Armstrong S69-31741, Aldrin (retrato oficial), Collins S69-31742 — usados como referencia de rasgos y proyectados (aplanados/igualados en color) sobre la zona de ojos/nariz/mejillas/cejas de cada cara. Las fotos de NASA son de dominio público en EE. UU.
+
+v04: pelo hecho con hair cards procedurales y textura alpha de mechones generada por script (CC0, propia). No se usan assets de pelo de terceros.
+
+v05: atlas de pelo horneado de un groom procedural propio (CC0). Fotos de referencia NASA (dominio público) listadas en refs/SOURCES.txt, incluye armstrong-aldrin-lm-sim.jpg.

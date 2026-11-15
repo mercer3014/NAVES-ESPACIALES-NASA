@@ -8,6 +8,10 @@ Apollo historical film: https://images.nasa.gov/details/KSC-19690716-MH-NAS01-00
 Audio: NASA Historical Sounds (Apollo 8, 11, 13). https://www.nasa.gov/audio-and-ringtones/
 NASA does not endorse this game; its insignia is not the game brand.
 
+Persona 1 models (public/models/civil-base.glb, armstrong-civil.glb, aldrin-civil.glb, collins-civil.glb, cabin-props.glb, laika-plush.glb): clothing, hair cards, materials, rigs, animation clips, cabin props and the Laika plush are original procedural work, CC0 1.0. Human base mesh, shape/age/feature targets, expression morph targets and eye proxy: MakeHuman 1.x assets (Data Collection AB / MakeHuman team), CC0 1.0. https://github.com/makehumancommunity/makehuman
+Likeness reference (color-matched projection on eyes, nose, cheeks and brows; the photographs themselves are not embedded): NASA 1969 official portraits Armstrong S69-31741, Aldrin official portrait, Collins S69-31742, and armstrong-aldrin-lm-sim.jpg — US public domain. NASA does not endorse this project.
+Mission-patch and brushed-aluminum textures are this project's existing CC0 art. Label type is Barlow Condensed (SIL OFL 1.1), noticed with the other fonts below. Full Persona 1 credit text: docs/persona1-modelos/CREDITS.txt.
+
 Planet textures © Solar System Scope (https://www.solarsystemscope.com/textures/), CC BY 4.0 https://creativecommons.org/licenses/by/4.0/ — resized/recompressed for web.
 
 Mars regolith PBR (albedo, normal, roughness) used on the Huerto rojo surface:
