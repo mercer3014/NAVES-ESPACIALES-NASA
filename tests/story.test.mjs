@@ -29,7 +29,7 @@ assert.deepEqual(badSlot, [], 'escenas en SLOTS sin STORY');
 // la decisión de Laika después de la escena; los puentes ocupan los huecos del plan.
 const slotOf = Object.fromEntries([...slots.matchAll(/'(before|after):([a-z]+)': \[([^\]]*)\]/g)].map((m) => [m[1] + ':' + m[2], [...m[3].matchAll(/'([a-z0-9:-]+)'/g)].map((x) => x[1])]));
 assert.equal(new Set(slotIds).size, slotIds.length, 'ids repetidos en SLOTS');
-assert.deepEqual(slotOf['before:prep'], ['bridge:intro', 'hotel-prologue', 'mocr-tough', 'bridge:design', 'design', 'bridge:jul69', 'house-farewell', 'kids', 'ksc', 'beach', 'bridge:launch-morning'], 'orden de before:prep');
+assert.deepEqual(slotOf['before:prep'], ['bridge:intro', 'hotel-prologue', 'mocr-tough', 'bridge:design', 'design', 'bridge:jul69', 'house-farewell', 'ksc', 'beach', 'bridge:launch-morning'], 'orden de before:prep');
 for (const id of ['house-farewell', 'kids', 'ksc', 'beach', 'design']) assert.ok(!slotOf['before:launch'].includes(id), `${id} debe ir antes de la Fase 1`);
 assert.deepEqual(slotOf['before:launch'], ['bridge:t-minus']);
 assert.deepEqual(slotOf['before:cruise'], ['bridge:tli']);
@@ -61,6 +61,21 @@ assert.match(flow, /laika: \['[^']*No Canon\)', '[^']*Non-canon\)'\]/, 'título 
 assert.match(flow, /design: designScene/, 'STORY design');
 assert.match(flow, /import\('\.\.\/design\/design-screen\.js'\)/, 'design importa design-screen.js');
 assert.match(flow, /designRoom\(\{ mode: 'story' \}\)/, "design llama designRoom({mode:'story'})");
+
+// WP-C: la casa y el MOCR se exploran; la decisión de los hijos y la hoja de Garman salen de esas escenas.
+assert.match(flow, /explore\('house'\)/, 'house-farewell explora la casa');
+assert.match(flow, /explore\('mocr-bales'\)/, 'mocr-briefing explora el MOCR');
+assert.match(flow, /'house-farewell': \['la-despedida'\]/, 'la casa solo entrega la tarjeta de momento');
+assert.match(flow, /'mocr-briefing': \[\]/, 'el chaleco y la hoja se ganan al inspeccionar');
+assert.match(src('game/explore/scenes/house.js'), /decision: 'c1-kids'/, 'c1-kids vive en el diálogo de Rick');
+assert.match(src('game/explore/scenes/house.js'), /stages-separate/, 'el cohete de Mark se separa');
+assert.match(src('game/explore/scenes/mocr-bales.js'), /flag: 'garmanSheet'/, 'la hoja deja garmanSheet');
+const descent = src('game/phases/descent.js');
+assert.match(descent, /flagOf\('garmanSheet'\)/, 'la 1202 mira la hoja');
+assert.match(descent, /c4_dec_bales_seguimos_go_tembloroso_en/, 'sin la hoja, la voz tiembla');
+assert.ok(has('audio/a11/voz_en_clonada/c4_dec_bales_seguimos_go_tembloroso_en.mp3'), 'falta el audio tembloroso');
+assert.ok(has('audio/a11/voz_en_clonada/c4_dec_bales_seguimos_go_en.mp3'), 'falta la voz firme');
+assert.ok(has('models/armstrong-house-p3.glb') && has('models/mocr-room-p3.glb'), 'faltan los mundos P3');
 
 const score = src('audio/a11-score.js');
 const audio = [...score.matchAll(/M\('([a-z0-9_]+)'\)/g)].map((m) => `audio/a11/music/${m[1]}.mp3`)

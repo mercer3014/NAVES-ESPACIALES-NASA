@@ -52,12 +52,32 @@ export const STORY = {
   'bridge:report': bridge('report'),
   'hotel-prologue': earth('hotel-prologue'),
   'mocr-tough': earth('mocr-tough'),
-  'house-farewell': earth('house-farewell'),
+  // La casa y el MOCR se caminan; el cierre es un plano corto de la cinemática.
+  // Object.assign: story.test corta el objeto STORY en el primer cierre con punto y coma.
+  'house-farewell': async (o) => {
+    const exp = await explore('house')(o);
+    if (exp?.skipped && !chose('c1-kids')) record('c1-kids', 'truth', { historic: true });
+    if (exp?.skipped) return Object.assign({}, exp, { id: 'house-farewell' });
+    const { runCinematic } = await import('../cutscenes/cine-player.js');
+    const { CINE_HOUSE } = await import('../cutscenes/cine-house.js');
+    const full = CINE_HOUSE['house-farewell'];
+    const shots = full.shots.slice(5, 7).map((s, i) => (i === 1 ? { ...s, d: 3 } : s));
+    const cine = await runCinematic({ ...full, shots }, o);
+    return Object.assign({}, exp, { id: 'house-farewell', cine });
+  },
   kids: decide('c1-kids'),
   ksc: own(() => import('./ksc.js')),
   beach: own(() => import('./beach.js')),
   night: own(() => import('./night.js')),
-  'mocr-briefing': earth('mocr-briefing'),
+  'mocr-briefing': async (o) => {
+    const exp = await explore('mocr-bales')(o);
+    if (exp?.skipped) return Object.assign({}, exp, { id: 'mocr-briefing' });
+    const { runCinematic } = await import('../cutscenes/cine-player.js');
+    const { CINE_MOCR } = await import('../cutscenes/cine-mocr.js');
+    const full = CINE_MOCR['mocr-briefing'];
+    const cine = await runCinematic({ ...full, shots: [{ ...full.shots[1], d: 7 }] }, o);
+    return Object.assign({}, exp, { id: 'mocr-briefing', cine });
+  },
   'mocr-1202': earth('mocr-1202'),
   'mocr-gonogo': earth('mocr-gonogo'),
   'mocr-landed': earth('mocr-landed'),
@@ -110,10 +130,10 @@ export const STORY_TITLES = {
 export const SCENE_CARDS = {
   'hotel-prologue': ['tratado-1967', 'apolo-1', 'foto-karen', 'libreta-ed-white'],
   'mocr-tough': ['duros-competentes', 'pizarra-kranz'],
-  'house-farewell': ['la-despedida', 'saturn-v'],
+  'house-farewell': ['la-despedida'],
   ksc: ['deke-slayton', 'primer-paso-quien'],
   beach: ['parche-mision', 'sobres-firmados'],
-  'mocr-briefing': ['chaleco-kranz', 'hoja-garman'],
+  'mocr-briefing': [],
   'mocr-1202': ['alarmas-1202'],
   'mocr-gonogo': ['go-aterrizar'],
   'mocr-landed': ['eagle-aterrizo'],
@@ -136,7 +156,7 @@ export const SCENE_CARDS = {
 // Orden cronológico (G1): prólogo 1967 → sala de diseño → julio de 1969 (casa, KSC, playa) → mañana del 16 jul (Fase 1) → lanzamiento…
 // El disyuntor se descubre ANTES del sueño del Guardián (T9). Las tarjetas puente `bridge:*` van en los huecos entre escenas.
 export const SLOTS = {
-  'before:prep': ['bridge:intro', 'hotel-prologue', 'mocr-tough', 'bridge:design', 'design', 'bridge:jul69', 'house-farewell', 'kids', 'ksc', 'beach', 'bridge:launch-morning'],
+  'before:prep': ['bridge:intro', 'hotel-prologue', 'mocr-tough', 'bridge:design', 'design', 'bridge:jul69', 'house-farewell', 'ksc', 'beach', 'bridge:launch-morning'],
   'before:launch': ['bridge:t-minus'],
   'before:cruise': ['bridge:tli'],
   'before:descent': ['bridge:undock', 'mocr-briefing'],

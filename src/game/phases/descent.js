@@ -227,7 +227,14 @@ export default async function descent(ctx) {
     if (opt === 'abort') await whatIf({ title: ['¿Y si…? Aborto a órbita', 'What if…? Abort to orbit'],
       text: ['Eagle separa la etapa de descenso y vuelve con Collins. El mundo espera. En la historia real el primer alunizaje se habría retrasado: el Apolo 12 estaba previsto para noviembre de 1969. Pero Bales dijo GO.', 'Eagle stages and returns to Collins. The world waits. In real history the first landing would have slipped: Apollo 12 was planned for November 1969. But Bales said GO.'] });
     if (ctx.dead) return;
-    await playStory('mocr-1202', { ctx, answer: opt === 'timeout' ? 'late' : 'go' }); if (ctx.dead) return;
+    // Con la hoja de Garman, Bales suena firme; sin ella, la misma frase sale temblorosa.
+    const { VO_MAP } = await import('../../audio/a11-voice-map.js');
+    const voiceKey = 'we re go flight it s go';
+    const prevVoice = VO_MAP[voiceKey];
+    if (opt === 'go' && !flagOf('garmanSheet')) VO_MAP[voiceKey] = 'voz_en_clonada/c4_dec_bales_seguimos_go_tembloroso_en';
+    try { await playStory('mocr-1202', { ctx, answer: opt === 'timeout' ? 'late' : 'go' }); }
+    finally { if (prevVoice) VO_MAP[voiceKey] = prevVoice; }
+    if (ctx.dead) return;
     if (opt === 'go' && st.alarmT < 3 && await quiz(['¿Por qué era seguro seguir con la alarma 1202?', 'Why was it safe to continue with the 1202 alarm?'], [
       { id: 'a', label: ['La computadora se sobrecargaba, pero priorizaba las tareas críticas y se reiniciaba sin perder el guiado', 'The computer was overloaded, but it prioritized critical tasks and restarted without losing guidance'] },
       { id: 'b', label: ['La alarma era un fallo del radar de aterrizaje que se arregló solo', 'The alarm was a landing radar fault that fixed itself'] },
