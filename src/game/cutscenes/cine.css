@@ -7,19 +7,20 @@
   max-width: min(860px, 88vw);
   pointer-events: none;
   text-align: center;
-  font-family: Chakra, sans-serif;
+  font-family: var(--f-ui);
+  font-weight: 600;
   font-size: clamp(14px, 1.9vw, 21px);
   line-height: 1.35;
-  color: #f4f7fb;
-  text-shadow: 0 1px 3px #000, 0 0 12px rgba(0, 0, 0, 0.8);
+  color: #F2EFE6;
+  text-shadow: 0 1px 3px #000, 0 0 6px rgba(0, 0, 0, 0.9);
   transition: opacity 0.25s;
 }
 .plb-cine-sub b {
   display: block;
-  font-family: Orbitron, sans-serif;
+  font-family:var(--f-title);
   font-size: 0.62em;
   letter-spacing: 0.18em;
-  color: #c6a36a;
+  color: #FF4F00;
   margin-bottom: 2px;
 }
 .plb-cine-cap {
@@ -28,10 +29,10 @@
   top: calc(max(58px, min(12vh, 120px)) + 16px);
   z-index: 73;
   pointer-events: none;
-  font-family: Mono, monospace;
+  font-family:var(--f-mono);
   font-size: clamp(11px, 1.3vw, 15px);
   letter-spacing: 0.08em;
-  color: #e9e2cf;
+  color: #CFCCC2;
   text-shadow: 0 1px 3px #000;
   transition: opacity 0.4s;
 }

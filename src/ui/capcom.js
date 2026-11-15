@@ -20,6 +20,17 @@ extend({
   'cx.k.stress': ['ESTRÉS', 'STRESS'], 'cx.k.pitch': ['CABECEO', 'PITCH'], 'cx.k.step': ['PASO', 'STEP'], 'cx.k.o2': ['O₂', 'O₂'], 'cx.k.mode': ['MODO', 'MODE'], 'cx.k.stage': ['ETAPA', 'STAGE'], 'cx.k.faults': ['FALLAS', 'FAULTS'],
 });
 const PH = ['prep', 'launch', 'cruise', 'descent', 'eva'];
+// Esquema de la Fase 1 que solo ve CAPCOM (el piloto actúa): qué color con cuál, qué válvula fuga
+const PREP_SCHEMA = [['cables'], ['tanks'], ['leak'], ['align'], ['hatch']];
+extend({
+  'cx.k.mistakes': ['ERRORES', 'MISTAKES'], 'cx.k.tasks': ['TAREAS', 'TASKS'],
+  'prep2.t.cables': ['Conecta el traje', 'Connect the suit'], 'prep2.t.tanks': ['Llena los tanques', 'Fill the tanks'], 'prep2.t.leak': ['Repara la fuga', 'Fix the leak'], 'prep2.t.align': ['Alinea la plataforma', 'Align the platform'], 'prep2.t.hatch': ['Cierra la escotilla', 'Close the hatch'],
+  'cx.s.cables': ['Azul con azul (entra O₂) · rojo con rojo (sale O₂) · negro con RADIO · ámbar con PULSO solo en Veterano. Dilo en voz alta.', 'Blue to blue (O₂ in) · red to red (O₂ out) · black to RADIO · amber to PULSE in Veteran only. Say it out loud.'],
+  'cx.s.tanks': ['Cada tanque a la franja verde y los 3 a la vez 2 s. LOX -183 °C, LH₂ -253 °C. Avisa si uno se pasa: el LH₂ hierve más rápido.', 'Each tank to the green band, all 3 together for 2 s. LOX -183 °C, LH₂ -253 °C. Call out an overfill: LH₂ boils off faster.'],
+  'cx.s.leak': ['La que silba es la válvula de reposición de LH₂ (sale vapor blanco). Después: girar las piezas para cerrar el circuito.', 'The hissing one is the LH₂ replenish valve (white steam). Then rotate the pieces to close the circuit.'],
+  'cx.s.align': ['Cabeceo, alabeo y guiñada, cada anillo a ±3° de la marca. La cruz se pone verde.', 'Pitch, roll and yaw, each ring within ±3° of the mark. The cross turns green.'],
+  'cx.s.hatch': ['La llave de media luna va a Neil; luego, manivela en círculo (1,5 vueltas). Solo se abre tras las 4 tareas.', 'The crescent key goes to Neil; then the handle in a circle (1.5 turns). Only unlocks after the 4 tasks.'],
+});
 const safe = s => String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('\"','&quot;');
 const STATIONS = ['booster', 'retro', 'fido', 'guidance', 'eecom', 'surgeon', 'network'];
 
@@ -63,9 +74,10 @@ export async function runCapcom(M) {
   function cell(k, v, cls = '') { return `<div class="tele" style="padding:6px 8px"><div class="k">${t('cx.k.' + k) !== 'cx.k.' + k ? t('cx.k.' + k) : k.toUpperCase()}</div><div class="v mono ${cls}" style="font-size:1.05rem">${v}</div></div>`; }
   function paintTele() {
     const d = C.snap, f = (n, p = 0) => (n == null ? '—' : Number(n).toFixed(p)); let html = '';
-    if (C.phase === 'prep') html = cell('step', `${(d.step ?? 0) + 1}/${d.n ?? '?'}`) + cell('faults', d.faults?.length ? `<span style="color:var(--red)">${d.faults.length}</span>` : '0') + cell('poll', d.poll ? d.poll.length + '/7' : '—') + (d.faults || []).map((k) => `<div class="fault" style="grid-column:1/-1"><b>!</b> ${safe(t('fault.' + k))}</div>`).join('');
+    if (C.phase === 'prep') { const dn = new Set(d.tasks || []); html = cell('tasks', `${[...dn].filter((k) => k !== 'hatch').length}/${d.n ?? 4}`) + cell('poll', d.poll ? d.poll.length + '/7' : '—') + cell('mistakes', d.mistakes ?? 0, d.mistakes ? 'bad' : '')
+      + `<div style="grid-column:1/-1;display:flex;flex-direction:column;gap:6px">${PREP_SCHEMA.map(([k, es, en]) => `<div style="padding:6px 8px;border:1px solid ${d.cur === k ? 'var(--amber)' : 'var(--line)'};opacity:${dn.has(k) ? .45 : 1};font-size:.78rem;line-height:1.25"><b style="color:${d.cur === k ? 'var(--amber)' : 'var(--go)'}">${dn.has(k) ? 'OK · ' : d.cur === k ? '> ' : ''}${safe(t('prep2.t.' + k))}</b><br>${safe(t('cx.s.' + k))}</div>`).join('')}</div>`; }
     else if (C.phase === 'launch') html = cell('alt', f((d.alt || 0) / 1000, 1) + ' km') + cell('vel', f(d.vel, 0) + ' m/s') + cell('pitch', f(d.pitch, 1) + '°') + cell('stress', f((d.stress || 0) * 100) + '%', d.stress > 0.7 ? 'bad' : '') + cell('stage', safe(d.stage ?? '—')) + cell('thr', f((d.thr || 0) * 100) + '%');
-    else if (C.phase === 'cruise') html = cell('stage', safe(d.stage || '—')) + (d.targets ? cell('align', `${d.got?.length || 0}/${d.targets.length}`) : '') + (d.v != null ? cell('burn', f(d.v * 100) + '%') : '') + (Number.isFinite(d.z0) && Number.isFinite(d.z1) ? cell('window', `${f(d.z0*100)}–${f(d.z1*100)}%`, 'cutoff') : '') + (Array.isArray(d.targets) ? `<div style="grid-column:1/-1">${cell('targets', d.targets.filter(n => ['Sirius','Vega','Rigel','Canopus','Antares','Altair'].includes(n)).map(n => (d.got?.includes(n) ? '✓ ' : '') + n).join(' · '))}</div>` : '') + (d.los ? `<div class="fault" style="grid-column:1/-1">${t('cc.los')}</div>` : '');
+    else if (C.phase === 'cruise') html = cell('stage', safe(d.stage || '—')) + (d.targets ? cell('align', `${d.got?.length || 0}/${d.targets.length}`) : '') + (d.v != null ? cell('burn', f(d.v * 100) + '%') : '') + (Number.isFinite(d.z0) && Number.isFinite(d.z1) ? cell('window', `${f(d.z0*100)}–${f(d.z1*100)}%`, 'cutoff') : '') + (Array.isArray(d.targets) ? `<div style="grid-column:1/-1">${cell('targets', d.targets.filter(n => ['Sirius','Vega','Rigel','Canopus','Antares','Altair'].includes(n)).map(n => (d.got?.includes(n) ? 'OK · ' : '') + n).join(' · '))}</div>` : '') + (d.los ? `<div class="fault" style="grid-column:1/-1">${t('cc.los')}</div>` : '');
     else if (C.phase === 'descent') html = cell('alt', f(d.alt) + ' m') + cell('vs', f(d.vs, 1), Math.abs(d.vs) > 3 && d.alt < 50 ? 'bad' : '') + cell('hs', f(d.hs, 1)) + cell('fuel', d.fuel == null ? 'AUTO' : f(d.fuel) + ' s', d.fuel != null && d.fuel < 20 ? 'bad' : '') + cell('thr', f((d.thr || 0) * 100) + '%') + cell('mode', (d.alarm ? '<span style="color:var(--red)">1202</span>' : '') + safe(d.mode || '—'));
     else if (C.phase === 'eva') html = cell('o2', f((d.o2 ?? 1) * 100) + '%') + cell('mode', safe(d.mode || '—')) + cell('tasks', `${d.sample ? 'SI' : 'NO'} · ${d.flag ? 'SI' : 'NO'}`);
     $('.tg', el).innerHTML = html;
@@ -81,9 +93,9 @@ export async function runCapcom(M) {
       px.strokeStyle = '#3ddc8466'; px.beginPath(); hs.forEach(([, d], i) => (i ? px.lineTo(d.x * s, d.z * s) : px.moveTo(d.x * s, d.z * s))); px.stroke();
       const d = hs[hs.length - 1][1]; px.fillStyle = '#fff'; px.beginPath(); px.arc(d.x * s, d.z * s, 5, 0, 7); px.fill(); px.restore(); return;
     }
-    if (C.phase === 'prep') { const d = hs[hs.length - 1][1], n = d.n || 8, st = d.step ?? 0, bw = (W - 40) / n;
-      for (let i = 0; i < n; i++) { px.fillStyle = i < st ? '#3ddc84' : i === st ? '#ffb000' : '#1b3a28'; px.fillRect(20 + i * bw + 3, H / 2 - 30, bw - 6, 60); }
-      px.fillStyle = '#3ddc84'; px.fillText(`${t('prep.cl').toUpperCase()} ${Math.min(st, n)}/${n}`, 20, 40); if (d.faults?.length) { px.fillStyle = '#ff4d4d'; px.fillText('! ' + d.faults.map((k) => k.toUpperCase()).join(' · '), 20, H - 30); } return; }
+    if (C.phase === 'prep') { const d = hs[hs.length - 1][1], n = 5, dn = new Set(d.tasks || []), ids = PREP_SCHEMA.map((x) => x[0]), bw = (W - 40) / n;
+      for (let i = 0; i < n; i++) { px.fillStyle = dn.has(ids[i]) ? '#3ddc84' : d.cur === ids[i] ? '#ffb000' : '#1b3a28'; px.fillRect(20 + i * bw + 3, H / 2 - 30, bw - 6, 60); }
+      px.fillStyle = '#3ddc84'; px.fillText(`${t('cx.k.tasks')} ${Math.min(dn.size, n)}/${n}`, 20, 40); return; }
     const key = { launch: 'alt', descent: 'alt', cruise: 'v', prep: 'step' }[C.phase] || 'alt'; const vals = hs.map(([, d]) => d[key]).filter((v) => v != null); if (!vals.length) return;
     const mx = Math.max(...vals, 1), mn = Math.min(0, ...vals); px.strokeStyle = '#3ddc84'; px.lineWidth = 2; px.beginPath();
     vals.forEach((v, i) => { const x = (i / Math.max(1, vals.length - 1)) * W, y = H - 10 - ((v - mn) / (mx - mn || 1)) * (H - 30); i ? px.lineTo(x, y) : px.moveTo(x, y); }); px.stroke();

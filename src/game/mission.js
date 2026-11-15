@@ -119,7 +119,7 @@ function pauseMenu() {
   pauseEl.onclick = (e) => {
     const a = e.target.closest('[data-a]')?.dataset.a; if (!a) return; sfx('click');
     if (a === 'bitacora') { import('../ui/bitacora.js').then((m) => m.openBitacora()); return; }
-    if (a === 'howto') { openCard(M.phase, { force: true }); return; }
+    if (a === 'howto') { openCard(M.phase === 'prep' ? 'prep-practice' : M.phase, { force: true }); return; }
     const phase = M.phase; closePause();
     if (a === 'resume' && lookActive()) requestLook();
     if (a === 'restart') { if (M.mode === 'coop') tx({ t: 'restart', ph: phase }); runPhase(phase, { skipCard: true }); }
@@ -127,12 +127,30 @@ function pauseMenu() {
   };
 }
 function closePause() { pauseEl?.remove(); pauseEl = null; setPaused(false); delete document.body.dataset.paused; syncCursor(); }
+// Con el puntero capturado, el navegador se queda el primer Esc para soltar el ratón y la página no recibe el keydown.
+// Si el ratón se suelta solo (Esc, cambio de ventana) en plena fase y sin ningún menú abierto, abrimos la pausa:
+// así el cursor vuelve y el jugador ve el menú, en vez de quedarse con el puntero escondido y el juego corriendo.
+document.addEventListener('pointerlockchange', () => {
+  // lookActive(): al terminar una fase, look.dispose() suelta el ratón sin sesión activa y eso no es una pausa
+  if (document.pointerLockElement || pauseEl || !lookActive() || !M || M.role !== 'pilot' || !document.body.dataset.screen?.startsWith('phase-')) return;
+  if (document.body.dataset.paused || document.querySelector('.overlay, .dialog, .bit, .mc-card, .dec-overlay')) return;
+  pauseMenu(); lockPauseAt = performance.now();
+});
+let lockPauseAt = 0;
 addEventListener('keydown', (e) => {
   if (e.code !== 'Escape' || !M || M.role !== 'pilot' || !document.body.dataset.screen?.startsWith('phase-')) return;
+  if (performance.now() - lockPauseAt < 300) return; // el mismo Esc ya abrió la pausa al soltar el ratón
   if (!pauseEl) { pauseMenu(); return; }
   closePause();
   if (lookActive()) requestLook();
 });
+
+// Reintentar la fase en curso (p. ej. tras explotar en el despegue). Igual que «Reiniciar fase» de la pausa.
+export function retryPhase() {
+  if (!M?.phase) return;
+  if (M.mode === 'coop') tx({ t: 'restart', ph: M.phase });
+  runPhase(M.phase, { skipCard: true });
+}
 
 export async function quitMission() {
   if (M) { M.ctx?.kill(); M.ctx?.cc.dispose(); M.offs.forEach((f) => f()); if (M.mode === 'coop') { tx({ t: 'quit' }); leaveRoom(); } }
@@ -145,7 +163,8 @@ async function runPhase(phase, { skipCard = false } = {}) {
   M.phase = phase; dbg('phase', phase); setPhaseBed(phase); if (M.mode === 'coop') tx({ t: 'phase', ph: phase, results: M.results });
   commsReset(); sfx('stage', { vol: 0.35 }); scanFx(); offerLook(phase);
   const mod = await loaders[phase](); const ctx = makeCtx(phase); M.ctx = ctx; const myCtx = ctx;
-  if (!skipCard) { await ctx.missionCard(phase); if (myCtx !== M?.ctx) return; offerLook(phase); } // mundo en pausa hasta «¡VAMOS!»
+  const cardId = phase === 'prep' ? 'prep-practice' : phase;
+  if (!skipCard) { await ctx.missionCard(cardId); if (myCtx !== M?.ctx) return; offerLook(phase); } // mundo en pausa hasta «¡VAMOS!»
   let res;
   try { res = await mod.default(ctx); } catch (e) { console.error(e); res = { score: 0, stats: { error: String(e) } }; }
   if (myCtx !== M?.ctx) return; // reiniciada o abandonada

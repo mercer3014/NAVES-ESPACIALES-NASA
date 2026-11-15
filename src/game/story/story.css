@@ -1,7 +1,8 @@
 /* Subtítulos y decisiones de los interludios narrativos (letterbox de las cinemáticas) */
 .plb-letterbox.story .plb-letterbox-copy { max-width: min(78vw, 980px); }
-.plb-letterbox.story .plb-letterbox-copy small { white-space: normal; color: #eef3f8; font-size: clamp(13px, 1.55vw, 18px); line-height: 1.3; letter-spacing: 0.02em; margin-top: 4px; }
+.plb-letterbox.story .plb-letterbox-copy small { white-space: normal; color: #F2EFE6; font-size: clamp(13px, 1.55vw, 18px); line-height: 1.3; letter-spacing: 0.02em; margin-top: 4px; }
 .story-screen { pointer-events: none; }
 .story-choice { position: fixed; left: 50%; bottom: calc(max(58px, min(12vh, 120px)) + 18px); transform: translateX(-50%); z-index: 73; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; width: min(760px, 92vw); pointer-events: auto; }
-.story-choice p { width: 100%; margin: 0 0 4px; text-align: center; font-family: Chakra, sans-serif; color: #fff; text-shadow: 0 2px 10px #000; }
-.story-choice .btn { background: rgba(6, 10, 16, 0.82); }
+.story-choice p { width: 100%; margin: 0 0 4px; text-align: center; font-family: var(--f-ui); font-weight: 600; color: #F2EFE6; text-shadow: 0 1px 4px #000; }
+.story-choice .btn { background: rgba(11, 12, 14, 0.9); }
+.story-choice .btn:hover { background: #F2EFE6; }

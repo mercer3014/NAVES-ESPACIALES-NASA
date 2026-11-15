@@ -28,7 +28,7 @@ export default async function tvScene() {
   const SPOTS = { collins: [-0.5, -0.56, -0.18, 0.18], armstrong: [0.02, -0.5, -0.42, 0], aldrin: [0.52, -0.6, -0.22, -0.16] };
   const crew = {};
   await Promise.all(Object.entries(SPOTS).map(async ([k, [x, y, z, yaw]]) => {
-    const c = await character(k + '-civil', 'idle', { at: [x, y, z], yaw }).catch((e) => { console.warn(k + '-civil.glb no disponible', e); return null; });
+    const c = await character(k + '-vuelo', 'idle', { at: [x, y, z], yaw }).catch((e) => { console.warn(k + '-vuelo.glb no disponible', e); return null; });
     if (c) { crew[k] = { ...c, y0: y, ph: Math.random() * 6 }; scene.add(c.root); }
   }));
   const speak = (who) => { for (const [k, c] of Object.entries(crew)) c.play(k === who ? 'talk' : 'idle', { fade: 0.4 }); };

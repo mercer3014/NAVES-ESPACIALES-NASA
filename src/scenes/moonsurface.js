@@ -7,8 +7,11 @@ import { lunarEnv } from './astronaut.js';
 import { rng } from '../core/util.js';
 import { makePlume, makePuffs } from './fx.js';
 import { earthshine, regolithLook } from '../render/grade.js';
+// Estado previo de renderer.shadowMap.enabled: se guarda al crear la primera superficie viva y se restaura al destruir la última (dispose())
+let shadowBase = null, liveScenes = 0;
 export function makeMoonSurface({ seed = 7 } = {}) {
   const scene = new THREE.Scene(); const camera = new THREE.PerspectiveCamera(55, innerWidth / innerHeight, 0.1, 6000);
+  if (!liveScenes++) shadowBase = renderer.shadowMap.enabled;
   renderer.shadowMap.enabled = !Q.mobile || Q.high;
   scene.fog = new THREE.FogExp2(0x030407, 0.00016);
   const sunDir = new THREE.Vector3(-0.95, 0.205, 0.18).normalize(); // ~12° de elevación (Apolo 11: 10–14°) → sombras largas y duras
@@ -44,12 +47,13 @@ export function makeMoonSurface({ seed = 7 } = {}) {
   }
   rocks.castShadow = true; rocks.receiveShadow = true; scene.add(rocks); occlude(rocks.material);
   // guijarros: miles de piedras de 2–20 cm alrededor del sitio de alunizaje y del recorrido de la EVA (largas sombras con el sol bajo)
-  let peb = null; const pebList = [];
+  // Se dibujan solo los que quedan a menos de PEB_R del jugador/cámara/LM (se reempaquetan cada ~0.25 s en rockCull), no los 4200 siempre.
+  let peb = null; const PEB_R = 42, NP = Q.high ? 4200 : Q.mobile ? 900 : 2000; const pebM = new Float32Array(NP * 16), pebC = new Float32Array(NP * 3), pebX = new Float32Array(NP), pebZ = new Float32Array(NP), pebOn = new Uint8Array(NP).fill(1);
   { const pg = new THREE.IcosahedronGeometry(1, 1); const q = pg.attributes.position; for (let i = 0; i < q.count; i++) { const f = 0.7 + R() * 0.6; q.setXYZ(i, q.getX(i) * f, q.getY(i) * f * 0.6, q.getZ(i) * f); } pg.computeVertexNormals();
-    const NP = Q.high ? 4200 : Q.mobile ? 900 : 2000; peb = new THREE.InstancedMesh(pg, new THREE.MeshStandardMaterial({ color: 0xaaa69e, roughness: 0.9, map }), NP); const col = new THREE.Color();
+    peb = new THREE.InstancedMesh(pg, new THREE.MeshStandardMaterial({ color: 0xaaa69e, roughness: 0.9, map }), NP); const col = new THREE.Color();
     for (let i = 0; i < NP; i++) { const a = R() * Math.PI * 2, r = 2 + Math.pow(R(), 0.7) * 70, x = PAD.x + Math.cos(a) * r, z = Math.sin(a) * r; const s = 0.02 + Math.pow(R(), 3.2) * 0.2;
-      v.set(x, ground(x, z) - s * 0.2, z); qq.setFromEuler(e.set(R() * 0.8, R() * 6.28, R() * 0.8)); sc.set(s * (0.8 + R() * 0.5), s, s * (0.8 + R() * 0.5)); m4.compose(v, qq, sc); peb.setMatrixAt(i, m4); pebList.push(m4.clone()); peb.setColorAt(i, col.setScalar(0.75 + R() * 0.4)); }
-    peb.castShadow = !Q.mobile; peb.receiveShadow = true; scene.add(peb); occlude(peb.material); }
+      v.set(x, ground(x, z) - s * 0.2, z); qq.setFromEuler(e.set(R() * 0.8, R() * 6.28, R() * 0.8)); sc.set(s * (0.8 + R() * 0.5), s, s * (0.8 + R() * 0.5)); m4.compose(v, qq, sc); m4.toArray(pebM, i * 16); pebX[i] = x; pebZ[i] = z; col.setScalar(0.75 + R() * 0.4); col.toArray(pebC, i * 3); peb.setColorAt(i, col); }
+    peb.count = 0; peb.frustumCulled = false; peb.castShadow = !Q.mobile; peb.receiveShadow = true; scene.add(peb); occlude(peb.material); }
   // marcador de zona segura
   const pad = new THREE.Group(); const ringM = new THREE.MeshBasicMaterial({ color: 0x3ddc84, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide });
   const ring = new THREE.Mesh(new THREE.RingGeometry(PAD.r - 1.2, PAD.r, 64), ringM); ring.rotation.x = -Math.PI / 2; pad.add(ring);
@@ -82,7 +86,7 @@ export function makeMoonSurface({ seed = 7 } = {}) {
   // Sombras ajustadas alrededor de un objeto (el astronauta en la EVA): frustum chico = sombras nítidas en el traje
   const F = { obj: null, snap: 0, rim: null }; const _fp = new THREE.Vector3(), _v = new THREE.Vector3(), _up = new THREE.Vector3(0, 3.5, 0);
   function focus(obj, half = 20) {
-    F.obj = obj; if (sun.castShadow) { const S = sun.shadow; Object.assign(S.camera, { left: -half, right: half, top: half, bottom: -half, near: 150, far: 350 }); S.camera.updateProjectionMatrix(); S.mapSize.set(2048, 2048); S.bias = -0.00025; S.normalBias = 0.025; S.radius = 2; S.map?.dispose(); S.map = null; F.snap = (2 * half) / 2048; }
+    F.obj = obj; if (sun.castShadow) { const S = sun.shadow; Object.assign(S.camera, { left: -half, right: half, top: half, bottom: -half, near: 150, far: 350 }); S.camera.updateProjectionMatrix(); shHalf = half; cullDirty = true; S.mapSize.set(2048, 2048); S.bias = -0.00025; S.normalBias = 0.025; S.radius = 2; S.map?.dispose(); S.map = null; F.snap = (2 * half) / 2048; }
     if (!F.rim) { F.rim = new THREE.DirectionalLight(0xc9d6ff, 1.25); scene.add(F.rim, F.rim.target); }
   }
   function update(dt, t) {
@@ -107,7 +111,7 @@ export function makeMoonSurface({ seed = 7 } = {}) {
     dust.U.uRad.value.set(lm.position.x, 0, 0, 22 + 26 * Math.min(1, k));
     haze.update(S.burning && S.agl < 30 ? (1 - S.agl / 30) ** 1.5 * Math.min(1, k * 3.6) : 0, dt, lm.position.x);
     occU.a.value.copy(camera.position); occU.b.value.copy(F.obj ? F.obj.position : lm.position).y += 1.5;
-    dust.update(dt, camera, null);
+    dust.update(dt, camera, null); rockCull(dt);
   }
 
   // ---------- Superficie del artista: rocas (moon-rocks.glb), tile de regolito 32 m (moon-surface-tile.glb), huella (boot-print.glb) ----------
@@ -120,16 +124,47 @@ export function makeMoonSurface({ seed = 7 } = {}) {
   const R2 = rng(seed + 101); const rockPick = rockList.map(([, , s]) => { const set = s > 1.3 ? RT.big : s > 0.65 ? RT.mid : RT.small; return [set[Math.floor(R2() * set.length)], R2() * 6.283]; });
   const extra = []; // rocas chicas sobre el tile [x, z, escala, tipo, yaw]
   let artRocks = null;
+  // Rendimiento: cada tipo de roca tiene 2 InstancedMesh (con y sin sombra) con capacidad para todas sus instancias; rockCull() copia a ellos solo las que
+  // quedan dentro del radio de visibilidad (crece con el tamaño: los bloques grandes se ven desde lejos, las piedras chicas no) y fija .count.
+  // Solo las rocas grandes (semi-tamaño >= SHADOW_MIN) proyectan sombra. La lógica de juego lee rockList (datos), no estas mallas.
+  const SHADOW_MIN = 1.3, CULL_BASE = 100, CULL_K = 60; let shHalf = 70; // shHalf: semilado del frustum de la sombra (70 m en el Alunizaje; ~18 m en la EVA, ver focus)
+  let cullItems = [], cullGroups = [], cullT = 1, cullAt = null; const cullPrev = new THREE.Vector3(1e9, 0, 1e9), cullPrevF = new THREE.Vector3(1e9, 0, 1e9);
   function layRocks(kit) {
     if (artRocks) { for (const m of artRocks) { m.removeFromParent(); m.dispose(); } }
     const by = {}; const add = (type, x, z, k, yaw) => (by[type] ||= []).push([x, z, k, yaw]);
     rockList.forEach(([x, z, s], i) => { if (i >= rockPick.length) return; const [type, yaw] = rockPick[i]; add(type, x, z, (2 * s) / kit[type].size, yaw); });
     for (const [x, z, k, type, yaw] of extra) add(type, x, z, k, yaw);
-    artRocks = []; const _q = new THREE.Quaternion(), _p = new THREE.Vector3(), _s = new THREE.Vector3(), _m = new THREE.Matrix4(), Y = new THREE.Vector3(0, 1, 0);
-    for (const type in by) { const L = by[type], im = new THREE.InstancedMesh(kit[type].g, kit[type].mat, L.length);
-      L.forEach(([x, z, k, yaw], i) => { _m.compose(_p.set(x, hAt(x, z) - 0.01 * k, z), _q.setFromAxisAngle(Y, yaw), _s.setScalar(k)); im.setMatrixAt(i, _m); });
-      im.castShadow = true; im.receiveShadow = true; im.computeBoundingSphere(); scene.add(im); artRocks.push(im); }
-    rocks.visible = false;
+    artRocks = []; cullItems = []; cullGroups = []; const _q = new THREE.Quaternion(), _p = new THREE.Vector3(), _s = new THREE.Vector3(), _m = new THREE.Matrix4(), Y = new THREE.Vector3(0, 1, 0);
+    for (const type in by) { const L = by[type], gr = [[], []]; // gr[0] sin sombra, gr[1] con sombra
+      const its = L.map(([x, z, k, yaw]) => { const rad = (k * kit[type].size) / 2; const f = new Float32Array(16); _m.compose(_p.set(x, hAt(x, z) - 0.01 * k, z), _q.setFromAxisAngle(Y, yaw), _s.setScalar(k)).toArray(f); return { f, x, y: f[13], z, rad, big: rad >= SHADOW_MIN }; });
+      const mk = (n, sh) => { if (!n) return null; const im = new THREE.InstancedMesh(kit[type].g, kit[type].mat, n); im.castShadow = sh; im.receiveShadow = true; im.frustumCulled = false; im.count = 0; im.visible = false;
+        scene.add(im); artRocks.push(im); const g = { im, k: 0 }; cullGroups.push(g); return g; };
+      const gNo = mk(its.length, false), gSh = mk(its.filter((o) => o.big).length, true); for (const o of its) { o.gNo = gNo; o.gSh = gSh; cullItems.push(o); } }
+    rocks.visible = false; cullAt = null; rockCull(0, true);
+  }
+  // Reempaqueta las instancias visibles de rocas y guijarros. Distancia: cada ~0.25 s y solo si la cámara o el foco se movieron > 3 m.
+  // Frustum: las rocas SIN sombra se descartan además si quedan fuera de la vista (con un margen angular de 4°), y se reempaqueta en cuanto la cámara gira > 3°.
+  // Las que proyectan sombra (grandes) y los guijarros solo se descartan por distancia: pueden sombrear la vista desde fuera de ella.
+  const _fr = new THREE.Frustum(), _pm = new THREE.Matrix4(), _mi = new THREE.Matrix4(), _cq = new THREE.Quaternion(), _sp = new THREE.Vector3(); let cullDirty = true;
+  function rockCull(dt, force) {
+    cullT += dt; const rot = _cq.angleTo(camera.quaternion) > 0.05; if (!force && !rot && cullT < 0.25) return;
+    const cp = camera.position, fp = F.obj ? F.obj.position : lm.position;
+    if (!force && !rot && cullPrev.distanceToSquared(cp) < 9 && cullPrevF.distanceToSquared(fp) < 9 && !cullDirty) { cullT = 0; return; }
+    cullT = 0; cullPrev.copy(cp); cullPrevF.copy(fp); _cq.copy(camera.quaternion); cullDirty = false;
+    camera.updateMatrixWorld(); _pm.multiplyMatrices(camera.projectionMatrix, _mi.copy(camera.matrixWorld).invert()); _fr.setFromProjectionMatrix(_pm); const pl = _fr.planes;
+    const cx = cp.x, cz = cp.z, fx = fp.x, fz = fp.z;
+    for (const g of cullGroups) g.k = 0;
+    for (const o of cullItems) { const R = (CULL_BASE + CULL_K * o.rad) ** 2, dc = (o.x - cx) ** 2 + (o.z - cz) ** 2, df = (o.x - fx) ** 2 + (o.z - fz) ** 2;
+      const rs = shHalf + 10 + 7 * o.rad; let g; // proyecta sombra solo si es grande y está lo bastante cerca del foco como para sombrear la zona de la sombra
+      if (o.big && df < rs * rs) g = o.gSh; // (sin recorte de vista: puede sombrear desde fuera de ella)
+      else { if (dc > R) continue; _sp.set(o.x, o.y, o.z); const m = o.rad * 1.2 + 0.07 * Math.sqrt(dc + (o.y - cp.y) ** 2); let out = false; // dentro de la vista (esfera con margen angular)
+        for (let j = 0; j < 6; j++) if (pl[j].distanceToPoint(_sp) < -m) { out = true; break; } if (out) continue; g = o.gNo; }
+      const a = g.im.instanceMatrix.array, f = o.f, b = g.k++ * 16; for (let j = 0; j < 16; j++) a[b + j] = f[j]; }
+    for (const g of cullGroups) { g.im.count = g.k; g.im.visible = g.k > 0; g.im.instanceMatrix.needsUpdate = true; }
+    if (peb) { const a = peb.instanceMatrix.array, c = peb.instanceColor.array, R = PEB_R * PEB_R; let n = 0;
+      for (let i = 0; i < NP; i++) { if (!pebOn[i]) continue; const dc = (pebX[i] - cx) ** 2 + (pebZ[i] - cz) ** 2, df = (pebX[i] - fx) ** 2 + (pebZ[i] - fz) ** 2; if (dc > R && df > R) continue;
+        const b = n * 16, k = i * 16; for (let j = 0; j < 16; j++) a[b + j] = pebM[k + j]; c[n * 3] = pebC[i * 3]; c[n * 3 + 1] = pebC[i * 3 + 1]; c[n * 3 + 2] = pebC[i * 3 + 2]; n++; }
+      peb.count = n; peb.visible = n > 0; peb.instanceMatrix.needsUpdate = true; peb.instanceColor.needsUpdate = true; }
   }
   const rocksReady = rockKit.then((kit) => { layRocks(kit); return kit; }).catch((e) => { console.warn('moon-rocks.glb no disponible', e); return null; });
 
@@ -187,8 +222,7 @@ export function makeMoonSurface({ seed = 7 } = {}) {
     dbg('plbTileTris', Math.round(triTotal));
     patchU.value.set(cx, cz, P.half - 0.6, 0);
     // guijarros procedurales: fuera dentro del tile (ya trae guijarros en la normal map); en el borde se apoyan en la altura nueva
-    if (peb) { const _p = new THREE.Vector3(), _q = new THREE.Quaternion(), _s = new THREE.Vector3(), Z = new THREE.Matrix4().makeScale(0, 0, 0);
-      pebList.forEach((m0, i) => { m0.decompose(_p, _q, _s); const inside = Math.max(Math.abs(_p.x - cx), Math.abs(_p.z - cz)) < P.half - 1; if (inside) peb.setMatrixAt(i, Z); }); peb.instanceMatrix.needsUpdate = true; }
+    if (peb) { for (let i = 0; i < NP; i++) if (Math.max(Math.abs(pebX[i] - cx), Math.abs(pebZ[i] - cz)) < P.half - 1) pebOn[i] = 0; cullDirty = true; }
     // rocas chicas del artista sobre el tile (fuera de la zona plana de 5 m del LM)
     const R3 = rng(seed + 202); const nx = Q.mobile ? 45 : 110;
     for (let i = 0; i < nx; i++) { const a = R3() * 6.283, rr = 6 + Math.pow(R3(), 0.8) * (P.half - 8), x = cx + Math.cos(a) * rr, z = cz + Math.sin(a) * rr; const big = R3() < 0.12;
@@ -199,7 +233,11 @@ export function makeMoonSurface({ seed = 7 } = {}) {
   // Huellas de bota A7L: decal instanciado orientado a la normal del terreno (punta +Z)
   const bootKit = model('boot-print').then((o) => { let src = null; o.traverse((c) => { if (c.isMesh && !src) src = c; }); const g = bakeGeometry(src);
     const m = src.material.clone(); Object.assign(m, { transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }); return { g, m }; });
-  return { scene, camera, env: lmEnv, lm, lmReady, rocksReady, lunarPatch, hAt, normalAt, bootKit, body, plume, pad, warn, rocks, rockList, terr, sun, sunDir, contactL, setLM, update, focus, haze, dust, dustAmount: () => (S.burning && S.agl < 30 ? (1 - S.agl / 30) * S.thr : 0) };
+  function dispose() { // restaura el flag global de sombras (lo encendían la superficie y la arena aunque el nivel siguiente no las use)
+    if (disposed) return; disposed = true; if (!--liveScenes && shadowBase !== null) renderer.shadowMap.enabled = shadowBase;
+    for (const m of artRocks || []) { m.removeFromParent(); m.dispose(); } peb?.dispose(); }
+  let disposed = false;
+  return { dispose, scene, camera, env: lmEnv, lm, lmReady, rocksReady, lunarPatch, hAt, normalAt, bootKit, body, plume, pad, warn, rocks, rockList, terr, sun, sunDir, contactL, setLM, update, focus, haze, dust, dustAmount: () => (S.burning && S.agl < 30 ? (1 - S.agl / 30) * S.thr : 0) };
 }
 
 // Regolito: rompe el mosaico de la textura (2ª escala rotada mezclada con ruido), suaviza los bordes de los cráteres

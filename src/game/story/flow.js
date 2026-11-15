@@ -7,11 +7,20 @@ import { AUTO, dbg } from '../../core/store.js';
 import { stopCue } from '../cutscenes/play.js';
 import { show } from '../../ui/router.js';
 import { score, stopAmbience } from '../../audio/a11-score.js';
-import { unlock, chose, record, run } from './state.js';
-import { ask } from './decisions.js';
+import { unlock, chose, record, run, setFlag } from './state.js';
+import { ask, DECISIONS } from './decisions.js';
 import { missionCard } from '../../ui/mission-card.js';
 
 const own = (load) => async (o) => { const m = await load(); return m.default(o); };
+// Escena explorable (RPG). El mapa es estático: un import('../explore/scenes/' + id) no entra en el build
+// de producción y el navegador pide un .js que no existe. Ahí se quedaba colgado «Iniciar misión».
+const sceneLoaders = import.meta.glob('../explore/scenes/*.js');
+export const explore = (id) => async (o) => {
+  const load = sceneLoaders['../explore/scenes/' + id + '.js'];
+  if (!load) return { id, done: false, skipped: false, flags: {}, error: 'id' };
+  const [m, d] = await Promise.all([import('../explore/run.js'), load()]);
+  return m.runExplore(d.default, o);
+};
 // minijuegos del guion: tarjeta «Cómo jugar» (qué pasó / tu misión / controles) antes de empezar
 const withCard = (cardId, load) => async (o) => { await missionCard(cardId); const m = await load(); return m.default(o); };
 // cinemáticas de la Tierra: devuelven { id, played, skipped }
@@ -26,7 +35,17 @@ const decide = (id, then) => async () => {
 // tarjeta puente (fecha/hora + 1-2 líneas + cita de radio opcional); ver bridge.js
 const bridge = (id) => async (o) => { const m = await import('./bridge.js'); return m.playBridge(id, o); };
 // Sala de diseño «Tu Apolo 11» (WP5): devuelve el plan, que designRoom guarda en store 'missionPlan'
-const designScene = async (o) => { const b = await import('./bridge.js'); await b.neutralWorld(); if (!o?.ctx) show('<div class="screen"></div>', 'story-design'); const m = await import('../design/design-screen.js'); const plan = await m.designRoom({ mode: 'story' }); return { id: 'design', plan }; };
+const designScene = async (o) => {
+  try {
+    const walked = await explore('design-room')(o);
+    if (walked && !walked.error) {
+      const { activePlan } = await import('../design/plan.js');
+      const { store } = await import('../../core/store.js');
+      return { id: 'design', plan: activePlan(null, store), flags: walked.flags || {} };
+    }
+  } catch (e) { console.warn('sala de diseño caminable', e); }
+  const b = await import('./bridge.js'); await b.neutralWorld(); if (!o?.ctx) show('<div class="screen"></div>', 'story-design'); const m = await import('../design/design-screen.js'); const plan = await m.designRoom({ mode: 'story' }); return { id: 'design', plan };
+};
 // escena No Canon con rótulo permanente (misma convención que el jefe: «NO CANON · …»)
 const noCanon = (run_) => async (o) => { const m = await import('./bridge.js'); const off = m.noCanonTag(); try { return await run_(o); } finally { off(); } };
 
@@ -43,20 +62,45 @@ export const STORY = {
   'bridge:hatch': bridge('hatch'),
   'bridge:meanwhile': bridge('meanwhile'),
   'bridge:report': bridge('report'),
-  'hotel-prologue': earth('hotel-prologue'),
+  'hotel-prologue': explore('hotel'),
   'mocr-tough': earth('mocr-tough'),
-  'house-farewell': earth('house-farewell'),
+  // La casa y el MOCR se caminan; el cierre es un plano corto de la cinemática.
+  // Object.assign: story.test corta el objeto STORY en el primer cierre con punto y coma.
+  'house-farewell': async (o) => {
+    const exp = await explore('house')(o);
+    if (exp?.skipped && !chose('c1-kids')) record('c1-kids', 'truth', { historic: true });
+    if (exp?.skipped) return Object.assign({}, exp, { id: 'house-farewell' });
+    const { runCinematic } = await import('../cutscenes/cine-player.js');
+    const { CINE_HOUSE } = await import('../cutscenes/cine-house.js');
+    const full = CINE_HOUSE['house-farewell'];
+    const shots = full.shots.slice(5, 7).map((s, i) => (i === 1 ? { ...s, d: 3 } : s));
+    const cine = await runCinematic({ ...full, shots }, o);
+    return Object.assign({}, exp, { id: 'house-farewell', cine });
+  },
   kids: decide('c1-kids'),
-  ksc: own(() => import('./ksc.js')),
-  beach: own(() => import('./beach.js')),
-  night: own(() => import('./night.js')),
-  'mocr-briefing': earth('mocr-briefing'),
+  // KSC sin caminar: la decisión de Aldrin sobre el primer paso queda como elección rápida (el rumor llega a la noche en Columbia)
+  firststep: decide('c1-firststep', (o) => { if (o === 'complain') setFlag('rumor', true); }),
+  // Sin la noche en Columbia ni Collins solo: sus decisiones quedan como elección rápida (mismas consecuencias en el epílogo)
+  'night-choice': decide('c3-night'),
+  'collins-choice': decide('c6-collins', (o) => { if (o === 'pat') setFlag('pat-words', true); }),
+  ksc: explore('ksc'),
+  beach: explore('beach'),
+  night: explore('columbia'),
+  'mocr-briefing': async (o) => {
+    const exp = await explore('mocr-bales')(o);
+    if (exp?.skipped) return Object.assign({}, exp, { id: 'mocr-briefing' });
+    const { runCinematic } = await import('../cutscenes/cine-player.js');
+    const { CINE_MOCR } = await import('../cutscenes/cine-mocr.js');
+    const full = CINE_MOCR['mocr-briefing'];
+    const cine = await runCinematic({ ...full, shots: [{ ...full.shots[1], d: 7 }] }, o);
+    return Object.assign({}, exp, { id: 'mocr-briefing', cine });
+  },
   'mocr-1202': earth('mocr-1202'),
   'mocr-gonogo': earth('mocr-gonogo'),
   'mocr-landed': earth('mocr-landed'),
   'house-landed': earth('house-landed'),
   'pre-eva': decide('c5-rest'),
-  'collins-solo': own(() => import('./collins-solo.js')),
+  'collins-solo': explore('collins'),
   boss: async (o) => { const m = await import('../boss/story.js'); return m.default({ ...o, briefing: () => missionCard('boss') }); }, // No Canon, opcional: pregunta «Soñar / Saltar» antes
   breaker: withCard('breaker', () => import('./breaker.js')),
   liftoff: withCard('liftoff', () => import('./liftoff.js')),
@@ -67,7 +111,8 @@ export const STORY = {
   tv: own(() => import('./tv.js')),
   reentry: withCard('reentry', () => import('./reentry.js')),
   recovery: epi('recovery'),
-  lrl: epi('lrl'),
+  lrl: explore('lrl'),
+  'white-room': explore('white-room'), // Fase 1 a pie (extra del menú)
   parade: epi('parade'),
   epilogue: own(() => import('./epilogue.js')),
 };
@@ -76,6 +121,7 @@ export const STORY_TITLES = {
   'hotel-prologue': ['Prólogo · Enero de 1967', 'Prologue · January 1967'],
   'mocr-tough': ['Prólogo · Duros y competentes', 'Prologue · Tough and competent'],
   design: ['Prólogo · Sala de diseño: Tu Apolo 11', 'Prologue · Design room: Your Apollo 11'],
+  'white-room': ['Cap. 2 · La Sala Blanca', 'Ch. 2 · The White Room'],
   'house-farewell': ['Cap. 1 · La despedida', 'Ch. 1 · The farewell'],
   ksc: ['Cap. 1 · Centro Espacial Kennedy', 'Ch. 1 · Kennedy Space Center'],
   beach: ['Cap. 1 · La playa de Cabo Kennedy', 'Ch. 1 · The Cape Kennedy beach'],
@@ -101,17 +147,17 @@ export const STORY_TITLES = {
 };
 // tarjetas de «Momento» y objetos que se ganan al ver cada escena (aunque se salte)
 export const SCENE_CARDS = {
-  'hotel-prologue': ['tratado-1967', 'apolo-1', 'foto-karen', 'libreta-ed-white'],
+  'hotel-prologue': ['tratado-1967', 'apolo-1'],
   'mocr-tough': ['duros-competentes', 'pizarra-kranz'],
-  'house-farewell': ['la-despedida', 'saturn-v'],
+  'house-farewell': ['la-despedida'],
   ksc: ['deke-slayton', 'primer-paso-quien'],
-  beach: ['parche-mision', 'sobres-firmados'],
-  'mocr-briefing': ['chaleco-kranz', 'hoja-garman'],
+  beach: [],
+  'mocr-briefing': [],
   'mocr-1202': ['alarmas-1202'],
   'mocr-gonogo': ['go-aterrizar'],
   'mocr-landed': ['eagle-aterrizo'],
   'house-landed': ['squawk-box'],
-  'collins-solo': ['ventana-trasera'],
+  'collins-solo': [],
   breaker: ['motor-ascenso'],
   liftoff: ['despegue-lunar'],
   reunion: ['reencuentro'],
@@ -120,7 +166,7 @@ export const SCENE_CARDS = {
   tv: ['ultima-transmision'],
   reentry: ['escudo-termico'],
   recovery: ['amerizaje'],
-  lrl: ['cuarentena', 'ventana-cuarentena'],
+  lrl: ['cuarentena'],
   parade: ['desfile'],
   epilogue: ['legado-lrrr', 'artemis'],
 };
@@ -129,14 +175,41 @@ export const SCENE_CARDS = {
 // Orden cronológico (G1): prólogo 1967 → sala de diseño → julio de 1969 (casa, KSC, playa) → mañana del 16 jul (Fase 1) → lanzamiento…
 // El disyuntor se descubre ANTES del sueño del Guardián (T9). Las tarjetas puente `bridge:*` van en los huecos entre escenas.
 export const SLOTS = {
-  'before:prep': ['bridge:intro', 'hotel-prologue', 'mocr-tough', 'bridge:design', 'design', 'bridge:jul69', 'house-farewell', 'kids', 'ksc', 'beach', 'bridge:launch-morning'],
+  // Intro corta: las escenas de charla (hotel 1967, discurso de Kranz, casa del lago, KSC y playa) salieron de la misión
+  // y siguen en «Escenas del guion». Sus dos decisiones se conservan como elección rápida para no perder consecuencias.
+  // Lo importante es el despegue: antes de la Fase 1 solo quedan las dos decisiones del cap. 1 (10 s cada una) y la tarjeta
+  // de la mañana del lanzamiento. La sala de diseño sigue en el menú y en el informe final («Rediseñar»); sin ella vale el plan de 1969.
+  // Directo al despegue: solo la tarjeta de la mañana del 16 de julio. Las decisiones sueltas sobre fondo negro (hijos, primer paso,
+  // noche, Collins, descanso) cambiaban apenas una frase del epílogo: salen y se toma la respuesta histórica (ver PASSED).
+  'before:prep': ['bridge:launch-morning'],
   'before:launch': ['bridge:t-minus'],
   'before:cruise': ['bridge:tli'],
-  'before:descent': ['bridge:undock', 'mocr-briefing'],
+  'before:descent': ['bridge:undock'],
   'after:descent': [],
-  'before:eva': ['pre-eva', 'bridge:hatch'],
-  'after:eva': ['bridge:meanwhile', 'collins-solo', 'breaker', 'boss', 'liftoff', 'reunion', 'tei', 'laika', 'laika-talk', 'tv', 'reentry', 'recovery', 'lrl', 'parade', 'epilogue', 'bridge:report'],
+  'before:eva': ['bridge:hatch'],
+  // Laika (No Canon), el rescate y el desfile son cinemáticas de charla: quedan como extras en «Escenas del guion».
+  // Tras la EVA solo quedan los minijuegos (disyuntor, jefe opcional, despegue, acople, reentrada) y el epílogo.
+  // Collins solo, TEI, la última transmisión y la cuarentena son charlas: extras del menú.
+  'after:eva': ['bridge:meanwhile', 'breaker', 'boss', 'liftoff', 'reunion', 'reentry', 'epilogue', 'bridge:report'],
 };
+// Escenas de charla que salieron de la misión: sus tarjetas de «Momento» se ganan igual (son hechos que ocurrieron),
+// en silencio y en el punto donde iban. Los objetos que había que inspeccionar se siguen ganando desde el menú.
+export const PASSED = {
+  'before:prep': ['hotel-prologue', 'mocr-tough', 'house-farewell', 'kids', 'ksc', 'firststep'],
+  'before:cruise': ['night-choice'],
+  'before:descent': ['mocr-briefing'],
+  'before:eva': ['pre-eva'],
+  'after:eva': ['collins-solo', 'collins-choice', 'tei', 'tv', 'lrl', 'recovery', 'parade'],
+};
+// decisión suelta que ya no se pregunta → su respuesta histórica (si la hay); c3-night no tiene: el epílogo omite esa frase
+const PASSED_DECISION = { kids: 'c1-kids', firststep: 'c1-firststep', 'night-choice': 'c3-night', 'pre-eva': 'c5-rest', 'collins-choice': 'c6-collins' };
+export function passScene(id) {
+  for (const c of SCENE_CARDS[id] || []) unlock(c, { quiet: true });
+  const dec = PASSED_DECISION[id], opt = dec && !chose(dec) && DECISIONS[dec]?.options.find((o) => o.historic);
+  if (opt) { record(dec, opt.id, { historic: true }); if (opt.card) unlock(opt.card, { quiet: true }); }
+  // la hoja de Garman era del MOCR de Bales: sin esa escena, Bales tiene la hoja (como en 1969) y su «GO» suena firme
+  if (id === 'mocr-briefing') setFlag('garmanSheet', true);
+}
 export const STORY_IDS = Object.keys(STORY);
 const params = new URLSearchParams(location.search);
 export const storyEnabled = () => !AUTO() && !params.has('nostory');
@@ -157,6 +230,7 @@ export async function playStory(id, opts = {}) {
 // alive(): false si la misión se abandonó a mitad de un interludio
 export async function interlude(slot, { alive = () => true } = {}) {
   if (!storyEnabled()) return;
+  for (const id of PASSED[slot] || []) passScene(id);
   for (const id of SLOTS[slot] || []) { if (!alive()) return; await playStory(id); }
 }
 dbg('storyRun', run);

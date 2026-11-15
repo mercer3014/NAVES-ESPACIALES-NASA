@@ -1,0 +1,14 @@
+import { createRequire } from 'module';
+const require = createRequire('/home/box/.local/lib/node_modules/@gltf-transform/cli/node_modules/x.js');
+const { NodeIO } = require('@gltf-transform/core');
+const { ALL_EXTENSIONS } = require('@gltf-transform/extensions');
+const { dequantize } = require('@gltf-transform/functions');
+const { MeshoptDecoder } = require('meshoptimizer');
+await MeshoptDecoder.ready;
+const io = new NodeIO().registerExtensions(ALL_EXTENSIONS).registerDependencies({ 'meshopt.decoder': MeshoptDecoder });
+const [,, i, o] = process.argv;
+const doc = await io.read(i);
+for (const e of doc.getRoot().listExtensionsUsed()) if (e.extensionName === 'EXT_meshopt_compression') e.dispose();
+await doc.transform(dequantize());
+for (const e of doc.getRoot().listExtensionsUsed()) if (e.extensionName === 'KHR_mesh_quantization') e.dispose();
+await io.write(o, doc); console.log('ok', o);

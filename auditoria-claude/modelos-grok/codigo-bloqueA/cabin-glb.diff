@@ -1,0 +1,20 @@
+--- a/src/scenes/cabin.js
++++ b/src/scenes/cabin.js
+@@ -6,7 +6,7 @@
+ // interruptor del HTML → nodo del panel (según userData.action)
+ export const SW_MAP = { fc1: 'switch-01', fc2: 'switch-02', fc3: 'switch-03', batA: 'switch-06', batB: 'switch-07', batC: 'switch-09', gnc: 'switch-11', abort: 'switch-12', o2: 'switch-18', sband: 'switch-23' };
+ // props: añade cabin-props.glb (checklist, sextante, bolsas de comida, rotulador, cinta) en la repisa derecha bajo el panel
+-export function makeCabin({ props = false } = {}) {
++export function makeCabin({ props = false, glb = 'cabin-panels' } = {}) { // glb: 'lm-interior' para el Eagle (disyuntor)
+   const scene = new THREE.Scene(); scene.background = new THREE.Color(0x05070b);
+   const camera = new THREE.PerspectiveCamera(74, innerWidth / innerHeight, 0.02, 50);
+   const pm = new THREE.PMREMGenerator(renderer); const env = pm.fromScene(new RoomEnvironment(), 0.04).texture; pm.dispose();
+@@ -33,7 +33,7 @@
+       }` });
+   const N = {}; let root = null, mixer = null, clips = [];
+   const tgt = {}; // rotaciones objetivo (animadas suavemente)
+-  const ready = modelAnim('cabin-panels').then(({ scene: o, animations }) => {
++  const ready = modelAnim(glb).then(({ scene: o, animations }) => {
+     root = o; clips = animations; scene.add(o); mixer = new THREE.AnimationMixer(o);
+     o.traverse((c) => { if (c.name) N[c.name] = c; if (c.isMesh) { const m = c.material; if (m && 'envMapIntensity' in m) m.envMapIntensity = 0.45; } });
+     for (const [n, c] of Object.entries(N)) if (/^switch-\d+$/.test(n) && c.userData.angles_deg) { const u = c.userData; c.rotation.x = deg(u.angles_deg[u.default ?? 0]); tgt[n] = c.rotation.x; }

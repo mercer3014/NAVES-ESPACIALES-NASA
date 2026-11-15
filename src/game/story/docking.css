@@ -1,27 +1,47 @@
-.dock{position:fixed;inset:0;z-index:50;pointer-events:none;color:#e9eef6;font-family:Chakra,system-ui,sans-serif;transition:opacity .4s}
+.dock{position:fixed;inset:0;z-index:50;pointer-events:none;color:#F2EFE6;font-family:var(--f-ui,Barlow,system-ui,sans-serif);transition:opacity .4s}
 .dock.out{opacity:0}
 .dock-top{position:absolute;top:calc(64px + var(--safe-t,0px));left:50%;transform:translateX(-50%);text-align:center;width:min(560px,calc(100vw - 32px))}
-.dock-k{font:600 12px Mono,monospace;letter-spacing:.24em;color:#ffcf6a;text-shadow:0 1px 6px #000}
-.dock-note{font-size:13px;color:#cfe3ff;margin-top:4px;text-shadow:0 1px 6px #000}
+.dock-k{font:500 12px var(--f-mono,monospace);letter-spacing:.24em;color:#FFB000;text-shadow:0 1px 4px #000}
+.dock-note{font-size:14px;color:#F2EFE6;margin-top:4px;text-shadow:0 1px 4px #000}
 .dock-coas{position:absolute;left:50%;top:46%;width:min(46vmin,300px);transform:translate(-50%,-50%);overflow:visible}
-.dock-coas line,.dock-coas circle{fill:none;stroke:#9fe8b4;stroke-width:1.6;opacity:.85}
+.dock-coas line,.dock-coas circle{fill:none;stroke:#7CFF4F;stroke-width:1.6;opacity:.85}
 .dock-coas .ring{stroke-dasharray:6 6;opacity:.55}
-.dock-coas .tgt circle,.dock-coas .tgt line{stroke:#ff9c5a;stroke-width:2.2}
-.dock-coas .tgt.ok circle,.dock-coas .tgt.ok line{stroke:#5dff9a}
-.dock-tele{position:absolute;right:12px;top:calc(110px + var(--safe-t,0px));display:grid;gap:6px;padding:10px 12px;border-radius:10px;background:#05080ecc;border:1px solid #ffffff22;min-width:150px}
+.dock-coas .tgt circle,.dock-coas .tgt line{stroke:#FF4F00;stroke-width:2.2}
+.dock-coas .tgt.ok circle,.dock-coas .tgt.ok line{stroke:#7CFF4F}
+.dock-tele{position:absolute;right:12px;top:calc(110px + var(--safe-t,0px));display:grid;gap:6px;padding:10px 12px;border-radius:0;background:#0B0C0Ee6;border:1px solid #3A3D42;border-left:3px solid #FF4F00;min-width:150px}
 .dock-tele div{display:grid;grid-template-columns:auto 1fr;align-items:baseline;gap:8px}
-.dock-tele span{font:600 10.5px Mono,monospace;letter-spacing:.14em;color:#9aa3b2}
-.dock-tele b{font:700 15px Mono,monospace;text-align:right}
-.dock-tele b.ok{color:#5dff9a}.dock-tele b.bad{color:#ff6a4a}
-.dock-tele .fb{grid-column:1/-1;display:block;height:4px;background:#ffffff18;border-radius:3px;overflow:hidden}
-.dock-tele .fb i{display:block;height:100%;background:#7cc4ff}
-.dock-hint{position:absolute;left:50%;bottom:calc(24px + var(--safe-b,0px));transform:translateX(-50%);width:min(560px,calc(100vw - 32px));text-align:center;font-size:14px;padding:8px 12px;border-radius:8px;background:#05080eb3}
-.dock-hint.bad{color:#ff8a6a}.dock-hint.warn{color:#ffcf6a}
-.dock-stick{pointer-events:auto;position:absolute;left:calc(18px + env(safe-area-inset-left,0px));bottom:calc(18px + var(--safe-b,0px));width:clamp(120px,30vw,160px);aspect-ratio:1;border-radius:50%;background:radial-gradient(#ffffff10,#ffffff05);border:1px solid #ffffff30;touch-action:none}
-.dock-stick i{position:absolute;left:50%;top:50%;width:42%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#9cf 60%,#357);transform:translate(-50%,-50%);box-shadow:0 4px 16px #0008}
+.dock-tele span{font:500 10.5px var(--f-mono,monospace);letter-spacing:.14em;color:#A8A59C}
+.dock-tele b{font:500 15px var(--f-mono,monospace);text-align:right}
+.dock-tele b.ok{color:#7CFF4F}.dock-tele b.bad{color:#E0201B}
+.dock-tele .fb{grid-column:1/-1;display:block;height:4px;background:#3A3D42;border-radius:0;overflow:hidden}
+.dock-tele .fb i{display:block;height:100%;background:#F2EFE6}
+.dock-hint{position:absolute;left:50%;bottom:calc(24px + var(--safe-b,0px));transform:translateX(-50%);width:min(560px,calc(100vw - 32px));text-align:center;font-size:15px;padding:8px 12px;border-radius:0;background:#0B0C0Ee6;border-left:3px solid #FF4F00}
+.dock-hint.bad{color:#FF4F00}.dock-hint.warn{color:#FFB000}
+.dock-hint.ok{color:#7CDB8A}
+.dock-hint.go{color:#0B0C0E;background:#FFB000;font-weight:700;animation:dockGo 1s ease-in-out infinite alternate}
+@keyframes dockGo{from{box-shadow:0 0 0 0 #FFB00066}to{box-shadow:0 0 0 8px #FFB00000}}
+.dock-stick{pointer-events:auto;position:absolute;left:calc(18px + env(safe-area-inset-left,0px));bottom:calc(18px + var(--safe-b,0px));width:clamp(120px,30vw,160px);aspect-ratio:1;border-radius:50%;background:rgba(11,12,14,.35);border:1.5px solid rgba(242,239,230,.5);touch-action:none}
+.dock-stick i{position:absolute;left:50%;top:50%;width:42%;aspect-ratio:1;border-radius:50%;background:#F2EFE6;transform:translate(-50%,-50%)}
 .dock-btns{pointer-events:auto;position:absolute;right:calc(14px + env(safe-area-inset-right,0px));bottom:calc(18px + var(--safe-b,0px));display:grid;gap:10px}
-.dock-b{all:unset;box-sizing:border-box;width:96px;min-height:56px;display:grid;place-items:center;border-radius:14px;background:#05080ecc;border:1px solid #ffcf6a88;color:#ffcf6a;font:700 12px Orbitron,Chakra,sans-serif;letter-spacing:.06em;touch-action:none;user-select:none}
-.dock-b.down,.dock-b:active{background:#ffcf6a;color:#111}
+.dock-b{all:unset;box-sizing:border-box;width:96px;min-height:56px;display:grid;place-items:center;border-radius:2px;background:#0B0C0Ee6;border:1.5px solid #FFB000;color:#FFB000;font:600 12px var(--f-ui,Barlow,sans-serif);text-transform:uppercase;letter-spacing:.08em;touch-action:none;user-select:none}
+.dock-b.down,.dock-b:active{background:#FFB000;color:#0B0C0E}
 body.touch .dock-hint{bottom:auto;top:calc(110px + var(--safe-t,0px));width:min(360px,calc(100vw - 200px));left:12px;transform:none;text-align:left;font-size:13px}
 @media (max-width:560px){.dock-tele{top:auto;bottom:calc(190px + var(--safe-b,0px));right:12px;min-width:132px;padding:8px 10px}.dock-tele b{font-size:13px}.dock-top{top:calc(120px + var(--safe-t,0px))}body.touch .dock-hint{width:calc(100vw - 24px);top:calc(170px + var(--safe-t,0px))}.dock-coas{top:44%}}
-.dock-skip{all:unset;pointer-events:auto;cursor:pointer;position:absolute;top:calc(14px + var(--safe-t,0px));right:14px;padding:10px 14px;min-height:24px;border-radius:20px;background:#05080ecc;border:1px solid #ffffff33;font:600 12px Chakra,sans-serif;color:#dfe5ee}
+.dock-skip{all:unset;pointer-events:auto;cursor:pointer;position:absolute;top:calc(14px + var(--safe-t,0px));right:14px;padding:10px 14px;min-height:24px;border-radius:2px;background:#0B0C0Ee6;border:1px solid #F2EFE6;font:600 12px var(--f-ui,Barlow,sans-serif);text-transform:uppercase;letter-spacing:.08em;color:#F2EFE6}
+.dock-skip:hover{background:#F2EFE6;color:#0B0C0E}
+/* Barra vertical de distancia (idea del equipo) */
+.dock-dist{position:fixed;left:calc(50% + min(34vh,230px));top:50%;transform:translateY(-50%);display:grid;justify-items:center;gap:6px;pointer-events:none;font:500 11px var(--f-mono,monospace);color:#CFCCC2;letter-spacing:.12em}
+.dock-distbar{width:12px;height:min(40vh,260px);background:#0B0C0Ecc;border:1px solid #3A3D42;position:relative}
+.dock-distbar i{position:absolute;left:0;right:0;bottom:0;height:0;background:#2FA84F}
+.dock-coas.dim{opacity:.35;transition:opacity .4s}
+/* Calibración tras la captura: rolido + 12 pestillos */
+.dock-cal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(520px,calc(100vw - 32px));padding:16px;background:#0B0C0Ef2;border:1px solid #3A3D42;border-left:3px solid #FFB000;display:grid;gap:10px;pointer-events:none}
+.dock-cal[hidden]{display:none}
+.dock-cal-k{font:500 12px var(--f-mono,monospace);letter-spacing:.16em;color:#FFB000}
+.dock-cal-g{position:relative;height:30px;background:#3A3D42}
+.dock-cal-band{position:absolute;top:0;bottom:0;left:40%;width:20%;background:#2FA84F;box-shadow:inset 0 0 0 2px #7CDB8A}
+.dock-cal-n{position:absolute;top:-6px;bottom:-6px;width:4px;margin-left:-2px;background:#FF4F00;box-shadow:0 0 0 1px #0B0C0E}
+.dock-cal-n.ok{background:#F2EFE6}
+.dock-cal-p{height:6px;background:#3A3D42}.dock-cal-p i{display:block;height:100%;width:0;background:#FFB000}
+.dock-cal-t{font:600 14px var(--f-mono,monospace);color:#F2EFE6}
+@media (max-width:560px){.dock-dist{left:auto;right:12px;top:auto;bottom:calc(240px + var(--safe-b,0px));transform:none}.dock-distbar{height:120px}}

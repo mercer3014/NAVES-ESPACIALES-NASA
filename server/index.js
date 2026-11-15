@@ -35,7 +35,7 @@ const server = http.createServer(async (req, res) => {
   res.setHeader('permissions-policy', 'microphone=(self), camera=(), geolocation=()');
   const wsHost = /^[a-zA-Z0-9.\-:\[\]]+$/.test(req.headers.host || '') ? req.headers.host : 'localhost';
   // Basis transcoder is Emscripten: the worker blob needs eval to bind the wasm module.
-  res.setHeader('content-security-policy', `default-src 'self'; script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self' blob: ws://${wsHost} wss://${wsHost}; font-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'`);
+  res.setHeader('content-security-policy', `default-src 'self'; script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: ws://${wsHost} wss://${wsHost}; font-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'`);
   if (!['GET', 'HEAD'].includes(req.method)) { res.writeHead(405, { allow: 'GET, HEAD' }); return res.end(); }
   try {
     const url = new URL(req.url, 'http://x');
@@ -74,7 +74,17 @@ const server = http.createServer(async (req, res) => {
       if (req.method === 'HEAD') return res.end();
       return fs.createReadStream(p, { start, end }).on('error', () => res.destroy()).pipe(res);
     }
-    if (GZ.has(ext) && /gzip/.test(req.headers['accept-encoding'] || '')) {
+    // Precomprimidos al compilar (tools/precompress.mjs): Brotli o gzip sin gastar CPU por petición
+    const ae = req.headers['accept-encoding'] || '';
+    if (GZ.has(ext)) for (const [enc, suf] of [['br', '.br'], ['gzip', '.gz']]) {
+      if (!new RegExp(`\\b${enc}\\b`).test(ae)) continue;
+      let cs; try { cs = fs.statSync(p + suf); } catch { continue; }
+      if (!cs.isFile() || cs.mtimeMs < stat.mtimeMs) continue;
+      res.writeHead(200, { ...headers, 'content-encoding': enc, vary: 'accept-encoding', 'content-length': cs.size });
+      if (req.method === 'HEAD') return res.end();
+      return fs.createReadStream(p + suf).on('error', () => res.destroy()).pipe(res);
+    }
+    if (GZ.has(ext) && /gzip/.test(ae)) {
       res.writeHead(200, { ...headers, 'content-encoding': 'gzip', vary: 'accept-encoding' });
       if (req.method === 'HEAD') return res.end();
       return fs.createReadStream(p).on('error', () => res.destroy()).pipe(zlib.createGzip({ level: 6 })).pipe(res);

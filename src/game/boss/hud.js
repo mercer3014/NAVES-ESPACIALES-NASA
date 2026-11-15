@@ -17,7 +17,14 @@ const CSS = `
 .bossD .bd-bar b{display:block;font:600 13px/1.2 Jost,Orbitron,sans-serif;letter-spacing:.18em;color:#F2EFE6}
 .bossD .bd-bar small{display:block;font-size:12px;color:#F2EFE6;opacity:.7;letter-spacing:.1em;margin-bottom:5px}
 .bossD .bd-hp{position:relative;height:12px;background:#0B0C0E;border:1px solid #3A3D42;border-radius:2px;overflow:hidden}
-.bossD .bd-hp i{position:absolute;left:0;top:0;bottom:0;width:100%;background:#FFB000;transition:width .25s}
+.bossD .bd-hp i{position:absolute;left:0;top:0;bottom:0;width:100%;background:#FFB000;transition:width .12s}
+.bossD .bd-hp b{position:absolute;left:0;top:0;bottom:0;width:100%;background:#F2EFE6;transition:width .55s ease-in .35s}
+.bossD .bd-hp.bd-hit{animation:bossDhit .28s}
+.bossD .bd-hp.bd-hit i{background:#F2EFE6}
+.bossD .bd-dmg{position:absolute;transform:translate(-50%,-50%);font:700 22px/1 'IBM Plex Mono',Mono,monospace;color:#FFB000;text-shadow:0 2px 0 #0B0C0E,0 0 10px #0B0C0E;pointer-events:none;animation:bossDdmg .9s ease-out forwards;white-space:nowrap}
+.bossD .bd-dmg.bd-crit{font-size:32px;color:#FF4F00}
+.bossD .bd-dmg.bd-plate{color:#F2EFE6}
+.bossD .bd-dmg.bd-mute{font-size:15px;color:#F2EFE6;opacity:.75}
 .bossD .bd-hp u{position:absolute;top:0;bottom:0;width:2px;background:#0B0C0E}
 .bossD .bd-card{position:absolute;left:14px;top:calc(14px + env(safe-area-inset-top,0px));width:min(340px,42vw);background:#0B0C0Eeb;border:1px solid #3A3D42;border-radius:2px;padding:10px 12px}
 .bossD .bd-card .bd-k{font:600 10px/1 Jost,Orbitron,sans-serif;letter-spacing:.16em;color:#FFB000;margin-bottom:8px}
@@ -45,6 +52,11 @@ const CSS = `
 .bossD .bd-tool .bd-cd{position:absolute;left:0;bottom:0;height:3px;background:#FFB000;width:0}
 .bossD .bd-tool.bd-off{opacity:.45}
 .bossD .bd-tool.bd-ready{border-color:#FFB000}
+.bossD .bd-t-hammer{width:118px}
+.bossD .bd-t-hammer .bd-wsel{display:flex;gap:4px;justify-content:center;margin-top:4px}
+.bossD .bd-t-hammer .bd-wsel span{font:10px 'IBM Plex Mono',Mono,monospace;padding:1px 5px;border:1px solid #3A3D42;border-radius:2px;opacity:.6}
+.bossD .bd-t-hammer .bd-wsel span.bd-on{border-color:#FFB000;color:#FFB000;opacity:1}
+.bossD .bd-t-hammer.bd-swap{animation:bossDswap .3s}
 .bossD .bd-big{position:absolute;top:calc(68px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);font:600 40px/1 'IBM Plex Mono',Mono,monospace;letter-spacing:.04em;color:#F2EFE6;background:#0B0C0E;padding:4px 12px;border-radius:2px;display:none}
 .bossD .bd-big.bd-red{color:#E0201B}
 .bossD .bd-meter{position:absolute;top:calc(70px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);width:min(300px,50vw);display:none;text-align:center;font-size:12px;letter-spacing:.12em}
@@ -72,6 +84,9 @@ const CSS = `
 .bossD .bd-tc-stick i{position:absolute;left:50%;top:50%;width:54px;height:54px;border-radius:3px;background:#3A3D42;transform:translate(-50%,-50%)}
 .bossD .bd-tcb{position:absolute;width:66px;height:66px;border-radius:4px;background:#0B0C0Eeb;border:1px solid #FFB000;color:#FFB000;font:600 10px Jost,Orbitron,sans-serif}
 .bossD .bd-tcb.down{background:#FFB000;color:#0B0C0E}
+@keyframes bossDhit{0%{transform:translate(0,0)}20%{transform:translate(-4px,1px)}45%{transform:translate(4px,-1px)}70%{transform:translate(-2px,0)}100%{transform:translate(0,0)}}
+@keyframes bossDdmg{0%{opacity:0;transform:translate(-50%,-30%) scale(.6)}15%{opacity:1;transform:translate(-50%,-60%) scale(1.15)}30%{transform:translate(-50%,-70%) scale(1)}100%{opacity:0;transform:translate(-50%,-190%) scale(.95)}}
+@keyframes bossDswap{0%{transform:scale(1)}40%{transform:scale(1.08);border-color:#FFB000}100%{transform:scale(1)}}
 @keyframes bossDgrain{0%{background-position:0 0}25%{background-position:-40px 20px}50%{background-position:30px -30px}75%{background-position:-20px -10px}100%{background-position:0 0}}
 `;
 
@@ -88,23 +103,25 @@ export function mountBossHud() {
   el.innerHTML = `<div class="bd-grain"></div><div class="bd-hurt"></div><div class="bd-whiteout"></div>
     <div class="bd-nocanon">${L('NO CANON · SUEÑO', 'NON-CANON · DREAM')}</div>
     <div class="bd-panel-b">
-      <div class="bd-bar"><b>${L('EL GUARDIÁN DE TRANQUILIDAD', 'THE GUARDIAN OF TRANQUILITY')}</b><small class="bd-ph"></small><div class="bd-hp"><i></i><u style="left:70%"></u><u style="left:35%"></u></div></div>
+      <div class="bd-bar"><b>${L('EL GUARDIÁN DE TRANQUILIDAD', 'THE GUARDIAN OF TRANQUILITY')}</b><small class="bd-ph"></small><div class="bd-hp"><b></b><i></i><u style="left:70%"></u><u style="left:35%"></u></div></div>
       <div class="bd-card"><div class="bd-k">${L('OBJETIVO', 'OBJECTIVE')}</div><div class="bd-obj"></div><div class="bd-steps"></div><div class="bd-sub"></div><div class="bd-hint"></div></div>
       <div class="bd-o2"><div class="bd-lbl"><span>O₂ · ALDRIN</span><em class="bd-buff"></em></div><div class="bd-track"><i></i></div></div>
-      <div class="bd-tools">${tool('hammer', L('MARTILLO', 'HAMMER'), 'E / clic')}${tool('flash', 'FLASH', 'F / clic der.')}${tool('dash', L('ESQUIVA', 'DODGE'), 'Shift')}${tool('hose', L('MANGUERA', 'O₂ HOSE'), 'Q')}</div>
+      <div class="bd-tools">${tool('hammer', L('MARTILLO GEOL.', 'GEO HAMMER'), 'E / clic')}${tool('flash', 'FLASH', 'F / clic der.')}${tool('dash', L('ESQUIVA', 'DODGE'), 'Shift')}${tool('hose', L('MANGUERA', 'O₂ HOSE'), 'Q')}</div>
       <div class="bd-big"></div>
       <div class="bd-meter"><span class="bd-mt"></span><div class="bd-track"><i></i></div></div>
     </div>
     <div class="bd-subs"></div>
     <div class="bd-prompt"><span class="bd-pt"></span><span class="bd-holdbar" style="display:none"><i></i></span></div>
-    <div class="bd-help">${isTouch ? L('Joystick moverse · arrastra para mirar · botones: SALTO, MARTILLO, FLASH, ESQUIVA, MANGUERA', 'Stick to move · drag to look · buttons: JUMP, HAMMER, FLASH, DODGE, HOSE') : L('WASD moverse · ratón mirar · Espacio saltar · Shift esquivar · E/clic martillo · F/clic der. flash · Q manguera · Tab fijar cámara · Esc pausa', 'WASD move · mouse look · Space jump · Shift dodge · E/click hammer · F/right-click flash · Q hose · Tab lock camera · Esc pause')}</div>
+    <div class="bd-help">${isTouch ? L('Joystick moverse · arrastra para mirar · botones: SALTO, GOLPE, HERRAMIENTA, FLASH, ESQUIVA, MANGUERA', 'Stick to move · drag to look · buttons: JUMP, STRIKE, TOOL, FLASH, DODGE, HOSE') : L('WASD moverse · ratón mirar · Espacio saltar · Shift esquivar · E/clic golpear · 1/2 o rueda: martillo/mazo · F/clic der. flash · Q manguera · Tab fijar cámara · Esc pausa', 'WASD move · mouse look · Space jump · Shift dodge · E/click strike · 1/2 or wheel: hammer/mallet · F/right-click flash · Q hose · Tab lock camera · Esc pause')}</div>
     <div class="bd-toastb"></div>
     ${isTouch ? `<div class="bd-tc"><div class="bd-tc-stick"><i></i></div>
       <button class="bd-tcb" data-b="jump" style="right:20px;bottom:calc(24px + env(safe-area-inset-bottom,0px))">${L('SALTO', 'JUMP')}</button>
       <button class="bd-tcb" data-b="hammer" style="right:96px;bottom:calc(40px + env(safe-area-inset-bottom,0px))">${L('MARTILLO', 'HAMMER')}</button>
       <button class="bd-tcb" data-b="flash" style="right:40px;bottom:calc(100px + env(safe-area-inset-bottom,0px))">FLASH</button>
       <button class="bd-tcb" data-b="dash" style="right:170px;bottom:calc(24px + env(safe-area-inset-bottom,0px))">${L('ESQUIVA', 'DODGE')}</button>
+      <button class="bd-tcb" data-b="tool" style="right:190px;bottom:calc(100px + env(safe-area-inset-bottom,0px))">${L('HERRAM.', 'TOOL')}</button>
       <button class="bd-tcb" data-b="hose" style="right:116px;bottom:calc(116px + env(safe-area-inset-bottom,0px))">${L('MANGUERA', 'HOSE')}</button></div>` : ''}`;
+  { const t = el.querySelector('.bd-t-hammer'); const s = document.createElement('div'); s.className = 'bd-wsel'; s.innerHTML = `<span class="bd-on">1</span><span>2</span>`; t.insertBefore(s, t.querySelector('.bd-cd')); }
   el.querySelector('.bd-grain').style.backgroundImage = `url(${grainURL()})`;
   document.body.append(el);
   const q = (s) => el.querySelector(s);
@@ -112,7 +129,13 @@ export function mountBossHud() {
   const hud = {
     el, q,
     phase(text) { q('.bd-ph').textContent = text; },
-    hp(v) { q('.bd-hp i').style.width = Math.max(0, v) + '%'; },
+    hp(v) { const w = Math.max(0, v) + '%'; const i = q('.bd-hp i'); if (i.style.width !== w) { i.style.width = w; q('.bd-hp b').style.width = w; } },
+    // sacudida y destello de la barra del Guardián al recibir daño
+    hpHit() { const h = q('.bd-hp'); h.classList.remove('bd-hit'); void h.offsetWidth; h.classList.add('bd-hit'); },
+    // número de daño flotante en coordenadas de pantalla (px); kind: '' | 'crit' | 'plate' | 'mute'
+    dmg(x, y, text, kind = '') { const d = document.createElement('div'); d.className = 'bd-dmg' + (kind ? ' bd-' + kind : ''); d.textContent = text; d.style.left = x.toFixed(0) + 'px'; d.style.top = y.toFixed(0) + 'px'; el.append(d); setTimeout(() => d.remove(), 950); },
+    // herramienta activa en la tarjeta del golpe
+    weapon(name, idx) { const t = q('.bd-t-hammer'); t.querySelector('b').textContent = name; t.querySelectorAll('.bd-wsel span').forEach((s, i) => s.classList.toggle('bd-on', i === idx)); t.classList.remove('bd-swap'); void t.offsetWidth; t.classList.add('bd-swap'); },
     o2(v, buff = '') { const o = q('.bd-o2'); o.querySelector('.bd-track i').style.width = Math.max(0, Math.min(100, v)) + '%'; o.classList.toggle('bd-low', v < 25); q('.bd-buff').textContent = buff; },
     // steps: [{ k: 'F', t: 'texto', on, done }] → un icono de tecla grande por paso; el paso activo se resalta
     objective(obj, sub = '', steps = []) { const sig = JSON.stringify([obj, sub, steps]); if (sig === objSig) return; objSig = sig; q('.bd-obj').textContent = obj; q('.bd-sub').textContent = sub;

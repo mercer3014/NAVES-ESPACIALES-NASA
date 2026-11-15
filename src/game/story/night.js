@@ -49,9 +49,11 @@ export async function makeColumbia({ light = 'night', spin = 0.06, withEarth = t
     actors: [],
     update(dt, t) {
       out.rotation.y += dt * spin; tickAll(out, dt, t);
-      const k = Math.min(1, dt * ease); cur.pos.lerp(tgt.pos, k); cur.look.lerp(tgt.look, k); cur.fov += (tgt.fov - cur.fov) * k;
-      camera.position.copy(cur.pos); camera.up.set(0, 1, 0); camera.lookAt(cur.look);
-      if (Math.abs(camera.fov - cur.fov) > 0.01) { camera.fov = cur.fov; camera.updateProjectionMatrix(); }
+      if (!world.pilot) {
+        const k = Math.min(1, dt * ease); cur.pos.lerp(tgt.pos, k); cur.look.lerp(tgt.look, k); cur.fov += (tgt.fov - cur.fov) * k;
+        camera.position.copy(cur.pos); camera.up.set(0, 1, 0); camera.lookAt(cur.look);
+        if (Math.abs(camera.fov - cur.fov) > 0.01) { camera.fov = cur.fov; camera.updateProjectionMatrix(); }
+      }
       for (const a of world.actors) a.tick(dt, t);
     },
     resize() { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); },
@@ -91,15 +93,15 @@ export default async function nightScene() {
     W = await makeColumbia({ light: 'night', spin: 0.06 });
     const [buzz, mike, neil] = await Promise.all([
       // Aldrin y Collins flotan acostados sobre el panel principal (el único hueco libre de la cabina); Neil, de pie junto a la ventana lateral
-      floater(W, 'aldrin-civil', { x: -0.9, y: 2.12, z: 0.15, tilt: -Math.PI / 2, phase: 0.3 }),
-      floater(W, 'collins-civil', { x: 0.9, y: 2.48, z: -0.15, tilt: Math.PI / 2, phase: 1.4 }),
-      floater(W, 'armstrong-civil', { x: -0.72, y: 0.9, z: 1.0, yaw: -2.25, phase: 2.2 }),
+      floater(W, 'aldrin-vuelo', { x: -0.28, y: 1.42, z: -0.55, tilt: -Math.PI / 2, phase: 0.3 }),
+      floater(W, 'collins-vuelo', { x: 0.28, y: 1.48, z: -0.85, tilt: Math.PI / 2, phase: 1.4 }),
+      floater(W, 'armstrong-vuelo', { x: 0.02, y: 1.38, z: -0.2, tilt: 0.4, phase: 2.2 }),
     ]);
     // primer plano: los acostados miran a +Z (hacia la escotilla); a Neil se lo toma de perfil contra la ventana
     const near = (a, side = 1) => (!a ? null : a === neil
       ? { pos: [a.head.x + 0.55, a.head.y - 0.05, a.head.z + 0.3], look: [a.head.x - 0.2, a.head.y - 0.02, a.head.z - 0.15], fov: 44 }
       : { pos: [a.head.x + side * 0.18, a.head.y - 0.32, a.head.z + 0.78], look: [a.head.x, a.head.y, a.head.z], fov: 42 });
-    const WIDE = { pos: [0.55, 1.5, 1.42], look: [-0.15, 2.0, -0.1], fov: 72 };
+    const WIDE = { pos: [0.42, 1.5, 0.92], look: [-0.15, 2.0, -0.1], fov: 72 };
     const WINDOW = { pos: [0, 1.2, 1.22], look: [0, 1.2, 3.2], fov: 52 };
     W.setShot(WIDE, { cut: true });
     const line = (S, who, text, actor, clip) => { S.subtitle(who, tx(text)); if (clip) playA11('voz_en_clonada/' + clip); if (actor) { actor.say(true); setTimeout(() => actor.say(false), 2600); } };

@@ -64,6 +64,19 @@ export const CARDS = {
     img: ['Sala de Control de Misión 2 (MOCR 2), Houston, a finales de los años sesenta.', 'Mission Operations Control Room 2 (MOCR 2), Houston, late 1960s.'],
     src: 'Gene Kranz, Failure Is Not an Option (2000)' }),
 
+  'sala-de-diseno': c(0, 'moment', 'common', ['Diseñar con límites', 'Designing within limits'], {
+    date: '1967 – 1969',
+    fact: ['Cada kilo del módulo lunar era una negociación: un instrumento más pesado dejaba menos combustible o menos carga. Los experimentos del Apolo 11 (EASEP) viajaron plegados en una bodega del propio módulo lunar, así que su masa y su tamaño tuvieron que encajar en ella.',
+      'Every kilogram of the lunar module was a negotiation: a heavier instrument left less fuel or less cargo. Apollo 11’s experiments (EASEP) rode folded in a bay of the lunar module itself, so their mass and size had to fit it.'],
+    img: ['El Eagle en la sala de montaje, con la etapa de descenso a la vista.', 'Eagle in the assembly room, descent stage in view.'],
+    src: NH + ' · ' + ALSJ }),
+  'elegir-el-sitio': c(0, 'place', 'rare', ['Cómo se eligió el sitio', 'How the site was chosen'], {
+    date: '1967 – 1969',
+    fact: ['Un comité de la NASA comparó sitios candidatos en el ecuador lunar: terreno llano, una aproximación sin montañas y poco combustible para llegar. El Sitio 2, en el Mar de la Tranquilidad, fue el elegido; el Sitio 3, en Sinus Medii, quedó como respaldo.',
+      'A NASA committee compared candidate sites near the lunar equator: flat ground, an approach free of mountains and little fuel needed to reach it. Site 2, in the Sea of Tranquility, was chosen; Site 3, in Sinus Medii, stayed as a backup.'],
+    img: ['Mapa de los sitios candidatos del Apolo sobre fotos del Lunar Orbiter.', 'Map of the Apollo candidate sites over Lunar Orbiter photos.'],
+    src: NH + ' · ' + ALSJ }),
+
   // ---------- Cap. 1 ----------
   'la-despedida': c(1, 'moment', 'common', ['La despedida', 'The farewell'], {
     date: 'jul 1969',
@@ -115,6 +128,36 @@ export const CARDS = {
     src: 'Michael Collins, Carrying the Fire (1974)' }),
 
   // ---------- Cap. 2 ----------
+  'traje-a7l': c(2, 'object', 'rare', ['El traje A7L y sus mangueras', 'The A7L suit and its hoses'], {
+    date: '16 jul 1969 · mañana',
+    fact: ['Antes de cerrar la escotilla, cada astronauta conecta el traje a la nave con mangueras de oxígeno de conectores de color: el azul trae el oxígeno hacia el traje y el rojo lo saca. Así se comprueba que el traje respira bien antes de despegar.',
+      'Before the hatch closes, each astronaut hooks the suit to the spacecraft with color-coded oxygen hoses: blue brings oxygen into the suit and red carries it out. That is how the suit is checked before liftoff.'],
+    img: ['Armstrong, Collins y Aldrin conectados a sus mangueras en la cabina.', 'Armstrong, Collins and Aldrin hooked to their hoses in the cabin.'],
+    src: ALSJ }),
+  'propelente-criogenico': c(2, 'science', 'rare', ['Propelente criogénico', 'Cryogenic propellant'], {
+    date: '16 jul 1969',
+    fact: ['El oxígeno líquido (LOX) está a −183 °C y el hidrógeno líquido (LH2) a −253 °C. Hierven poco a poco dentro del cohete, así que se siguen reponiendo hasta pocos minutos antes del despegue.',
+      'Liquid oxygen (LOX) sits at −183 °C and liquid hydrogen (LH2) at −253 °C. They slowly boil off inside the rocket, so they are topped up until a few minutes before liftoff.'],
+    img: ['Vapor blanco saliendo del Saturn V en la plataforma 39A.', 'White vapor venting from the Saturn V on Pad 39A.'],
+    src: NH + ' · Saturn V Flight Manual' }),
+  'torre-lanzamiento': c(2, 'place', 'rare', ['El brazo de acceso 9', 'Access arm 9'], {
+    date: '16 jul 1969',
+    fact: ['El brazo de acceso 9 unía la torre de lanzamiento con la nave, a unos 98 m (320 pies) de altura. Por él caminó la tripulación hasta la Sala Blanca.',
+      'Access arm 9 linked the launch tower to the spacecraft, about 98 m (320 feet) up. The crew walked it to the White Room.'],
+    img: ['La pasarela del brazo 9 hacia la Sala Blanca del Apolo 11.', 'The arm 9 walkway toward the Apollo 11 White Room.'],
+    src: 'NASA, Apollo 11 Press Kit · ' + AFJ }),
+  'red-crew': c(2, 'person', 'rare', ['El red crew', 'The red crew'], {
+    date: '16 jul 1969 · madrugada',
+    fact: ['De madrugada se halló una fuga en la válvula de reposición de hidrógeno líquido. Un equipo subió a la torre, con el cohete ya cargado, y apretó los pernos. El LH2 está a −253 °C. La tripulación no reparaba: observaba y confirmaba.',
+      'Before dawn a leak was found in the liquid-hydrogen replenish valve. A crew climbed the tower, with the rocket already fueled, and tightened the bolts. LH2 sits at −253 °C. The astronauts did not repair it: they watched and confirmed.'],
+    img: ['Vapor en la torre de la plataforma 39A la mañana del lanzamiento.', 'Vapor on the Pad 39A tower on launch morning.'],
+    src: AFJ }),
+  'llave-de-la-luna': c(2, 'object', 'epic', ['La llave de la Luna', 'The key to the Moon'], {
+    date: '16 jul 1969',
+    fact: ['Guenter Wendt, el jefe del equipo de la plataforma, que cerraba la escotilla a cada tripulación, le regaló a Armstrong una llave de espuma con forma de media luna: la «llave de la Luna». Era una broma de buena suerte, hecha con cariño.',
+      'Guenter Wendt, the pad leader who closed the hatch on every crew, gave Armstrong a foam key shaped like a crescent moon: the “key to the Moon.” It was an affectionate good-luck joke.'],
+    img: ['Guenter Wendt cerrando la escotilla de un Apolo.', 'Guenter Wendt closing an Apollo hatch.'],
+    src: ALSJ + ' · NASA' }),
   'despegue': c(2, 'moment', 'common', ['Despegue del Apolo 11', 'Apollo 11 liftoff'], {
     date: '16 jul 1969 · 13:32:00 UTC',
     fact: ['A las 9:32 hora de Florida, los cinco motores F-1 levantaron el Saturn V de la plataforma 39A. Jack King, la voz del control de lanzamiento, contó: «…cero, todos los motores en marcha. Despegue». Cerca de un millón de personas lo vieron desde las playas y carreteras.',
@@ -277,6 +320,12 @@ export const CARDS = {
       'President Richard Nixon spoke to them “by telephone” from the White House, in the longest-distance call in history. “For one priceless moment in the whole history of man, all the people on this Earth are truly one.”'],
     img: ['Nixon al teléfono en el Despacho Oval mirando la transmisión.', 'Nixon on the phone in the Oval Office watching the broadcast.'],
     src: ALSJ }),
+  'millones-lo-vieron': c(5, 'moment', 'rare', ['650 millones lo vieron', '650 million people watched'], {
+    date: '21 jul 1969',
+    fact: ['La imagen de la caminata llegó por Goldstone, Honeysuckle Creek y el radiotelescopio de Parkes. Parkes, en Australia, sostuvo la señal cuando el viento movía la antena. Unas 600 a 650 millones de personas la vieron en directo.',
+      'The moonwalk picture came through Goldstone, Honeysuckle Creek and the Parkes radio telescope. Parkes, in Australia, held the signal while the wind shook the dish. Some 600 to 650 million people watched it live.'],
+    img: ['La antena de Parkes, de 64 m, durante el Apolo 11.', 'The 64 m Parkes dish during Apollo 11.'],
+    src: 'CSIRO · ' + ALSJ }),
   'huella': c(5, 'science', 'rare', ['El regolito lunar', 'Lunar regolith'], {
     date: '21 jul 1969',
     fact: ['El suelo lunar es un polvo fino y abrasivo formado por miles de millones de años de impactos. Sin viento ni agua que lo erosionen, una huella puede durar millones de años. Armstrong lo describió como «carbón en polvo».',
@@ -528,3 +577,46 @@ export const CARDS = {
     img: ['El USS Hornet recupera a Columbia en el Pacífico.', 'USS Hornet recovers Columbia in the Pacific.'],
     src: MR }),
 };
+
+// Los 8 eventos ocultos del guion. La pista se muestra en la Bitácora en cuanto un personaje la dice.
+export const HIDDEN_EVENTS = ['h-45s', 'h-dejamos', 'h-laser', 'h-hamilton', 'h-cartografo', 'h-ciegas', 'h-angulo', 'historiador'];
+const HINTS = {
+  'h-45s': ['Haise, en la Sala Blanca: «Dicen que Neil podría posar ese bicho con 20 segundos de combustible…».', 'Haise, in the White Room: “They say Neil could set that thing down with 20 seconds of fuel left….”'],
+  'h-hamilton': ['Wendt: «Si ves a Garman en Houston, pregúntale por su hojita».', 'Wendt: “If you see Garman in Houston, ask him about his little sheet.”'],
+  'h-dejamos': ['Aldrin, al pie de la escalerilla: en un bolsillo del traje viaja un paquete que no está en la lista de tareas.', 'Aldrin, at the foot of the ladder: a pocket of the suit carries a packet that is not on the task list.'],
+  'h-laser': ['Duke: el retrorreflector solo devuelve el láser si mira de frente a la Tierra.', 'Duke: the retroreflector only returns the laser if it faces Earth.'],
+  'h-cartografo': ['Collins, solo en Columbia: «Hay seis marcas en el terreno. Si las fotografío en una sola pasada…».', 'Collins, alone in Columbia: “There are six landmarks. If I photograph them in a single pass….”'],
+  'h-ciegas': ['CAPCOM, antes de la LOI: «Detrás de la Luna no os vemos. El encendido es vuestro».', 'CAPCOM, before LOI: “Behind the Moon we cannot see you. The burn is yours.”'],
+  'h-angulo': ['Collins, en la reentrada: «El corredor es de unos dos grados. Ni más empinado ni más plano».', 'Collins, during reentry: “The corridor is about two degrees. Not steeper, not shallower.”'],
+  'historiador': ['Kranz: unas 400.000 personas hicieron posible el Apolo. La bitácora completa es su título.', 'Kranz: some 400,000 people made Apollo possible. The completed log is their title.'],
+};
+for (const [id, hint] of Object.entries(HINTS)) CARDS[id].hint = hint;
+
+// «Por qué importa» en cada tarjeta de objeto.
+const WHY = {
+  'foto-karen': ['Porque Armstrong casi nunca hablaba de ella, y esa reserva explica su silencio en la misión.', 'Because Armstrong almost never spoke of her, and that reserve explains his silence on the mission.'],
+  'libreta-ed-white': ['Porque el incendio de 1964 une a Armstrong con Ed White antes del Apolo 1.', 'Because the 1964 fire links Armstrong to Ed White before Apollo 1.'],
+  'pizarra-kranz': ['Porque «duros y competentes» es la regla con la que Houston decide seguir en la 1202.', 'Because “tough and competent” is the rule Houston uses to press on through the 1202.'],
+  'saturn-v': ['Porque sin esa masa en órbita no hay módulo lunar que descienda.', 'Because without that mass in orbit there is no lunar module to descend.'],
+  'parche-mision': ['Porque el emblema, sin nombres, dice que el vuelo es de todas las personas que lo hicieron.', 'Because the emblem, with no names, says the flight belongs to everyone who built it.'],
+  'sobres-firmados': ['Porque eran el seguro de la familia si la tripulación no volvía.', 'Because they were the family’s insurance if the crew did not come back.'],
+  'traje-a7l': ['Porque desde que se cierra el traje se respira oxígeno puro, y el orden de las mangueras es lo que lo mantiene.', 'Because once the suit is closed you breathe pure oxygen, and the hose order is what keeps it that way.'],
+  'llave-de-la-luna': ['Porque la broma de Wendt es el último gesto humano antes de cerrar la escotilla.', 'Because Wendt’s joke is the last human gesture before the hatch closes.'],
+  'checklist-muslo': ['Porque en el traje no se puede desplegar una hoja: la lista va cosida al brazo.', 'Because you cannot unfold a sheet in the suit: the list is sewn to the sleeve.'],
+  'sextante': ['Porque detrás de la Luna la única referencia son las estrellas.', 'Because behind the Moon the only reference is the stars.'],
+  'agc-dsky': ['Porque esa computadora es la que prioriza y por eso la alarma 1202 no aborta el descenso.', 'Because that computer is what prioritizes, and that is why the 1202 alarm does not abort the descent.'],
+  'comida-espacial': ['Porque tres hombres viven días en una lata: el agua y la comida son parte del diseño, no un detalle.', 'Because three men live for days in a can: water and food are part of the design, not a detail.'],
+  'eagle-lm5': ['Porque cada kilo de este módulo es un kilo que no es combustible ni ciencia.', 'Because every kilogram of this module is a kilogram that is not fuel or science.'],
+  'hoja-garman': ['Porque sin esa hoja Bales no puede decir GO en tres segundos.', 'Because without that sheet Bales cannot call GO in three seconds.'],
+  'chaleco-kranz': ['Porque cerrar la puerta y ponerse el chaleco es la señal de que el descenso ya no se interrumpe.', 'Because closing the door and putting on the vest is the sign that the descent will not be interrupted.'],
+  'squawk-box': ['Porque la familia oye el descenso en directo, y lo que Neil les dijo en casa cambia cómo lo escuchan.', 'Because the family hears the descent live, and what Neil told them at home changes how they listen.'],
+  'placa': ['Porque el texto que Armstrong lee en la escalerilla es el mensaje que se queda en la Luna.', 'Because the words Armstrong reads on the ladder are the message that stays on the Moon.'],
+  'bandera': ['Porque el tratado impide reclamar la Luna: la bandera es un saludo, no una frontera.', 'Because the treaty forbids claiming the Moon: the flag is a greeting, not a border.'],
+  'hasselblad': ['Porque esas fotos son la prueba que vieron cientos de millones de personas.', 'Because those pictures are the proof hundreds of millions of people saw.'],
+  'paquete-recuerdos': ['Porque honra a quienes murieron en los dos lados de la carrera, y sigue en la superficie.', 'Because it honors those who died on both sides of the race, and it is still on the surface.'],
+  'libreta-collins': ['Porque en los 48 minutos sin radio Collins solo tiene esa libreta y la ventana.', 'Because in the 48 minutes without radio Collins has only that notebook and the window.'],
+  'rotulador-aldrin': ['Porque un objeto no conductor es la única forma de cerrar el disyuntor del motor de ascenso.', 'Because a non-conductive object is the only way to close the ascent-engine breaker.'],
+  'discurso-safire': ['Porque la NASA escribió qué diría el presidente si no volvían: el riesgo era real.', 'Because NASA wrote what the president would say if they did not come back: the risk was real.'],
+  'ventana-cuarentena': ['Porque las rocas podían traer algo desconocido, y la familia solo podía tocar el vidrio.', 'Because the rocks might have carried something unknown, and the family could only touch the glass.'],
+};
+for (const [id, why] of Object.entries(WHY)) CARDS[id].why = why;

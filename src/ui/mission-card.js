@@ -6,23 +6,30 @@
 export const CARDS = {
   design: {
     n: '00', title: ['Diseña tu misión', 'Design your mission'],
-    what: ['1967–69: la NASA eligió el lugar, cada experimento y cada kilo del Eagle.', 'In 1967–69 NASA chose the site, every experiment and every kilo of the Eagle.'],
-    goal: ['Diseña tu Apolo 11 sin pasarte del límite de masa.', 'Design your Apollo 11 without going over the mass limit.'],
-    m: [[['CLIC'], ['Elige las cartas', 'Pick the cards']], [['ARRASTRAR'], ['Mueve el control deslizante', 'Drag the slider']]],
-    t: [[['TOCA'], ['Elige las cartas', 'Pick the cards']], [['DESLIZA'], ['Mueve el control', 'Slide the control']]],
+    what: ['Enero de 1969, Houston. Cuatro expertos te esperan en la sala de planificación.', 'January 1969, Houston. Four experts are waiting in the planning room.'],
+    goal: ['Habla con los cuatro, cambia el sitio y el combustible, y sigue hacia la misión.', 'Talk to all four, change the site and the fuel, and go on to the mission.'],
+    m: [[['W', 'A', 'S', 'D'], ['Caminar', 'Walk']], [['E'], ['Hablar', 'Talk']], [['RATÓN'], ['Mirar y elegir en el panel', 'Look and choose on the panel']]],
+    t: [[['PALANCA'], ['Caminar', 'Walk']], [['ACCIÓN'], ['Hablar', 'Talk']]],
   },
-  prep: {
-    n: '01', title: ['Preparación', 'Preparation'],
+  'prep-practice': {
+    n: '01', title: ['Preparación', 'Preparation'], // la misión y la práctica usan las mismas 4 tareas en la plataforma
     what: ['16 jul 1969, madrugada: técnicos y tripulación preparan el Saturn V en la plataforma 39A.', 'July 16, 1969, before dawn: technicians and crew ready the Saturn V on Pad 39A.'],
     goal: ['Completa las 4 tareas antes de la cuenta atrás: arrastrar, mantener y girar con el puntero.', 'Finish the 4 tasks before the countdown: drag, hold and turn with the pointer.'],
     m: [[['ARRASTRAR'], ['Mueve piezas y cables a su sitio', 'Move parts and cables into place']], [['MANTENER'], ['Mantén pulsado hasta llenar', 'Hold down until it fills']], [['GIRAR'], ['Arrastra en círculo anillos y manivelas', 'Drag in a circle on rings and cranks']]],
     t: [[['ARRASTRA'], ['Lo mismo con el dedo', 'Same with your finger']], [['MANTÉN'], ['Deja el dedo pulsado', 'Keep your finger down']], [['GIRA'], ['Dibuja un círculo', 'Draw a circle']]],
   },
+  prep: {
+    n: '01', title: ['Preparación', 'Preparation'],
+    what: ['16 jul 1969, madrugada: técnicos y tripulación preparan el Saturn V en la plataforma 39A.', 'July 16, 1969, before dawn: technicians and crew ready the Saturn V on Pad 39A.'],
+    goal: ['Camina la pasarela del brazo 9, habla, mira y confirma. Luego entra en Columbia.', 'Walk access arm 9, talk, look and confirm. Then climb into Columbia.'],
+    m: [[['W', 'A', 'S', 'D'], ['Caminar', 'Walk']], [['RATÓN'], ['Girar la cámara', 'Turn the camera']], [['E'], ['Hablar, mirar o mantener', 'Talk, look or hold']], [['1', '2'], ['Elegir respuesta', 'Choose a reply']]],
+    t: [[['PALANCA'], ['Caminar', 'Walk']], [['ARRASTRAR'], ['Mirar', 'Look']], [['ACCIÓN'], ['Hablar o mantener', 'Talk or hold']]],
+  },
   launch: {
     n: '02', title: ['Lanzamiento', 'Launch'],
     what: ['09:32. Casi 3.000 toneladas de cohete despegan del 39A.', '09:32. Almost 3,000 tons of rocket lift off from 39A.'],
-    goal: ['Mantén la flecha dentro del pasillo verde y separa cada etapa cuando su tanque se vacíe, hasta llegar a la órbita.', 'Keep the arrow inside the green corridor and drop each stage when its tank runs dry, all the way to orbit.'],
-    m: [[['A', 'D'], ['Cabeceo (también ← →)', 'Pitch (also ← →)']], [['W', 'S'], ['Empuje', 'Thrust']], [['ESPACIO'], ['Separar etapa', 'Separate stage']], [['C', 'V'], ['Cámara', 'Camera']]],
+    goal: ['Mantén la flecha en el pasillo verde, baja el empuje (S) en Max-Q y separa cada etapa con ESPACIO cuando la aguja esté en la franja verde. Si te sales del pasillo o fuerzas la estructura, el cohete explota.', 'Keep the arrow in the green corridor, throttle down (S) at Max-Q and stage with SPACE when the needle is in the green band. Leave the corridor or overstress the structure and the rocket explodes.'],
+    m: [[['A', 'D'], ['Cabeceo (también ← →)', 'Pitch (also ← →)']], [['W', 'S'], ['Empuje: baja en Max-Q', 'Thrust: lower it at Max-Q']], [['ESPACIO'], ['Separar en la franja verde', 'Stage in the green band']], [['C', 'V'], ['Cámara', 'Camera']]],
     t: [[['PALANCA'], ['Cabeceo (izquierda)', 'Pitch (left)']], [['ETAPA'], ['Separar etapa', 'Separate stage']]],
   },
   cruise: {
@@ -35,9 +42,9 @@ export const CARDS = {
   descent: {
     n: '04', title: ['Alunizaje', 'Landing'],
     what: ['20 jul: alarmas 1202 y un cráter lleno de rocas. Armstrong pilotó a mano con menos de un minuto de combustible.', 'July 20: 1202 alarms and a crater full of boulders. Armstrong flew by hand with under a minute of fuel.'],
-    goal: ['Baja despacio: velocidad vertical en verde, sobre la zona marcada y sin rocas.', 'Come down slowly: vertical speed in the green, over the marked zone and clear of rocks.'],
-    m: [[['A', 'D'], ['Inclinar', 'Tilt']], [['W', 'S'], ['Empuje', 'Thrust']], [['R'], ['Asistente', 'Assist']]],
-    t: [[['PALANCA'], ['Inclinar', 'Tilt']], [['BARRA'], ['Empuje', 'Thrust']]],
+    goal: ['A 300 m tomas el control. Elige el ritmo de bajada con W/S, llega a la zona marcada sin rocas y toca con la aguja en la franja verde (menos de 1 m/s).', 'At 300 m you take over. Pick your descent rate with W/S, reach the marked zone clear of rocks and touch down with the needle in the green band (under 1 m/s).'],
+    m: [[['A', 'D'], ['Inclinar: moverte a los lados', 'Tilt: move sideways']], [['W', 'S'], ['Velocidad vertical: W frena la bajada, S la acelera (0,3 m/s por toque)', 'Vertical speed: W slows the descent, S speeds it up (0.3 m/s per tap)']], [['R'], ['Empuje directo (sin ROD)', 'Direct throttle (no ROD)']]],
+    t: [[['PALANCA'], ['Inclinar', 'Tilt']], [['BARRA'], ['Velocidad vertical: arriba frena', 'Vertical speed: up slows you']], [['ROD'], ['Empuje directo', 'Direct throttle']]],
   },
   eva: {
     n: '05', title: ['Caminata lunar', 'Moonwalk'],

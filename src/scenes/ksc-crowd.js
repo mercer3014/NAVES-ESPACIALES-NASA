@@ -18,7 +18,7 @@ export function loadKscCrowd({ seed = 1969 } = {}) {
       // tramo frente a la cámara (|x| < 120): tres filas densas; resto de la playa: un grupo cada 30 m
       const spots = [];
       for (let x = -120; x <= 120; x += 7) for (const dz of [-8, 0, 8]) spots.push([x + (dz / 8) * 3.5, dz]);
-      for (let x = BEACH.x0; x <= BEACH.x1; x += 30) if (Math.abs(x) > 124) spots.push([x, 0]);
+      for (let x = BEACH.x0; x <= BEACH.x1; x += 48) if (Math.abs(x) > 124) spots.push([x, 0]);
       spots.forEach(([x, dz], i) => {
         const c = kinds[i % kinds.length].clone(true); // nodo con nombre: pivote limpio, la malla va en el hijo -geo
         c.position.set(x + (R() - 0.5) * 4, BEACH.y, BEACH.z + dz + (R() - 0.5) * 3);

@@ -4,7 +4,9 @@ export const BOOT_LINES = ['boot.line.bus', 'boot.line.nav', 'boot.line.comm', '
 
 export function cursorMode({ screen = '', paused = false } = {}) {
   if (paused) return 'menu';
-  if (String(screen).startsWith('phase-')) return 'play';
+  // Solo se esconde el cursor donde se mira con el ratón (descenso y EVA). Las fases de clic y arrastre
+  // (tareas de la Fase 1, despegue, alineación de estrellas en el crucero) necesitan verlo.
+  if (screen === 'phase-descent' || screen === 'phase-eva') return 'play';
   return 'menu';
 }
 

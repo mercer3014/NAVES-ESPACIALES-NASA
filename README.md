@@ -3,6 +3,14 @@
 Three-mission browser game (Spanish / English), solo with Pancho or two players:
 Apollo lunar expedition; Red Garden Mars crops; Horizon fictional rescue expedition.
 
+## Jugar en línea / Play online
+
+**https://nasa.nickzar.online**
+
+«Apolo 11: Un gran salto» (NASA Space Apps 2026, reto Space Mission Design Game). Funciona en computadora, portátil, tableta y teléfono, con teclado y ratón o con controles táctiles. No requiere instalación.
+
+"Apollo 11: One Giant Leap" (NASA Space Apps 2026, Space Mission Design Game challenge). Runs in the browser on desktop, laptop, tablet and phone, with keyboard and mouse or touch controls. No install needed.
+
 ## Install and run
 
 Use Node.js 22.12+ (or a compatible newer release). From this repository root:

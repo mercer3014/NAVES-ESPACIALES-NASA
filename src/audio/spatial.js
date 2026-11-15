@@ -55,6 +55,7 @@ export function syncListener(camera) {
   const l = c.listener;
   const px = camera.position.x, py = camera.position.y, pz = camera.position.z;
   const fx = -e[8], fy = -e[9], fz = -e[10], ux = e[4], uy = e[5], uz = e[6];
+  if (![px, py, pz, fx, fy, fz, ux, uy, uz].every(Number.isFinite)) return; // cámara sin colocar aún (primer fotograma): el AudioParam no admite NaN
   if (l.positionX) {
     l.positionX.value = px; l.positionY.value = py; l.positionZ.value = pz;
     l.forwardX.value = fx; l.forwardY.value = fy; l.forwardZ.value = fz;

@@ -29,16 +29,25 @@ assert.deepEqual(badSlot, [], 'escenas en SLOTS sin STORY');
 // la decisión de Laika después de la escena; los puentes ocupan los huecos del plan.
 const slotOf = Object.fromEntries([...slots.matchAll(/'(before|after):([a-z]+)': \[([^\]]*)\]/g)].map((m) => [m[1] + ':' + m[2], [...m[3].matchAll(/'([a-z0-9:-]+)'/g)].map((x) => x[1])]));
 assert.equal(new Set(slotIds).size, slotIds.length, 'ids repetidos en SLOTS');
-assert.deepEqual(slotOf['before:prep'], ['bridge:intro', 'hotel-prologue', 'mocr-tough', 'bridge:design', 'design', 'bridge:jul69', 'house-farewell', 'kids', 'ksc', 'beach', 'bridge:launch-morning'], 'orden de before:prep');
+// Intro corta (pedido del equipo): sin escenas de charla antes de la Fase 1; las decisiones del cap. 1 quedan como elección rápida
+assert.deepEqual(slotOf['before:prep'], ['bridge:launch-morning'], 'directo al despegue');
+for (const id of ['hotel-prologue', 'mocr-tough', 'design', 'white-room', 'house-farewell', 'ksc', 'beach', 'laika', 'recovery', 'parade']) { assert.ok(!slotIds.includes(id), `${id} es un extra del menú, no va en la misión`); assert.ok(story.has(id), `${id} sigue en STORY para el menú`); }
 for (const id of ['house-farewell', 'kids', 'ksc', 'beach', 'design']) assert.ok(!slotOf['before:launch'].includes(id), `${id} debe ir antes de la Fase 1`);
 assert.deepEqual(slotOf['before:launch'], ['bridge:t-minus']);
 assert.deepEqual(slotOf['before:cruise'], ['bridge:tli']);
-assert.deepEqual(slotOf['before:descent'], ['bridge:undock', 'mocr-briefing']);
-assert.deepEqual(slotOf['before:eva'], ['pre-eva', 'bridge:hatch']);
+assert.deepEqual(slotOf['before:descent'], ['bridge:undock']);
+assert.deepEqual(slotOf['before:eva'], ['bridge:hatch']);
+// sin decisiones sueltas sobre fondo negro: se toma la respuesta histórica
+for (const id of ['kids', 'firststep', 'night-choice', 'pre-eva', 'collins-choice']) assert.ok(!slotIds.includes(id), `${id} no se pregunta en la misión`);
 const after = slotOf['after:eva']; const at = (id) => after.indexOf(id);
 assert.ok(at('breaker') > -1 && at('breaker') < at('boss'), 'el disyuntor va antes del jefe');
-assert.ok(at('collins-solo') < at('breaker') && at('boss') < at('liftoff'), 'collins → disyuntor → jefe → despegue');
-assert.ok(at('laika') > -1 && at('laika') < at('laika-talk'), 'Laika antes de su decisión');
+assert.ok(at('boss') < at('liftoff'), 'disyuntor → jefe → despegue');
+// Sin charlas entre fases: las escenas de conversación son extras del menú y sus tarjetas de momento se pasan en PASSED
+for (const id of ['night', 'mocr-briefing', 'mocr-landed', 'house-landed', 'collins-solo', 'tei', 'tv', 'lrl']) { assert.ok(!slotIds.includes(id), `${id} no va en la misión`); assert.ok(story.has(id), `${id} sigue en el menú`); }
+const { PASSED } = await import('../src/game/story/flow.js').catch(() => ({ PASSED: null }));
+if (PASSED) for (const id of Object.values(PASSED).flat()) assert.ok(story.has(id), `PASSED ${id} sin STORY`);
+assert.match(src('game/phases/descent.js'), /passScene\('mocr-landed'\)/, 'el alunizaje limpio da las tarjetas de Houston y la casa');
+assert.doesNotMatch(src('game/phases/cruise.js'), /playStory\('night/, 'el crucero no se corta');
 assert.equal(after[0], 'bridge:meanwhile'); assert.equal(after.at(-1), 'bridge:report'); assert.equal(after.at(-2), 'epilogue');
 
 // Tarjetas puente: las 10 del plan, con fecha y texto ES/EN, sin emojis y con registro STORY `bridge:<id>`
@@ -48,7 +57,7 @@ const body = bridgeSrc.split('export const BRIDGES = {')[1].split('\n};')[0];
 for (const id of bridgeIds) {
   assert.ok(new RegExp(`(^|\\n)  '?${id}'?: \\{ when: \\[`).test(body), `bridge ${id}: sin definición con fecha`);
   assert.ok(story.has('bridge:' + id), `bridge:${id} sin STORY`);
-  assert.ok(slotIds.includes('bridge:' + id), `bridge:${id} no está en SLOTS`);
+  if (!['intro', 'design', 'jul69'].includes(id)) assert.ok(slotIds.includes('bridge:' + id), `bridge:${id} no está en SLOTS`); // «intro» hablaba del hotel de 1967, que ya no abre la misión
 }
 assert.equal([...body.matchAll(/(^|\n)  '?[a-z0-9-]+'?: \{ when:/g)].length, bridgeIds.length, 'número de tarjetas puente');
 for (const m of body.matchAll(/(when|text|quote|who): \[('(?:[^'\\]|\\.)*'), ('(?:[^'\\]|\\.)*')\]/g)) assert.ok(m[2].length > 2 && m[3].length > 2, `bridge: par [es, en] vacío en ${m[1]}`);
@@ -61,6 +70,32 @@ assert.match(flow, /laika: \['[^']*No Canon\)', '[^']*Non-canon\)'\]/, 'título 
 assert.match(flow, /design: designScene/, 'STORY design');
 assert.match(flow, /import\('\.\.\/design\/design-screen\.js'\)/, 'design importa design-screen.js');
 assert.match(flow, /designRoom\(\{ mode: 'story' \}\)/, "design llama designRoom({mode:'story'})");
+
+// WP-C: la casa y el MOCR se exploran; la decisión de los hijos y la hoja de Garman salen de esas escenas.
+assert.match(flow, /explore\('house'\)/, 'house-farewell explora la casa');
+assert.match(flow, /explore\('mocr-bales'\)/, 'mocr-briefing explora el MOCR');
+assert.match(flow, /'house-farewell': \['la-despedida'\]/, 'la casa solo entrega la tarjeta de momento');
+assert.match(flow, /'mocr-briefing': \[\]/, 'el chaleco y la hoja se ganan al inspeccionar');
+assert.match(src('game/explore/scenes/house.js'), /decision: 'c1-kids'/, 'c1-kids vive en el diálogo de Rick');
+assert.match(src('game/explore/scenes/house.js'), /stages-separate/, 'el cohete de Mark se separa');
+assert.match(src('game/explore/scenes/mocr-bales.js'), /flag: 'garmanSheet'/, 'la hoja deja garmanSheet');
+const descent = src('game/phases/descent.js');
+assert.match(descent, /flagOf\('garmanSheet'\)/, 'la 1202 mira la hoja');
+assert.match(descent, /c4_dec_bales_seguimos_go_tembloroso_en/, 'sin la hoja, la voz tiembla');
+assert.ok(has('audio/a11/voz_en_clonada/c4_dec_bales_seguimos_go_tembloroso_en.mp3'), 'falta el audio tembloroso');
+assert.ok(has('audio/a11/voz_en_clonada/c4_dec_bales_seguimos_go_en.mp3'), 'falta la voz firme');
+assert.ok(has('models/armstrong-house-p3.glb') && has('models/mocr-room-p3.glb'), 'faltan los mundos P3');
+assert.match(flow, /explore\('hotel'\)/, 'el hotel de 1967 se explora');
+assert.match(flow, /'hotel-prologue': \['tratado-1967', 'apolo-1'\]/, 'la cartera y la libreta no se regalan');
+assert.match(src('game/explore/scenes/hotel.js'), /p_obj_armstrong_recuerdo_ed_white_en/, 'la libreta tiene la voz de Ed White');
+assert.ok(has('models/hotel-room-1967-p3.glb'), 'falta el hotel P3');
+assert.match(flow, /ksc: explore\('ksc'\)/, 'el KSC se camina');
+assert.match(flow, /beach: explore\('beach'\)/, 'la playa se camina');
+assert.match(flow, /beach: \[\]/, 'el parche y los sobres salen de la fogata');
+assert.match(src('game/explore/scenes/ksc.js'), /decision: 'c1-firststep'/, 'c1-firststep vive con Deke');
+assert.match(flow, /night: explore\('columbia'\)/, 'la noche en Columbia se flota');
+assert.match(flow, /'collins-solo': explore\('collins'\)/, 'Collins solo se explora');
+assert.match(flow, /'collins-solo': \[\]/, 'la ventana de Collins no se regala');
 
 const score = src('audio/a11-score.js');
 const audio = [...score.matchAll(/M\('([a-z0-9_]+)'\)/g)].map((m) => `audio/a11/music/${m[1]}.mp3`)

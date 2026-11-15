@@ -1,0 +1,13 @@
+--- a/src/game/story/reunion.js
++++ b/src/game/story/reunion.js
+@@ -93,8 +93,8 @@
+     id: 'reunion', world, title: TITLE, minHold: 16,
+     shots: [
+       { d: 6, pos: P(0.75, -0.55, 0.95), look: [c.x, top, c.z], fov: 62, to: { pos: P(0.6, -0.45, 0.8), look: [c.x, top - 0.2, c.z], fov: 56 } }, // Collins mira el túnel
+-      { d: 7, pos: P(-0.9, 0.1, 0.9), look: P(0, -0.2, 0), fov: 58, to: { pos: P(-0.7, 0.05, 0.75), look: P(0, -0.25, 0), fov: 52 } },
+-      { d: 30, pos: P(0.2, 0.15, 1.15), look: P(-0.05, -0.35, 0), fov: 50, to: { pos: P(0.15, 0.1, 1.0), look: P(-0.05, -0.35, 0), fov: 46 } },
++      { d: 7, pos: P(-0.6, 0.1, 0.55), look: P(0, -0.2, 0), fov: 58, to: { pos: P(-0.5, 0.05, 0.5), look: P(0, -0.25, 0), fov: 52 } }, // dentro del casco
++      { d: 30, pos: P(0.15, 0.1, 0.72), look: P(-0.05, -0.35, 0), fov: 50, to: { pos: P(0.12, 0.08, 0.66), look: P(-0.05, -0.35, 0), fov: 46 } }, // dentro del casco
+     ],
+     lines: [
+       { at: 0.4, who: 'COLLINS', text: ['Ahí están. Ahí están los dos.', 'There they are! There they both are!'] },

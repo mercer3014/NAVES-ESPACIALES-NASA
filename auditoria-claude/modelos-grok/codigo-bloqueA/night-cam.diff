@@ -1,0 +1,11 @@
+--- a/src/game/story/night.js
++++ b/src/game/story/night.js
+@@ -97,7 +97,7 @@
+     const near = (a, side = 1) => (!a ? null : a === neil
+       ? { pos: [a.head.x + 0.55, a.head.y - 0.05, a.head.z + 0.3], look: [a.head.x - 0.2, a.head.y - 0.02, a.head.z - 0.15], fov: 44 }
+       : { pos: [a.head.x + side * 0.18, a.head.y - 0.32, a.head.z + 0.78], look: [a.head.x, a.head.y, a.head.z], fov: 42 });
+-    const WIDE = { pos: [0.55, 1.5, 1.42], look: [-0.15, 2.0, -0.1], fov: 72 };
++    const WIDE = { pos: [0.42, 1.5, 0.92], look: [-0.15, 2.0, -0.1], fov: 72 }; // dentro del casco (r 1,01 m < pared 1,16 m a y=1,5)
+     const WINDOW = { pos: [0, 1.2, 1.22], look: [0, 1.2, 3.2], fov: 52 };
+     W.setShot(WIDE, { cut: true });
+     const line = (S, who, text, actor, clip) => { S.subtitle(who, tx(text)); if (clip) playA11('voz_en_clonada/' + clip); if (actor) { actor.say(true); setTimeout(() => actor.say(false), 2600); } };

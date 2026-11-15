@@ -10,7 +10,7 @@
 .plb-letterbox-bar {
   pointer-events: auto;
   background: #000;
-  color: #f4f7fb;
+  color: #F2EFE6;
   height: 12vh;
   min-height: 58px;
   max-height: 120px;
@@ -31,8 +31,9 @@
 .plb-letterbox-copy { min-width: 0; }
 .plb-letterbox-copy strong {
   display: block;
-  font-family: Orbitron, sans-serif;
+  font-family:var(--f-title);
   font-weight: 700;
+  text-transform: uppercase;
   letter-spacing: 0.14em;
   font-size: clamp(13px, 1.7vw, 20px);
   white-space: nowrap;
@@ -41,21 +42,21 @@
 }
 .plb-letterbox-copy small {
   display: block;
-  font-family: Chakra, sans-serif;
+  font-family:var(--f-ui);
   letter-spacing: 0.06em;
-  color: #b7c3d4;
+  color: #CFCCC2;
   font-size: clamp(11px, 1.2vw, 14px);
 }
 .plb-letterbox-skip {
   pointer-events: auto;
   flex: none;
   background: transparent;
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 999px;
+  color: #F2EFE6;
+  border: 1.5px solid #F2EFE6;
+  border-radius:2px;
   padding: 0.45em 1em;
   min-height: 40px;
-  font-family: Chakra, sans-serif;
+  font-family:var(--f-ui);
   font-weight: 700;
   letter-spacing: 0.08em;
   cursor: pointer;
