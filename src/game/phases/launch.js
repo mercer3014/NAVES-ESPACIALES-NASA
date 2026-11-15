@@ -23,9 +23,14 @@ extend({
   'l.ign': ['Secuencia de ignición', 'Ignition sequence'],
   'l.offWarn': ['¡FUERA DE TRAYECTORIA! Vuelve al corredor (A/D)', 'OFF COURSE! Get back in the corridor (A/D)'],
   'l.qWarn': ['¡ESTRUCTURA AL LÍMITE! Baja el empuje (S)', 'STRUCTURE AT LIMIT! Throttle down (S)'],
-  'l.sepGood': ['Separación limpia', 'Clean separation'], 'l.sepBad': ['Separación brusca: la estructura sufre', 'Rough separation: the structure takes a hit'],
+  'l.sepGood': ['Separación limpia', 'Clean separation'], 'l.sepBad': ['¡Fallo! Los pernos no cedieron: intenta otra vez', 'Miss! The bolts did not let go: try again'],
   'l.sepBar': ['SEPARACIÓN · pulsa ESPACIO en la zona verde', 'STAGING · press SPACE in the green zone'], 'l.sepBarT': ['SEPARACIÓN · toca SEPARAR en la zona verde', 'STAGING · tap STAGE in the green zone'],
-  'l.sepNow': ['¡Separa YA!', 'Stage NOW!'],
+  'l.sepNow': ['¡Separa YA!', 'Stage NOW!'], 'l.tries': ['Intentos', 'Tries'],
+  'l.roll': ['PROGRAMA DE ROLIDO · gira hasta el rumbo 72° (Q / E) y sostenlo', 'ROLL PROGRAM · roll to heading 72° (Q / E) and hold it'],
+  'l.rollT': ['PROGRAMA DE ROLIDO · gira hasta 72° con ◀ ▶ y sostenlo', 'ROLL PROGRAM · roll to 72° with ◀ ▶ and hold it'],
+  'l.rollOk': ['Programa de rolido completo', 'Roll program complete'], 'l.rollAuto': ['La computadora terminó el rolido por ti', 'The computer finished the roll for you'],
+  'l.f.roll': ['El Saturn V nunca giró a su rumbo de vuelo y se desvió hacia la costa: el oficial de seguridad del campo lo destruyó.', 'The Saturn V never rolled to its flight heading and veered toward the coast: the Range Safety Officer destroyed it.'],
+  'l.f.rollF': ['Real: a los pocos segundos de despegar, el Apolo 11 giró sobre su eje desde el rumbo de la plataforma (90°) al de vuelo, unos 72°.', 'Real: seconds after liftoff, Apollo 11 rolled from the pad heading (90°) to its flight heading, about 72°.'],
   'l.boom': ['MISIÓN PERDIDA', 'MISSION LOST'], 'l.retry': ['Reintentar despegue', 'Retry launch'], 'l.quit': ['Salir al menú', 'Quit to menu'],
   'l.f.range': ['El Saturn V se salió de su trayectoria y el oficial de seguridad del campo activó la destrucción.', 'The Saturn V left its trajectory and the Range Safety Officer triggered destruct.'],
   'l.f.rangeF': ['Real: cada Saturn V llevaba cargas de destrucción. Si se desviaba hacia zonas pobladas, el oficial de seguridad del campo (Range Safety) lo destruía.', 'Real: every Saturn V carried destruct charges. If it veered toward populated areas, the Range Safety Officer would destroy it.'],
@@ -88,7 +93,7 @@ export default async function launch(ctx) {
       <circle r="4" fill="#e6eef1"/><text x="-50" y="16" fill="#93a4ab" font-size="10" font-family="Chakra,sans-serif" text-anchor="middle">${t('l.corr')}</text></svg></div>
     <div class="cdown" style="position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);text-align:center;pointer-events:none"><div class="phase-tag">${t('l.ign')}</div><div class="big" style="font-family:Chakra,sans-serif;font-weight:700;font-size:clamp(48px,12vw,96px)">T-10</div></div>
     <button class="btn skipcd" style="position:absolute;left:50%;bottom:calc(16px + var(--safe-b));transform:translateX(-50%)">${t('l.skip')}</button>
-    ${isTouch ? `<div class="tc-stick"><i></i></div><div class="tc-throttle"><div class="fill"></div><div class="lab">${t('l.thr')}</div></div><div class="tc-btn big amber stagebtn" style="right:calc(110px + env(safe-area-inset-right,0px));bottom:calc(30px + var(--safe-b));display:none">${t('l.stage')}</div>` : ''}
+    ${isTouch ? `<div class="tc-stick"><i></i></div><div class="tc-throttle"><div class="fill"></div><div class="lab">${t('l.thr')}</div></div><div class="tc-btn big amber stagebtn" style="right:calc(110px + env(safe-area-inset-right,0px));bottom:calc(30px + var(--safe-b));display:none">${t('l.stage')}</div><div class="tc-btn mid rollL" style="right:calc(200px + env(safe-area-inset-right,0px));bottom:calc(120px + var(--safe-b));display:none">◀</div><div class="tc-btn mid rollR" style="right:calc(110px + env(safe-area-inset-right,0px));bottom:calc(120px + var(--safe-b));display:none">▶</div>` : ''}
     <div class="alarmbox"></div>`);
   let thrTouch = null; let thrUI = null;
   if (isTouch) { makeStick($('.tc-stick', el)); thrUI = makeThrottle($('.tc-throttle', el), (v) => (thrTouch = v)); bindBtn($('.stagebtn', el), 'stage'); }
@@ -179,20 +184,48 @@ export default async function launch(ctx) {
         if (done) return; if (S.phase !== 'fly') { done = true; off?.(); res('dead'); return; }
         tt += dt; cool = Math.max(0, cool - dt);
         const u = (tt / period) % 2, p = u < 1 ? u : 2 - u; ndl.style.left = (p * 100).toFixed(2) + '%';
-        nTxt.textContent = 3 * period - tt < period * 1.2 ? t('l.sepNow') : '';
-        if (tt > 3 * period) { done = true; off?.(); fail('stage'); res('dead'); return; }
+        nTxt.textContent = (SWEEPS * period - tt < period * 1.2 ? t('l.sepNow') + ' · ' : '') + t('l.tries') + ' ' + (TRIES - misses) + '/' + TRIES;
+        if (tt > SWEEPS * period) { done = true; off?.(); fail('stage'); res('dead'); return; }
         if (!cool && (pressed('Space') || bpressed('stage'))) {
           if (Math.abs(p - c) <= w / 2) { done = true; off?.(); sfx('ok', { vol: 0.6 }); ctx.banner(t('l.sepGood'), STG[i].name, 1200); waitingStage = null; res(true); return; }
-          misses++; cool = 0.35; S.stress = clamp(S.stress + 0.35, 0, 1); W.shake = 3; sfx('error'); navigator.vibrate?.([40, 30, 40]);
-          ctx.banner(t('l.sepBad'), '', 1300, 'warn');
-          if (misses >= 2 || S.stress >= 1) { done = true; off?.(); fail(S.stress >= 1 ? 'maxq' : 'stage'); res('dead'); return; }
-          waitingStage = null; done = true; off?.(); res(true); // separó, pero mal
+          // Fuera de la franja: los pernos no ceden limpio. Sacudón, algo de estrés y se gasta un intento (cadete 3 · normal 2 · veterano 1).
+          misses++; cool = 0.35; S.stress = clamp(S.stress + 0.2, 0, 1); W.shake = 3; sfx('error'); navigator.vibrate?.([40, 30, 40]);
+          ctx.banner(t('l.sepBad'), '', 1300, 'warn'); tt = Math.min(tt, period); // la cuenta de barridos vuelve a empezar
+          if (misses >= TRIES || S.stress >= 1) { done = true; off?.(); fail(S.stress >= 1 ? 'maxq' : 'stage'); res('dead'); return; }
         }
       });
     });
   }
   // ---------- fallo: explosión y «¿qué pasó?» ----------
   const canFail = !AUTO() && !(coop && ctx.cc.remote?.());
+  // Margen por dificultad: intentos de separación, barridos de la aguja y segundos fuera del corredor antes de Range Safety
+  const LV = D.tol > 1.2 ? 'cadet' : D.tol < 0.9 ? 'veteran' : 'normal';
+  const LVL = { cadet: { tries: 3, sweeps: 4, offSecs: 6.5, rollBand: 9 }, normal: { tries: 2, sweeps: 3, offSecs: 4, rollBand: 6 }, veteran: { tries: 1, sweeps: 2, offSecs: 2.5, rollBand: 4 } }[LV];
+  const TRIES = LVL.tries, SWEEPS = LVL.sweeps;
+  // ---------- programa de rolido (minijuego 1 del ascenso) ----------
+  // Al librar la torre: el rumbo arranca en 90° y hay que llevarlo a 72° con Q/E y sostenerlo 1,5 s dentro de la franja.
+  const ROLL = { on: false, done: false, hdg: 90, v: 0, hold: 0, t: 0, el: null };
+  if (isTouch) { bindBtn($('.rollL', el), 'rollL'); bindBtn($('.rollR', el), 'rollR'); }
+  function rollStep(dt) {
+    if (ROLL.done || !canFail || S.s < 3.5) return;
+    if (!ROLL.on) {
+      ROLL.on = true; const box = document.createElement('div'); box.className = 'lroll';
+      box.innerHTML = `<div class="lsep-k">${t(isTouch ? 'l.rollT' : 'l.roll')}</div><div class="lroll-g"><i class="lroll-band"></i><span class="lroll-mk">72°</span><b class="lroll-n"></b></div><div class="lroll-v mono"></div>`;
+      el.append(box); ROLL.el = box; sfx('computer', { vol: 0.6 });
+      const lo = 72 - LVL.rollBand, hi = 72 + LVL.rollBand, pos = (d) => ((d - 55) / (100 - 55)) * 100;
+      $('.lroll-band', box).style.cssText = `left:${pos(lo).toFixed(1)}%;width:${(pos(hi) - pos(lo)).toFixed(1)}%`; $('.lroll-mk', box).style.left = pos(72).toFixed(1) + '%';
+      if (isTouch) { $('.rollL', el).style.display = ''; $('.rollR', el).style.display = ''; }
+    }
+    ROLL.t += dt;
+    const inp = (down('KeyE') || bdown('rollR') ? 1 : 0) - (down('KeyQ') || bdown('rollL') ? 1 : 0);
+    ROLL.v = damp(ROLL.v, inp * 9 + Math.sin(S.s * 1.7 + ctx.seed) * 1.6, 3, dt); ROLL.hdg = clamp(ROLL.hdg + ROLL.v * dt, 55, 100);
+    const inBand = Math.abs(ROLL.hdg - 72) <= LVL.rollBand; ROLL.hold = inBand ? ROLL.hold + dt : 0;
+    const n = $('.lroll-n', ROLL.el); n.style.left = (((ROLL.hdg - 55) / 45) * 100).toFixed(2) + '%'; n.className = 'lroll-n' + (inBand ? ' ok' : '');
+    $('.lroll-v', ROLL.el).textContent = `${fmt(ROLL.hdg)}° → 72° · ${Math.max(0, 12 - ROLL.t).toFixed(0)} s`;
+    const end = (msg) => { ROLL.done = true; ROLL.el?.remove(); if (isTouch) { $('.rollL', el).style.display = 'none'; $('.rollR', el).style.display = 'none'; } if (msg) ctx.banner(t(msg), '', 1500); };
+    if (ROLL.hold >= 1.5) { sfx('ok', { vol: 0.6 }); S.rollOk = true; return end('l.rollOk'); }
+    if (ROLL.t > 12) { if (LV === 'cadet') { S.rollOk = false; return end('l.rollAuto'); } end(null); return fail('roll'); }
+  }
   function fail(cause) {
     if (S.phase !== 'fly') return; S.phase = 'boom'; S.fail = cause;
     paintPrompt(el, null, ''); $('.alarmbox', el).innerHTML = ''; W.setThrust(0); stopEngine(); stopRumble();
@@ -298,6 +331,7 @@ export default async function launch(ctx) {
   await new Promise((res) => ctx.loop((dt) => {
     if (S.phase !== 'fly') return;
     // control
+    rollStep(dt); if (S.phase !== 'fly') return;
     const ax = pitchAxis(); S.gust = damp(S.gust, Math.sin(S.s * 0.7 + ctx.seed) * 2.2 + Math.sin(S.s * 1.9) * 1.4, 2, dt);
     const tg = target(S.s); let rate = -ax * 14 * (isTouch ? 1 : 1) + S.gust * (S.s > 3 ? 1 : 0) * (1 / D.tol);
     if (D.assist) rate += (tg - S.pitch) * 0.6;
@@ -332,14 +366,14 @@ export default async function launch(ctx) {
       if (!far && S.off === 0) S.offWarned = false;
       if (S.stress > 0.3 && !S.qWarned) { S.qWarned = true; ctx.banner(t('l.qWarn'), '', 2400, 'warn'); sfx('computer', { vol: 0.7 }); }
       if (S.stress < 0.12) S.qWarned = false;
-      if (S.off > (D.assist ? 6 : 4)) return fail('range');
+      if (S.off > LVL.offSecs) return fail('range');
       if (S.stress >= 1) return fail('maxq');
     }
     // etapas
     if (!prompting && st && S.s >= st.end && waitingStage === null && S.stage < 2) { prompting = true; const i = S.stage; stagePrompt(i).then(() => { S.stage = i + 1; prompting = false; if (i === 0) setTimeout(() => !lesDone && !ctx.dead && (toast(t('l.les'), 'info'), sfx('beep')), 3000); }); }
     if (S.stage === 1 && !lesDone && S.s > STG[0].end + 9) { lesDone = true; doStage(3); } // auto si se olvida
     // visual
-    const R = W.rocket; R.rotation.z = -((90 - S.pitch) * Math.PI) / 180; const vis = S.alt * Math.min(1, (S.s / 7) ** 2); // la simulación va comprimida; visualmente el despegue es lento y pesado (≈10 s en librar la torre real)
+    const R = W.rocket; R.rotation.order = 'ZYX'; R.rotation.z = -((90 - S.pitch) * Math.PI) / 180; R.rotation.y = ((90 - ROLL.hdg) * Math.PI) / 180; // rolido sobre su eje const vis = S.alt * Math.min(1, (S.s / 7) ** 2); // la simulación va comprimida; visualmente el despegue es lento y pesado (≈10 s en librar la torre real)
     R.position.y = (W.newModel ? BASE_Y : BASE_Y - 0.62) + vis; R.position.x += S.vx * dt * 2.4;
     W.alt = vis; W.shake = Math.max(W.shake * Math.exp(-dt * 2), thrust * (S.alt < 8000 ? 0.5 : 0.12) + S.stress * 0.8);
     W.emit(dt, thrust); rumble(thrust * (S.stage === 0 ? 1 : 0.35) * clamp(1 - S.alt / 40000, 0.15, 1), thrust * (S.stage === 0 ? 1 : 0.2));
