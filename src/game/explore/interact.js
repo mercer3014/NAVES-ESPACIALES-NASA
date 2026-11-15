@@ -28,6 +28,7 @@ export function pickInteractable(player, items) {
 
 export function interactPrompt(item, lang = 0) {
   if (!item) return '';
+  if (item.prompt) return `E · ${tx(item.prompt, lang)}`;
   if (item.kind === 'talk') {
     const name = tx(item.name, lang);
     return lang ? `E · Talk to ${name}` : `E · Hablar con ${name}`;

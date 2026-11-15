@@ -39,6 +39,12 @@ export function stepExploreCamera(cam, dt = 0) {
 
 export function exploreCameraPose(cam, target, focus = null) {
   const yaw = cam.orbit.smoothYaw, pitch = cam.orbit.smoothPitch;
+  if (cam.mode === 'first' && cam.dialog <= 0) {
+    const cp = Math.cos(pitch), sp = Math.sin(pitch);
+    const eye = target.y + cam.height * 0.92;
+    const fx = -Math.sin(yaw) * cp, fy = -sp, fz = -Math.cos(yaw) * cp;
+    return { x: target.x, y: eye, z: target.z, look: { x: target.x + fx, y: eye + fy, z: target.z + fz }, fov: 68 };
+  }
   const dist = cam.mode === 'first' ? 0.12 : cam.orbit.smoothDistance;
   const eye = target.y + cam.height * (cam.mode === 'first' ? 0.95 : 0.55);
   const look = { x: target.x, y: target.y + cam.height * 0.9, z: target.z };

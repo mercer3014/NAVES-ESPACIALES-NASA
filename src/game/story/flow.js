@@ -50,7 +50,7 @@ export const STORY = {
   'bridge:hatch': bridge('hatch'),
   'bridge:meanwhile': bridge('meanwhile'),
   'bridge:report': bridge('report'),
-  'hotel-prologue': earth('hotel-prologue'),
+  'hotel-prologue': explore('hotel'),
   'mocr-tough': earth('mocr-tough'),
   // La casa y el MOCR se caminan; el cierre es un plano corto de la cinemática.
   // Object.assign: story.test corta el objeto STORY en el primer cierre con punto y coma.
@@ -128,7 +128,7 @@ export const STORY_TITLES = {
 };
 // tarjetas de «Momento» y objetos que se ganan al ver cada escena (aunque se salte)
 export const SCENE_CARDS = {
-  'hotel-prologue': ['tratado-1967', 'apolo-1', 'foto-karen', 'libreta-ed-white'],
+  'hotel-prologue': ['tratado-1967', 'apolo-1'],
   'mocr-tough': ['duros-competentes', 'pizarra-kranz'],
   'house-farewell': ['la-despedida'],
   ksc: ['deke-slayton', 'primer-paso-quien'],

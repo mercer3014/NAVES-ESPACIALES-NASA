@@ -31,6 +31,7 @@
 
 .xp-inspect { position: absolute; inset: 0; display: grid; align-items: end; justify-items: end; padding: calc(16px + var(--safe-t)) 16px calc(16px + var(--safe-b)); background: linear-gradient(90deg, transparent 30%, rgba(11, 12, 14, .55) 70%); }
 .xp-inspect[hidden] { display: none; }
+.xp-inspect.quiet h4, .xp-inspect.quiet p, .xp-inspect.quiet .xp-src { display: none; }
 .xp-inspect-card { width: min(420px, calc(100vw - 32px)); background: #0b0c0e; border: 1px solid var(--orange); padding: 16px 16px 14px; display: grid; gap: 4px; pointer-events: auto; }
 .xp-inspect-card h3 { margin: 0 0 6px; font-family: var(--f-title); font-weight: 700; letter-spacing: .06em; font-size: 1.25rem; }
 .xp-inspect-card h4 { margin: 8px 0 0; font-family: var(--f-mono); font-size: .68rem; letter-spacing: .16em; text-transform: uppercase; color: var(--orange); }

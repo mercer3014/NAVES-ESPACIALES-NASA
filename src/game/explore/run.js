@@ -93,6 +93,7 @@ export async function runExplore(def, opts = {}) {
   const objs = createObjectives(def.objectives || []);
   const done = new Set(); const flags = { ...(def.flags || {}) };
   const player = await actor(def.player?.model, 'idle', spawn, body.yaw, 0xf2efe6);
+  if (def.camera?.mode === 'first') player.root.visible = false;
   world.scene.add(player.root);
   const items = [];
   for (const n of def.npcs || []) {

@@ -76,6 +76,10 @@ assert.match(descent, /c4_dec_bales_seguimos_go_tembloroso_en/, 'sin la hoja, la
 assert.ok(has('audio/a11/voz_en_clonada/c4_dec_bales_seguimos_go_tembloroso_en.mp3'), 'falta el audio tembloroso');
 assert.ok(has('audio/a11/voz_en_clonada/c4_dec_bales_seguimos_go_en.mp3'), 'falta la voz firme');
 assert.ok(has('models/armstrong-house-p3.glb') && has('models/mocr-room-p3.glb'), 'faltan los mundos P3');
+assert.match(flow, /explore\('hotel'\)/, 'el hotel de 1967 se explora');
+assert.match(flow, /'hotel-prologue': \['tratado-1967', 'apolo-1'\]/, 'la cartera y la libreta no se regalan');
+assert.match(src('game/explore/scenes/hotel.js'), /p_obj_armstrong_recuerdo_ed_white_en/, 'la libreta tiene la voz de Ed White');
+assert.ok(has('models/hotel-room-1967-p3.glb'), 'falta el hotel P3');
 
 const score = src('audio/a11-score.js');
 const audio = [...score.matchAll(/M\('([a-z0-9_]+)'\)/g)].map((m) => `audio/a11/music/${m[1]}.mp3`)

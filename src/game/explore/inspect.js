@@ -11,6 +11,7 @@ export function inspectPanel(spec = {}, lang = 0) {
     fact: tx(spec.fact, lang),
     src: tx(spec.src, lang),
     card: spec.card || null,
+    quiet: !!spec.quiet,
     checks: (spec.checks || []).map((c) => tx(c, lang)),
   };
 }
@@ -51,6 +52,7 @@ export function mountInspect(root) {
     },
     show(panel, lang, close) {
       onClose = close; box.hidden = false; box.classList.add('overlay');
+      box.classList.toggle('quiet', !!panel.quiet);
       box.querySelector('h3').textContent = panel.title;
       for (const k of ['what', 'why', 'fact']) {
         box.querySelector(`[data-k="${k}"]`).textContent = LABELS[k][lang] || LABELS[k][0];
