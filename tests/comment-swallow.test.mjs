@@ -10,7 +10,8 @@ const files = [];
 const walk = (d) => { for (const n of readdirSync(d)) { const p = join(d, n); if (statSync(p).isDirectory()) walk(p); else if (n.endsWith('.js')) files.push(p); } };
 walk(root);
 const bad = [];
-const re = /\/\/[^'"`\n]*\b(?:const|let) [A-Za-z_$][\w$]* = [^;\n]+;|\/\/[^'"`\n]*\bif \(ctx\.dead\) return/;
+// también una llamada «a.b.c(…);» al final del comentario (eva.js perdió así su ctx.cc.log('e.quote'))
+const re = /\/\/[^'"`\n]*\b(?:const|let) [A-Za-z_$][\w$]* = [^;\n]+;|\/\/[^'"`\n]*\bif \(ctx\.dead\) return|[;}]\s*\/\/[^\n]*\s[A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*)+\([^\n]*\)\s*;\s*$/;
 for (const f of files) {
   readFileSync(f, 'utf8').split('\n').forEach((line, i) => {
     if (/^\s*\/\//.test(line)) return; // comentario de línea completa: puede citar código

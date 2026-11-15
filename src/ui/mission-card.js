@@ -42,9 +42,9 @@ export const CARDS = {
   descent: {
     n: '04', title: ['Alunizaje', 'Landing'],
     what: ['20 jul: alarmas 1202 y un cráter lleno de rocas. Armstrong pilotó a mano con menos de un minuto de combustible.', 'July 20: 1202 alarms and a crater full of boulders. Armstrong flew by hand with under a minute of fuel.'],
-    goal: ['Baja despacio: velocidad vertical en verde, sobre la zona marcada y sin rocas.', 'Come down slowly: vertical speed in the green, over the marked zone and clear of rocks.'],
-    m: [[['A', 'D'], ['Inclinar', 'Tilt']], [['W', 'S'], ['Empuje', 'Thrust']], [['R'], ['Asistente', 'Assist']]],
-    t: [[['PALANCA'], ['Inclinar', 'Tilt']], [['BARRA'], ['Empuje', 'Thrust']]],
+    goal: ['A 300 m tomas el control. Elige el ritmo de bajada con W/S, llega a la zona marcada sin rocas y toca con la aguja en la franja verde (menos de 1 m/s).', 'At 300 m you take over. Pick your descent rate with W/S, reach the marked zone clear of rocks and touch down with the needle in the green band (under 1 m/s).'],
+    m: [[['A', 'D'], ['Inclinar: moverte a los lados', 'Tilt: move sideways']], [['W', 'S'], ['Velocidad vertical: W frena la bajada, S la acelera (0,3 m/s por toque)', 'Vertical speed: W slows the descent, S speeds it up (0.3 m/s per tap)']], [['R'], ['Empuje directo (sin ROD)', 'Direct throttle (no ROD)']]],
+    t: [[['PALANCA'], ['Inclinar', 'Tilt']], [['BARRA'], ['Velocidad vertical: arriba frena', 'Vertical speed: up slows you']], [['ROD'], ['Empuje directo', 'Direct throttle']]],
   },
   eva: {
     n: '05', title: ['Caminata lunar', 'Moonwalk'],

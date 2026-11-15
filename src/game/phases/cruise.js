@@ -1,4 +1,4 @@
-// FASE 3 · Crucero: TLI (mantener para encender), alineación con 3 estrellas, LOI tras la Luna (LOS), foto Earthrise, calcetín
+// FASE 3 · Crucero: TLI (mantener para encender), alineación P52 con el sextante (align.js), LOI tras la Luna (LOS), foto Earthrise, calcetín
 import { THREE, renderer } from '../../core/engine.js';
 import { t, extend } from '../../core/i18n.js';
 import { $, $$, h, toast, achieve, clamp, damp, lerp, fmt } from '../../core/util.js';
@@ -18,6 +18,7 @@ import { runDocking } from '../story/docking.js';
 import { record, hearHint } from '../story/state.js';
 import { whatIf } from '../story/decisions.js';
 import { playA11 } from '../../audio/a11-voice.js';
+import { runAlign } from './align.js';
 extend({
   'c.dv': ['Δv', 'Δv'], 'c.ok': ['¡Quemado perfecto!', 'Perfect burn!'], 'c.short': ['Un poco corto — corrección de curso', 'A bit short — course correction'], 'c.long': ['Te pasaste — corrección de curso', 'Overburn — course correction'],
   'c.cczone': ['Control de Misión ve la zona verde. ¡Escúchalo!', 'Mission Control sees the green zone. Listen!'], 'c.wrong': ['Esa no es', 'Not that one'],
@@ -28,11 +29,12 @@ extend({
   'c.td2': ['Aproximación al LM', 'Closing on the LM'], 'c.tdc': ['¡Contacto! Pestillos cerrados', 'Contact! Latches closed'], 'c.td4': ['Extrayendo el LM', 'Extracting the LM'], 'c.td5': ['Despliegue del tren de aterrizaje del LM', 'Deploying the LM landing legs'],
   'c.vin': ['Cabina', 'Cabin'], 'c.vout': ['Exterior', 'Outside'], 'c.vkey': ['C/V: órbita, persecución o cabina', 'C/V: orbit, chase or cockpit'],
 });
-const NAMES = ['Sirius', 'Vega', 'Rigel', 'Canopus', 'Antares', 'Altair'];
 
 export default async function cruise(ctx) {
   const W = makeCruise(); ctx.world(W); const { camera: cam, ship, E, M } = W; const coop = ctx.cc.coop, D = ctx.diff;
-  music('cruise', { vol: 0.45 });
+  // banda sonora del equipo (public/audio/a11/music): noche tranquila en Columbia, dron grave detrás de la Luna
+  const MUS_CRUISE = 'a11/music/mus_c3_noche_nave_calma', MUS_LOS = 'a11/music/mus_c3_detras_luna_drone_loop';
+  music(MUS_CRUISE, { vol: 0.42 });
   const el = ctx.hud(`${objectiveCardHtml({ kicker: `${t('ph.n')} 03 · ${t('ph.cruise')}`, titleHtml: `<div class="phase-title st-title">${t('c.tli')}</div><button class="btn viewbtn" style="display:none;width:max-content;margin-top:8px;padding:.35em .7em;font-size:.75rem;pointer-events:auto"></button>`, bodyHtml: '<p class="mhud-note hint"></p>' })}
     <div class="bc burnbox" style="display:none;width:min(420px,88vw)"><div class="burnmeter" style="position:relative;width:100%;height:10px;background:rgba(7,12,16,.72);border:1px solid rgba(186,206,212,.32);overflow:hidden">
       <i class="zone" style="position:absolute;top:0;bottom:0;background:rgba(143,191,155,.35)"></i><i class="fillb" style="position:absolute;left:0;top:0;bottom:0;width:0;background:#c6a36a"></i></div>
@@ -110,8 +112,9 @@ export default async function cruise(ctx) {
   E.position.set(-10, -78, 0); M.position.set(2600, 120, -500);
 
   // ---------- quemado (TLI / LOI) ----------
-  async function burn(kind, showZone) {
-    const box = $('.burnbox', el); box.style.display = ''; if (!isTouch) { const pr = burnPrompt(true); paintPrompt(el, pr, t(pr.labelKey)); } const w = 0.055 * D.tol; const z0 = 0.74 + (ctx.rand() - 0.5) * 0.1, z1 = z0 + w;
+  // zf: factor de anchura de la zona verde (la alineación P52 lo da para la LOI: >1 más ancha, <1 más estrecha)
+  async function burn(kind, showZone, zf = 1) {
+    const box = $('.burnbox', el); box.style.display = ''; if (!isTouch) { const pr = burnPrompt(true); paintPrompt(el, pr, t(pr.labelKey)); } const w = 0.055 * D.tol * zf; const z0 = 0.74 + (ctx.rand() - 0.5) * 0.1, z1 = z0 + w;
     const zone = $('.zone', el); zone.style.left = z0 * 100 + '%'; zone.style.width = w * 100 + '%'; zone.style.opacity = showZone ? 1 : 0;
     let v = 0, burning = false, started = false, relT = 0; const rate = 0.16 / D.time;
     await new Promise((res) => { const off = ctx.loop((dt) => {
@@ -136,8 +139,8 @@ export default async function cruise(ctx) {
     'loi-long': { t: ['¿Y si…? Directo a la Luna', 'What if…? Straight into the Moon'], x: ['Frenaste de más detrás de la Luna: la órbita quedó tan baja que cruza la superficie. Columbia se habría estrellado sin que Houston pudiera verlo, porque detrás de la Luna no hay radio.', 'You braked too much behind the Moon: the orbit dropped so low it crosses the surface. Columbia would have crashed with Houston unable to see it, since there is no radio behind the Moon.'] },
     'loi-short': { t: ['¿Y si…? Pasas de largo', 'What if…? You fly past'], x: ['Frenaste muy poco: la Luna no te captura y la trayectoria de retorno libre te devuelve a la Tierra. Real: el Apolo 11 iba en esa trayectoria a propósito, para volver a casa si el motor fallaba.', 'You braked too little: the Moon does not capture you and the free-return trajectory sends you back to Earth. Real: Apollo 11 flew that trajectory on purpose, to get home if the engine failed.'] },
   };
-  async function burnChecked(kind, showZone) {
-    let r = await burn(kind, showZone), tries = 0;
+  async function burnChecked(kind, showZone, zf = 1) {
+    let r = await burn(kind, showZone, zf), tries = 0;
     while (!AUTO() && r.err > 2 && tries < 2 && !ctx.dead) {
       const f = BURN_FAIL[kind + '-' + r.dir]; tries++;
       if (kind === 'loi' && r.dir === 'long') { sfx('explosion', { vol: 0.5 }); shake = 1.2; setTimeout(() => (shake = 0), 600); }
@@ -145,7 +148,7 @@ export default async function cruise(ctx) {
       await whatIf({ title: f.t, text: f.x, back: [kind === 'tli' ? 'Hacer la corrección de curso' : 'Repetir el encendido', kind === 'tli' ? 'Do the course correction' : 'Redo the burn'] });
       if (ctx.dead) return r;
       ctx.banner(kind === 'tli' ? (store.get('lang') === 'en' ? 'Course correction' : 'Corrección de curso') : 'LOI', '', 1600, 'warn');
-      const r2 = await burn(kind, true); r = { ...r2, score: Math.min(r2.score, 0.75), retried: tries }; // se aprueba, pero con penalización
+      const r2 = await burn(kind, true, zf); r ={ ...r2, score: Math.min(r2.score, 0.75), retried: tries }; // se aprueba, pero con penalización
     }
     if (r.err > 2 && tries >= 2) { r.score = Math.min(r.score, 0.4); ctx.banner(store.get('lang') === 'en' ? 'The computer corrects the burn' : 'La computadora corrige el encendido', '', 2200, 'warn'); }
     return r;
@@ -205,41 +208,31 @@ export default async function cruise(ctx) {
   ctx.loop((dt, tt) => { if (!sock.visible) return; sock.position.x += dt * 1.6; sock.rotation.x += dt * 0.9; sock.rotation.z += dt * 0.6; if (sock.position.x > 30) sock.position.x = -30; });
   const onSockClick = (e) => { if (!sock.visible || st.sock) return; const p = sock.position.clone().project(cam); const sx = (p.x + 1) / 2 * innerWidth, sy = (1 - p.y) / 2 * innerHeight; if (Math.hypot(sx - e.clientX, sy - e.clientY) < 46) { st.sock = true; sock.visible = false; sfx('jingle_pancho'); ctx.say('pa.sock', { ms: 3500 }); achieve('sock'); } };
   addEventListener('pointerdown', onSockClick); ctx.onCleanup(() => removeEventListener('pointerdown', onSockClick));
-  // alineación: 6 estrellas brillantes; 3 objetivo
-  rollK = 0; lockView('win'); await ctx.wait(1.5); hint(coop && ctx.cc.remote() ? 'c.ccstars' : 'c.tap3'); // alineación mirando por la ventana de encuentro ctx.say('pa.align', { ms: 3500 });
-  const SR = [0.2, 0.28, 0.02]; const fwd = new THREE.Vector3(); cam.getWorldDirection(fwd); const order = [...NAMES].sort(() => ctx.rand() - 0.5); const targets = order.slice(0, 3);
-  const right = new THREE.Vector3().crossVectors(fwd, new THREE.Vector3(0, 1, 0)).normalize(), upv = new THREE.Vector3().crossVectors(right, fwd).normalize();
-  const sprites = NAMES.map((n, i) => { const a = (i / 6) * Math.PI * 2 + ctx.rand() * 0.5; const ndc = new THREE.Vector3(Math.cos(a) * (view ? SR[0] : 0.62), Math.sin(a) * (view ? SR[1] : 0.42) + (view ? SR[2] : -0.04), 0.5).unproject(cam); const d = ndc.sub(cam.position).normalize().multiplyScalar(1500);
-    const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: W.sun.material.map, color: 0xcfe6ff, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false })); s.scale.setScalar(26); s.userData.dir = d; W.scene.add(s); return s; });
-  const layer = $('.starlayer', el); const solo = !(coop && ctx.cc.remote());
-  const btns = NAMES.map((n, i) => { const b = h(`<button class="starbtn ${solo && targets.includes(n) ? 'tgt' : ''}" style="position:absolute;pointer-events:auto"><i></i><span>${n}</span></button>`); layer.append(b); return b; });
-  const got = new Set(); const tA = ctx.time;
-  await new Promise((res) => {
-    btns.forEach((b, i) => (b.onclick = () => {
-      const n = NAMES[i]; if (got.has(n)) return;
-      if (targets.includes(n)) { got.add(n); b.classList.add('done'); sfx('ok', { rate: 1 + got.size * 0.1 }); ctx.cc.snap({ stage: 'align', targets, got: [...got] }, true); if (got.size === 3) res(); }
-      else { st.wrong++; sfx('error'); b.classList.add('bad'); setTimeout(() => b.classList.remove('bad'), 600); toast(t('c.wrong'), 'info'); }
-    }));
-    const offA = ctx.loop(() => { if (got.size === 3) return offA?.(); sprites.forEach((s, i) => { s.position.copy(cam.position).add(s.userData.dir); const p = s.position.clone().project(cam); btns[i].style.left = ((p.x + 1) / 2) * 100 + '%'; btns[i].style.top = ((1 - p.y) / 2) * 100 + '%'; btns[i].style.display = p.z < 1 ? '' : 'none'; });
-      if (AUTO1() && !got.size) { targets.forEach((n) => btns[NAMES.indexOf(n)].click()); } });
-    ctx.cc.snap({ stage: 'align', targets, got: [] }, true);
-  });
-  st.align = { time: ctx.time - tA, wrong: st.wrong }; layer.innerHTML = ''; sprites.forEach((s) => W.scene.remove(s)); ctx.banner(t('c.alignok'), '', 1500); ctx.cc.log('c.alignok', null, 'ok'); await ctx.wait(1); rollK = 1; lockView(null, false);
+  // alineación P52 (align.js): telescopio + sextante, dos estrellas de navegación; el error N05 fija la zona verde de la LOI
+  rollK = 0; lockView('win'); await ctx.wait(1.2);
+  const solo = !(coop && ctx.cc.remote()); hint(solo ? 'c.p52hint' : 'c.ccstars');
+  const al = await runAlign({ root: $('.mhud', el) || el, loop: (f) => ctx.loop(f), onCleanup: (f) => ctx.onCleanup(f), rand: ctx.rand, D, cadet: ctx.diffName === 'cadet', veteran: ctx.diffName === 'veteran', solo,
+    snap: (d, force) => ctx.cc.snap({ stage: 'align', ...d }, force) });
+  st.wrong += al.wrong; st.align = { time: al.time, wrong: st.wrong, n05: al.n05, quality: al.quality, zf: al.zf };
+  ctx.banner(t('c.p52.' + al.quality), `N05 · ${String(Math.round(al.n05 * 100)).padStart(5, '0')}`, 1800, al.quality === 'poor' ? 'warn' : '');
+  ctx.cc.log('c.p52.' + al.quality, null, al.quality === 'poor' ? 'warn' : 'ok'); await ctx.wait(1); rollK = 1; lockView(null, false);
   // Cap. 3.2: la noche en Columbia (charla) y su decisión salieron de la misión; siguen en «Escenas del guion».
   // Su respuesta histórica se toma en PASSED (flow.js). El crucero sigue sin cortes hasta la LOI.
   // esperar a llegar a la Luna
   title('c.coast'); hint('pa.tli'); await ctx.until(() => k >= 1); coastOn = false; days.style.display = 'none';
   // ---------- LOI tras la Luna: LOS ----------
   title('c.loi'); clips(['cap3_go_loi_nos_vemos_otro_lado', 'cap3_perdida_senal_detras_luna'], { radio: true }); hearHint('h-ciegas'); ctx.banner(t('c.los'), 'LOS', 2200); ctx.say('pa.los', { ms: 3000 }); ctx.cc.log('c.los', null, 'warn'); ctx.cc.snap({ stage: 'los', los: true }, true);
-  const los = $('.los', el); los.style.display = ''; los.innerHTML = '<div class="static"></div>'; sfx('glitch', { vol: 0.4 });
+  const los = $('.los', el); los.style.display = ''; los.innerHTML = '<div class="static"></div>'; sfx('glitch', { vol: 0.4 }); music(MUS_LOS, { vol: 0.5, fade: 2500 });
   W.sun.visible = false; W.scene.children.filter((o) => o.isDirectionalLight).forEach((l) => (l.intensity = 0.25)); // lado oscuro
   ship.rotation.set(0, 0, ship.userData.docked ? -Math.PI / 2 : Math.PI / 2); hint('c.retro'); // acoplado: +Y local = tobera SPS
   await ctx.wait(2.4); los.innerHTML = ''; los.style.display = 'none';
-  st.loi = await burnChecked('loi', true);
+  // consecuencia del P52: la plataforma bien alineada ensancha la zona verde de la LOI; una mala la estrecha
+  const aq = st.align?.quality; if (aq) { ctx.banner(t('c.p52loi.' + aq), 'P52', 2400, aq === 'poor' ? 'warn' : ''); await ctx.wait(1.6); }
+  st.loi = await burnChecked('loi', true, st.align?.zf || 1);
   clips(['c3_34_capcom_go_loi_en', 'c3_34_armstrong_estamos_en_orbita_en', 'c3_34_collins_yeso_viejo_en'], { radio: true });
   W.sun.visible = true; W.scene.children.filter((o) => o.isDirectionalLight).forEach((l) => (l.intensity = 3.2));
   sfx('ping'); ctx.banner(t('c.aos'), 'AOS', 1600); ctx.cc.log('c.aos', null, 'ok'); ctx.cc.snap({ stage: 'aos', los: false }, true);
-  await ctx.wait(1.6);
+  music(MUS_CRUISE, { vol: 0.4, fade: 2500 }); await ctx.wait(1.6);
   } else st.tli = st.loi = { score: 1 }, st.align = { time: 0, wrong: 0 };
   // ---------- Earthrise ----------
   title('c.photo'); hint('c.photoHint'); music('ambient', { vol: 0.4 });
@@ -268,7 +261,8 @@ export default async function cruise(ctx) {
   ctx.banner(t(ps > 0.5 ? 'c.nice' : 'c.meh'), '', 1600); if (ps > 0.5) achieve('earthrise'); ctx.cc.log(ps > 0.5 ? 'c.nice' : 'c.meh', null, ps > 0.5 ? 'ok' : 'warn');
   pf.style.display = 'none'; pb.style.display = 'none';
   await ctx.wait(1.8);
-  const alignS = clamp(1 - st.align.wrong * 0.15 - Math.max(0, st.align.time - 12) * 0.02, 0, 1);
+  const alignQ = { good: 1, fair: 0.8, poor: 0.5 }[st.align.quality] ?? 1;
+  const alignS = clamp(alignQ - st.align.wrong * 0.15 - Math.max(0, st.align.time - 90) * 0.004, 0, 1);
   const score = Math.round(st.tli.score * 40 + alignS * 25 + st.loi.score * 25 + ps * 10);
   return { score, stats: { tli: Math.round(st.tli.score * 100), loi: Math.round(st.loi.score * 100), wrong: st.wrong, photo: Math.round(ps * 100), sock: st.sock } };
 }

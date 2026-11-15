@@ -26,7 +26,18 @@ extend({
   'd.why.vs': ['VELOCIDAD VERTICAL {v} m/s (máx {m})', 'VERTICAL SPEED {v} m/s (max {m})'], 'd.why.hs': ['VELOCIDAD LATERAL {v} m/s (máx {m})', 'LATERAL SPEED {v} m/s (max {m})'],
   'd.why.tilt': ['INCLINACIÓN {v}° (máx {m}°)', 'TILT {v}° (max {m}°)'], 'd.why.slope': ['PENDIENTE {v}° (máx {m}°)', 'SLOPE {v}° (max {m}°)'], 'd.why.rocks': ['Aterrizaste en el campo de rocas', 'You landed in the boulder field'],
   'd.skip': ['Continuar (sin puntos)', 'Continue (no points)'], 'd.view': ['VISTA', 'VIEW'], 'd.rod': ['ROD', 'ROD'], 'd.toPad': ['A la zona', 'To pad'],
-  'd.keysF': ['A/D inclinar · W sube empuje · S baja hasta planeo · R asistente · C/V cámara', 'A/D tilt · W more thrust · S down to coast · R assist · C/V camera'],
+  'd.keysF': ['A/D mover a los lados · W frena la bajada · S baja más rápido · R empuje directo · C/V cámara', 'A/D move sideways · W slows the descent · S descends faster · R direct throttle · C/V camera'],
+  'd.keysT': ['Barra: arriba frena la bajada, abajo baja más rápido · ROD: empuje directo', 'Bar: up slows the descent, down descends faster · ROD: direct throttle'],
+  'd.rodg.t': ['OBJETIVO', 'TARGET'], 'd.rodg.r': ['REAL', 'ACTUAL'], 'd.rodg.rod': ['ROD · tú eliges la V/S', 'ROD · you pick the V/S'], 'd.rodg.thr': ['EMPUJE DIRECTO', 'DIRECT THROTTLE'],
+  'd.rod.on': ['ROD: W/S cambian la velocidad vertical', 'ROD: W/S change vertical speed'], 'd.rod.off': ['Empuje directo: W/S mueven el motor', 'Direct throttle: W/S move the engine'],
+  'd.c.fast': ['Demasiado rápido ({v} m/s): pulsa W para frenar la bajada.', 'Too fast ({v} m/s): press W to slow the descent.'],
+  'd.c.fastT': ['Demasiado rápido ({v} m/s): sube el empuje con W.', 'Too fast ({v} m/s): raise thrust with W.'],
+  'd.c.near': ['Cerca del suelo: sube el objetivo con W hasta la franja verde (menos de 1 m/s).', 'Near the ground: raise the target with W into the green band (under 1 m/s).'],
+  'd.c.sat': ['Motor al máximo: el Eagle frena todo lo que puede.', 'Engine at full: Eagle is braking as hard as it can.'],
+  'd.c.up': ['Subiendo: pulsa S para volver a bajar.', 'Climbing: press S to come back down.'],
+  'd.c.soft': ['Ritmo de toque. Mantén la franja verde y corrige con A/D.', 'Touchdown rate. Stay in the green and correct with A/D.'],
+  'd.c.lim': ['Limitador de Cadete: la computadora no deja bajar más rápido de {v} m/s.', 'Cadet limiter: the computer will not let you descend faster than {v} m/s.'],
+  'd.c.rod': ['W frena la bajada, S la acelera. Cada toque: 0,3 m/s (1 pie/s).', 'W slows the descent, S speeds it up. Each tap: 0.3 m/s (1 ft/s).'],
   'd.rise': ['SUBIENDO por inercia. S hasta 0% (planeo): la gravedad lunar frena la subida. No hay motor hacia abajo.', 'RISING on momentum. Hold S to 0% (coast): lunar gravity slows the climb. There is no downward engine.'],
   'd.fall': ['BAJANDO. W frena antes del suelo. El mínimo no es suficiente si caes muy rápido.', 'DESCENDING. W brakes before the ground. Idle thrust will not stop a fast fall.'],
   'd.hold': ['Casi quieto. Alrededor del {h}% el peso y el empuje se equilibran.', 'Nearly still. About {h}% balances weight and thrust.'],
@@ -54,6 +65,8 @@ export default async function descent(ctx) {
       <div><div class="k">${t('d.alt')}</div><div class="v alt">—</div></div><div><div class="k">${t('d.vs')}</div><div class="v vs">—</div></div>
       <div><div class="k">${t('d.hs')}</div><div class="v hs">—</div></div><div><div class="k">${t('d.tilt')}</div><div class="v tlt">—</div></div>
       <div><div class="k">${t('d.thr')}</div><div class="v th">—</div></div><div><div class="k">${t('d.fuel')}</div><div class="v fu">—</div></div></div>
+      <div class="rodg" style="display:none"><div class="rodg-bar"><i class="rodg-band rodg-red"></i><i class="rodg-band rodg-amb"></i><i class="rodg-band rodg-ok"></i><i class="rodg-zero"></i><i class="rodg-real"></i><i class="rodg-tgt"></i></div>
+        <div class="rodg-txt"><div class="k">${t('d.rodg.t')}</div><div class="v rodg-t">—</div><div class="k">${t('d.rodg.r')}</div><div class="v rodg-r">—</div><div class="rodg-mode">ROD</div></div></div>
       <div class="vscue"> </div>
       <div class="fuelbar" style="height:4px;background:rgba(186,206,212,.18);margin-top:6px;overflow:hidden"><i style="display:block;height:100%;width:100%;background:var(--mhud-go,#8fbf9b)"></i></div>
       <div class="lamps"><span class="lampx l-prog">PROG</span><span class="lampx l-cont">CONTACT</span><span class="lampx l-rod">ROD</span></div>
@@ -71,6 +84,23 @@ export default async function descent(ctx) {
   const hint = (k, v) => { $('.hint', el).textContent = v ?? t(k); }; const prog = (k) => { $('.prog', el).textContent = t(k); };
   const tele = $('.dtele', el); const V = (c) => $('.' + c, tele);
   let s = create({ x: -520, y: 1250, vx: 26, vy: -26, fuel: 1400 }); const fuel0 = 1400 * (D.fuel || 1) * PL.fuelMult; let mode = 'auto', view = 'ext', rod = false, rodUsed = false, frozen = false, thrTarget = 0.3, thrTouch = null, ffw = 1, chaseYaw = 0.9, fuelWarn = false;
+  // P66 estilo Apolo: con ROD (por defecto) el jugador fija la velocidad vertical objetivo y la computadora mueve el empuje.
+  // Cada toque de W/S es un clic del interruptor ROD (±0,3 m/s ≈ 1 pie/s); mantenido, la consigna corre de forma continua.
+  // R pasa a empuje directo (W/S mueven el motor, como antes). rodUsed ahora significa «el limitador de Cadete intervino».
+  const VS_MIN = -10, VS_MAX = 2, VS_STEP = 0.3, VS_RAMP = 2.4, VS_GAIN = 1.2;
+  let vsT = -5, holdW = 0, holdS = 0, vsFlash = 0, limiting = false, limV = 0, rodPref = true;
+  const LVS = 3 * (D.tol || 1);
+  const vsPct = (v) => clamp((VS_MAX - v) / (VS_MAX - VS_MIN), 0, 1) * 100;
+  const snapVs = (v) => clamp(Math.round(v / VS_STEP) * VS_STEP, VS_MIN, VS_MAX);
+  // empuje que necesita la computadora para llevar s.vy hacia la consigna (compensa la inclinación)
+  const rodThr = (target) => { const m = LM.dry + Math.max(0, s.fuel), c = Math.max(0.6, Math.cos((s.tilt * Math.PI) / 180)); return clamp(((LM.g + (target - s.vy) * VS_GAIN) * m) / (LM.thrust * c), 0, 1); };
+  const bumpVs = (d) => { vsT = clamp(vsT + d, VS_MIN, VS_MAX); vsFlash = 0.25; sfx('tick', { rate: d > 0 ? 1.25 : 0.85, vol: 0.5 }); };
+  const setRod = (on) => {
+    rod = on; rodPref = on;
+    if (on) vsT = snapVs(Math.max(s.vy, -6)); else thrTarget = s.thr;
+    const lab = $('.tc-throttle .lab', el); if (lab) lab.textContent = on ? 'V/S' : t('d.thr');
+    ctx.banner(t(on ? 'd.rod.on' : 'd.rod.off'), '', 1400); sfx('switch');
+  };
   const orbitState = createOrbitState({ yaw: chaseYaw, pitch: 0.25, distance: 36, minDistance: 11, maxDistance: 120, damp: 6 });
   const camRig = bindOrbitControls(orbitState, { pointer: false, touch: true, allow: () => !frozen });
   ctx.onCleanup(() => camRig.dispose());
@@ -84,7 +114,7 @@ export default async function descent(ctx) {
   bindBtn($('.viewbtn', el), 'view'); $('.ffw', el).onclick = () => { ffw = ffw === 1 ? 3 : 1; sfx('tick'); $('.ffw', el).classList.toggle('on', ffw > 1); };
   // cámara
   const camPos = new THREE.Vector3(-520, 1270, 120), look = new THREE.Vector3(); let shake = 0;
-  if (DEBUG) window.__descDbg = { W, s: () => s, set: (o) => Object.assign(s, o), ground, snap: () => { for (let i = 0; i < 60; i++) camUpdate(0.1); } };
+  if (DEBUG) window.__descDbg = { W, s: () => s, set: (o) => Object.assign(s, o), ground, rodState: () => ({ vsT, rod, limiting, mode }), snap: () => { for (let i = 0; i < 60; i++) camUpdate(0.1); } };
   const placeDescentOrbit = (dt) => {
     const p = W.lm.position;
     stepOrbit(orbitState, dt);
@@ -121,7 +151,35 @@ export default async function descent(ctx) {
     V('alt').textContent = a > 100 ? fmt(a) + ' m' : a.toFixed(1) + ' m';
     const cue = vsCue(s.vy);
     V('vs').textContent = (s.vy > 0 ? '+' : '') + s.vy.toFixed(1);
-    const cueEl = $('.vscue', tele); if (cueEl) { cueEl.className = 'vscue ' + cue; const hv = Math.round(hoverThr(s) * 100); cueEl.textContent = cue === 'rise' ? (s.thr > hoverThr(s) + 0.05 ? t('d.toomuch') : t('d.rise')) : cue === 'fall' ? t('d.fall') : t('d.hold', { h: hv }); }
+    const cueEl = $('.vscue', tele); if (cueEl) {
+      // «demasiado rápido»: cerca del suelo por encima del límite de las patas, o cuando frenar a tope ya come más de media altura
+      const aUp = Math.max(0.3, LM.thrust / (LM.dry + Math.max(0, s.fuel)) - LM.g), brake = s.vy < 0 ? (s.vy * s.vy) / (2 * aUp) : 0;
+      const hv = Math.round(hoverThr(s) * 100), fast = (a < 15 && s.vy < -LVS * 0.85) || (a < 120 && brake > a * 0.5), vtxt = Math.abs(s.vy).toFixed(1);
+      let txt, cls = cue;
+      if (mode !== 'manual') txt = cue === 'rise' ? (s.thr > hoverThr(s) + 0.05 ? t('d.toomuch') : t('d.rise')) : cue === 'fall' ? t('d.fall') : t('d.hold', { h: hv });
+      else if (fast && s.thr > 0.97) { txt = t('d.c.sat'); cls = 'bad'; }
+      else if (fast) { txt = t(rod ? 'd.c.fast' : 'd.c.fastT', { v: vtxt }); cls = 'bad'; }
+      else if (rod && limiting) { txt = t('d.c.lim', { v: Math.abs(limV).toFixed(1) }); cls = 'warn'; }
+      else if (rod && a < 25 && vsT < -1.05) { txt = t('d.c.near'); cls = 'warn'; }
+      else if (rod && s.vy > 0.4) txt = t('d.c.up');
+      else if (rod && a < 25 && s.vy > -1.05) { txt = t('d.c.soft'); cls = 'good'; }
+      else if (rod) txt = t('d.c.rod');
+      else txt = cue === 'rise' ? (s.thr > hoverThr(s) + 0.05 ? t('d.toomuch') : t('d.rise')) : cue === 'fall' ? t('d.fall') : t('d.hold', { h: hv });
+      cueEl.className = 'vscue ' + cls; cueEl.textContent = txt;
+    }
+    if (mode === 'manual') {
+      // indicador vertical: franja verde (toque suave, <1 m/s), ámbar (hasta el límite de las patas), rojo (rotura)
+      const g = $('.rodg', tele), band = (q, top, bot) => { const b = $(q, g); b.style.top = vsPct(top) + '%'; b.style.height = Math.max(0, vsPct(bot) - vsPct(top)) + '%'; };
+      band('.rodg-ok', 0.5, -1); band('.rodg-amb', -1, -LVS); band('.rodg-red', -LVS, VS_MIN);
+      $('.rodg-zero', g).style.top = vsPct(0) + '%';
+      const vcls = a > 60 ? '' : s.vy < -LVS ? 'bad' : s.vy < -1 ? 'warn' : 'good';
+      const re = $('.rodg-real', g); re.style.top = vsPct(s.vy) + '%'; re.className = 'rodg-real ' + vcls;
+      const tg = $('.rodg-tgt', g); tg.style.display = rod ? '' : 'none'; tg.style.top = vsPct(limiting ? limV : vsT) + '%'; tg.classList.toggle('flash', vsFlash > 0); vsFlash = Math.max(0, vsFlash - 1 / 60);
+      $('.rodg-t', g).textContent = rod ? (vsT > 0 ? '+' : '') + vsT.toFixed(1) + ' m/s' : '—';
+      $('.rodg-r', g).textContent = (s.vy > 0 ? '+' : '') + s.vy.toFixed(1) + ' m/s';
+      $('.rodg-r', g).className = 'v rodg-r ' + vcls;
+      $('.rodg-mode', g).textContent = rod ? t('d.rodg.rod') : t('d.rodg.thr'); g.classList.toggle('thr', !rod);
+    }
     V('hs').textContent = (s.vx > 0 ? '+' : '') + s.vx.toFixed(1); V('tlt').textContent = s.tilt.toFixed(0) + '°'; V('th').textContent = Math.round(s.thr * 100) + '%' + (s.thr < 0.02 ? ' · ' + t('d.coast') : '');
     const live = mode === 'manual'; V('fu').textContent = live ? Math.round(sec()) + ' s' : 'AUTO';
     V('vs').className = 'v vs ' + (a < 60 ? (Math.abs(s.vy) > 3 * D.tol ? 'bad' : Math.abs(s.vy) > 1.8 ? 'warn' : 'good') : ''); V('hs').className = 'v hs ' + (a < 60 ? (Math.abs(s.vx) > 1.5 * D.tol ? 'warn' : 'good') : '');
@@ -132,7 +190,7 @@ export default async function descent(ctx) {
       $('.me', el).style.left = pc(s.x) + '%'; const pd = $('.pd', el); pd.style.left = pc(PAD.x - PAD.r) + '%'; pd.style.width = pc(PAD.x + PAD.r) - pc(PAD.x - PAD.r) + '%';
       const rk = $('.rk', el); rk.style.left = pc(BOULDERS.x - BOULDERS.r) + '%'; rk.style.width = pc(BOULDERS.x + BOULDERS.r) - pc(BOULDERS.x - BOULDERS.r) + '%';
       const dx = PAD.x - s.x; $('.topad', el).textContent = `${t('d.toPad')}: ${dx > 0 ? '→' : '←'} ${Math.abs(dx).toFixed(0)} m`; }
-    if (isTouch && thrUI) thrUI.show(s.thr);
+    if (isTouch && thrUI) thrUI.show(mode === 'manual' && rod ? (vsT - VS_MIN) / (VS_MAX - VS_MIN) : s.thr);
     const chip = $('.plan-chip', el); if (chip) { const show = mode === 'manual'; chip.style.display = show ? '' : 'none'; if (show) chip.textContent = (store.get('lang') === 'en' ? 'YOUR PLAN' : 'TU PLAN') + ' · ~' + PL.marginSec + ' s'; }
     if (mode === 'manual' && !fuelWarn && brakingMargin(s) < 0 && a > 40) {
       fuelWarn = true;
@@ -150,10 +208,27 @@ export default async function descent(ctx) {
       if (mode === 'auto') inp = guide(s, BOULDERS.x);
       else if (mode === 'manual') {
         const ax = isTouch ? input.stick.x : axis().x; let tilt = clamp(ax, -1, 1);
-        if (pressed('KeyR') || bpressed('rod')) { rod = !rod; if (rod) rodUsed = true; sfx('switch'); }
-        if (down('KeyW', 'ArrowUp')) thrTarget += 0.7 * dt; if (down('KeyS', 'ArrowDown')) thrTarget -= 0.7 * dt; if (thrTouch != null) { thrTarget = thrTouch; thrTouch = null; } thrTarget = clamp(thrTarget, 0, 1);
-        let thr = thrTarget; if (rod) { thr = guide(s, s.x, { rod: true, vyMax: 6 }).thr; thrTarget = thr; }
-        if (AUTO()) { const g = guide(s, PAD.x); tilt = g.tilt; thr = g.thr; thrTarget = thr; }
+        if (k === 0 && (pressed('KeyR') || bpressed('rod'))) setRod(!rod);
+        let thr;
+        if (rod) {
+          if (k === 0) {
+            if (pressed('KeyW', 'ArrowUp')) bumpVs(VS_STEP);
+            if (pressed('KeyS', 'ArrowDown')) bumpVs(-VS_STEP);
+            holdW = down('KeyW', 'ArrowUp') ? holdW + dt : 0; holdS = down('KeyS', 'ArrowDown') ? holdS + dt : 0;
+            if (holdW > 0.3) vsT += VS_RAMP * dt;
+            if (holdS > 0.3) vsT -= VS_RAMP * dt;
+            if (thrTouch != null) { vsT = VS_MIN + thrTouch * (VS_MAX - VS_MIN); thrTouch = null; }
+            vsT = clamp(vsT, VS_MIN, VS_MAX);
+          }
+          // Cadete: la computadora solo pone un suelo a la consigna cerca del terreno; no toca nada más
+          let eff = vsT; limiting = false;
+          if (D.assist) { limV = -Math.max(0.8, 0.6 + Math.max(0, agl(s)) * 0.12); if (eff < limV) { eff = limV; limiting = true; rodUsed = true; } }
+          thr = rodThr(eff); thrTarget = thr;
+        } else {
+          if (down('KeyW', 'ArrowUp')) thrTarget += 0.7 * dt; if (down('KeyS', 'ArrowDown')) thrTarget -= 0.7 * dt; if (thrTouch != null) { thrTarget = thrTouch; thrTouch = null; } thrTarget = clamp(thrTarget, 0, 1);
+          thr = thrTarget; limiting = false;
+        }
+        if (AUTO()) { const g = guide(s, PAD.x); tilt = g.tilt; thr = g.thr; thrTarget = thr; vsT = clamp(g.vyDes, VS_MIN, VS_MAX); }
         inp = { tilt, thr, burnFuel: true };
       } else break;
       step(s, inp, dt);
@@ -166,7 +241,7 @@ export default async function descent(ctx) {
     if (mode === 'manual') { const sc = sec(); for (const c of [60, 30]) if (sc < c && !callouts[c]) { callouts[c] = 1; ctx.banner(t('d.' + c), '', 1500, c === 30 ? 'warn' : ''); sfx('beep'); clip(c === 60 ? 'cap4_60_segundos' : 'cap4_30_segundos', { radio: true }); if (c === 60) ctx.say('pa.fuel', { ms: 3000 }); ctx.cc.log('d.' + c, null, 'warn'); }
       if (a < 15 && !s.landed && !callouts.dust) { callouts.dust = 1; clip('cap4_aldrin_polvo_40_pies', { radio: true }); }
       if (a < 1.6 && !s.landed && !callouts.c) { callouts.c = 1; $('.l-cont', tele).classList.add('on', 'blue'); W.contactL.intensity = 6; sfx('beep', { rate: 1.6 }); ctx.banner(t('d.contact'), '', 1200); clip('cap4_luz_de_contacto_apagado', { radio: true }); } }
-    ctx.cc.snap({ alt: a, vs: s.vy, hs: s.vx, tilt: s.tilt, thr: s.thr, fuel: mode === 'manual' ? sec() : null, x: s.x, pad: PAD.x, mode, alarm: frozen });
+    ctx.cc.snap({ alt: a, vs: s.vy, hs: s.vx, tilt: s.tilt, thr: s.thr, fuel: mode === 'manual' ? sec() : null, x: s.x, pad: PAD.x, mode, alarm: frozen, rod: mode === 'manual' ? rod : null, vsT: mode === 'manual' && rod ? +vsT.toFixed(1) : null });
   });
   // ---- 1) P63/P64 automático + alarma 1202 ----
   const sub = new URLSearchParams(location.search).get('sub');
@@ -183,8 +258,11 @@ export default async function descent(ctx) {
   const ckpt = JSON.stringify(s);
   W.warn.visible = true; W.pad.visible = true; sfx('beep'); sfx('beep', { rate: 0.7 });
   async function handover() {
-    mode = 'manual'; s.fuel = s.fuel0 = fuel0; thrTarget = hoverThr(s); rod = !!D.assist && ctx.diffName === 'cadet'; if (rod) rodUsed = true; callouts = {};
-    prog('d.p66'); ctx.banner(t('d.control'), '', 2600, 'warn'); ctx.say('pa.control', { ms: 4000 }); ctx.cc.log('d.control', null, 'warn'); hint(null, isTouch ? '' : '');
+    // ROD activo al tomar el control (como Armstrong en P66); la consigna empieza en -5 m/s y la computadora frena la caída de P64
+    mode = 'manual'; s.fuel = s.fuel0 = fuel0; thrTarget = hoverThr(s); rod = rodPref; vsT = -5; holdW = holdS = 0; callouts = {};
+    const lab = $('.tc-throttle .lab', el); if (lab) lab.textContent = rod ? 'V/S' : t('d.thr');
+    prog('d.p66'); ctx.banner(t('d.control'), '', 2600, 'warn'); ctx.say('pa.control', { ms: 4000 }); ctx.cc.log('d.control', null, 'warn'); hint(null, t(isTouch ? 'd.keysT' : 'd.keysF'));
+    $('.rodg', tele).style.display = '';
     const note = planNotes(PL.plan)[0]; if (note && !isNasaPlan(PL.plan)) setTimeout(() => !ctx.dead && ctx.banner(note[store.get('lang') === 'en' ? 1 : 0], '', 3200, 'warn'), 2700);
     $('.lpd', el).style.display = ''; $('.viewbtn', el).style.display = ''; if (isTouch) ['.tc-stick', '.tc-throttle', '.rodbtn'].forEach((q) => ($(q, el).style.display = ''));
     $('.l-cont', tele).classList.remove('on', 'blue'); W.contactL.intensity = 0;
@@ -196,7 +274,7 @@ export default async function descent(ctx) {
     await new Promise((res) => { landedCb = res; const off = ctx.loop(() => { if (s.out && agl(s) < 0.1) res(); }); ctx.onCleanup(off); });
     landedCb = null; mode = 'done'; stopEngine(); J = judge(s, D); st.result = J.res; W.setLM(s.x, s.y, s.tilt, 0, false);
     if (s.out && J.res === 'good') J.res = 'hard';
-    if (J.res === 'good') { sfx('thud'); clip('cap4_base_tranquilidad_eagle_aterrizado', { radio: true }); ctx.banner(t('d.landed'), 'Tranquility Base', 3200, 'good'); ctx.say('pa.landed', { ms: 3500 }); ctx.cc.log('d.landed', null, 'ok'); playCue('eagle', { anchor: () => W.lm, ctx }); if (J.vs < 1 && J.pad < PAD.r) achieve('soft'); if (!rodUsed) achieve('noassist'); if (sec() > 60) achieve('fuel'); break; }
+    if (J.res === 'good') { music('a11/music/mus_c4_alunizaje_alivio', { vol: 0.5, loop: false, fade: 900 }); sfx('thud'); clip('cap4_base_tranquilidad_eagle_aterrizado', { radio: true }); ctx.banner(t('d.landed'), 'Tranquility Base', 3200, 'good'); ctx.say('pa.landed', { ms: 3500 }); ctx.cc.log('d.landed', null, 'ok'); playCue('eagle', { anchor: () => W.lm, ctx }); if (J.vs < 1 && J.pad < PAD.r) achieve('soft'); if (!rodUsed) achieve('noassist'); if (sec() > 60) achieve('fuel'); break; }
     if (J.res === 'hard') { sfx('thud'); sfx('clunk'); shake = 0.8; st.hard = true; W.body.rotation.x = 0.08; ctx.banner(t('d.hard'), t('d.hardD'), 2800, 'warn'); ctx.cc.log('d.hard', null, 'warn'); break; }
     // crash
     st.crashes++; sfx('explosion'); shake = 2.2; W.body.visible = false; const why = J.why ? fill(t('d.why.' + J.why), { v: (J.why === 'vs' ? J.vs : J.why === 'hs' ? J.hs : J.why === 'tilt' ? J.tilt : J.slope).toFixed(1), m: J.L[J.why] && (+J.L[J.why]).toFixed(1) }) : t(s.out ? 'd.fuelout' : 'd.crashD');
@@ -208,6 +286,7 @@ export default async function descent(ctx) {
     if (choice === 'skip') { st.result = 'skip'; break; }
     s = Object.assign(create(), JSON.parse(ckpt)); W.body.visible = true; W.body.rotation.x = 0; await handover();
   }
+  $('.rodg', tele).style.display = 'none';
   $('.lpd', el).style.display = 'none'; if (isTouch) ['.tc-stick', '.tc-throttle', '.rodbtn'].forEach((q) => ($(q, el).style.display = 'none'));
   W.pad.visible = false; W.warn.visible = false; $('.viewbtn', el).style.display = 'none';
   // plano lento sobre el LM posado; la órbita libre y la cabina lo sustituyen, y el raíl de la cinemática sigue ganando

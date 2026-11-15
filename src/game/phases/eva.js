@@ -46,7 +46,9 @@ extend({
   'e.siteRock': ['Hay rocas aquí', 'Rocks here'], 'e.siteSlope': ['Demasiada pendiente', 'Too steep'], 'e.siteOut': ['Fuera del encuadre de la cámara TV', 'Outside the TV camera frame'],
   'e.hammer': ['Clava el mástil: golpea en la zona verde (3)', 'Drive the pole: hit in the green zone (3)'], 'e.hit': ['¡Buen golpe!', 'Good hit!'], 'e.miss': ['Rebotó… el regolito es duro', 'It bounced… the regolith is hard'],
   'e.bar': ['Extiende la barra: mantén y suelta', 'Extend the crossbar: hold and release'], 'e.wrinkle': ['La barra se trabó a medias… igual que en 1969', 'The bar jammed halfway… just like in 1969'],
-  'e.salute': ['Saluda a la bandera', 'Salute the flag'], 'e.photo': ['Encuadra la bandera y pulsa FOTO', 'Frame the flag and press PHOTO'], 'e.photoC': ['CAPCOM encuadra la cámara TV…', 'CAPCOM is framing the TV camera…'],
+  'e.salute': ['Saluda a la bandera', 'Salute the flag'], 'e.photo': ['Encuadra la bandera y pulsa FOTO', 'Frame the flag and press PHOTO'],
+  'e.saluteB': ['Aldrin saluda a la bandera. Tú llevas la Hasselblad', 'Aldrin salutes the flag. You carry the Hasselblad'], 'e.photoB2': ['Encuadra a Aldrin y la bandera y pulsa FOTO', 'Frame Aldrin and the flag and press PHOTO'],
+  'e.photoFact': ['Real: Armstrong llevó la cámara casi toda la caminata. Por eso casi todas las fotos son de Aldrin y hay muy pocas de Armstrong en la Luna.', 'Real: Armstrong carried the camera for most of the moonwalk. That is why almost every photo shows Aldrin and there are very few of Armstrong on the Moon.'], 'e.photoC': ['CAPCOM encuadra la cámara TV…', 'CAPCOM is framing the TV camera…'],
   'e.tvPoor': ['Por tu plan: solo Goldstone. La televisión se corta.', 'Your plan: Goldstone only. The television drops out.'],
   'e.tvFair': ['Por tu plan: sin Parkes la imagen pierde detalle.', 'Your plan: without Parkes the picture loses detail.'],
   'e.done': ['Bandera plantada', 'Flag planted'], 'e.swing': ['E: ¡swing!', 'E: swing!'], 'e.swingT': ['ACCIÓN: ¡swing!', 'ACTION: swing!'], 'e.golf': ['Millas y millas y millas…', 'Miles and miles and miles…'],
@@ -78,7 +80,7 @@ export default async function eva(ctx) {
   // ---------- HUD ----------
   const el = ctx.hud(`${objectiveCardHtml({ kicker: `${t('ph.n')} 05 · ${t('ph.eva')}`, titleHtml: `<div class="phase-title etitle">${t('e.ladder')}</div>`, bodyHtml: `<p class="mhud-note ph1"></p><div class="k">${t('e.o2')}</div><div class="fuelbar o2" style="height:4px;background:rgba(186,206,212,.18);margin:4px 0 8px;overflow:hidden"><i style="display:block;height:100%;width:100%;background:var(--mhud-go,#8fbf9b)"></i></div><div class="etasks">${['sample', 'flag', 'photo'].map((k) => `<div class="task t-${k}"><i class="mhud-tick box"></i><span>${t('e.t.' + k)}</span></div>`).join('')}</div>` })}
     <div class="ph2" hidden></div>
-    <div class="bc eprompt" style="bottom:calc(${isTouch ? 150 : 22}px + var(--safe-b));width:min(220px,70vw);pointer-events:none"><div class="hold" style="display:none;width:100%;height:4px;background:rgba(186,206,212,.2);overflow:hidden"><i style="display:block;height:100%;width:0;background:var(--mhud-gold,#c6a36a)"></i></div></div>
+    <div class="bc eprompt" style="bottom:calc(${isTouch ? 178 : 64}px + var(--safe-b));width:min(260px,70vw);pointer-events:none"><div class="hold" style="display:none;width:100%;height:6px;background:rgba(186,206,212,.2);overflow:hidden"><i style="display:block;height:100%;width:0;background:var(--mhud-gold,#c6a36a)"></i></div></div>
     <div class="bc rhythm" style="display:none;bottom:calc(${isTouch ? 240 : 90}px + var(--safe-b));width:min(460px,86vw)"><div style="position:relative;width:100%;height:30px;border-radius:15px;background:#0a0f1acc;border:1px solid var(--line);overflow:hidden">
       <i class="zone" style="position:absolute;top:0;bottom:0;background:#3ddc8455;border-left:2px solid var(--go);border-right:2px solid var(--go)"></i><i class="cur" style="position:absolute;top:2px;bottom:2px;width:6px;margin-left:-3px;border-radius:3px;background:#fff;box-shadow:0 0 10px #fff"></i></div>
       <div class="phase-tag rtxt" style="text-align:center;margin-top:6px"></div></div>
@@ -89,7 +91,7 @@ export default async function eva(ctx) {
     ${isTouch ? `<div class="tc-stick" style="display:none"><i></i></div><button class="tc-btn mid jumpbtn" style="display:none;right:calc(124px + env(safe-area-inset-right,0px));bottom:calc(40px + var(--safe-b))">${t('e.jump')}</button>` : ''}
     <button class="tc-btn big actbtn amber" style="display:${isTouch ? '' : 'none'};right:calc(18px + env(safe-area-inset-right,0px));bottom:calc(30px + var(--safe-b))">${t('e.down')}</button>
     <button class="btn sciencebtn" style="display:none;position:absolute;right:12px;bottom:calc(175px + var(--safe-b));max-width:44vw;font-size:.72rem"></button>
-    <button class="btn primary photobtn" style="display:none;position:absolute;left:50%;transform:translateX(-50%);bottom:calc(${isTouch ? 150 : 40}px + var(--safe-b));pointer-events:auto">${t('e.photoB')}</button>`);
+    <button class="btn primary photobtn" style="display:none;position:absolute;left:50%;transform:translateX(-50%);bottom:calc(${isTouch ? 178 : 64}px + var(--safe-b));pointer-events:auto">${t('e.photoB')}</button>`);
   const title = (k) => { $('.etitle', el).textContent = t(k); dbg('eva', k); };
   const evaKey = (a, b) => {
     const blob = `${a}\n${b}`.toLowerCase();
@@ -131,7 +133,19 @@ export default async function eva(ctx) {
   for (const sx of [-0.28, 0.28]) { const r = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, ladLen), alu); r.position.copy(top).add(bot).multiplyScalar(0.5); r.position.x += sx; r.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), ladDir.clone().negate()); r.castShadow = true; lad.add(r); }
   const rungs = []; for (let i = 0; i < 9; i++) { const p = top.clone().addScaledVector(ladDir, (ladLen * (i + 0.5)) / 9); rungs.push(p); const g = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.56), alu); g.rotation.z = Math.PI / 2; g.position.copy(p); lad.add(g); }
   const porch = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.05, 0.6), alu); porch.position.copy(top).add(new THREE.Vector3(0, 0.12, -0.3)); lad.add(porch);
-  const padTop = eagle ? new THREE.Vector3(lx, ly + 0.3, 4.3) : new THREE.Vector3(lx, ly + 0.28, 3.95);
+  // Plato del pie delantero: se mide en la malla real del Eagle (leg-fwd-pad-geo_1). El puntal baja al centro del plato,
+  // así que el astronauta se apoya en la mitad delantera (entre el puntal y el borde), sobre la superficie real.
+  const padTop = eagle ? new THREE.Vector3(lx, ly + 0.36, 4.42) : new THREE.Vector3(lx, ly + 0.28, 3.95);
+  if (eagle) {
+    const pm = W.scene.getObjectByName('leg-fwd-pad-geo_1') || W.scene.getObjectByName('leg-fwd-pad-geo');
+    if (pm) {
+      pm.updateWorldMatrix(true, true); const bb = new THREE.Box3().setFromObject(pm), c = bb.getCenter(new THREE.Vector3()), r = (bb.max.z - bb.min.z) / 2;
+      padTop.set(c.x, bb.max.y, c.z + r * 0.48);
+      const hit = new THREE.Raycaster(new THREE.Vector3(padTop.x, bb.max.y + 1, padTop.z), new THREE.Vector3(0, -1, 0), 0, 3).intersectObject(pm, true)[0];
+      if (hit) padTop.y = hit.point.y;
+      dbg('padTop', padTop.toArray().map((v) => +v.toFixed(3)));
+    }
+  }
   lad.visible = !eagle;
   // cámara TV en trípode
   let tvProc = null;
@@ -248,14 +262,52 @@ export default async function eva(ctx) {
     for (const [x, z, s] of W.rockList) if (s > 0.5 && Math.abs(x - P.x) < 4 && Math.abs(z - P.z) < 4) push(x, z, s * 0.9 + 0.25);
   }
   const _hr = new THREE.Vector3();
+  // Aldrin con vida propia (antes te seguía pegado como una cola e imitaba cada paso). Como en 1969: inspecciona el Eagle,
+  // prueba maneras de moverse con saltos de canguro, despliega experimentos y mira la Tierra. Solo vuelve contigo si te
+  // alejas más de 14 m. En la foto posa junto a la bandera (BUZZ.pose).
+  const BUZZ = { mode: 'follow', i: 0, t: 0, tgt: null, pose: null };
+  const buzzTasks = () => [
+    { at: [lx + 2.6, 1.2], act: 'point', secs: 4 },              // revisa la pata y el motor del Eagle
+    { at: [lx + 5.5, 7.5], hop: true },                           // saltos de canguro para probar cómo moverse
+    { at: [lx + 4.5, 10.5], act: 'scoop', secs: 4.5 },            // se agacha a mirar el regolito
+    { at: [lx - 3.5, 8.5], look: true, secs: 4 },                 // se queda mirando la Tierra
+    { at: [lx - 1.5, 13], act: 'point', secs: 3.5 },              // señala el sitio de los experimentos
+  ];
+  function stepBuzz(dt) {
+    const b = buzzBody; const dP = Math.hypot(P.x - b.x, P.z - b.z);
+    const walkTo = (x, z, v) => { const dx = x - b.x, dz = z - b.z, d = Math.hypot(dx, dz); if (d < 0.25) return true; const s = Math.min(d, v * dt); b.x += (dx / d) * s; b.z += (dz / d) * s; b.yaw = Math.atan2(dx, dz); return false; };
+    if (BUZZ.pose) { // pose para la foto
+      const p = BUZZ.pose; if (!walkTo(p.x, p.z, 1.3)) return { speed: 1.3 };
+      b.yaw = p.yaw; return { speed: 0, act: 'salute' };
+    }
+    // al principio baja y se acerca (dice «Magnífica desolación»); luego trabaja por su cuenta
+    if (!saidDes || dP > 14) { BUZZ.mode = 'follow'; }
+    if (BUZZ.mode === 'follow') {
+      if (dP > 3.2) { const k = 2.6 / dP; walkTo(P.x + (b.x - P.x) * k, P.z + (b.z - P.z) * k, 1.4); return { speed: 1.4 }; }
+      if (saidDes) { BUZZ.mode = 'task'; BUZZ.t = 0; BUZZ.tgt = buzzTasks()[BUZZ.i % 5]; }
+      b.yaw = Math.atan2(P.x - b.x, P.z - b.z); return { speed: 0 };
+    }
+    const tk = BUZZ.tgt; const [tx, tz] = tk.at;
+    if (dP < 1.1) { const ax = b.x - P.x, az = b.z - P.z, l = Math.hypot(ax, az) || 1; b.x += (ax / l) * 1.2 * dt; b.z += (az / l) * 1.2 * dt; } // te deja pasar
+    if (tk.hop) { // saltos: avanza a saltos de canguro hasta el punto
+      BUZZ.t += dt; const ph = (BUZZ.t % 0.9) / 0.9; const arrived = walkTo(tx, tz, 1.7);
+      if (!arrived) return { speed: 0, jump: true, lift: Math.sin(ph * Math.PI) * 0.35 };
+      BUZZ.i++; BUZZ.mode = 'follow'; return { speed: 0 };
+    }
+    if (!walkTo(tx, tz, 1.1)) return { speed: 1.1 };
+    BUZZ.t += dt;
+    if (tk.look) b.yaw = damp(b.yaw, Math.atan2(EARTH_XZ[0] - b.x, EARTH_XZ[1] - b.z), 2, dt); // hacia la Tierra
+    if (BUZZ.t > tk.secs) { BUZZ.i++; BUZZ.mode = 'follow'; }
+    return { speed: 0, act: tk.act || null, k: tk.act === 'scoop' ? Math.min(0.62, BUZZ.t / tk.secs) : 0 };
+  }
   ctx.loop((dt, tt) => {
     tEva += dt; $('.o2 i', el).style.width = clamp(100 - (tEva / O2) * 100, 0, 100) + '%';
     if (buzz && st.step && P.mode !== 'ladder') {
       buzz.root.visible = true;
-      stepCompanion(buzzBody, { x: P.x, z: P.z, yaw: P.yaw, speed: P.speed, floorY: ground(buzzBody.x, buzzBody.z) }, dt);
-      buzzBody.y = ground(buzzBody.x, buzzBody.z);
+      const bp = stepBuzz(dt);
+      buzzBody.y = ground(buzzBody.x, buzzBody.z) + (bp.lift || 0);
       buzz.root.position.set(buzzBody.x, buzzBody.y, buzzBody.z); buzz.root.rotation.y = buzzBody.yaw;
-      buzz.pose(dt, { speed: buzzBody.speed });
+      buzz.pose(dt, { speed: bp.speed, jump: !!bp.jump, act: bp.act || null, k: bp.k || 0 });
       if (!saidDes && Math.hypot(buzzBody.x - P.x, buzzBody.z - P.z) < 2.5) {
         saidDes = true; clip('cap5_magnifica_desolacion');
         ctx.banner('ALDRIN', store.get('lang') === 'en' ? 'Magnificent desolation.' : 'Magnífica desolación.', 3400);
@@ -321,6 +373,8 @@ export default async function eva(ctx) {
     } else if (viewMode === 'follow') {
       const ty = P.y + 1.3; const cx = P.x + Math.sin(camYaw) * Math.cos(camPitch) * camDist, cz = P.z + Math.cos(camYaw) * Math.cos(camPitch) * camDist; let cy = ty + Math.sin(camPitch) * camDist; cy = Math.max(cy, ground(cx, cz) + 0.5);
       camP.x = damp(camP.x, cx, 5, dt); camP.y = damp(camP.y, cy, 5, dt); camP.z = damp(camP.z, cz, 5, dt); cam.position.copy(camP); look.set(P.x, ty, P.z); cam.lookAt(look); cam.fov = cam.aspect < 1 ? 70 : 55; cam.updateProjectionMatrix();
+    } else if (viewMode === 'hassel') {
+      const base = P.yaw, yy = base + tvLook.yaw; cam.position.set(P.x, P.y + 1.3, P.z); look.set(P.x + Math.sin(yy) * 10, P.y + 1.15 + tvLook.pitch * 10, P.z + Math.cos(yy) * 10); cam.up.set(0, 1, 0); cam.lookAt(look); cam.fov = (cam.aspect < 1 ? 60 : 42) / tvLook.zoom; cam.updateProjectionMatrix();
     } else if (viewMode === 'tv') {
       const base = Math.atan2(site.x - camTV.x, site.z - camTV.z); const yy = base + tvLook.yaw; cam.position.set(camTV.x + Math.sin(base) * 0.45, camTV.y, camTV.z + Math.cos(base) * 0.45); look.set(camTV.x + Math.sin(yy) * 10, camTV.y + 0.3 + tvLook.pitch * 10, camTV.z + Math.cos(yy) * 10); cam.lookAt(look); cam.fov = (cam.aspect < 1 ? 62 : 44) / tvLook.zoom; cam.updateProjectionMatrix();
     }
@@ -349,7 +403,7 @@ export default async function eva(ctx) {
     if (show) { sb.textContent = t('e.science') + ' · ' + (isTouch ? t('e.' + nearby.name) : t('e.scienceHint', { task: t('e.' + nearby.name) })); if (pressed('KeyF')) deployScience(); }
   });
   // ganchos de depuración para capturas (cámara y pose)
-  if (DEBUG) window.__evaDbg = { ast, science, evaProps, W, ground, sampleP, site, cam: (y, p, d) => { camYaw = y; camPitch = p; camDist = d; }, fps, footprint, act: (a, k = 0.5) => { P.dbgAct = a; P.dbgK = k; }, P, M, st, flag, cloth, setFlag };
+  if (DEBUG) window.__evaDbg = { ast, science, evaProps, W, ground, sampleP, site, cam: (y, p, d) => { camYaw = y; camPitch = p; camDist = d; }, fps, footprint, act: (a, k = 0.5) => { P.dbgAct = a; P.dbgK = k; }, P, M, st, flag, cloth, setFlag, buzz, buzzBody, BUZZ: () => BUZZ };
   const sub = new URLSearchParams(location.search).get('sub');
   const LAD = { y: 0, z: 0 }; if (DEBUG) window.__evaDbg.LAD = LAD;
   // ---------- 1) escalera ----------
@@ -367,15 +421,27 @@ export default async function eva(ctx) {
       if (i === 5) clip('cap5_placa_lectura_armstrong', { radio: true });
     }
     // salto a la pata
-    P.act = null; { const from = new THREE.Vector3(P.x, P.y, P.z); await new Promise((res) => { let k = 0; const off = ctx.loop((dt) => { k = Math.min(1, k + dt / 1.1); P.x = from.x + (padTop.x - from.x) * k; P.z = from.z + (padTop.z - from.z) * k; P.y = from.y + (padTop.y - from.y) * k + Math.sin(k * Math.PI) * 0.25; if (k >= 1) { off(); res(); } }); }); }
-    sfx('thud', { vol: 0.5 }); puff(P.x, P.z + 0.3, 8, 0.6);
+    // salto del último peldaño al plato con el clip de salto (antes bajaba con las piernas rectas y juntas)
+    P.act = 'hop'; P.actK = 0; { const from = new THREE.Vector3(P.x, P.y, P.z); await new Promise((res) => { let k = 0; const off = ctx.loop((dt) => { k = Math.min(1, k + dt / 1.1); P.actK = k; P.x = from.x + (padTop.x - from.x) * k; P.z = from.z + (padTop.z - from.z) * k; P.y = from.y + (padTop.y - from.y) * k + Math.sin(k * Math.PI) * 0.25; if (k >= 1) { off(); res(); } }); }); }
+    P.act = null; sfx('thud', { vol: 0.5 }); puff(P.x, P.z + 0.3, 8, 0.6);
     // ---------- 2) primer paso ----------
     title('e.step'); prompt(t('e.step'), t(isTouch ? 'e.stepT' : 'e.stepK')); actLabel('e.stepB'); P.yaw = 0; camYaw = 0.9; camPitch = 0.12; camDist = 3.6;
     ctx.cc.log('e.step', null, 'warn');
     await ctx.until(() => AUTO() || ACT());
     const fl = $('.flash', el); fl.style.transition = 'opacity .2s'; fl.style.opacity = 1; await ctx.wait(0.2); fl.style.transition = 'opacity 1.4s'; fl.style.opacity = 0;
-    { const tz = padTop.z + 0.38; P.z = tz; P.y = ground(P.x, tz); P.act = 'step'; P.actK = 0; playCue('firststep', { anchor: () => ast.root, ctx }); await new Promise((res) => { let k = 0; const off = ctx.loop((dt) => { k = Math.min(1, k + dt / 4); P.actK = k; if (k >= 1) { off(); res(); } }); }); P.act = null; }
-    footprint(P.x - 0.1, P.z + 0.05, 0, true); printAt.x = P.x - 0.1; printAt.z = P.z + 0.05; printAt.on = true; puff(P.x, P.z, 18, 0.8); sfx('step1'); st.step = true; achieve('first'); if (storyInPhase(ctx)) { music(null, { fade: 150 }); setTimeout(() => !ctx.dead && music('a11/music/mus_c5_magnifica_desolacion', { vol: 0.3, fade: 4000 }), 20000); } // el guion pide silencio total en el primer paso ctx.cc.log('e.quote', null, 'ok');
+    { // baja de verdad del plato al regolito: el cuerpo avanza y desciende mientras el clip mueve piernas y brazos
+      // (t del clip de 4 s: 1,3–2,2 s la pierna izquierda baja y apoya; 2,7–3,5 s la derecha se junta)
+      const z0 = padTop.z, y0 = padTop.y, z1 = padTop.z + 0.62, y1 = ground(P.x, z1), z2 = z1 + 0.16;
+      P.x = padTop.x; P.z = z0; P.y = y0; P.act = 'step'; P.actK = 0; playCue('firststep', { anchor: () => ast.root, ctx });
+      const ss = (a, b, x) => { const u = clamp((x - a) / (b - a), 0, 1); return u * u * (3 - 2 * u); };
+      await new Promise((res) => { let k = 0; const off = ctx.loop((dt) => { k = Math.min(1, k + dt / 4); P.actK = k; const tc = k * 4;
+        const f = ss(1.25, 2.2, tc), fy = ss(1.55, 2.2, tc), g2 = ss(2.7, 3.4, tc);
+        P.z = z0 + (z1 - z0) * f + (z2 - z1) * g2; P.y = y0 + (y1 - y0) * fy; if (fy >= 1) P.y = ground(P.x, P.z);
+        if (tc >= 2.2 && !P._stepDust) { P._stepDust = true; puff(P.x, P.z, 10, 0.5); sfx('step1', { vol: 0.5 }); }
+        if (k >= 1) { off(); res(); } }); });
+      P._stepDust = false; P.act = null; }
+    footprint(P.x - 0.1, P.z + 0.05, 0, true); printAt.x = P.x - 0.1; printAt.z = P.z + 0.05; printAt.on = true; puff(P.x, P.z, 18, 0.8); sfx('step1'); st.step = true; achieve('first'); if (storyInPhase(ctx)) { music(null, { fade: 150 }); setTimeout(() => !ctx.dead && music('a11/music/mus_c5_magnifica_desolacion', { vol: 0.3, fade: 4000 }), 20000); } // el guion pide silencio total en el primer paso
+    ctx.cc.log('e.quote', null, 'ok');
     const spoken = commsMode() !== 'off'; const qq = $('.quote', el);
     if (spoken) { clips(['cap5_un_pequeno_paso', 'cap5_superficie_fina_polvorienta'], { radio: true }); qq.textContent = t('e.quote'); qq.style.display = ''; }
     prompt('');
@@ -436,12 +502,22 @@ export default async function eva(ctx) {
   hb.style.display = 'none'; st.bar = e; sfx('clunk'); if (e > 0.3 && e < 0.85) { achieve('wrinkle'); ctx.banner(t('e.wrinkle'), '', 2600); } st.flag = true; tick('flag'); ctx.cc.log('e.done', null, 'ok');
   clips(['cap5_nixon_hola_neil_buzz', 'cap5_nixon_momento_invaluable', 'cap5_armstrong_respuesta_nixon'], { radio: true });
   // 3e saludo y foto
-  title('e.t.photo'); prompt(t('e.salute'));
-  { // colócate al lado de la bandera, mirando a la cámara TV
-    const side = new THREE.Vector3(Math.cos(flag.rotation.y), 0, -Math.sin(flag.rotation.y)); const px = spot.x - side.x * 0.9, pz = spot.z - side.z * 0.9; P.x = px; P.z = pz; P.y = ground(px, pz); P.yaw = Math.atan2(spot.x - px, spot.z - pz) ; }
-  P.act = 'salute'; sfx('ok', { vol: 0.3 }); await ctx.wait(1.4);
-  viewMode = 'tv'; $('.reseau', el).style.display = ''; $('.reseau', el).innerHTML = reseau(); tvLook = { yaw: 0, pitch: -0.03, zoom: 1.5 }; prompt(t(coop && ctx.cc.remote() ? 'e.photoC' : 'e.photo'));
-  if (PL.tv !== 'good') { ctx.banner(t(PL.tv === 'poor' ? 'e.tvPoor' : 'e.tvFair'), '', 2800, 'warn'); if (PL.tv === 'poor') sfx('glitch', { vol: 0.4 }); }
+  const hassel = !!buzz && !(coop && ctx.cc.remote()); // historia real: Armstrong fotografía a Aldrin saludando a la bandera
+  title('e.t.photo'); prompt(t(hassel ? 'e.saluteB' : 'e.salute'));
+  { const side = new THREE.Vector3(Math.cos(flag.rotation.y), 0, -Math.sin(flag.rotation.y)); const px = spot.x - side.x * 0.9, pz = spot.z - side.z * 0.9;
+    if (hassel) { // Aldrin junto a la bandera; tú a unos 4,6 m, en perpendicular a la línea Aldrin–bandera
+      // (así el mástil queda al lado y no le tapa el brazo del saludo). Aldrin se gira un poco hacia la bandera, como en la foto real.
+      const perp = new THREE.Vector3(-side.z, 0, side.x), tcv = new THREE.Vector3(camTV.x - px, 0, camTV.z - pz); if (perp.dot(tcv) < 0) perp.negate();
+      const toMe = Math.atan2(perp.x, perp.z); let dA = Math.atan2(spot.x - px, spot.z - pz) - toMe; dA = Math.atan2(Math.sin(dA), Math.cos(dA));
+      BUZZ.pose = { x: px, z: pz, yaw: toMe + dA * 0.4 };
+      P.x = px + perp.x * 4.6; P.z = pz + perp.z * 4.6; P.y = ground(P.x, P.z); P.yaw = toMe + Math.PI; P.act = null;
+      document.querySelector('.hud > .banner')?.remove(); // que ningún aviso tape el visor de la Hasselblad
+      const tw = ctx.time; await ctx.until(() => Math.hypot(buzzBody.x - px, buzzBody.z - pz) < 0.3 || AUTO() || ctx.time - tw > 6);
+      buzzBody.x = px; buzzBody.z = pz; await ctx.wait(1.2); // si tardaba, llega de una vez
+    } else { P.x = px; P.z = pz; P.y = ground(px, pz); P.yaw = Math.atan2(spot.x - px, spot.z - pz); P.act = 'salute'; sfx('ok', { vol: 0.3 }); await ctx.wait(1.4); }
+  }
+  viewMode = hassel ? 'hassel' : 'tv'; if (hassel) ast.root.visible = false; $('.reseau', el).style.display = ''; $('.reseau', el).innerHTML = reseau(); tvLook = { yaw: 0, pitch: -0.03, zoom: 1.5 }; prompt(t(coop && ctx.cc.remote() ? 'e.photoC' : hassel ? 'e.photoB2' : 'e.photo'));
+  if (!hassel && PL.tv !== 'good') { ctx.banner(t(PL.tv === 'poor' ? 'e.tvPoor' : 'e.tvFair'), '', 2800, 'warn'); if (PL.tv === 'poor') sfx('glitch', { vol: 0.4 }); }
   let framing;
   if (coop && ctx.cc.remote()) { const offF = on('net:ev', (m) => { if (m.k === 'frame' && m.v) tvLook = { ...tvLook, ...m.v }; }); ctx.onCleanup(offF); }
   if (coop && ctx.cc.remote()) framing = await ctx.cc.ask('photo', { site: [site.x - lx, site.z] }, async () => ({ yaw: 0, pitch: -0.03, zoom: 1.5 }), 30);
@@ -454,6 +530,7 @@ export default async function eva(ctx) {
   tvLook = framing || tvLook; await ctx.wait(0.05);
   st.photo = takePhoto(); sfx('click'); const fl2 = $('.flash', el); fl2.style.transition = 'opacity .05s'; fl2.style.opacity = 0.9; setTimeout(() => { fl2.style.transition = 'opacity .6s'; fl2.style.opacity = 0; }, 60);
   tick('photo'); ctx.cc.log('e.t.photo', null, 'ok'); await ctx.wait(1.2); $('.reseau', el).style.display = 'none';
+  if (hassel) { ast.root.visible = true; BUZZ.pose = null; BUZZ.mode = 'follow'; toast(t('e.photoFact'), 'info'); }
   // final: cámara gira alrededor de la escena
   viewMode = 'outro'; if (isTouch) { $('.tc-stick', el).style.display = 'none'; $('.jumpbtn', el).style.display = 'none'; } actBtn.style.display = 'none'; P.act = 'salute'; title('e.done'); prompt(''); music('victory', { vol: 0.5 }); ctx.banner(t('e.done'), 'Tranquility Base · 20·VII·1969', 3200, 'good');
   let ang = 0; const c0 = new THREE.Vector3(spot.x, spot.y, spot.z); ctx.loop((dt) => { ang += dt * 0.22; cam.position.set(c0.x + Math.sin(ang) * 7, c0.y + 2.2, c0.z + Math.cos(ang) * 7); cam.lookAt(c0.x, c0.y + 1.2, c0.z); cam.fov = cam.aspect < 1 ? 68 : 50; cam.updateProjectionMatrix(); });
@@ -498,13 +575,13 @@ export default async function eva(ctx) {
     renderer.render(W.scene, cam); const src = renderer.domElement; const S = 1080; const c = document.createElement('canvas'); c.width = S; c.height = S; const x = c.getContext('2d');
     const sw = Math.min(src.width, src.height); x.drawImage(src, (src.width - sw) / 2, (src.height - sw) / 2, sw, sw, 0, 0, S, S);
     // grano + viñeta + réseau (Hasselblad)
-    const id = x.getImageData(0, 0, S, S), d = id.data; const grain = PL.tv === 'poor' ? 78 : PL.tv === 'fair' ? 40 : 22; for (let i = 0; i < d.length; i += 4) { const n = (Math.random() - 0.5) * grain; d[i] += n; d[i + 1] += n; d[i + 2] += n; } x.putImageData(id, 0, 0);
+    const id = x.getImageData(0, 0, S, S), d = id.data; const grain = viewMode === 'hassel' ? 18 : PL.tv === 'poor' ? 78 : PL.tv === 'fair' ? 40 : 22; for (let i = 0; i < d.length; i += 4) { const n = (Math.random() - 0.5) * grain; d[i] += n; d[i + 1] += n; d[i + 2] += n; } x.putImageData(id, 0, 0);
     const g = x.createRadialGradient(S / 2, S / 2, S * 0.3, S / 2, S / 2, S * 0.75); g.addColorStop(0, '#0000'); g.addColorStop(1, '#000a'); x.fillStyle = g; x.fillRect(0, 0, S, S);
     x.strokeStyle = '#000c'; x.lineWidth = 3; for (let i = 1; i < 5; i++) for (let j = 1; j < 5; j++) { const px = (i / 5) * S, py = (j / 5) * S; x.beginPath(); x.moveTo(px - 14, py); x.lineTo(px + 14, py); x.moveTo(px, py - 14); x.lineTo(px, py + 14); x.stroke(); }
     try { shared.flagPhoto = c.toDataURL('image/jpeg', 0.85); } catch {}
     // calidad del encuadre: bandera y astronauta en pantalla y centrados
     const sc = (v) => { const p = v.clone().project(cam); return p.z < 1 && Math.abs(p.x) < 1 && Math.abs(p.y) < 1 ? 1 - Math.min(1, Math.hypot(p.x, p.y) * 0.7) : 0; };
-    const fq = sc(flag.position.clone().add(new THREE.Vector3(0, 1.8, 0))), aq = sc(ast.root.position.clone().add(new THREE.Vector3(0, 1, 0)));
+    const fq = sc(flag.position.clone().add(new THREE.Vector3(0, 1.8, 0))), aq = sc((viewMode === 'hassel' && buzz ? buzz.root : ast.root).position.clone().add(new THREE.Vector3(0, 1, 0)));
     return clamp(fq * 0.6 + aq * 0.4 + 0.15, 0, 1);
   }
 }

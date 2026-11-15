@@ -1,0 +1,74 @@
+/* Minijuego P52 (alineación de la IMU): ocular del telescopio/sextante + DSKY + carta estelar */
+.p52{position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;gap:28px;padding:calc(58px + var(--safe-t,0px)) 16px calc(16px + var(--safe-b,0px));background:radial-gradient(circle at 40% 50%,#0B0C0Ed9,#050608f5 70%);color:#F2EFE6;font-family:var(--f-ui,Barlow,system-ui,sans-serif);pointer-events:auto;transition:opacity .4s;box-sizing:border-box}
+.p52.out{opacity:0}
+.p52-eye{position:relative;flex:none;width:min(78vh,calc(100vw - 400px),720px);aspect-ratio:1;border-radius:50%;box-shadow:0 0 0 6px #1b1d22,0 0 0 8px #3A3D42,0 0 60px 12px #000;background:#03060b}
+.p52-cv{display:block;width:100%;height:100%;border-radius:50%}
+.p52-mode{position:absolute;left:50%;bottom:7%;transform:translateX(-50%);font:500 11px var(--f-mono,monospace);letter-spacing:.18em;color:#7CFF4F;opacity:.8;white-space:nowrap;pointer-events:none}
+.p52-msg{position:absolute;left:50%;top:9%;transform:translateX(-50%);max-width:80%;text-align:center;font-size:13px;padding:6px 10px;background:#0B0C0Ee6;border-left:3px solid #FFB000;color:#FFB000;opacity:0;transition:opacity .25s;pointer-events:none}
+.p52-msg.on{opacity:1}
+.p52-side{flex:none;width:300px;max-height:100%;overflow:auto;display:flex;flex-direction:column;gap:10px}
+.p52-k{font:500 11px var(--f-mono,monospace);letter-spacing:.2em;color:#FFB000}
+.p52-dsky{background:#16181c;border:1px solid #3A3D42;padding:10px 12px;display:grid;gap:6px;font-family:var(--f-mono,monospace)}
+.p52-lt{display:flex;gap:6px}
+.p52-lt i{font-style:normal;font-size:9.5px;letter-spacing:.08em;padding:3px 6px;background:#25282d;color:#5d6066}
+.p52-lt i.act.on{background:#7CFF4F;color:#0B0C0E}.p52-lt i.opr.on{background:#FFB000;color:#0B0C0E}
+.p52-rw{display:flex;align-items:baseline;gap:8px}
+.p52-rw span{font-size:9.5px;letter-spacing:.14em;color:#A8A59C;background:#2FA84F33;padding:1px 4px}
+.p52-rw b{font-size:22px;font-weight:500;color:#7CFF4F;min-width:2ch;text-shadow:0 0 6px #7CFF4F66}
+.p52-rw b.flash{opacity:.15}
+.p52-reg{font-size:24px;letter-spacing:.06em;color:#7CFF4F;text-shadow:0 0 6px #7CFF4F66;border-top:1px solid #2b2e33;padding-top:4px;min-height:1.2em}
+.p52-star b{display:block;font:600 15px var(--f-mono,monospace);letter-spacing:.06em;color:#F2EFE6}
+.p52-star small{display:block;font-size:12px;color:#A8A59C;margin-top:2px}
+.p52-chartw{position:relative}
+.p52-chart{display:block;width:100%;max-width:220px;aspect-ratio:1;border:1px solid #3A3D42}
+.p52-ck{position:absolute;left:6px;bottom:5px;font:500 9px var(--f-mono,monospace);letter-spacing:.16em;color:#5b5750}
+.p52-chartw.cc{display:none}
+.p52-tip{margin:0;font-size:13px;line-height:1.35;color:#CFCCC2}
+.p52-tip:empty{display:none}
+.p52-marks{display:flex;gap:6px}
+.p52-marks i{font:500 10px var(--f-mono,monospace);font-style:normal;letter-spacing:.12em;padding:4px 8px;border:1px solid #3A3D42;color:#5d6066}
+.p52-marks i.cur{border-color:#FFB000;color:#FFB000}.p52-marks i.on{border-color:#7CFF4F;color:#7CFF4F}
+.p52-ctl{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.p52-bs{display:flex;gap:10px;margin-left:auto}
+.p52-b{all:unset;box-sizing:border-box;cursor:pointer;min-width:92px;min-height:48px;padding:0 14px;display:grid;place-items:center;border-radius:2px;background:#0B0C0Ee6;border:1.5px solid #FFB000;color:#FFB000;font:600 13px var(--f-ui,Barlow,sans-serif);text-transform:uppercase;letter-spacing:.08em;touch-action:none;user-select:none}
+.p52-b.mark{border-color:#FF4F00;color:#FF4F00}
+.p52-b.down,.p52-b:active{background:#FFB000;color:#0B0C0E}
+.p52-b.mark.down{background:#FF4F00;color:#0B0C0E}
+.p52-b.go{background:#FFB000;color:#0B0C0E}
+.p52-b:focus-visible{outline:2px solid #F2EFE6;outline-offset:2px}
+.p52-stick{position:relative;flex:none;width:118px;aspect-ratio:1;border-radius:50%;background:rgba(11,12,14,.45);border:1.5px solid rgba(242,239,230,.5);touch-action:none}
+.p52-stick i{position:absolute;left:50%;top:50%;width:42%;aspect-ratio:1;border-radius:50%;background:#F2EFE6;transform:translate(-50%,-50%)}
+.p52-help{font-size:11.5px;color:#A8A59C;line-height:1.35}
+.p52-brief{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(560px,calc(100vw - 32px));max-height:calc(100% - 32px);overflow:auto;box-sizing:border-box;padding:18px 20px;background:#0B0C0Ef5;border:1px solid #3A3D42;border-left:3px solid #FFB000;font-size:14px;line-height:1.45;z-index:2}
+.p52-brief[hidden]{display:none}
+.p52-brief h3{margin:6px 0 4px;font-family:var(--f-title,inherit);font-size:20px;letter-spacing:.06em}
+.p52-brief p{margin:8px 0}.p52-brief ol{margin:8px 0;padding-left:20px}.p52-brief li{margin:4px 0}
+.p52-brief .bad{color:#FF4F00}.p52-brief .dim{color:#A8A59C;font-size:12.5px}
+.p52-brief.good{border-left-color:#7CFF4F}.p52-brief.good h3{color:#7CFF4F}
+.p52-brief.fair h3{color:#FFB000}.p52-brief.poor{border-left-color:#FF4F00}.p52-brief.poor h3{color:#FF4F00}
+.p52-bk{font:500 12px var(--f-mono,monospace);letter-spacing:.16em;color:#FFB000}
+.p52-bk b{font-size:18px;color:#7CFF4F;letter-spacing:.08em}
+.p52-bb{display:flex;gap:10px;justify-content:flex-end;margin-top:12px;flex-wrap:wrap}
+/* pantallas estrechas (móvil vertical): ocular arriba, DSKY y carta en dos columnas, mandos abajo */
+@media (max-width:760px){
+  .p52{flex-direction:column;justify-content:flex-start;gap:12px;padding-top:calc(54px + var(--safe-t,0px))}
+  .p52-eye{width:min(calc(100vw - 32px),46vh)}
+  .p52-side{width:100%;max-width:560px;display:grid;grid-template-columns:1fr 130px;gap:8px;overflow:visible}
+  .p52-k,.p52-star,.p52-tip,.p52-marks,.p52-ctl,.p52-help{grid-column:1/-1}
+  .p52-k,.p52-marks{display:none}
+  .p52-dsky{padding:6px 8px;gap:3px}.p52-rw b{font-size:17px}.p52-reg{font-size:18px}
+  .p52-chart{max-width:none;width:100%}
+  .p52-tip{font-size:12px}
+  .p52-help{display:none}
+}
+/* móvil apaisado: ocular a la izquierda, panel compacto */
+@media (max-height:500px) and (orientation:landscape){
+  .p52{flex-direction:row;padding-top:calc(8px + var(--safe-t,0px));padding-bottom:8px;gap:14px;align-items:center}
+  .p52-eye{width:min(calc(100vh - 24px),calc(100vw - 330px))}
+  .p52-side{width:300px;display:grid;grid-template-columns:1fr 110px;gap:6px;overflow:auto;max-height:calc(100vh - 16px)}
+  .p52-k,.p52-star,.p52-tip,.p52-marks,.p52-ctl,.p52-help{grid-column:1/-1}
+  .p52-help,.p52-k{display:none}
+  .p52-tip{font-size:11.5px}
+  .p52-stick{width:96px}
+  .p52-b{min-height:44px;min-width:80px}
+}

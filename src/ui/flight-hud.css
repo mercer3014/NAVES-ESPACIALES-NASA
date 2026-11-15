@@ -393,6 +393,8 @@ html[data-touch] .expedition.mhud .ex-mapbox { bottom: calc(148px + var(--safe-b
 /* G5: la ficha «Persecución · C/V» ya no tapa V/S ni «Día». En escritorio se ve 2 s al cambiar de cámara; en táctil va baja, sobre el joystick. */
 .cam-cycle { background: rgba(11, 12, 14, .9) !important; border-color: var(--mhud-line, #3A3D42) !important; font-family: var(--f-mono) !important; font-size: .68rem !important; letter-spacing: .06em; min-height: 32px; padding: .3em .7em !important; text-transform: none; transition: opacity .3s; }
 body:not(.touch) .cam-cycle:not(.flash):not(:hover):not(:focus-visible) { opacity: 0; }
+/* en escritorio va a la izquierda del botón de pausa: a 68 px tapaba ALT y V/S de la telemetría (descenso, crucero) */
+body:not(.touch) .cam-cycle { top: calc(10px + var(--safe-t, 0px)) !important; right: calc(62px + env(safe-area-inset-right, 0px)) !important; }
 body.touch .cam-cycle { top: auto !important; right: auto !important; left: 12px !important; bottom: calc(196px + var(--safe-b)) !important; opacity: .7; }
 body.touch .cam-cycle.flash { opacity: 1; }
 
@@ -418,3 +420,25 @@ body.touch .cam-cycle.flash { opacity: 1; }
 .lroll-n { position: absolute; top: -4px; bottom: -4px; width: 3px; margin-left: -2px; background: #FF4F00; box-shadow: 0 0 0 1px #0B0C0E; }
 .lroll-n.ok { background: #F2EFE6; }
 .lroll-v { font-size: 12px; color: #CFCCC2; }
+/* Descenso P66: indicador ROD (velocidad vertical objetivo frente a la real) */
+.rodg { display: grid; grid-template-columns: 30px 1fr; gap: 16px; align-items: stretch; margin-top: 8px; }
+.rodg-bar { position: relative; height: 132px; background: #0B0C0Ecc; border: 1px solid #3A3D42; overflow: visible; }
+.rodg-band { position: absolute; left: 0; right: 0; }
+.rodg-ok { background: #2FA84F; box-shadow: inset 0 0 0 1px #7CDB8A; }
+.rodg-amb { background: #FFB00055; }
+.rodg-red { background: repeating-linear-gradient(45deg, #E0201B66 0 5px, #0000 5px 10px); }
+.rodg-zero { position: absolute; left: -4px; right: -4px; height: 1px; background: #F2EFE6aa; }
+.rodg-real { position: absolute; left: -6px; right: -6px; height: 3px; margin-top: -1px; background: #F2EFE6; box-shadow: 0 0 0 1px #0B0C0E; transition: top .08s linear; }
+.rodg-real.good { background: #7CDB8A; }
+.rodg-real.warn { background: #FFB000; }
+.rodg-real.bad { background: #E0201B; }
+.rodg-tgt { position: absolute; right: -13px; width: 0; height: 0; margin-top: -6px; border: 6px solid #0000; border-right: 9px solid #FF4F00; transition: top .12s ease-out; }
+.rodg-tgt.flash { border-right-color: #FFFFFF; }
+.rodg-txt { display: flex; flex-direction: column; justify-content: center; gap: 1px; padding-left: 6px; }
+.rodg-txt .v { font-size: 15px; }
+.rodg-txt .rodg-t { color: #FF4F00; }
+.rodg-mode { margin-top: 4px; font: 600 10px var(--f-mono, monospace); letter-spacing: .08em; color: #FF4F00; }
+.rodg.thr .rodg-mode { color: #FFB000; }
+.mhud .vscue.bad { color: #E0201B; font-weight: 600; }
+.mhud .vscue.warn { color: #FFB000; }
+.mhud .vscue.good { color: #7CDB8A; }

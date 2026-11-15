@@ -5,6 +5,8 @@ import { THREE, renderer, modelAnim, getWorld, Q } from '../core/engine.js';
 import { locomotionClip } from '../game/locomotion.js';
 import { renderFlag } from '../ui/flag.js';
 import { makeAstronaut as makePrim } from './astronaut_prim.js';
+import { rebuildAstronautClips } from './astro-clips.js';
+import { makeLife } from './astro-life.js';
 
 let envTex = null;
 // Mapa de entorno lunar: cielo negro, regolito iluminado abajo, sol fuerte y la Tierra
@@ -69,7 +71,11 @@ export async function makeAstronaut(flag, name = '', { commander = false } = {})
   const tool = makeTool(env); if (handR) { tool.rotation.x = Math.PI / 2; tool.position.set(0, 0, 0); handR.add(tool); }
   // clips
   const mixer = new THREE.AnimationMixer(src); const A = {};
-  for (const c of g.animations) A[c.name] = mixer.clipAction(c);
+  // first-step y kneel-pick-sample vienen vacíos en el GLB (solo la cadera): se reconstruyen con articulaciones reales
+  const anims = g.animations.slice(); rebuildAstronautClips(src, anims);
+  // capa de vida (brazos, torso, respiración, mirada): se mide en reposo, antes de reproducir ningún clip
+  const life = (() => { const LB = {}; src.traverse((o) => { if (o.isBone) LB[o.name.replace(/^mixamorig:?/i, '')] = o; }); return makeLife(src, LB); })();
+  for (const c of anims) A[c.name] = mixer.clipAction(c);
   const once = ['first-step', 'kneel-pick-sample', 'plant-flag', 'salute', 'fall-and-get-up', 'point'];
   for (const n of once) if (A[n]) { A[n].setLoop(THREE.LoopOnce, 1); A[n].clampWhenFinished = true; }
   let cur = null, curName = '';
@@ -77,12 +83,13 @@ export async function makeAstronaut(flag, name = '', { commander = false } = {})
   play('idle', 0);
   let lastAct = null, stroke = -1, idleT = 0, climbT = 0, lastK = 0; const hp = new THREE.Vector3(), cp = new THREE.Vector3();
   const api = { root, body, tool, bones: B, head, handR, model: 'a7l-v2', ladderStep: 0.25, A, mixer };
-  api.pose = (dt, { speed = 0, jump = false, act = null, k = 0 } = {}) => {
+  api.pose = (dt, { speed = 0, jump = false, air = false, act = null, k = 0 } = {}) => {
     dt = Math.min(dt, 0.1); let ts = 1;
     if (act !== lastAct) { if (act === 'hammer') stroke = (stroke + 1) % 3; lastK = 0; }
     tool.visible = act === 'scoop';
     if (act === 'climb') { // escalera: la mano/pie avanza 0.5 m por ciclo de 2 s; bajar = tiempo hacia atrás
       const a = play('climb-ladder', 0.2); if (k < lastK) lastK = 0; const dk = Math.max(0, k - (lastAct === 'climb' ? lastK : 0)); climbT -= dk * (api.ladderStep / 0.5) * a.getClip().duration; const d = a.getClip().duration; a.time = ((climbT % d) + d) % d; a.paused = true; lastK = k; }
+    else if (act === 'hop') { const a = play(A['low-g-jump'] ? 'low-g-jump' : 'bunny-hop', 0.15); if (a) { a.paused = true; a.time = Math.min(1, k) * a.getClip().duration; } }
     else if (act === 'step') { const a = play('first-step', 0.15); a.paused = true; a.time = Math.min(1, k) * a.getClip().duration; }
     else if (act === 'scoop') { const a = play('kneel-pick-sample', 0.25); a.paused = true; a.time = Math.min(1, k) * a.getClip().duration; }
     else if (act === 'hammer' || act === 'hold') { const a = play('plant-flag', 0.2, curName !== 'plant-flag'); a.paused = true; a.time = stroke < 0 ? 0 : (stroke * 30 + (act === 'hammer' ? Math.min(1, k) * 17 : 22)) / 30; }
@@ -93,10 +100,11 @@ export async function makeAstronaut(flag, name = '', { commander = false } = {})
     else {
       const loco = locomotionClip({ speed, jump });
       if (loco.clip === 'idle') { idleT += dt; if (curName === 'wave' && cur && !act && cur.time > 1.9) { play('idle', 0.4); idleT = 0; } else if (curName !== 'wave') { if (idleT > 9 && lastAct === null) { play('wave', 0.35); } else play('idle', 0.35, false); } }
+      else if (loco.clip === 'walk' && speed > 1.35 && A.run) { const a = play('run', 0.3, false); if (a) { a.paused = false; ts = Math.max(0.6, Math.min(1.2, speed / 1.9)); } } // trote lunar: zancada saltada con brazos
       else { const a = play(loco.clip, loco.clip === 'walk' ? 0.28 : 0.2, false); if (a) { a.paused = false; ts = loco.timeScale; } }
     }
     if (speed > 0.08 || act) idleT = 0; lastAct = act;
-    if (cur && !cur.paused) cur.timeScale = ts; mixer.update(dt);
+    if (cur && !cur.paused) cur.timeScale = ts; life?.undo(); mixer.update(dt); life?.apply(dt, { speed, act, air: air || jump });
     // LOD por distancia (LOD1 en móvil o a más de 12 m)
     const camW = getWorld()?.camera; if (camW && !Q.mobile) { root.getWorldPosition(hp); setLod(camW.getWorldPosition(cp).distanceTo(hp) < 12); }
   };
