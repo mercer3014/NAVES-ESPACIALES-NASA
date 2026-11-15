@@ -1,0 +1,6 @@
+[13.0s] PROBE {"path":"?nointro&phase=eva","tris":6936630,"calls":348,"geos":392,"texs":75,"progs":62,"pr":0.7,"shadowOn":true,"shadowType":1,"lights":5,"shadowLights":["DirectionalLight:2048"],"meshes":308,"shadowCasters":255,"fps":23,"post":false}
+[13.3s] SHOT 07-probe-01__nointro_phase_eva.png
+[25.6s] PROBE {"path":"?nointro&phase=launch","tris":1,"calls":1,"geos":418,"texs":84,"progs":94,"pr":1,"shadowOn":true,"shadowType":1,"lights":4,"shadowLights":["DirectionalLight:2048"],"meshes":435,"shadowCasters":224,"fps":61,"post":true}
+[25.9s] SHOT 07-probe-02__nointro_phase_launch.png
+[38.2s] PROBE {"path":"?nointro&phase=descent","tris":3388116,"calls":150,"geos":252,"texs":33,"progs":32,"pr":1,"shadowOn":true,"shadowType":1,"lights":4,"shadowLights":["DirectionalLight:2048"],"meshes":88,"shadowCasters":75,"fps":61,"post":false}
+[38.6s] SHOT 07-probe-03__nointro_phase_descent.png

@@ -1,0 +1,107 @@
+vite v8.3.5 building client environment for production...
+transforming...
+✓ 173 modules transformed.
+rendering chunks...
+computing gzip size...
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/index.html                                1.93 kB │ gzip:   0.78 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/basis_transcoder-o4Hde_L7.js      57.52 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/basis_transcoder-VXdx5NbI.wasm   527.33 kB │ gzip: 248.94 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/collins-solo-CdNvK6by.css          0.47 kB │ gzip:   0.31 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/cine-DbVw-cTW.css                  0.66 kB │ gzip:   0.41 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/cine-play-5kywS30V.css             0.85 kB │ gzip:   0.43 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/letterbox-D3lGNsT8.css             1.34 kB │ gzip:   0.65 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/moon-scenes-CZ3sa93D.css           1.58 kB │ gzip:   0.81 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/flow-CCt05NOv.css                  2.34 kB │ gzip:   1.01 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/reentry-DevHxOER.css               3.24 kB │ gzip:   1.27 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/docking-BSez7qbt.css               3.68 kB │ gzip:   1.34 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/horizon-controller-CGL-0KFP.css    3.94 kB │ gzip:   1.25 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/epilogue-B9CwmF8m.css              5.13 kB │ gzip:   1.79 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/expeditions-K866J9zw.css           5.76 kB │ gzip:   1.78 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/flight-hud-mount-_Ios11S-.css     12.03 kB │ gzip:   2.88 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/index-VtOdwQxU.css                52.49 kB │ gzip:  12.45 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/rolldown-runtime-4tVxZq34.js       0.23 kB │ gzip:   0.19 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/expeditions-BajuBIGf.js            0.48 kB │ gzip:   0.30 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/us-flag-BoQpQPDh.js                0.52 kB │ gzip:   0.37 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/phase-cards-DaG2Ln-m.js            0.65 kB │ gzip:   0.42 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/letterbox-CsY9wmvl.js              0.79 kB │ gzip:   0.35 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/preview-BelF2cOj.js                1.09 kB │ gzip:   0.66 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/cine-parade-B-LvJMDM.js            1.10 kB │ gzip:   0.65 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/store-DPycy3cf.js                  1.12 kB │ gzip:   0.70 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/cine-hotel-DKZwNiRq.js             1.23 kB │ gzip:   0.76 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/cine-laika-DMqpicaB.js             1.27 kB │ gzip:   0.75 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/cine-recovery-9WEobOHN.js          1.31 kB │ gzip:   0.78 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/cine-lrl-B4dq08w1.js               1.45 kB │ gzip:   0.84 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/story-CIkV0toB.js                  1.51 kB │ gzip:   0.92 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/util-gbmLhHCu.js                   1.62 kB │ gzip:   0.88 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/cine-lrl-Lr280Fpp.js               1.64 kB │ gzip:   0.88 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/cine-laika-CYVnkUjw.js             1.76 kB │ gzip:   1.01 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/cine-parade-0hzwUpnm.js            1.87 kB │ gzip:   1.10 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/cine-house-CRkk8lzi.js             2.11 kB │ gzip:   1.16 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/beach-BplInKok.js                  2.15 kB │ gzip:   1.29 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/expeditions-CA2R77xu.js            2.19 kB │ gzip:   1.04 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/cine-kit-CXD3WnT0.js               2.60 kB │ gzip:   1.24 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/cine-C32m8Li-.js                   3.11 kB │ gzip:   1.75 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/cine-mocr-BTIatXA9.js              3.21 kB │ gzip:   1.59 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/breaker-FUN5I8aZ.js                3.41 kB │ gzip:   1.89 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/cine-common-79GMB-w-.js            3.75 kB │ gzip:   1.90 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/cine-recovery-WdmXt9VJ.js          3.99 kB │ gzip:   2.08 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/tv-B2uJufrj.js                     4.25 kB │ gzip:   2.33 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/tei-ByfMJGzH.js                    4.32 kB │ gzip:   2.43 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/cabin-DxsIF7yu.js                  5.14 kB │ gzip:   2.64 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/play-B-KFIrX2.js                   5.19 kB │ gzip:   2.46 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/ksc-DJfjcdF5.js                    5.46 kB │ gzip:   2.72 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/audio-CN_Iuz0O.js                  5.74 kB │ gzip:   2.62 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/docking-BOeKEEem.js                5.76 kB │ gzip:   2.60 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/orbit-view-mN3_fXr3.js             5.80 kB │ gzip:   2.77 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/cine-play-LatU12zq.js              6.31 kB │ gzip:   2.88 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/a11-voice-Cio-O60o.js              6.38 kB │ gzip:   2.48 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/reunion-vKLBRsWD.js                6.40 kB │ gzip:   3.32 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/engine-DtUlK2DA.js                 6.71 kB │ gzip:   3.09 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/liftoff-BCg5zysl.js                7.01 kB │ gzip:   3.56 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/runtime-Dt18Awr1.js                7.07 kB │ gzip:   2.94 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/night-DFTrq_GJ.js                  7.93 kB │ gzip:   3.89 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/collins-solo-BIr0v7ej.js           8.06 kB │ gzip:   4.15 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/astronaut-DxJueLrt.js              9.17 kB │ gzip:   3.98 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/flight-hud-mount-DctxJMbV.js       9.54 kB │ gzip:   3.76 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/radio--vrj3IbS.js                 10.46 kB │ gzip:   4.37 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/mission-C1VXhHW-.js               10.68 kB │ gzip:   4.43 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/reentry-BfcgowPL.js               10.85 kB │ gzip:   5.27 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/prep-D1Vi_fx3.js                  11.34 kB │ gzip:   4.93 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/debrief-B5xxF_P8.js               12.01 kB │ gzip:   5.23 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/fx-CcsUHk6u.js                    12.53 kB │ gzip:   5.49 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/mars-controller-ChEBqYRP.js       13.60 kB │ gzip:   5.62 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/launch-C6wF5BZT.js                14.83 kB │ gzip:   6.76 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/epilogue-B-0nfAJw.js              14.90 kB │ gzip:   6.89 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/capcom-CRIrmdfY.js                15.15 kB │ gzip:   6.31 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/i18n-Dx7qTFCS.js                  16.03 kB │ gzip:   7.17 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/flow-DS6bwb-m.js                  18.63 kB │ gzip:   7.61 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/descent-BwCMhRwU.js               18.98 kB │ gzip:   8.28 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/cine-index-DbSrDSlM.js            19.98 kB │ gzip:   8.20 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/moonsurface-Cjrc4DZI.js           20.81 kB │ gzip:   9.19 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/mars-1rfwPy8Q.js                  22.75 kB │ gzip:   9.66 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/cruise-BKnCKdD6.js                24.36 kB │ gzip:  10.74 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/pad-C2mUGtf9.js                   25.04 kB │ gzip:  10.38 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/horizon-controller-CmlI76r1.js    29.65 kB │ gzip:  12.38 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/vendor-CEtxzTko.js                35.95 kB │ gzip:   9.59 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/eva-DCp4JSP1.js                   38.08 kB │ gzip:  16.11 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/boss-BF9vmYlV.js                  60.79 kB │ gzip:  23.54 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/state-B34PVhif.js                 60.98 kB │ gzip:  24.06 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/index-Vu0DCCcD.js                103.43 kB │ gzip:  38.83 kB
+../../../../../../CEREZO~1/AppData/Local/Temp/plb-dist/assets/three-Bweu0k2Y.js                901.79 kB │ gzip: 239.26 kB
+
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 900 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0msrc/ui/pancho.js is dynamically imported by src/scenes/skyevents.js, src/ui/radio.js but also statically imported by src/game/mission.js, src/game/phases/debrief.js, src/ui/screens.js, dynamic import will not move module into another chunk.
+
+[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0msrc/ui/screens.js is dynamically imported by src/game/mission.js, src/main.js but also statically imported by src/game/boss/story.js, src/game/expeditions/horizon-controller.js, src/game/expeditions/index.js, src/game/expeditions/mars-controller.js, src/game/mission.js, ..., dynamic import will not move module into another chunk.
+
+[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0msrc/ui/bitacora.js is dynamically imported by src/game/mission.js, src/ui/screens.js but also statically imported by src/main.js, dynamic import will not move module into another chunk.
+
+✓ built in 835ms
+
+real	0m2.300s
+user	0m0.090s
+sys	0m0.135s

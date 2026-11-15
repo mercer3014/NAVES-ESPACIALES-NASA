@@ -1,0 +1,190 @@
+[7.4s] SHOT 06-eva-01_start.png
+[8.5s] TEXT FASE 05 · CAMINATA ¶ Baja la escalera ¶ Peldaño 3 / 9 ¶ O₂ EVA ¶ Recoger muestra de contingencia ¶ Plantar la bandera en la zona de la cámara ¶ Saludo y foto ¶ Persecución · C/V
+[8.5s] SCREEN  -> phase-eva fps=21 eng=22 dpr=1
+[9.3s] SHOT 06-eva-02_phase-eva.png
+[10.3s] TEXT Peldaño 5 / 9
+[11.3s] TEXT Peldaño 7 / 9
+[12.3s] TEXT Peldaño 8 / 9
+[13.4s] TEXT Da el primer paso ¶ Da el primer paso ¶ Da el primer paso
+[14.4s] TEXT EL PRIMER PASO ¶ Un pequeño paso ¶ Saltar · Esc
+[17.9s] SHOT 06-eva-03_phase-eva-cine.png
+[19.0s] TEXT «Es un pequeño paso para el hombre, un gran salto para la humanidad.» ¶ Primer paso
+[20.0s] TEXT Explora
+[22.0s] TEXT Ciencia opcional · F · Extender la lámina solar
+[23.0s] TEXT Mantén E para recoger ¶ Mantén E para recoger
+[27.1s] TEXT Elige el sitio: sin rocas, plano, dentro de la zona ¶ Muestra a bordo
+[29.1s] TEXT Recuerdo 1/5: Medalla de Gagarin
+[30.1s] TEXT Sitio válido · E para plantar ¶ Sitio válido · E para plantar
+[31.3s] TEXT Clava el mástil: golpea en la zona verde (3) ¶ Clava el mástil: golpea en la zona verde (3) · 2/3 ¶ ¡Buen golpe! ¶ Profundidad 8 cm
+[32.3s] TEXT Clava el mástil: golpea en la zona verde (3) · 3/3 ¶ Profundidad 17 cm
+[33.4s] TEXT Profundidad 26 cm
+[34.4s] TEXT Extiende la barra: mantén y suelta ¶ Extiende la barra: mantén y suelta
+[35.4s] TEXT Saluda a la bandera ¶ La barra se trabó a medias… igual que en 1969
+[37.4s] TEXT Encuadra la bandera y pulsa FOTO
+[38.4s] TEXT Bandera plantada ¶ Bandera plantada ¶ Tranquility Base · 20·VII·1969
+[41.5s] TEXT NUEVA ENTRADA EN LA BITÁCORA · RARA ¶ La bandera · [B] abrir ¶ DECISIÓN ¶ Un momento a solas en la superficie ¶ «Lo hiciste bien ahí abajo» ¶ Requiere confianza ≥ 70 ¶ Seguir con el trabajo
+[41.9s] SHOT 06-eva-04_decision.png
+[41.9s] DECISION Un momento a solas en la superficie
+[45.9s] TEXT NUEVA ENTRADA EN LA BITÁCORA · COMÚN ¶ Un pequeño paso · [B] abrir ¶ El regolito lunar · [B] abrir ¶ La placa de Eagle · [B] abrir ¶ NUEVA ENTRADA EN LA BITÁCORA · COMÚN ¶ Magnífica desolación · [B] abrir ¶ NUEVA ENTRADA EN LA BITÁCORA · COMÚN ¶ La llamada del Despacho Oval · [B] abrir ¶ La Hasselblad · [B] abrir ¶ CAP. 6 · EL LADO SILENCIOSO ¶ Órbita lunar, 21 de julio de 1969. Eagle está en la superficie. Columbia pasa detrás de la Luna en cada vuelta.
+[45.9s] SCREEN phase-eva -> story-collins-solo fps=28 eng=28 dpr=0.65
+[46.2s] SHOT 06-eva-05_story-collins-solo.png
+[49.4s] SHOT 06-eva-06_story-collins-solo-cine.png
+[50.4s] TEXT PÉRDIDA DE SEÑAL. Unos 48 minutos sin contacto con nadie.
+[54.4s] TEXT COLLINS: Ahora estoy solo, verdaderamente solo, y absolutamente aislado de cualquier vida conocida. Lo soy. Si se hiciera un recuento: tres mil millones más dos al otro lado de la Luna, y uno más, solo Dios sabe qué, de este lado.
+[56.6s] SHOT 06-eva-07_story-collins-solo-cine.png
+[62.7s] SKIP scene story-collins-solo
+[64.5s] TEXT Por qué detrás de la Luna no hay radio · [B] abrir ¶ NO CANON · SUEÑO ¶ NO CANON · OPCIONAL ¶ Polvo y fuego · El sueño de Aldrin ¶ Eagle, noche lunar. La cabina ronda los 16 °C y nadie duerme bien. Aldrin cierra los ojos… ¶ Combate contra «El Guardián de Tranquilidad» (6–10 min). Esto NO ocurrió: es un sueño. Al final verás qué datos eran reales. ¶ Soñar (jugar) ¶ Saltar
+[64.7s] SHOT 06-eva-08_boss-optin.png
+[64.7s] BOSS: saltar
+[65.9s] TEXT CAP. 6 · EL DISYUNTOR ¶ Fin de la caminata. Aldrin entra primero; detrás, las mochilas rozan el panel.
+[65.9s] SCREEN story-collins-solo -> story-breaker fps=144 eng=144 dpr=0.85
+[66.1s] SHOT 06-eva-09_story-breaker.png
+[69.2s] TEXT ALDRIN: Neil… mira esto.
+[69.4s] SHOT 06-eva-10_story-breaker-cine.png
+[72.5s] TEXT ARMSTRONG: Ese es el del motor de ascenso.
+[75.5s] TEXT ¿Con qué empujas el disyuntor? ¶ Rotulador de punta de fieltro ¶ Lápiz mecánico metálico ¶ El disyuntor ENG ARM está roto. Hay que cerrarlo para despegar. No se puede tocar con los dedos.
+[76.7s] SHOT 06-eva-11_story-breaker-cine.png
+[82.8s] SKIP scene story-breaker
+[84.6s] TEXT El motor de ascenso · [B] abrir ¶ CAP. 6 · DESPEGUE DE LA LUNA ¶ 21 de julio de 1969 · 17:54 UTC · Base Tranquilidad. La música se apaga.
+[84.6s] SCREEN story-breaker -> story-liftoff fps=62 eng=131 dpr=1
+[85.0s] SHOT 06-eva-12_story-liftoff.png
+[87.0s] TEXT ALDRIN: 9, 8, 7, 6, 5…
+[88.4s] SHOT 06-eva-13_story-liftoff-cine.png
+[91.4s] TEXT ALDRIN: Separación de aborto. Motor armado.
+[93.4s] TEXT ALDRIN: Ascenso. Proceder.
+[95.5s] TEXT Encendido. La etapa de descenso se queda como plataforma de lanzamiento.
+[95.8s] SHOT 06-eva-14_story-liftoff-cine.png
+[97.9s] TEXT ALDRIN: Precioso. 26, 36 pies por segundo, subiendo.
+[101.9s] SKIP scene story-liftoff
+[103.7s] TEXT Despegue de la Luna · [B] abrir ¶ ÓRBITA LUNAR · 21:35 UTC · COLUMBIA ← EAGLE ¶ Eagle sube brillante sobre la superficie gris. Tráelos a casa, Mike. ¶ RANGO ¶ 15.4 m ¶ CIERRE ¶ 0.19 m/s ¶ DESALIN. ¶ 3 cm ¶ RCS ¶ 90% ¶ INTENTOS ¶ 0/3 ¶ WASD / flechas: alinear · R acercar · F frenar · cierre ≤ 0.3 m/s
+[103.7s] SCREEN story-liftoff -> story-reunion fps=142 eng=65 dpr=0.65
+[104.0s] SHOT 06-eva-15_story-reunion.png
+[105.0s] TEXT 14.2 m ¶ 0.24 m/s ¶ 57 cm ¶ 83%
+[106.0s] TEXT 13.2 m ¶ 0.25 m/s ¶ 7 cm ¶ 82%
+[107.0s] TEXT 12.2 m ¶ 31 cm ¶ 79%
+[107.3s] SHOT 06-eva-16_story-reunion.png
+[108.3s] TEXT 10.9 m ¶ 5 cm ¶ 78%
+[109.3s] TEXT 9.9 m ¶ 15 cm ¶ 77%
+[110.4s] TEXT 8.9 m ¶ 2 cm
+[111.4s] TEXT 7.9 m ¶ 76%
+[112.4s] TEXT 6.9 m
+[113.4s] TEXT 5.9 m
+[114.4s] TEXT 4.9 m ¶ 1 cm ¶ 75%
+[114.7s] SHOT 06-eva-17_story-reunion.png
+[115.7s] TEXT 3.6 m
+[116.7s] TEXT 2.5 m
+[117.7s] TEXT 1.5 m
+[118.8s] TEXT 0.7 m ¶ 0.16 m/s ¶ 73%
+[119.8s] TEXT 0.2 m ¶ 0.13 m/s ¶ 0 cm ¶ 72%
+[120.8s] TEXT 0.0 m
+[120.8s] SKIP scene story-reunion
+[122.6s] TEXT CAP. 6 · EL REENCUENTRO ¶ COLLINS: Ahí están. Ahí están los dos.
+[125.9s] SHOT 06-eva-18_story-reunion-cine.png
+[126.9s] TEXT La escotilla se abre. Llega un olor a pólvora quemada: el polvo lunar. Detrás, las cajas de muestras.
+[132.0s] TEXT COLLINS: Vengan acá.
+[133.2s] SHOT 06-eva-19_story-reunion-cine.png
+[134.2s] TEXT La escotilla se abre ¶ Collins los abraza ¶ La mano, y una broma sobre el polvo
+[134.4s] SHOT 06-eva-20_decision.png
+[134.4s] DECISION La escotilla se abre
+[138.0s] TEXT Collins los abraza a los dos. Por primera vez en ocho días, nadie dice nada técnico.
+[141.3s] SHOT 06-eva-21_story-reunion-cine.png
+[142.3s] TEXT Eagle se abandona en órbita lunar. Aldrin lo mira alejarse por la ventana.
+[148.7s] SHOT 06-eva-22_story-reunion-cine.png
+[154.8s] SKIP scene story-reunion
+[156.6s] TEXT El reencuentro · [B] abrir ¶ CAP. 7 · RUMBO A CASA ¶ 22 de julio de 1969 · 04:55 UTC · Detrás de la Luna
+[156.6s] SCREEN story-reunion -> story-tei fps=145 eng=92 dpr=1
+[156.7s] SHOT 06-eva-23_story-tei.png
+[159.7s] TEXT Sin radio. Si el motor no enciende, Houston no lo sabrá hasta que vuelvan a aparecer.
+[159.8s] SHOT 06-eva-24_story-tei-cine.png
+[164.9s] TEXT Inyección transterrestre: el motor SPS enciende unos dos minutos y medio.
+[167.0s] SHOT 06-eva-25_story-tei-cine.png
+[172.1s] TEXT (Solo los ventiladores. Esta vez los tres están juntos.)
+[173.1s] SKIP scene story-tei
+[174.9s] TEXT Rumbo a casa (TEI) · [B] abrir ¶ COLLINS ¶ Es una tripulante no oficial. Pasajera de honor. Se llama Laika. ¶ 22 de julio de 1969 · tras la inyección transterrestre ¶ LA PERRITA ¶ Columbia · camino a casa · dramatizado
+[174.9s] SCREEN story-tei -> story-laika fps=144 eng=138 dpr=1
+[175.0s] SHOT 06-eva-26_story-laika.png
+[178.1s] TEXT ARMSTRONG ¶ La primera perra en órbita.
+[178.2s] SHOT 06-eva-27_story-laika-cine.png
+[181.2s] TEXT Noviembre del 57. Sputnik 2. Una perrita callejera de Moscú. Antes de nosotros, antes de Gagarin… ella dio la vuelta a la Tierra. ¶ Bitácora · Sputnik 2 · 3 de noviembre de 1957
+[185.4s] SHOT 06-eva-28_story-laika-cine.png
+[188.4s] TEXT ALDRIN ¶ Y no volvió. ¶ Tarjeta Legendaria · «Laika»
+[190.4s] TEXT No. Sabían que no volvería. Por eso la traje. Para que alguien de los que abrieron el camino haga el viaje completo, aunque sea de tela.
+[191.4s] SKIP scene story-laika
+[193.3s] TEXT NUEVA ENTRADA EN LA BITÁCORA · LEGENDARIA ¶ Laika · [B] abrir ¶ ¿Cómo sigue la charla? ¶ Aldrin: «Bienvenida a bordo, cabo Laika» ¶ Armstrong cuenta lo de Belka y Strelka ¶ Collins se queda mirando la Tierra
+[193.4s] SHOT 06-eva-29_decision.png
+[193.4s] DECISION ¿Cómo sigue la charla?
+[196.9s] TEXT EN VIVO · APOLO 11 · 23 JUL 1969 ¶ CAP. 7 · LA ÚLTIMA TRANSMISIÓN ¶ 23 de julio de 1969. Última transmisión de televisión desde Columbia, la víspera del amerizaje.
+[196.9s] SCREEN story-laika -> story-tv fps=79 eng=144 dpr=1
+[197.1s] SHOT 06-eva-30_story-tv.png
+[199.4s] [reqfail] /audio/a11/nasa_real/cap7_ultima_tv_collins.mp3 net::ERR_ABORTED
+[200.2s] TEXT COLLINS: …Todo lo que ven somos nosotros tres, pero bajo la superficie hay miles y miles de personas más…
+[200.4s] SHOT 06-eva-31_story-tv-cine.png
+[207.5s] TEXT COLLINS: …y a todas ellas me gustaría decirles: muchas gracias.
+[207.8s] SHOT 06-eva-32_story-tv-cine.png
+[213.8s] SKIP scene story-tv
+[215.7s] TEXT VEL ¶ km/h ¶ ALT ¶ 1.0 ¶ ESCUDO ¶ CALOR ¶ REBOTE ¶ La última transmisión · [B] abrir ¶ CAP. 7 · REENTRADA ¶ Columbia suelta el módulo de servicio. Solo queda la cápsula y su escudo térmico.
+[215.7s] SCREEN story-tv -> story-reentry fps=26 eng=89 dpr=1
+[215.9s] SHOT 06-eva-33_story-reentry.png
+[218.9s] TEXT 39.708 ¶ 122 ¶ 320 ¶ W/S o ↑/↓ · mantén la marca dentro del corredor verde ¶ Interfaz de entrada: 122 km de altura, ~40.000 km/h. Mantén el ángulo dentro del corredor.
+[219.1s] SHOT 06-eva-34_story-reentry-cine.png
+[221.1s] TEXT 121
+[222.1s] TEXT 120
+[223.1s] TEXT 39.700 ¶ 119
+[224.2s] TEXT 39.592 ¶ 118 ¶ DEMASIADO PLANO · riesgo de rebote
+[225.2s] TEXT 39.357 ¶ 116 ¶ 1.2 ¶ 406
+[226.2s] TEXT 39.002 ¶ 115 ¶ 1.6 ¶ 647
+[226.3s] SHOT 06-eva-35_story-reentry-cine.png
+[227.4s] TEXT 38.451 ¶ 112 ¶ 2.2 ¶ 926
+[228.4s] TEXT 37.861 ¶ 110 ¶ 2.7 ¶ 1168
+[229.4s] TEXT 37.171 ¶ 108 ¶ 3.3 ¶ 1409 ¶ SIN CONTACTO · PLASMA
+[230.4s] TEXT 36.384 ¶ 105 ¶ 3.9 ¶ 1656 ¶ DEMASIADO EMPINADO · suben el calor y la g
+[231.4s] TEXT 35.516 ¶ 102 ¶ 5.3 ¶ 1989
+[232.4s] TEXT 34.575 ¶ 6.2 ¶ 2260
+[232.4s] SKIP scene story-reentry
+[234.3s] TEXT Escudo térmico · [B] abrir ¶ 16:47 UTC · Tres paracaídas principales ¶ VOLVER A CASA ¶ Océano Pacífico · 24 de julio de 1969
+[234.3s] SCREEN story-reentry -> story-recovery fps=145 eng=132 dpr=1
+[234.3s] SHOT 06-eva-36_story-recovery.png
+[237.5s] SHOT 06-eva-37_story-recovery-cine.png
+[239.5s] TEXT 16:50:35 UTC · Amerizaje
+[244.6s] TEXT Helicóptero del USS Hornet · trajes de aislamiento
+[244.6s] SHOT 06-eva-38_story-recovery-cine.png
+[248.7s] TEXT Póngase el traje, caballeros. Todavía no estamos en casa.
+[250.7s] SKIP scene story-recovery
+[252.5s] TEXT Amerizaje · [B] abrir ¶ 21 días de aislamiento · hasta el 10 de agosto ¶ CUARENTENA ¶ Laboratorio de Recepción Lunar · Houston
+[252.5s] SCREEN story-recovery -> story-lrl fps=55 eng=144 dpr=1
+[252.7s] SHOT 06-eva-39_story-lrl.png
+[255.8s] SHOT 06-eva-40_story-lrl-cine.png
+[257.9s] TEXT MARK ¶ ¿Trajiste una piedra?
+[261.9s] TEXT Trajimos veintiún kilos. Pero no son nuestras. Son de todos.
+[263.1s] SHOT 06-eva-41_story-lrl-cine.png
+[267.2s] TEXT RICK ¶ Te escuché aterrizar.
+[269.2s] SKIP scene story-lrl
+[271.0s] TEXT Cuarentena · [B] abrir ¶ La ventana de la cuarentena · [B] abrir ¶ Desfile con lluvia de papel · Broadway ¶ UN GRAN SALTO ¶ Nueva York · 13 de agosto de 1969
+[271.0s] SCREEN story-lrl -> story-parade fps=10 eng=82 dpr=1
+[271.1s] SHOT 06-eva-42_story-parade.png
+[274.3s] SHOT 06-eva-43_story-parade-cine.png
+[281.5s] SHOT 06-eva-44_story-parade-cine.png
+[283.6s] TEXT COLLINS (VOZ EN OFF) ¶ En todas partes la gente no decía «ustedes lo lograron». Decía «lo logramos». Eso era lo correcto.
+[287.6s] SKIP scene story-parade
+[289.5s] TEXT Desfile en Nueva York · [B] abrir ¶ EPÍLOGO · 1969 – HOY ¶ NEIL ARMSTRONG ¶ Dejó la NASA en 1971 y enseñó ingeniería aeroespacial en la Universidad de Cincinnati. Evitó la fama toda su vida. Falleció en 2012. ¶ 1 / 6 ¶ Siguiente
+[292.6s] SHOT 06-eva-45_story-parade.png
+[299.7s] TEXT BUZZ ALDRIN ¶ Habló públicamente de su lucha contra la depresión tras la misión, algo poco común en su época, y se convirtió en un gran defensor de la exploración espacial. ¶ 2 / 6
+[299.8s] SHOT 06-eva-46_story-parade.png
+[305.9s] SKIP scene story-parade
+[309.0s] TEXT EPÍLOGO · MAR DE LA TRANQUILIDAD, HOY ¶ JOHN F. KENNEDY · UNIVERSIDAD RICE, 1962 · REAL: Elegimos ir a la Luna en esta década y hacer las otras cosas, no porque sean fáciles, sino porque son difíciles.
+[309.0s] SCREEN story-parade -> story-epilogue-today fps=28 eng=29 dpr=1
+[309.4s] SHOT 06-eva-47_story-epilogue-today.png
+[312.8s] SHOT 06-eva-48_story-epilogue-today-cine.png
+[320.3s] SHOT 06-eva-49_story-epilogue-today-cine.png
+[326.4s] SKIP scene story-epilogue-today
+[328.2s] TEXT APOLO 11 · DIAGRAMA DE LA MISIÓN ¶ Tu ruta ¶ Ruta histórica ¶ Tu elección ¶ No tomada ¶ Confianza de la tripulación ¶ Moral del Control de Misión ¶ Bitácora completa (%) ¶ 2 de 3 decisiones en la ruta histórica. ¶ Cap. 1 · La última cena en la Tierra ¶ ¿Cómo habla Neil con sus hijos? ¶ Contarles la verdad ¶ Restarle importancia ¶ Darle a Rick el cohete de Mark ¶ No vivida en esta partida ¶ Aldrin y el primer paso ¶ Aceptarlo en silencio ¶ Hablar con Neil, de frente ¶ Quejarse con otros astronautas ¶ No vivida en esta partida ¶ Cap. 2 · Fuego y trueno ¶ Velocidad del acoplamiento ¶ Lento y preciso ¶ Rápido para ahorrar tiempo ¶ No vivida en esta partida ¶ Cap. 3 · Tres hombres en una lata ¶ Neil acaba de nombrar a Karen. ¿Qué hace Aldrin? ¶ Nada. Una mano en su hombro ¶ Cambiar de tema hacia la misión ¶ Preguntar más
+[331.3s] SHOT 06-eva-50_story-epilogue-today.png
+[338.5s] SHOT 06-eva-51_story-epilogue-today.png
+[344.6s] SKIP scene story-epilogue-today
+[346.4s] TEXT MISIÓN 1 · BASE TRANQUILIDAD ¶ Informe de misión ¶ Preparación ¶ Lanzamiento ¶ Viaje ¶ Alunizaje ¶ Caminata ¶ 3/3 golpes · foto 87% ¶ Puntaje total ¶ APRENDIZ DE ASTRONAUTA ¶ ¡Nuevo récord! ¶ Logros ¶ Tripulación ¶ Alex ¶ Piloto ¶ Pancho ¶ CAPCOM ¶ Compartir ¶ Descargar tarjeta ¶ Volar otra vez ¶ Menú ¶ Misión 1 completa ¶ Sin ayuda ¶ El retrorreflector hoy · [B] abrir ¶ Artemis · [B] abrir
+[346.4s] SCREEN story-epilogue-today -> debrief fps=50 eng=127 dpr=0.85
+[346.5s] SHOT 06-eva-52_debrief.png
+[350.7s] SHOT 06-eva-53_debrief.png
+[350.7s] RESULTS {"eva":{"score":96,"stats":{"hits":3,"depth":26,"lean":0,"bar":0.61,"photo":0.87,"golf":false,"time":31}}}
+[350.7s] FPS_BY_SCREEN {"phase-eva":{"n":32,"p10":21,"med":26},"story-collins-solo":{"n":18,"p10":132,"med":144},"story-breaker":{"n":17,"p10":137,"med":144},"story-liftoff":{"n":17,"p10":29,"med":32},"story-reunion":{"n":46,"p10":66,"med":101},"story-tei":{"n":17,"p10":144,"med":144},"story-laika":{"n":18,"p10":144,"med":144},"story-tv":{"n":17,"p10":78,"med":84},"story-reentry":{"n":17,"p10":143,"med":144},"story-recovery":{"n":17,"p10":143,"med":144},"story-lrl":{"n":17,"p10":65,"med":69},"story-parade":{"n":34,"p10":120,"med":144},"story-epilogue-today":{"n":34,"p10":31,"med":144},"debrief":{"n":1,"p10":50,"med":50}}
+[350.7s] ELAPSED_MIN 5.7 ERRORS 0

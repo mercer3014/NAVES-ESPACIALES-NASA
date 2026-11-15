@@ -1,0 +1,86 @@
+[10.6s] SHOT 03-boss-01_p1-intro.png
+[10.6s] TEXT NO CANON · SUEÑO ¶ El polvo se eleva sin viento, en espiral, en total silencio. ¶ NO CANON · Sueño de Aldrin ¶ Cráter Oeste ¶ Saltar
+[18.2s] TEXT EL GUARDIÁN DE TRANQUILIDAD ¶ FASE 1 · POLVO ¶ OBJETIVO ¶ Rompe las placas de basalto con el martillo (0/4) ¶ Rodillas: siempre. Hombros: cuando está aturdido (flash) o tras su golpe al suelo. ¶ O₂ · ALDRIN ¶ MARTILLO ¶ E / clic ¶ FLASH ¶ F / clic der. 12 ¶ ESQUIVA ¶ Shift ¶ MANGUERA ¶ WASD moverse · ratón mirar · Espacio saltar · Shift esquivar · E/clic martillo · F/clic der. flash · Q manguera · Tab fijar cámara · Esc pausa
+[18.6s] SHOT 03-boss-02_p1-play-start.png
+[19.0s] SHOT 03-boss-03_p1-t0.png
+[19.0s] STATE {"mode":"play","phase":1,"hp":100,"o2":100,"t":12,"fuel":60,"hatch":0,"plates":"2,2,2,2","d":21.1,"stun":0,"over":false,"stats":{"hits":0,"rainHits":0,"time":11.695199999995548,"perfect":0,"retries":0}}
+[39.2s] SHOT 03-boss-04_p1-t20.png
+[39.2s] STATE {"mode":"play","phase":1,"hp":71,"o2":66,"t":31,"fuel":60,"hatch":0,"plates":"2,2,0,0","d":2.7,"stun":0,"over":false,"stats":{"hits":2,"rainHits":1,"time":31.214199999995515,"perfect":0,"retries":0}}
+[39.2s] TEXT Rompe las placas de basalto con el martillo (2/4) ¶ F / clic der. 9 ¶ Placas altas: aturde con el flash o golpea tras su golpe al suelo
+[59.3s] SHOT 03-boss-05_p1-t40.png
+[59.3s] STATE {"mode":"play","phase":1,"hp":71,"o2":32,"t":51,"fuel":60,"hatch":0,"plates":"0,2,0,0","d":2.7,"stun":0,"over":false,"stats":{"hits":4,"rainHits":2,"time":51.00309999999401,"perfect":0,"retries":0}}
+[59.3s] TEXT Rompe las placas de basalto con el martillo (3/4) ¶ F / clic der. 6
+[79.4s] SHOT 03-boss-06_p1-t60.png
+[79.4s] STATE {"mode":"play","phase":1,"hp":71,"o2":24,"t":71,"fuel":60,"hatch":0,"plates":"0,2,0,0","d":2.7,"stun":0,"over":false,"stats":{"hits":5,"rainHits":3,"time":71.0841999999953,"perfect":0,"retries":0}}
+[79.4s] TEXT F / clic der. 3
+[86.5s] FAIL #1 {"mode":"fail","phase":1,"hp":71,"o2":0,"t":79,"fuel":60,"hatch":0,"plates":"0,2,0,0","d":2.7,"stun":0,"over":false,"stats":{"hits":7,"rainHits":4,"time":78.39909999998633,"perfect":0,"retries":0}}
+[87.0s] SHOT 03-boss-07_p1-fail1.png
+[99.5s] SHOT 03-boss-08_p1-t80.png
+[99.5s] STATE {"mode":"play","phase":1,"hp":71,"o2":98,"t":91,"fuel":60,"hatch":0,"plates":"2,2,0,2","d":2.7,"stun":0,"over":false,"stats":{"hits":7,"rainHits":4,"time":90.94219999998775,"perfect":0,"retries":1}}
+[99.5s] TEXT Rompe las placas de basalto con el martillo (1/4) ¶ F / clic der. 10 ¶ ¡FOTO Y GOLPE! ×2,5
+[119.7s] SHOT 03-boss-09_p1-t100.png
+[119.7s] STATE {"mode":"play","phase":1,"hp":71,"o2":64,"t":111,"fuel":60,"hatch":0,"plates":"2,2,0,0","d":2.7,"stun":0,"over":false,"stats":{"hits":9,"rainHits":5,"time":111.02019999998764,"perfect":0,"retries":1}}
+[119.7s] TEXT F / clic der. 7
+[139.8s] SHOT 03-boss-10_p1-t120.png
+[139.8s] STATE {"mode":"play","phase":1,"hp":71,"o2":36,"t":131,"fuel":60,"hatch":0,"plates":"2,2,0,0","d":2.7,"stun":0,"over":false,"stats":{"hits":10,"rainHits":5,"time":131.04279999998187,"perfect":0,"retries":1}}
+[139.8s] TEXT F / clic der. 4
+[158.3s] FAIL #2 {"mode":"fail","phase":1,"hp":71,"o2":0,"t":150,"fuel":60,"hatch":0,"plates":"2,2,0,0","d":2.7,"stun":0,"over":false,"stats":{"hits":13,"rainHits":7,"time":149.83859999998626,"perfect":0,"retries":1}}
+[158.8s] SHOT 03-boss-11_p1-fail2.png
+[162.3s] SHOT 03-boss-12_p1-t143.png
+[162.3s] STATE {"mode":"play","phase":1,"hp":100,"o2":100,"t":153,"fuel":60,"hatch":0,"plates":"2,2,2,2","d":18.7,"stun":0,"over":false,"stats":{"hits":13,"rainHits":7,"time":153.35289999999068,"perfect":0,"retries":2}}
+[162.3s] TEXT F / clic der. 11 ¶ ALDRIN ¶ ¡Sonríe! (NO CANON) ¶ Reintento desde el inicio de la fase
+[168.6s] RESULT fase 1: llegó a fase 1, fallos 2, estado {"mode":"play","phase":1,"hp":86.5,"o2":98,"t":160,"fuel":60,"hatch":0,"plates":"1,2,0,2","d":2.7,"stun":1.9,"over":false,"stats":{"hits":13,"rainHits":7,"time":160.19599999998485,"perfect":0,"retries":2}}
+[169.1s] SHOT 03-boss-13_p1-end.png
+[178.8s] SHOT 03-boss-14_p2-intro.png
+[178.8s] TEXT FASE 2 · COMBUSTIBLE ¶ Usa el flash en el Guardián que proyecta sombra ¶ Los clones de polvo no tienen sombra. Si la cuenta llega a 0, la onda vacía tu O₂. ¶ 54 s
+[179.3s] SHOT 03-boss-15_p2-play-start.png
+[179.8s] SHOT 03-boss-16_p2-t0.png
+[179.8s] STATE {"mode":"play","phase":2,"hp":70,"o2":72,"t":7,"fuel":53,"hatch":0,"plates":"2,2,2,2","d":12.1,"stun":0,"over":false,"stats":{"hits":1,"rainHits":0,"time":6.764600000008936,"perfect":0,"retries":0}}
+[179.8s] TEXT 53 s
+[201.5s] SHOT 03-boss-17_p2-t21.png
+[201.5s] STATE {"mode":"play","phase":2,"hp":70,"o2":66.2,"t":27,"fuel":33,"hatch":0,"plates":"2,2,2,2","d":2.7,"stun":6.2,"over":false,"stats":{"hits":1,"rainHits":0,"time":26.858100000016428,"perfect":0,"retries":0}}
+[201.5s] TEXT Corre al anillo azul de Neil y pulsa SALTO: «Salto del Águila» ¶ 32 s ¶ ¡Neil, lánzame! (NO CANON) ¶ El polvo absorbe el golpe: busca el depósito de la espalda
+[221.5s] SHOT 03-boss-18_p2-t41.png
+[221.5s] STATE {"mode":"play","phase":2,"hp":70,"o2":36.6,"t":48,"fuel":12,"hatch":0,"plates":"2,2,2,2","d":5.4,"stun":0,"over":false,"stats":{"hits":2,"rainHits":0,"time":48.49420000001051,"perfect":0,"retries":0}}
+[221.5s] TEXT F / clic der. 8 ¶ 12 s
+[232.9s] FAIL #1 {"mode":"fail","phase":2,"hp":70,"o2":0,"t":60,"fuel":60,"hatch":0,"plates":"2,2,2,2","d":2.7,"stun":3,"over":false,"stats":{"hits":3,"rainHits":0,"time":60.00790000002088,"perfect":0,"retries":0}}
+[233.4s] SHOT 03-boss-19_p2-fail1.png
+[242.6s] SHOT 03-boss-20_p2-t62.png
+[242.6s] STATE {"mode":"play","phase":2,"hp":70,"o2":72,"t":68,"fuel":53,"hatch":0,"plates":"2,2,2,2","d":8.3,"stun":5.9,"over":false,"stats":{"hits":4,"rainHits":0,"time":68.02420000001801,"perfect":0,"retries":1}}
+[242.6s] TEXT F / clic der. 5 ¶ 51 s ¶ ¡ESE ES EL REAL! TIENE SOMBRA
+[264.2s] SHOT 03-boss-21_p2-t84.png
+[264.2s] STATE {"mode":"play","phase":2,"hp":70,"o2":64,"t":90,"fuel":31,"hatch":0,"plates":"2,2,2,2","d":2.8,"stun":4.2,"over":false,"stats":{"hits":4,"rainHits":0,"time":89.64060000001655,"perfect":0,"retries":1}}
+[264.2s] TEXT 30 s ¶ DUKE (ECO) ¶ Treinta segundos… (NO CANON)
+[284.8s] SHOT 03-boss-22_p2-t104.png
+[284.8s] STATE {"mode":"play","phase":2,"hp":70,"o2":59.9,"t":110,"fuel":11,"hatch":0,"plates":"2,2,2,2","d":2.7,"stun":2.7,"over":false,"stats":{"hits":4,"rainHits":0,"time":110.173100000024,"perfect":0,"retries":1}}
+[284.8s] TEXT F / clic der. 1 ¶ 9 s
+[306.4s] SHOT 03-boss-23_p2-t126.png
+[306.4s] STATE {"mode":"play","phase":2,"hp":70,"o2":12.9,"t":132,"fuel":49,"hatch":0,"plates":"2,2,2,2","d":2.9,"stun":0.6,"over":false,"stats":{"hits":5,"rainHits":0,"time":131.86400000002226,"perfect":0,"retries":1}}
+[306.4s] TEXT 48 s ¶ Los Guardianes se reordenan
+[326.5s] SHOT 03-boss-24_p2-t146.png
+[326.5s] STATE {"mode":"play","phase":2,"hp":70,"o2":6.7,"t":153,"fuel":28,"hatch":0,"plates":"2,2,2,2","d":20.5,"stun":0,"over":false,"stats":{"hits":5,"rainHits":0,"time":153.31240000002043,"perfect":0,"retries":1}}
+[326.5s] TEXT 28 s
+[330.8s] RESULT fase 2: llegó a fase 2, fallos 1, estado {"mode":"play","phase":2,"hp":70,"o2":4.7,"t":158,"fuel":23,"hatch":0,"plates":"2,2,2,2","d":8.2,"stun":4.2,"over":false,"stats":{"hits":5,"rainHits":0,"time":158.07690000002043,"perfect":0,"retries":1}}
+[331.3s] SHOT 03-boss-25_p2-end.png
+[340.9s] SHOT 03-boss-26_p3-intro.png
+[340.9s] TEXT FASE 3 · FUEGO ¶ Conecta la manguera con Neil (Q) y golpea el núcleo ¶ Salta los anillos de calor. No dejes que tape la escotilla de Eagle. ¶ ESCOTILLA DE EAGLE CUBIERTA ¶ Q · conectar la manguera de O₂
+[341.4s] SHOT 03-boss-27_p3-play-start.png
+[341.8s] SHOT 03-boss-28_p3-t0.png
+[341.8s] STATE {"mode":"play","phase":3,"hp":35,"o2":100,"t":8,"fuel":60,"hatch":0,"plates":"2,2,2,2","d":20.7,"stun":0,"over":false,"stats":{"hits":0,"rainHits":0,"time":7.807199999988077,"perfect":0,"retries":0}}
+[491.4s] RESULT fase 3: llegó a fase 3, fallos 0, estado {"mode":"end","phase":3,"hp":0,"o2":98,"t":157,"fuel":60,"hatch":0,"plates":"2,2,2,2","d":7.7,"stun":1.5,"over":false,"stats":{"hits":0,"rainHits":0,"time":15.874699999995554,"perfect":0,"retries":0}}
+[491.8s] SHOT 03-boss-29_p3-end.png
+[504.7s] SHOT 03-boss-30_api-win-1.png
+[504.7s] TEXT Cierra el disyuntor roto del núcleo ¶ Ya sé cómo arreglar esto. (NO CANON · saca el rotulador) ¶ E · cierra el disyuntor con el rotulador
+[507.7s] AFTER_WIN {"mode":"breaker","phase":3,"hp":0,"o2":100,"t":13,"fuel":60,"hatch":0,"plates":"2,2,2,2","d":20.5,"stun":0,"over":false,"stats":{"hits":0,"rainHits":0,"time":13.447400000005963,"perfect":0,"retries":0}} /?boss=3&diff=normal
+[510.7s] AFTER_WIN {"mode":"breaker","phase":3,"hp":0,"o2":100,"t":16,"fuel":60,"hatch":0,"plates":"2,2,2,2","d":20.5,"stun":0,"over":false,"stats":{"hits":0,"rainHits":0,"time":16.426700000002977,"perfect":0,"retries":0}} /?boss=3&diff=normal
+[511.2s] SHOT 03-boss-31_api-win-1.png
+[514.2s] AFTER_WIN {"mode":"breaker","phase":3,"hp":0,"o2":100,"t":20,"fuel":60,"hatch":0,"plates":"2,2,2,2","d":20.5,"stun":0,"over":false,"stats":{"hits":0,"rainHits":0,"time":19.896300000004455,"perfect":0,"retries":0}} /?boss=3&diff=normal
+[517.2s] AFTER_WIN {"mode":"breaker","phase":3,"hp":0,"o2":100,"t":23,"fuel":60,"hatch":0,"plates":"2,2,2,2","d":20.5,"stun":0,"over":false,"stats":{"hits":0,"rainHits":0,"time":22.94750000000743,"perfect":0,"retries":0}} /?boss=3&diff=normal
+[520.2s] AFTER_WIN {"mode":"breaker","phase":3,"hp":0,"o2":100,"t":26,"fuel":60,"hatch":0,"plates":"2,2,2,2","d":20.5,"stun":0,"over":false,"stats":{"hits":0,"rainHits":0,"time":25.952700000002938,"perfect":0,"retries":0}} /?boss=3&diff=normal
+[523.3s] AFTER_WIN {"mode":"breaker","phase":3,"hp":0,"o2":100,"t":29,"fuel":60,"hatch":0,"plates":"2,2,2,2","d":20.5,"stun":0,"over":false,"stats":{"hits":0,"rainHits":0,"time":28.974500000007414,"perfect":0,"retries":0}} /?boss=3&diff=normal
+[523.7s] SHOT 03-boss-32_api-win-5.png
+[526.7s] AFTER_WIN {"mode":"breaker","phase":3,"hp":0,"o2":100,"t":32,"fuel":60,"hatch":0,"plates":"2,2,2,2","d":20.5,"stun":0,"over":false,"stats":{"hits":0,"rainHits":0,"time":32.401500000007395,"perfect":0,"retries":0}} /?boss=3&diff=normal
+[529.7s] AFTER_WIN {"mode":"breaker","phase":3,"hp":0,"o2":100,"t":35,"fuel":60,"hatch":0,"plates":"2,2,2,2","d":20.5,"stun":0,"over":false,"stats":{"hits":0,"rainHits":0,"time":35.38570000001039,"perfect":0,"retries":0}} /?boss=3&diff=normal
+[532.7s] AFTER_WIN {"mode":"breaker","phase":3,"hp":0,"o2":100,"t":38,"fuel":60,"hatch":0,"plates":"2,2,2,2","d":20.5,"stun":0,"over":false,"stats":{"hits":0,"rainHits":0,"time":38.407400000005914,"perfect":0,"retries":0}} /?boss=3&diff=normal
+[535.7s] AFTER_WIN {"mode":"breaker","phase":3,"hp":0,"o2":100,"t":41,"fuel":60,"hatch":0,"plates":"2,2,2,2","d":20.5,"stun":0,"over":false,"stats":{"hits":0,"rainHits":0,"time":41.426700000002974,"perfect":0,"retries":0}} /?boss=3&diff=normal
+[535.7s] ERRORS 0

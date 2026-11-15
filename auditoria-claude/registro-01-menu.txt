@@ -1,0 +1,41 @@
+[0.6s] GL ANGLE (Intel, Intel(R) UHD Graphics (0x00009A68) Direct3D11 vs_5_0 ps_5_0, D3D11)
+[2.1s] SHOT 01-menu-01_boot-early.png
+[2.1s] TEXT APOLLO 11 · 1969 · NASA ¶ Activar sonido ¶ Saltar
+[2.1s] BOOT_TO_NEXT_MS 1523 intro
+[2.1s] RES_AT_BOOT {"n":67,"mb":11.4,"dcl":422}
+[2.3s] SHOT 01-menu-02_after-boot.png
+[7.4s] SHOT 01-menu-03_intro-5s.png
+[7.4s] TEXT 16 de julio de 1969 — Centro Espacial Kennedy
+[7.5s] [reqfail] /video/intro_720.webm net::ERR_ABORTED
+[10.0s] STATE {"scr":"start","fps":142,"eng":141,"dpr":1,"ph":""}
+[10.2s] SHOT 01-menu-04_start.png
+[10.2s] TEXT LOS ORINALEJOS · MISIONES ESPACIALES ¶ PLANTA LA ¶ BANDERA ¶ HISTORIA ESPACIAL Y CIENCIA FICCIÓN. SOLO O EN EQUIPO. ¶ JUGAR SOLO ¶ con Pancho como CAPCOM ¶ CREAR SALA ¶ 2 jugadores · 2 dispositivos ¶ UNIRSE ¶ con código o QR ¶ MI BANDERA ¶ MISIONES ¶ AJUSTES ¶ CRÉDITOS ¶ BITÁCORA DEL APOLO 11 ¶ 0/80 · 0% ¶ Los Orinalejos · 3 misiones · Vista previa ¶ Ver intro
+[13.2s] FPS start {"scr":"start","fps":144,"eng":144,"dpr":1,"ph":""}
+[15.4s] OPEN solo true {"scr":"briefing","fps":142,"eng":142,"dpr":1,"ph":""}
+[15.6s] SHOT 01-menu-05_briefing-solo.png
+[15.6s] TEXT ‹ Volver ¶ Misión 1 · Apolo 11 ¶ Lleva al Eagle a la Luna y planta tu bandera. ¶ Mi bandera ¶ Dificultad ¶ Cadete ¶ Normal ¶ Veterano ¶ Cadete mantiene el cohete en el corredor y enciende el asistente de empuje al tomar el control del Eagle. Normal y Veterano: tú llevas el cabeceo y el empuje. ¶ Iniciar misión
+[20.3s] OPEN flag true {"scr":"flag","fps":144,"eng":144,"dpr":1,"ph":""}
+[20.5s] SHOT 01-menu-06_flag-studio.png
+[20.5s] TEXT Así se verá en tu traje ¶ País ¶ Diseñar ¶ Bolivia ¶ Argentina ¶ Brasil ¶ Chile ¶ Perú ¶ Colombia ¶ Ecuador ¶ Venezuela ¶ Uruguay ¶ Paraguay ¶ México ¶ Cuba ¶ Costa Rica ¶ Panamá ¶ Guatemala ¶ Honduras ¶ Rep. Dominicana ¶ España ¶ Estados Unidos ¶ Canadá ¶ Francia ¶ Italia ¶ Alemania ¶ Reino Unido ¶ Portugal ¶ Países Bajos ¶ Bélgica
+[21.2s] SHOT 01-menu-07_flag-random.png
+[25.9s] OPEN settings true {"scr":"settings","fps":144,"eng":142,"dpr":1,"ph":""}
+[26.1s] SHOT 01-menu-08_settings.png
+[26.1s] TEXT Ajustes ¶ Música ¶ Efectos ¶ Voces ¶ Comunicaciones ¶ Mínimas ¶ Normales ¶ Desactivadas ¶ Calidad gráfica ¶ Auto ¶ Baja ¶ Alta ¶ Se guarda la preferencia. El render la aplica al arrancar. ¶ Logros ¶ Primer paso ¶ Cabina impecable ¶ Pluma lunar (< 1 m/s) ¶ Con lo justo (< 5% combustible) ¶ Sin ayuda ¶ Salida de Tierra ¶ Calcetín perdido ¶ Hoyo en uno ¶ La arruga histórica ¶ Galaxia secreta ¶ Modo cartón ¶ Trabajo en equipo ¶ Misión 1 completa ¶ Vinimos en paz
+[30.8s] OPEN missions true {"scr":"missions","fps":128,"eng":126,"dpr":1,"ph":""}
+[30.9s] SHOT 01-menu-09_missions.png
+[30.9s] TEXT Misiones ¶ MISIÓN 1 · APOLO 11 ¶ MISIÓN 2 · CULTIVOS EN MARTE ¶ Huerto rojo ¶ MISIÓN 3 · AGUJERO NEGRO ¶ Horizonte ¶ Práctica ¶ Entrena cualquier fase por separado. ¶ Preparación ¶ Lanzamiento ¶ Viaje ¶ Alunizaje ¶ Caminata ¶ Escenas del guion ¶ Las escenas narrativas entre fases (también aparecen en la misión completa en solitario). ¶ Prólogo · Enero de 1967 ¶ Prólogo · Duros y competentes ¶ Cap. 1 · La despedida ¶ Cap. 1 · Centro Espacial Kennedy ¶ Cap. 1 · La playa de Cabo Kennedy ¶ Cap. 3 · Noche en Columbia ¶ Cap. 4 · Cierren las puertas ¶ Cap. 4 · Alarma 1202 en Houston ¶ Cap. 4 · GO / NO GO ¶ Cap. 4 · Base Tranquilidad ¶ Cap. 4 · En casa de los Armstrong ¶ Cap. 6 · El lado silencioso ¶ Cap. 6 · Polvo y fuego (No Canon) ¶ Cap. 6 · El disyuntor ¶ Cap. 6 · Despegue de la Luna
+[30.9s] missions buttons 36
+[35.7s] OPEN credits true {"scr":"credits","fps":138,"eng":136,"dpr":1,"ph":""}
+[35.9s] SHOT 01-menu-10_credits.png
+[35.9s] TEXT Créditos ¶ Los Orinalejos — diseño, código y arte original CC0 (A7L, Eagle, Saturn V, LC-39A, Columbia, EASEP y sus animaciones). ¶ NASA — video y audio históricos de Apolo 8, 11 y 13; fotografías; modelos 3D (NASA-3D-Resources); texturas de la Tierra y la Luna. Dominio público. NASA no respalda este proyecto. ¶ Marte: rover NASA (dominio público); invernadero, grúa, paracaídas y cultivos originales del proyecto (CC0). ¶ Horizonte: nave, sonda, proyección de bandera y shader de lente originales del proyecto (CC0). Visual y dinámica de ciencia ficción, no simulación científica. ¶ Solar System Scope — Planet textures © Solar System Scope (solarsystemscope.com), CC BY 4.0. ¶ Música — SRG774 (Dark Sci-Fi Audio Pack), TinyWorlds (Space Graveyard), cinameng / James Gargette (Persistence), Umplix (Floating in Space) — CC0 · OpenGameArt. ¶ Efectos de sonido — Kenney (kenney.nl), CC0. ¶ Tipografías — Orbitron, Chakra Petch, Share Tech Mono, Exo 2, Audiowide — SIL Open Font License 1.1. ¶ Tecnología — three.js, Vite, Howler.js, ws, qrcode (MIT). ¶ Pancho y todos los personajes y easter eggs son originales. ¶ Fuentes y licencias completas ¶ "We choose to go to the Moon…" — J. F. Kennedy, 1962
+[40.6s] OPEN bitacora true {"scr":"start","fps":144,"eng":144,"dpr":1,"ph":""}
+[40.7s] SHOT 01-menu-11_bitacora.png
+[40.7s] TEXT APOLO 11 · BITÁCORA ¶ Prólogo ¶ Cap. 1 ¶ Cap. 2 ¶ Cap. 3 ¶ Cap. 4 ¶ Cap. 5 ¶ Cap. 6 ¶ Cap. 7 ¶ Epílogo ¶ No Canon ¶ Prólogo · Fuego en la plataforma ¶ ??? ¶ Común ¶ ??? ¶ Común ¶ ??? ¶ Común ¶ ??? ¶ Rara ¶ ??? ¶ Rara ¶ ??? ¶ Rara ¶ Juega este capítulo para llenar estas páginas.
+[45.4s] OPEN create true {"scr":"lobby","fps":98,"eng":122,"dpr":1,"ph":""}
+[45.6s] SHOT 01-menu-12_create-room.png
+[45.6s] TEXT Sala de misión ¶ Código de sala ¶ 6207 ¶ Escanea con el otro dispositivo ¶ http://localhost:8787/?room=6207 ¶ Destino de la sala ¶ Apolo 11 ¶ Alex ¶ Tú · Piloto ¶ Esperando compañero… ¶ Compañero ¶ Tu rol ¶ Piloto ¶ Control de Misión ¶ Vuela la nave: despegue, maniobras, alunizaje y caminata. ¶ Jugar con Pancho ¶ RADIO DEL TRAJE ¶ Toca para encender
+[50.3s] OPEN join true {"scr":"join","fps":143,"eng":137,"dpr":1,"ph":""}
+[50.5s] SHOT 01-menu-13_join.png
+[50.5s] TEXT Unirse a una sala ¶ Ingresa el código de 4 a 6 dígitos ¶ Unirse
+[53.0s] START_HTML <div class="screen start"> <div class="top"><div class="brand-mini">LOS ORINALEJOS · MISIONES ESPACIALES</div> <div class="lang" role="button" aria-label="Idioma / Language"><span data-l="es" class="on">ES</span><span data-l="en">EN</span></div></div> <div class="center"> <div class="logo"><svg viewBox="0 0 640 200"><text class="l1" x="2" y="78" font-size="74" data-i="title.l1">PLANTA LA</text><text class="l2" x="0" y="180" font-size="104" data-i="title.l2">BANDERA</text></svg><canvas width="120" height="90"></canvas></div> <div class="tagline" data-i="title.tag">Historia espacial y ciencia ficción. Solo o en equipo.</div> <div class="menu"> <button class="mbtn primary" data-a="solo"><span class="idx">01</span><span><span data-i="menu.solo">Jugar solo</span><small data-i="menu.solo.s">con Pancho como CAPCOM</small></span></button> <div class="row2"> <button class="mbtn" data-a="create"><span class="idx">02</span><span><span data-i="menu.create">Crear sala</span><small data-i="menu.create.s">2 jugadores · 2 dispositivos</small></span></button> <button class="mbtn" data-a="join"><span class="idx">03</span><span><span data-i="menu.join">Unirse</span><small data-i="menu.join.s">con código o QR</small></span></button> </div> <div class="row2"> <button class="mbtn" data-a="flag"><span class="idx">04</span><span data-i="menu.flag">Mi bandera</span></button> <button class="mbtn" data-a="missions"><span class="idx">05</span><span data-i="menu.missions">Misiones</span></button> </div> <div class="row2"> <button class="mbtn" data-a="settings"><span class="idx">06</span><span data-i="menu.settings">Ajustes</span></button> <button class="mbtn" data-a="credits"><span class="idx">07</span><span data-i="menu.credits">Créditos</span></button> </div> <button class="mbtn bitbtn" data-a="bitacora"><span class="idx">08</span><span><span data-i="menu.bitacora">Bitácora del Apolo 11</span><small class="bitpct">0/80 · 0%</small></span></button> </div> </div> <div class="foot"><span data-i="foot.ver">Los Orinalejos · 3 misiones · Vista previa</span><a href="#" data-a="intro" data-i="menu.intro">Ver intro</a></div></div>
+[53.0s] ERRORS 0

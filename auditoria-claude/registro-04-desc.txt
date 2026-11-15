@@ -1,0 +1,118 @@
+[7.5s] SHOT 04-desc-01_start.png
+[8.5s] TEXT FASE 04 · ALUNIZAJE ¶ PROG 63 · Frenado ¶ La computadora vuela. Observa la telemetría… ¶ ALT ¶ 1165 m ¶ V/S ¶ -25.0 ¶ H/S ¶ +23.1 ¶ INCL. ¶ -24° ¶ EMPUJE ¶ 30% ¶ COMBUSTIBLE ¶ AUTO ¶ BAJANDO. W frena antes del suelo. El mínimo no es suficiente si caes muy rápido. ¶ PROG ¶ CONTACT ¶ ROD ¶ Acelerar ¶ Persecución · C/V
+[8.5s] SCREEN  -> phase-descent fps=48 eng=51 dpr=1
+[9.0s] SHOT 04-desc-02_phase-descent.png
+[10.0s] TEXT 1128 m ¶ +22.2 ¶ -21° ¶ 29%
+[11.0s] TEXT 1099 m ¶ +21.5 ¶ -20°
+[12.0s] TEXT 1072 m ¶ +21.0 ¶ -18° ¶ 28%
+[13.0s] TEXT 1048 m ¶ +20.5 ¶ -17°
+[14.1s] TEXT 1024 m ¶ +20.0 ¶ -16°
+[15.1s] TEXT PROG 64 · Aproximación ¶ 999 m ¶ +19.6 ¶ -14°
+[16.1s] TEXT 971 m ¶ +19.2 ¶ -13°
+[17.2s] TEXT 945 m ¶ +18.8 ¶ -12°
+[18.2s] TEXT 927 m ¶ +18.4
+[19.2s] TEXT 907 m ¶ +18.1 ¶ -11° ¶ 27%
+[20.2s] TEXT 886 m ¶ +17.8 ¶ -10°
+[21.2s] TEXT 866 m ¶ +17.5 ¶ -9°
+[22.2s] TEXT 841 m ¶ +17.3
+[23.2s] TEXT 814 m ¶ +17.0
+[24.3s] TEXT 789 m ¶ +16.7
+[25.3s] TEXT 780 m ¶ +16.5 ¶ 1202 ¶ ALARMA 1202 ¶ Armstrong pide una lectura. En Houston, todas las miradas van a Guiado: Steve Bales, 26 años.
+[27.3s] TEXT DECISIÓN · 10 s ¶ Flight te mira. «Guiado, ¿cómo estamos?» ¶ «¡Seguimos, Flight! Es GO» ¶ «Abortar. No podemos arriesgarnos»
+[27.6s] SHOT 04-desc-03_decision.png
+[27.6s] DECISION Flight te mira. «Guiado, ¿cómo estamos?»
+[31.1s] TEXT NUEVA ENTRADA EN LA BITÁCORA · ÉPICA ¶ Steve Bales, 26 años · [B] abrir ¶ ARMSTRONG (RADIO) · REAL ¶ Alarma de programa. Es una 1202. ¶ Saltar · Esc
+[33.2s] TEXT ALDRIN (RADIO) · REAL ¶ 1202.
+[34.3s] SHOT 04-desc-04_phase-descent-cine.png
+[35.3s] TEXT Danos una lectura sobre la alarma 1202.
+[38.4s] TEXT KRANZ · DRAMATIZADO ¶ Guiado, ¿cómo estamos?
+[41.4s] TEXT GARMAN · DRAMATIZADO ¶ Mientras no se repita sin parar, estamos bien. Es GO.
+[41.5s] SHOT 04-desc-05_phase-descent-cine.png
+[45.6s] TEXT BALES · REAL ¶ ¡Seguimos, Flight! Es GO.
+[47.6s] SKIP scene phase-descent
+[49.5s] TEXT NUEVA ENTRADA EN LA BITÁCORA · COMÚN ¶ Las alarmas 1201/1202 · [B] abrir ¶ PREGUNTA ¶ ¿Por qué era seguro seguir con la alarma 1202? ¶ La computadora se sobrecargaba, pero priorizaba las tareas críticas y se reiniciaba sin perder el guiado ¶ La alarma era un fallo del radar de aterrizaje que se arregló solo ¶ Houston podía pilotar el Eagle a distancia
+[49.8s] SHOT 04-desc-06_decision.png
+[49.8s] DECISION ¿Por qué era seguro seguir con la alarma 1202?
+[53.3s] TEXT 727 m ¶ +15.8 ¶ NUEVA ENTRADA EN LA BITÁCORA · OCULTA ¶ Margaret Hamilton · [B] abrir
+[54.3s] TEXT 698 m ¶ +15.4 ¶ -15°
+[55.3s] TEXT 664 m ¶ +14.9
+[56.4s] TEXT 639 m ¶ +14.4
+[57.4s] TEXT 615 m ¶ +13.8 ¶ -19°
+[58.4s] TEXT 591 m ¶ +13.2
+[59.4s] TEXT 566 m ¶ +12.6
+[60.4s] TEXT 539 m ¶ +11.7 ¶ -30° ¶ 31%
+[61.4s] TEXT 513 m ¶ +10.7
+[62.5s] TEXT 487 m ¶ +9.8
+[63.5s] TEXT 462 m ¶ +8.8
+[64.5s] TEXT 438 m ¶ +7.9
+[65.5s] TEXT 412 m ¶ +7.0
+[66.5s] TEXT 386 m ¶ +6.0
+[67.5s] TEXT 361 m ¶ +5.1
+[68.5s] TEXT 335 m ¶ +4.1
+[69.6s] TEXT 310 m ¶ +3.2
+[70.6s] TEXT PROG 66 · Manual ¶ 269 m ¶ +2.5 ¶ 12° ¶ 129 s ¶ A la zona: → 176 m ¶ VISTA ¶ ¡Tienes el control! El piloto automático va hacia rocas.
+[71.6s] TEXT 196 m ¶ -23.7 ¶ +5.2 ¶ 22° ¶ 65% ¶ 125 s ¶ A la zona: → 165 m
+[72.6s] TEXT 142 m ¶ -17.7 ¶ +8.2 ¶ 62% ¶ 120 s ¶ A la zona: → 147 m ¶ PANCHO · CAPCOM ¶ Toma el control.
+[73.6s] TEXT 97.1 m ¶ -12.4 ¶ +9.7 ¶ 52% ¶ 115 s ¶ A la zona: → 120 m
+[74.6s] TEXT 71.6 m ¶ -9.2 ¶ +10.0 ¶ 44% ¶ 111 s ¶ A la zona: → 96 m
+[75.6s] TEXT 54.5 m ¶ -7.0 ¶ +9.9 ¶ -3° ¶ 36% ¶ 108 s ¶ A la zona: → 71 m
+[76.7s] TEXT 34.6 m ¶ -4.9 ¶ +9.4 ¶ -6° ¶ 37% ¶ 104 s ¶ A la zona: → 43 m
+[77.7s] TEXT 25.1 m ¶ -3.7 ¶ +8.6 ¶ 33% ¶ 101 s ¶ A la zona: → 20 m
+[78.7s] TEXT 18.7 m ¶ -0.6 ¶ +6.3 ¶ 35% ¶ 97 s ¶ A la zona: ← 1 m
+[79.3s] SHOT 04-desc-07_phase-descent-t25.png
+[80.3s] TEXT 17.6 m ¶ -0.3 ¶ +4.0 ¶ 93 s ¶ Casi quieto. Alrededor del 25% el peso y el empuje se equilibran. ¶ A la zona: ← 24 m
+[81.3s] TEXT 16.8 m ¶ 26% ¶ 90 s ¶ A la zona: ← 33 m
+[82.3s] TEXT 15.8 m ¶ +1.2 ¶ 88 s ¶ A la zona: ← 38 m
+[83.3s] TEXT 14.9 m ¶ +0.2 ¶ 85 s ¶ A la zona: ← 40 m
+[84.3s] TEXT 14.1 m ¶ -0.7 ¶ 25% ¶ 83 s ¶ A la zona: ← 39 m
+[85.3s] TEXT 13.4 m ¶ -1.5 ¶ -7° ¶ 80 s ¶ A la zona: ← 36 m
+[86.3s] TEXT 12.6 m ¶ -2.0 ¶ -4° ¶ 78 s ¶ A la zona: ← 31 m
+[87.4s] TEXT 11.7 m ¶ -2.2 ¶ -2° ¶ 75 s
+[88.4s] TEXT 10.6 m ¶ -2.3 ¶ 72 s ¶ A la zona: ← 18 m
+[89.4s] TEXT 9.6 m ¶ 24% ¶ 70 s ¶ Casi quieto. Alrededor del 24% el peso y el empuje se equilibran. ¶ A la zona: ← 11 m
+[90.4s] TEXT 8.6 m ¶ -1.9 ¶ 67 s ¶ A la zona: ← 5 m
+[91.4s] TEXT 7.9 m ¶ +0.1 ¶ -1.6 ¶ 64 s ¶ A la zona: → 0 m
+[92.4s] TEXT 8.0 m ¶ -0.1 ¶ -1.2 ¶ 20% ¶ 62 s ¶ A la zona: → 4 m
+[93.4s] TEXT -0.0 ¶ -0.9 ¶ 17% ¶ 59 s ¶ A la zona: → 7 m ¶ 60 segundos
+[94.4s] TEXT -0.5 ¶ 56 s ¶ A la zona: → 9 m
+[95.5s] TEXT 5.4 m ¶ -0.2 ¶ 54 s ¶ A la zona: → 10 m ¶ Combustible bajo.
+[96.5s] TEXT 2.2 m ¶ 51 s ¶ A la zona: → 11 m
+[97.5s] TEXT 0.0 m ¶ -0.8 ¶ +0.3 ¶ El Eagle ha alunizado ¶ Tranquility Base ¶ EL EAGLE HA ALUNIZADO ¶ Base Tranquilidad
+[101.1s] SHOT 04-desc-08_phase-descent-cine.png
+[102.1s] TEXT CONTROL DE MISIÓN · 20:17:40 UTC ¶ Silencio absoluto en la sala.
+[104.1s] TEXT Houston, aquí Base Tranquilidad. El Águila ha aterrizado.
+[108.3s] SHOT 04-desc-09_phase-descent-cine.png
+[109.3s] TEXT CAPCOM · CHARLIE DUKE · REAL ¶ Entendido, Tranquilidad. Los copiamos en tierra. Tienen a un montón de tipos a punto de ponerse azules.
+[112.4s] TEXT Volvemos a respirar. Muchas gracias.
+[114.4s] SKIP scene phase-descent
+[116.2s] TEXT Logro conseguido ¶ «El Águila ha aterrizado» · [B] abrir ¶ «El Águila tiene alas» · [B] abrir ¶ NUEVA ENTRADA EN LA BITÁCORA · RARA ¶ West Crater · [B] abrir
+[117.2s] TEXT DECISIÓN ¶ El plan dice dormir antes de salir ¶ Pedir a Houston adelantar la caminata ¶ Dormir según el plan
+[117.7s] SHOT 04-desc-10_decision.png
+[117.7s] DECISION El plan dice dormir antes de salir
+[123.4s] TEXT FASE 05 · CAMINATA ¶ Baja la escalera ¶ O₂ EVA ¶ Recoger muestra de contingencia ¶ Plantar la bandera en la zona de la cámara ¶ Saludo y foto ¶ FASE 05 ¶ Caminata
+[123.5s] SCREEN phase-descent -> phase-eva fps=7 eng=22 dpr=0.65
+[125.0s] SHOT 04-desc-11_phase-eva.png
+[126.0s] TEXT Peldaño 2 / 9
+[127.2s] TEXT Peldaño 3 / 9
+[128.3s] TEXT Peldaño 5 / 9
+[129.3s] TEXT Peldaño 7 / 9
+[130.3s] TEXT Peldaño 8 / 9
+[131.3s] TEXT Da el primer paso ¶ Da el primer paso ¶ Da el primer paso ¶ EL PRIMER PASO ¶ Un pequeño paso
+[134.8s] SHOT 04-desc-12_phase-eva-cine.png
+[135.8s] TEXT «Es un pequeño paso para el hombre, un gran salto para la humanidad.» ¶ Primer paso
+[137.8s] TEXT Explora ¶ En la superficie.
+[139.9s] TEXT Ciencia opcional · F · Extender la lámina solar
+[140.9s] TEXT Mantén E para recoger ¶ Mantén E para recoger
+[145.0s] TEXT Elige el sitio: sin rocas, plano, dentro de la zona ¶ Muestra a bordo
+[148.0s] TEXT Sitio válido · E para plantar ¶ Sitio válido · E para plantar
+[161.8s] SHOT 04-desc-13_phase-eva-t25.png
+[187.5s] SHOT 04-desc-14_phase-eva-t50.png
+[213.4s] SHOT 04-desc-15_phase-eva-t75.png
+[239.2s] SHOT 04-desc-16_phase-eva-t100.png
+[256.4s] SOFTLOCK? 120s sin cambios en phase-eva 
+[256.9s] SHOT 04-desc-17_softlock-phase-eva.png
+[258.5s] TEXT FASE 05 · Caminata ¶ Pausa ¶ Continuar ¶ Bitácora del Apolo 11 ¶ Reiniciar fase ¶ Salir al menú
+[266.0s] SHOT 04-desc-18_phase-eva-t125.png
+[291.7s] SHOT 04-desc-19_phase-eva-t150.png
+[317.4s] SHOT 04-desc-20_phase-eva-t175.png
+[343.1s] SHOT 04-desc-21_phase-eva-t200.png

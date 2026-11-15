@@ -1,0 +1,19 @@
+Eres el líder técnico y de diseño del juego "Apolo 11: Un gran salto" (NASA Space Apps 2026). Proyecto Three.js + Vite en esta carpeta (rama git `mejoras`, salida de `unificado`). Entrega final: HOY domingo 15 nov 2026 a las 23:59 hora Bolivia; hay unas 22 horas. Otro agente (Grok Bot) coordina contigo y se encarga de los modelos 3D en Blender (tú NO tienes Blender: si un modelo .glb necesita cambios de forma, describe exactamente qué y para qué archivo, y él lo hará).
+
+FASE 1 (esta tarea): AUDITAR JUGANDO + PLAN. No implementes todavía salvo arreglos triviales de crashes que bloqueen la auditoría.
+
+1. Lee README, docs/, QA_*.md, EXPEDITIONS.md, src/main.js, src/game/story/flow.js, src/ui/screens.js, src/game/phases/*.js, src/game/boss/*.js y busca en docs o en la web el texto del reto de NASA Space Apps que estamos resolviendo (el dueño dice que el reto pide que el usuario pueda DISEÑAR algo). Cita el reto si lo encuentras.
+2. Levanta el juego (`npm run dev`) y JUÉGALO en navegador con puppeteer-core (ya está en devDependencies; usa Chrome/Edge instalado en Windows, por ejemplo C:\Program Files\Google\Chrome\Application\chrome.exe o msedge.exe). Recorre de principio a fin: lobby, carga, cada fase/misión, cinemáticas, la pelea con el golem/guardián en la Luna, el regreso y el final. Toma capturas a 1280x720 en ./auditoria-claude/ con nombres numerados. Usa subagentes en paralelo si te sirve.
+3. Escribe ./auditoria-claude/PLAN-MEJORAS.md con:
+   a) Mapa del flujo actual (fase -> fase) y en qué transiciones el jugador no entiende por qué o cómo llegó ahí. Propón el tejido narrativo concreto que lo explique (texto corto de transición, quién habla, qué se ve), fiel a la historia real del Apolo 11.
+   b) Rediseño de minijuegos: el dueño NO quiere las tareas de "presionar botones, escribir números y mover palancas" antes del despegue. Quiere tareas estilo Among Us que un niño entienda: conectar cables por color, reparar una pieza, alinear algo, rellenar oxígeno, etc. Lista qué tareas actuales reemplazar, y para cada nueva: objetivo, controles (ratón y táctil), por qué tiene sentido en la historia real (dato real del Apolo 11), cómo se gana, cuánto dura (30-60 s).
+   c) Cómo jugar: dónde y cómo explicarle al jugador los controles y el objetivo de cada misión (tarjeta de misión breve antes de cada fase: qué pasó en la historia real, qué tienes que hacer, controles).
+   d) Limpieza de interfaz: el dueño odia los colores pastel y las tarjetas/barras de carga "genéricas de IA". Propón una dirección visual concreta (paleta de 4-6 colores con hex, tipografía, estilo de botones/tarjetas, barra de carga, lobby) inspirada en la NASA de 1969 (instrumentación, tipografía tipo Futura/DIN, negro/blanco/naranja de seguridad, etc.). Lista qué archivos CSS/JS cambiar y qué elementos sobran.
+   e) Elemento de DISEÑO para el usuario según el reto: propuesta concreta (por ejemplo diseñar el parche de la misión, la etapa del cohete, la ruta, etc.) que encaje en el flujo sin romper nada, y cómo se refleja después en el juego.
+   f) Rendimiento: mide FPS y tiempo de carga (tamaño de dist tras `npm run build`, peso de modelos/audio) y lista los cuellos de botella con arreglo propuesto.
+   g) Bugs encontrados (con captura) y estado de la pelea con el guardián (¿se puede ganar? ¿se entiende? ¿se ve bien?).
+   h) Lista de cambios de MODELOS 3D para Grok Bot (archivo .glb, problema visible, cambio exacto), por ejemplo trajes, cohete Saturno V, guardián, lobby.
+   i) Plan de implementación en paquetes de trabajo independientes (para subagentes en paralelo sin pisarse archivos), ordenado por impacto/tiempo, con estimación. Marca qué es imprescindible antes de las 18:00 y qué es opcional.
+4. No hagas push ni merge. No borres audios ni modelos. Haz commit en la rama `mejoras` solo de ./auditoria-claude/ (sin node_modules).
+
+Responde al final con un resumen de 15 líneas máximo y la ruta del plan.

@@ -1,0 +1,308 @@
+[6.9s] SHOT 02-full-01_start.png
+[9.1s] SHOT 02-full-02_briefing.png
+[9.1s] TEXT ‹ Volver ¶ Misión 1 · Apolo 11 ¶ Lleva al Eagle a la Luna y planta tu bandera. ¶ Mi bandera ¶ Dificultad ¶ Cadete ¶ Normal ¶ Veterano ¶ Cadete mantiene el cohete en el corredor y enciende el asistente de empuje al tomar el control del Eagle. Normal y Veterano: tú llevas el cabeceo y el empuje. ¶ Iniciar misión
+[10.2s] TEXT HOTEL GEORGETOWN INN · WASHINGTON D. C. ¶ 27 de enero de 1967 · noche. El teléfono suena. ¶ Saltar · Esc
+[10.2s] SCREEN  -> story-hotel-prologue fps=143 eng=139 dpr=1
+[10.4s] SHOT 02-full-03_story-hotel-prologue.png
+[13.6s] SHOT 02-full-04_story-hotel-prologue-cine.png
+[15.6s] TEXT VOZ AL TELÉFONO · DRAMATIZADO ¶ Hubo un incendio en la cabina. En la prueba.
+[19.7s] TEXT Gus, Ed y Roger… no salieron.
+[20.8s] SHOT 02-full-05_story-hotel-prologue-cine.png
+[24.8s] TEXT Silencio. Neil no se mueve. Solo se escucha el tráfico afuera.
+[26.9s] SKIP scene story-hotel-prologue
+[28.7s] TEXT NUEVA ENTRADA EN LA BITÁCORA · COMÚN ¶ Tratado del Espacio Ultraterrestre · [B] abrir ¶ NUEVA ENTRADA EN LA BITÁCORA · COMÚN ¶ Apolo 1 · [B] abrir ¶ NUEVA ENTRADA EN LA BITÁCORA · RARA ¶ Una foto en la cartera · [B] abrir ¶ NUEVA ENTRADA EN LA BITÁCORA · RARA ¶ La libreta de Neil · [B] abrir ¶ CONTROL DE MISIÓN · HOUSTON ¶ Enero de 1967. Días después del incendio del Apolo 1.
+[28.7s] SCREEN story-hotel-prologue -> story-mocr-tough fps=64 eng=114 dpr=1
+[28.9s] SHOT 02-full-06_story-mocr-tough.png
+[32.1s] SHOT 02-full-07_story-mocr-tough-cine.png
+[33.1s] TEXT KRANZ · REAL ¶ El espacio no tolera el descuido, la incapacidad ni la negligencia.
+[39.1s] TEXT En algún lugar, de alguna manera, metimos la pata.
+[39.3s] SHOT 02-full-08_story-mocr-tough-cine.png
+[44.4s] TEXT A partir de hoy, Control de Vuelo será conocido por dos palabras: duros y competentes.
+[45.4s] SKIP scene story-mocr-tough
+[47.3s] TEXT FASE 01 · PREPARACIÓN ¶ Cabina del Módulo de Mando ¶ Lista de verificación ¶ Baterías A y B en ON ¶ Celdas de combustible 1-3 ON ¶ Ventilador O₂ en ON ¶ Guiado en PGNS ¶ Modo ABORTO armado (abre la tapa) ¶ Antena S-band ON ¶ DSKY: VERBO 37, NOUN 01, ENTER ¶ Ronda GO / NO-GO ¶ Energía ¶ BAT A ¶ BAT B ¶ BAT C ¶ OFF ¶ BUS A ¶ BUS B ¶ Celdas de combustible ¶ CC 1 ¶ OFF ¶ CC 2 ¶ OFF ¶ CC 3 ¶ OFF ¶ CC 2 PSI ¶ PURGA ¶ Ambiente · Comunicaciones ¶ O₂ FAN ¶ OFF
+[47.3s] SCREEN story-mocr-tough -> phase-prep fps=43 eng=122 dpr=1
+[47.5s] SHOT 02-full-09_phase-prep.png
+[49.6s] TEXT ALARMA MAESTRA ¶ ¡BUS B bajo voltaje! Conecta BAT C (cross-tie).
+[51.6s] TEXT ¡Celda de combustible 2 sin presión! Purga con PURGE.
+[54.6s] TEXT Una lámpara no enciende… tócala 3 veces.
+[56.6s] TEXT Toca cada estación para pedir su GO ¶ Propulsión ¶ Retro ¶ Dinámica de vuelo ¶ Eléctrico ¶ Médico ¶ Red
+[58.7s] TEXT Falla resuelta ¶ PANCHO · CAPCOM
+[62.7s] TEXT ¡Todas las estaciones GO para lanzamiento!
+[64.8s] TEXT Cuenta regresiva…
+[65.8s] TEXT Logro conseguido ¶ La checklist del muslo · [B] abrir ¶ La computadora de guiado Apolo · [B] abrir
+[67.8s] SCREEN phase-prep -> story-house-farewell fps=94 eng=94 dpr=1
+[68.8s] SHOT 02-full-10_story-house-farewell.png
+[69.8s] TEXT CASA DE LOS ARMSTRONG · EL LAGO, TEXAS ¶ Julio de 1969. Noche, días antes de la cuarentena.
+[73.0s] SHOT 02-full-11_story-house-farewell-cine.png
+[75.0s] TEXT JAN · DRAMATIZADO ¶ Neil. Antes de irte tienes que hablar con los niños.
+[78.0s] TEXT Explícales que puede que no vuelvas.
+[80.1s] SHOT 02-full-12_story-house-farewell-cine.png
+[82.1s] TEXT NEIL · DRAMATIZADO ¶ Jan, las probabilidades son buenas.
+[85.2s] TEXT Entonces no te costará decírselo.
+[86.2s] SKIP scene story-house-farewell
+[88.0s] TEXT La despedida · [B] abrir ¶ Saturn V · [B] abrir ¶ DECISIÓN ¶ ¿Cómo habla Neil con sus hijos? ¶ Contarles la verdad ¶ «Es peligroso, pero confío en mi equipo». ¶ Restarle importancia ¶ «Es un viaje de trabajo, volveré pronto». ¶ Darle a Rick el cohete de Mark ¶ Para que cuide de su hermano.
+[88.2s] SHOT 02-full-13_decision.png
+[88.2s] DECISION ¿Cómo habla Neil con sus hijos?
+[94.3s] TEXT CAP. 1 · CENTRO ESPACIAL KENNEDY
+[94.4s] SCREEN story-house-farewell -> story-ksc fps=75 eng=84 dpr=1
+[94.7s] SHOT 02-full-14_story-ksc.png
+[95.7s] TEXT DEKE SLAYTON: Buzz, ya está decidido. Neil sale primero. Es el comandante y la escotilla abre hacia su lado.
+[98.0s] SHOT 02-full-15_story-ksc-cine.png
+[105.3s] SHOT 02-full-16_story-ksc-cine.png
+[106.3s] TEXT ALDRIN: En Gemini salía el piloto, no el comandante. Solo digo que hay precedente.
+[111.4s] SKIP scene story-ksc
+[113.2s] TEXT Aldrin y el primer paso ¶ Aceptarlo en silencio ¶ Hablar con Neil, de frente ¶ Quejarse con otros astronautas
+[113.5s] SHOT 02-full-17_decision.png
+[113.5s] DECISION Aldrin y el primer paso
+[117.1s] TEXT Deke Slayton · [B] abrir ¶ ¿Quién sale primero? · [B] abrir ¶ CAP. 1 · LA PLAYA DE CABO KENNEDY ¶ COLLINS: Saben qué es lo bueno de mi trabajo, ¿no? Si algo sale mal ahí abajo, el único que vuelve soy yo.
+[117.1s] SCREEN story-ksc -> story-beach fps=38 eng=54 dpr=1
+[117.5s] SHOT 02-full-18_story-beach.png
+[120.8s] SHOT 02-full-19_story-beach-cine.png
+[121.8s] TEXT ALDRIN: Qué consuelo, Mike.
+[124.9s] TEXT COLLINS: No es un chiste. Si no suben, no puedo bajar a buscarlos. Lo pienso cada noche.
+[128.2s] SHOT 02-full-20_story-beach-cine.png
+[130.2s] TEXT (Silencio. Las olas.)
+[133.3s] TEXT ARMSTRONG: Vamos a subir, Mike.
+[134.3s] SKIP scene story-beach
+[136.3s] TEXT FASE 02 · LANZAMIENTO ¶ Saturn V ¶ Mantén la nave dentro del corredor. Etapa cuando el tanque se vacíe. ¶ ALT ¶ 0 km ¶ VEL ¶ 0 m/s ¶ CABECEO ¶ 90° ¶ ETAPA ¶ S-IC ¶ EMPUJE ¶ ESTRÉS ¶ CORREDOR ¶ Secuencia de ignición ¶ T-17 ¶ Saltar cuenta ¶ Playa de Cabo Kennedy · 16 de julio de 1969 · Cerca de un millón de personas miran desde las playas y carreteras ¶ Emblema del Apolo 11 · [B] abrir ¶ Sobres firmados · [B] abrir ¶ Persecución · C/V ¶ FASE 02 ¶ Lanzamiento
+[136.3s] SCREEN story-beach -> phase-launch fps=11 eng=38 dpr=0.7
+[136.6s] SHOT 02-full-21_phase-launch.png
+[137.6s] TEXT T-16
+[138.6s] TEXT T-15
+[139.7s] TEXT T-14
+[140.7s] TEXT T-13
+[141.7s] TEXT T-12
+[142.7s] TEXT T-11
+[143.7s] TEXT T-10
+[144.8s] TEXT Inicio de la secuencia de ignición ¶ T-9
+[145.8s] TEXT T-8
+[146.8s] TEXT T-7
+[147.8s] TEXT T-6
+[148.8s] TEXT Todos los motores en marcha ¶ T-5
+[149.9s] TEXT T-4
+[150.9s] TEXT T-2
+[151.9s] TEXT T-1
+[152.9s] TEXT 0.0 km ¶ 4 m/s ¶ ¡DESPEGUE! ¶ ¡DESPEGUE! ¶ Liberación de los anclajes ¶ ¡DESPEGUE! ¶ Se sueltan los anclajes
+[154.0s] TEXT 96 m/s
+[155.0s] TEXT 0.2 km ¶ 186 m/s
+[156.0s] TEXT 0.4 km ¶ 276 m/s
+[156.3s] SHOT 02-full-22_phase-launch-cine.png
+[157.4s] TEXT 0.8 km ¶ 398 m/s ¶ Torre despejada
+[158.4s] TEXT 1.2 km ¶ 490 m/s ¶ 89°
+[159.4s] TEXT 1.7 km ¶ 581 m/s ¶ 87°
+[160.4s] TEXT 2.2 km ¶ 667 m/s ¶ 85° ¶ ¡MAX-Q! Baja el empuje
+[161.5s] TEXT 2.9 km ¶ 715 m/s ¶ 83°
+[162.5s] TEXT 3.5 km ¶ 764 m/s ¶ 81°
+[163.5s] TEXT 4.2 km ¶ 813 m/s ¶ 80°
+[164.5s] TEXT 5.0 km ¶ 861 m/s ¶ 78°
+[165.6s] TEXT 5.8 km ¶ 910 m/s ¶ 77°
+[166.6s] TEXT 6.6 km ¶ 959 m/s ¶ 75°
+[167.6s] TEXT 7.5 km ¶ 1007 m/s ¶ 74°
+[168.6s] TEXT 8.4 km ¶ 1055 m/s ¶ 72°
+[169.7s] TEXT 9.4 km ¶ 1103 m/s ¶ 71°
+[170.7s] TEXT 10.4 km ¶ 1151 m/s ¶ 70°
+[171.7s] TEXT 11.4 km ¶ 1199 m/s ¶ 68°
+[172.7s] TEXT 12.5 km ¶ 1247 m/s ¶ 67°
+[173.7s] TEXT 13.6 km ¶ 1297 m/s ¶ 66°
+[174.8s] TEXT 14.8 km ¶ 1386 m/s ¶ 65°
+[175.8s] TEXT 16.1 km ¶ 1476 m/s ¶ 63°
+[176.8s] TEXT 17.4 km ¶ 1565 m/s ¶ 62°
+[177.8s] TEXT 18.7 km ¶ 1562 m/s ¶ 61° ¶ S-II ¶ Separación ¶ SEPARACIÓN ¶ La primera etapa se aleja
+[178.9s] TEXT 20.1 km ¶ 1681 m/s ¶ 60° ¶ Max-Q superado ¶ Separación.
+[179.9s] TEXT 21.6 km ¶ 1823 m/s ¶ 58°
+[180.9s] TEXT 23.3 km ¶ 1969 m/s ¶ 57° ¶ ESPACIO ¶ Soltar torre ¶ ¡Expulsa la torre de escape!
+[181.9s] TEXT 25.0 km ¶ 2113 m/s ¶ 56°
+[182.9s] TEXT 26.8 km ¶ 2257 m/s ¶ 55°
+[184.0s] TEXT 28.8 km ¶ 2400 m/s ¶ 54°
+[185.0s] TEXT 30.9 km ¶ 2547 m/s ¶ 53°
+[186.0s] TEXT 33.0 km ¶ 2692 m/s ¶ 51° ¶ LES
+[187.0s] TEXT 35.3 km ¶ 2837 m/s ¶ 50°
+[188.1s] TEXT 37.6 km ¶ 2981 m/s ¶ 49°
+[189.1s] TEXT 40.1 km ¶ 3127 m/s ¶ 48°
+[190.1s] TEXT 42.7 km ¶ 3272 m/s ¶ 47°
+[191.1s] TEXT 45.3 km ¶ 3417 m/s ¶ 46°
+[192.1s] TEXT 48.0 km ¶ 3560 m/s ¶ 45°
+[193.2s] TEXT 50.9 km ¶ 3707 m/s ¶ 44°
+[194.2s] TEXT 53.8 km ¶ 3853 m/s ¶ 43°
+[195.2s] TEXT 56.9 km ¶ 4000 m/s ¶ 42°
+[196.2s] TEXT 60.0 km ¶ 4146 m/s ¶ 41°
+[197.3s] TEXT 63.2 km ¶ 4293 m/s ¶ 39°
+[198.3s] TEXT 66.5 km ¶ 4439 m/s ¶ 38°
+[199.3s] TEXT 69.9 km ¶ 4587 m/s ¶ 37°
+[200.3s] TEXT 73.4 km ¶ 4735 m/s ¶ 36°
+[201.4s] TEXT 76.9 km ¶ 4879 m/s ¶ 35°
+[202.4s] TEXT 80.5 km ¶ 5027 m/s ¶ 34°
+[203.4s] TEXT 84.2 km ¶ 5172 m/s ¶ 33°
+[204.4s] TEXT 87.9 km ¶ 5318 m/s ¶ 32°
+[205.5s] TEXT 91.8 km ¶ 5392 m/s ¶ 31° ¶ S-IVB
+[206.5s] TEXT 95.7 km ¶ 5446 m/s ¶ 30°
+[206.7s] SHOT 02-full-23_phase-launch-t25.png
+[207.8s] TEXT 100.4 km ¶ 5586 m/s ¶ 29°
+[208.8s] TEXT 104.4 km ¶ 5700 m/s ¶ 28°
+[209.8s] TEXT 108.4 km ¶ 5814 m/s ¶ 27°
+[210.8s] TEXT 112.4 km ¶ 5928 m/s ¶ 26°
+[211.9s] TEXT 116.5 km ¶ 6043 m/s ¶ 25°
+[212.9s] TEXT 120.6 km ¶ 6154 m/s ¶ 24°
+[213.9s] TEXT 124.8 km ¶ 6267 m/s ¶ 23°
+[215.0s] TEXT 129.0 km ¶ 6379 m/s ¶ 22°
+[216.0s] TEXT 133.2 km ¶ 6491 m/s ¶ 21°
+[217.0s] TEXT 137.5 km ¶ 6603 m/s ¶ 20°
+[218.0s] TEXT 141.8 km ¶ 6713 m/s ¶ 19°
+[219.1s] TEXT 146.2 km ¶ 6824 m/s ¶ 18°
+[220.1s] TEXT 150.6 km ¶ 6934 m/s ¶ 17°
+[221.1s] TEXT 154.9 km ¶ 7042 m/s ¶ 16°
+[222.1s] TEXT 159.3 km ¶ 7150 m/s ¶ 15°
+[223.1s] TEXT 163.7 km ¶ 7259 m/s ¶ 14°
+[224.2s] TEXT 168.2 km ¶ 7367 m/s ¶ 13°
+[225.2s] TEXT 171.8 km ¶ 7452 m/s ¶ 12° ¶ ¡Órbita alcanzada! ¶ 172 km · 7452 m/s
+[228.2s] TEXT Despegue del Apolo 11 · [B] abrir ¶ Órbita de estacionamiento · [B] abrir ¶ Bruce McCandless, CAPCOM · [B] abrir
+[230.5s] TEXT FASE 03 · VIAJE ¶ Inyección translunar ¶ Mantén presionado para encender. Suelta en la zona verde. ¶ FASE 03 ¶ Viaje
+[230.6s] SCREEN phase-launch -> phase-cruise fps=56 eng=53 dpr=0.65
+[230.8s] SHOT 02-full-24_phase-cruise.png
+[232.3s] TEXT Inyecc
+[233.7s] TEXT Δv 30 m/s ¶ Mantener encendido ¶ Inyección translunar.
+[234.8s] TEXT Δv 547 m/s
+[235.8s] TEXT Δv 1041 m/s
+[236.8s] TEXT Δv 1553 m/s
+[237.8s] TEXT Δv 2063 m/s
+[238.8s] TEXT ¡Quemado perfecto! ¶ INYECCIÓN TRANSLUNAR ¶ Rumbo a la Luna
+[240.9s] TEXT Transposición y acople ¶ Separación del CSM · paneles del SLA fuera
+[242.1s] SHOT 02-full-25_phase-cruise-cine.png
+[246.2s] TEXT Giro de 180°
+[251.3s] TEXT Aproximación al LM ¶ ACOPLE · COLUMBIA → EAGLE (EN EL SLA) ¶ Eres Collins. Alinea la sonda con el cono de Eagle. ¶ RANGO ¶ 13.9 m ¶ CIERRE ¶ 0.03 m/s ¶ DESALIN. ¶ 82 cm ¶ RCS ¶ 99% ¶ INTENTOS ¶ 0/3 ¶ WASD / flechas: alinear · R acercar · F frenar · cierre ≤ 0.3 m/s
+[252.3s] TEXT 13.4 m ¶ 0.18 m/s ¶ 13 cm ¶ 93%
+[253.4s] TEXT 12.5 m ¶ 0.23 m/s ¶ 40 cm ¶ 89%
+[254.4s] TEXT 11.6 m ¶ 0.24 m/s ¶ 15 cm ¶ 87%
+[255.4s] TEXT 10.6 m ¶ 0.25 m/s ¶ 17 cm ¶ 86%
+[256.4s] TEXT 9.6 m ¶ 11 cm ¶ 85%
+[257.4s] TEXT 8.6 m ¶ 7 cm ¶ 84%
+[258.4s] TEXT 7.5 m
+[259.5s] TEXT 6.5 m ¶ 2 cm ¶ 83%
+[260.5s] TEXT 5.5 m ¶ 4 cm
+[261.5s] TEXT 4.5 m ¶ 0 cm
+[262.5s] TEXT 3.5 m
+[263.5s] TEXT 2.4 m ¶ 1 cm
+[264.5s] TEXT 1.4 m ¶ 82%
+[265.6s] TEXT 0.7 m ¶ 0.16 m/s ¶ 81%
+[266.6s] TEXT 0.1 m ¶ 0.13 m/s ¶ 80%
+[267.6s] TEXT 0.0 m
+[268.6s] TEXT ¡Contacto! Pestillos cerrados
+[268.9s] SHOT 02-full-26_phase-cruise-t25.png
+[269.9s] TEXT Extrayendo el LM ¶ ALDRIN ¶ «Bonito, Mike».
+[275.0s] TEXT Despliegue del tren de aterrizaje del LM
+[279.1s] TEXT Alinea la plataforma con 3 estrellas ¶ Día ¶ Acelerar
+[280.1s] TEXT Toca las 3 estrellas marcadas en ámbar ¶ Plataforma alineada
+[282.7s] TEXT CAP. 3 · NOCHE EN COLUMBIA ¶ 18 de julio de 1969. «Noche» a bordo: luces atenuadas. La nave gira despacio para repartir el calor del Sol.
+[282.7s] SCREEN phase-cruise -> story-night fps=62 eng=63 dpr=0.95
+[283.1s] SHOT 02-full-27_story-night.png
+[286.5s] SHOT 02-full-28_story-night-cine.png
+[287.5s] TEXT Por la ventana, la Tierra y la Luna se turnan. «Modo barbacoa».
+[291.6s] TEXT NUEVA ENTRADA EN LA BITÁCORA · ÉPICA ¶ Marion Moon · [B] abrir ¶ ALDRIN: ¿Sabes cuál era el apellido de soltera de mi madre? Moon. Marion Moon.
+[293.9s] SHOT 02-full-29_story-night-cine.png
+[297.0s] TEXT COLLINS: Entonces esto es una visita familiar.
+[300.0s] SKIP scene story-night
+[301.9s] SCREEN story-night -> phase-cruise fps=73 eng=75 dpr=0.7999999999999999
+[302.1s] SHOT 02-full-30_phase-cruise.png
+[327.7s] SHOT 02-full-31_phase-cruise-t25.png
+[331.8s] TEXT Inserción en órbita lunar ¶ Quemado retrógrado ¶ Pérdida de señal detrás de la Luna ¶ LOS
+[333.8s] TEXT Pérdida de señal.
+[334.8s] TEXT Δv 472 m/s
+[335.9s] TEXT Δv 986 m/s
+[336.9s] TEXT Δv 1504 m/s
+[337.9s] TEXT Δv 2018 m/s
+[338.9s] TEXT Δv 2400 m/s
+[339.9s] TEXT Señal recuperada ¶ AOS
+[340.9s] TEXT ¡Salida de la Tierra! Toma la foto ¶ Espera a que la Tierra salga completa y toma la foto ¶ FOTO
+[349.0s] TEXT ¡Fotón!
+[351.1s] TEXT Inyección translunar · [B] abrir ¶ Transposición y acople · [B] abrir ¶ Modo barbacoa · [B] abrir ¶ Inserción en órbita lunar · [B] abrir ¶ Módulo Lunar Eagle (LM-5) · [B] abrir ¶ Navegar con estrellas · [B] abrir ¶ NUEVA ENTRADA EN LA BITÁCORA · OCULTA ¶ Navegar a ciegas · [B] abrir
+[353.3s] SHOT 02-full-32_phase-cruise-t50.png
+[354.3s] TEXT 20 de julio de 1969 · 19:50 UTC
+[354.3s] SCREEN phase-cruise -> story-mocr-briefing fps=44 eng=51 dpr=0.8499999999999999
+[354.6s] SHOT 02-full-33_story-mocr-briefing.png
+[356.6s] TEXT Kranz se pone su chaleco blanco nuevo y ordena cerrar las puertas de la sala.
+[357.8s] SHOT 02-full-34_story-mocr-briefing-cine.png
+[359.9s] TEXT KRANZ · DRAMATIZADO ¶ Hoy vamos a hacer algo que nadie ha hecho. Vamos a aterrizar en la Luna.
+[362.9s] TEXT Pase lo que pase, salgo de esta sala con ustedes. Confío en cada uno de los que están aquí.
+[365.1s] SHOT 02-full-35_story-mocr-briefing-cine.png
+[367.2s] TEXT STEVE BALES, 26 · GUIADO ¶ Tendrá diez segundos para decidir si la misión sigue o se aborta.
+[371.2s] SKIP scene story-mocr-briefing
+[373.1s] TEXT FASE 04 · ALUNIZAJE ¶ PROG 63 · Frenado ¶ La computadora vuela. Observa la telemetría… ¶ 1247 m ¶ V/S ¶ -25.9 ¶ H/S ¶ +26.0 ¶ INCL. ¶ -6° ¶ 40% ¶ COMBUSTIBLE ¶ AUTO ¶ BAJANDO. W frena antes del suelo. El mínimo no es suficiente si caes muy rápido. ¶ CONTACT ¶ ROD ¶ PROG 63 · Frenado ¶ Eagle ¶ El chaleco blanco · [B] abrir ¶ La hoja de Jack Garman · [B] abrir ¶ FASE 04 ¶ Alunizaje
+[373.1s] SCREEN story-mocr-briefing -> phase-descent fps=5 eng=56 dpr=0.8499999999999999
+[373.5s] SHOT 02-full-36_phase-descent.png
+[374.5s] TEXT 1208 m ¶ -25.1 ¶ +24.7 ¶ -28° ¶ 34%
+[375.6s] TEXT 1185 m ¶ -25.0 ¶ +23.8 ¶ -25° ¶ 31%
+[376.6s] TEXT 1161 m ¶ +23.0 ¶ -23° ¶ 30%
+[377.6s] TEXT 1136 m ¶ +22.3 ¶ -22° ¶ 29%
+[378.6s] TEXT 1112 m ¶ +21.8 ¶ -20°
+[379.6s] TEXT 1083 m ¶ +21.2 ¶ -19°
+[380.6s] TEXT 1059 m ¶ +20.7 ¶ -17° ¶ 28%
+[381.6s] TEXT 1034 m ¶ +20.2 ¶ -16°
+[382.6s] TEXT 1009 m ¶ +19.7 ¶ -15°
+[383.7s] TEXT PROG 64 · Aproximación ¶ 983 m ¶ +19.3 ¶ -14°
+[384.7s] TEXT 955 m ¶ +18.9 ¶ -13°
+[385.7s] TEXT 930 m ¶ +18.6 ¶ -12°
+[386.7s] TEXT 915 m ¶ +18.2 ¶ -11°
+[387.7s] TEXT 894 m ¶ +17.9 ¶ -10° ¶ 27%
+[388.7s] TEXT 874 m ¶ +17.6
+[389.7s] TEXT 852 m ¶ +17.4 ¶ -9°
+[390.8s] TEXT 824 m ¶ +17.1
+[391.8s] TEXT 800 m ¶ +16.8
+[392.8s] TEXT 780 m ¶ +16.5 ¶ 1202 ¶ ALARMA 1202 ¶ Armstrong pide una lectura. En Houston, todas las miradas van a Guiado: Steve Bales, 26 años.
+[395.8s] TEXT DECISIÓN · 10 s ¶ Flight te mira. «Guiado, ¿cómo estamos?» ¶ «¡Seguimos, Flight! Es GO» ¶ «Abortar. No podemos arriesgarnos»
+[396.2s] SHOT 02-full-37_decision.png
+[396.2s] DECISION Flight te mira. «Guiado, ¿cómo estamos?»
+[399.7s] TEXT Steve Bales, 26 años · [B] abrir ¶ ARMSTRONG (RADIO) · REAL ¶ Alarma de programa. Es una 1202.
+[400.7s] TEXT ALDRIN (RADIO) · REAL ¶ 1202.
+[402.7s] TEXT Danos una lectura sobre la alarma 1202.
+[402.9s] SHOT 02-full-38_phase-descent-cine.png
+[406.0s] TEXT Guiado, ¿cómo estamos?
+[409.0s] TEXT GARMAN · DRAMATIZADO ¶ Mientras no se repita sin parar, estamos bien. Es GO.
+[410.2s] SHOT 02-full-39_phase-descent-cine.png
+[413.2s] TEXT BALES · REAL ¶ ¡Seguimos, Flight! Es GO.
+[416.3s] TEXT CAPCOM · CHARLIE DUKE · REAL ¶ Entendido. Estamos GO con esa alarma.
+[416.3s] SKIP scene phase-descent
+[418.1s] TEXT Las alarmas 1201/1202 · [B] abrir ¶ PREGUNTA ¶ ¿Por qué era seguro seguir con la alarma 1202? ¶ La computadora se sobrecargaba, pero priorizaba las tareas críticas y se reiniciaba sin perder el guiado ¶ La alarma era un fallo del radar de aterrizaje que se arregló solo ¶ Houston podía pilotar el Eagle a distancia
+[418.5s] SHOT 02-full-40_decision.png
+[418.5s] DECISION ¿Por qué era seguro seguir con la alarma 1202?
+[422.3s] SHOT 02-full-41_decision.png
+[422.3s] DECISION ¿Por qué era seguro seguir con la alarma 1202?
+[426.2s] SHOT 02-full-42_decision.png
+[426.2s] DECISION ¿Por qué era seguro seguir con la alarma 1202?
+[430.0s] SHOT 02-full-43_decision.png
+[430.0s] DECISION ¿Por qué era seguro seguir con la alarma 1202?
+[433.8s] SHOT 02-full-44_decision.png
+[433.8s] DECISION ¿Por qué era seguro seguir con la alarma 1202?
+[437.7s] SHOT 02-full-45_decision.png
+[437.7s] DECISION ¿Por qué era seguro seguir con la alarma 1202?
+[441.5s] SHOT 02-full-46_decision.png
+[441.5s] DECISION ¿Por qué era seguro seguir con la alarma 1202?
+[445.4s] SHOT 02-full-47_decision.png
+[445.4s] DECISION ¿Por qué era seguro seguir con la alarma 1202?
+[449.2s] SHOT 02-full-48_decision.png
+[449.2s] DECISION ¿Por qué era seguro seguir con la alarma 1202?
+[453.1s] SHOT 02-full-49_decision.png
+[453.1s] DECISION ¿Por qué era seguro seguir con la alarma 1202?
+[456.9s] SHOT 02-full-50_decision.png
+[456.9s] DECISION ¿Por qué era seguro seguir con la alarma 1202?
+[460.8s] SHOT 02-full-51_decision.png
+[460.8s] DECISION ¿Por qué era seguro seguir con la alarma 1202?
+[464.6s] SHOT 02-full-52_decision.png
+[464.6s] DECISION ¿Por qué era seguro seguir con la alarma 1202?
+[468.5s] SHOT 02-full-53_decision.png
+[468.5s] DECISION ¿Por qué era seguro seguir con la alarma 1202?
+[472.4s] SHOT 02-full-54_decision.png
+[472.4s] DECISION ¿Por qué era seguro seguir con la alarma 1202?
+[476.2s] SHOT 02-full-55_decision.png
+[476.2s] DECISION ¿Por qué era seguro seguir con la alarma 1202?
+[480.1s] SHOT 02-full-56_decision.png
+[480.1s] DECISION ¿Por qué era seguro seguir con la alarma 1202?
+[484.0s] SHOT 02-full-57_decision.png
+[484.0s] DECISION ¿Por qué era seguro seguir con la alarma 1202?
+[487.8s] SHOT 02-full-58_decision.png
+[487.8s] DECISION ¿Por qué era seguro seguir con la alarma 1202?
+[491.7s] SHOT 02-full-59_decision.png
+[491.7s] DECISION ¿Por qué era seguro seguir con la alarma 1202?
+[495.6s] SHOT 02-full-60_decision.png
+[495.6s] DECISION ¿Por qué era seguro seguir con la alarma 1202?
+[499.4s] SHOT 02-full-61_decision.png
+[499.4s] DECISION ¿Por qué era seguro seguir con la alarma 1202?

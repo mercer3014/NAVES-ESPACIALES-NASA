@@ -1,0 +1,1 @@
+[12.9s] EVA_TRIS {"by":{"otros":201489,"rocas-instanciadas":3149760,"n-instancias":5091,"otros-con-sombra":155394,"tiles-terreno":373248},"tileTris":373248}
