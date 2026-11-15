@@ -9,7 +9,7 @@ import { renderFlag, renderPatch } from '../../ui/flag.js';
 import { lobbyBg } from '../../ui/screens.js';
 import { pancho } from '../../ui/pancho.js';
 import '../design/design.css';
-import { NASA_PLAN, SITES, INSTRUMENTS, EVA_TIMES, NASA_MARGIN_S, activePlan, computePlan, diffVsNasa } from '../design/plan.js';
+import { NASA_PLAN, SITES, INSTRUMENTS, EVA_TIMES, NASA_MARGIN_S, COMMS, POWER, WINDOWS, BUDGET_CR, activePlan, computePlan, diffVsNasa, scoreAxes } from '../design/plan.js';
 extend({
   'd.title': ['Informe de misión', 'Mission debrief'], 'd.total': ['Puntaje total', 'Total score'], 'd.share': ['Compartir', 'Share'], 'd.save': ['Descargar tarjeta', 'Download card'],
   'd.again': ['Volar otra vez', 'Fly again'], 'd.menu': ['Menú', 'Menu'], 'd.ach': ['Logros', 'Achievements'], 'd.new': ['¡nuevo!', 'new!'], 'd.best': ['Récord', 'Best'], 'd.newbest': ['¡Nuevo récord!', 'New record!'],
@@ -35,6 +35,12 @@ extend({
   'dz.l.eva': ['Caminata de {h}: terminaste con {o}% de O₂.', 'Moonwalk of {h}: you finished with {o}% O₂.'],
   'dz.l.evaL': ['Mucho margen de O₂: podías haber hecho más ciencia.', 'Plenty of O₂ left: you could have done more science.'], 'dz.l.evaT': ['Justo de oxígeno: la caminata larga es arriesgada.', 'Tight on oxygen: the long moonwalk is risky.'],
   'dz.rocks': ['Roca traída: {k} kg', 'Rock brought back: {k} kg'], 'dz.before': ['Antes', 'Before'], 'dz.now': ['Ahora', 'Now'], 'dz.same': ['Sin cambios respecto al plan de la NASA.', 'Same as the NASA plan.'],
+  'dz.r.budget': ['Presupuesto', 'Budget'], 'dz.r.power': ['Energía', 'Power'], 'dz.r.comms': ['Comunicaciones', 'Communications'], 'dz.r.window': ['Ventana', 'Window'],
+  'dz.ax.success': ['Éxito', 'Success'], 'dz.ax.science': ['Ciencia', 'Science'], 'dz.ax.safety': ['Seguridad', 'Safety'], 'dz.ax.efficiency': ['Eficiencia', 'Efficiency'],
+  'dz.l.budget': ['Gastaste {s} de {b} créditos y sobraron {left}. Ese sobrante es la eficiencia del plan.', 'You spent {s} of {b} credits and had {left} left. That leftover is the plan’s efficiency.'],
+  'dz.l.power': ['Baterías: {name}. {why}', 'Batteries: {name}. {why}'],
+  'dz.l.comms': ['Comunicaciones: {name}. {why}', 'Communications: {name}. {why}'],
+  'dz.l.window': ['Ventana {name}. {why}', 'Window {name}. {why}'],
 });
 const PH = ['prep', 'launch', 'cruise', 'descent', 'eva'];
 export const rankOf = (s) => (s >= 88 ? 4 : s >= 72 ? 3 : s >= 50 ? 2 : 1);
@@ -64,18 +70,27 @@ export function designLines(plan, R) {
     out.push((names.length ? t('dz.l.sci', { n: names.join(', '), s: E.sci }) : t('dz.l.sci0')) + (dn.includes('PSEP') ? ' ' + t('dz.l.psep') : dn.includes('LRRR') ? ' ' + t('dz.l.lrrr') : ''));
     out.push(t('dz.l.eva', { h: evaH(E.evaMin ?? c.evaMin), o: Math.round((E.o2Left ?? 0) * 100) }) + (c.plan.evaTime === 'long' && E.o2Left < 0.2 ? ' ' + t('dz.l.evaT') : c.plan.evaTime === 'short' && E.o2Left > 0.45 ? ' ' + t('dz.l.evaL') : ''));
   }
-  return out.slice(0, 5);
+  const pow = POWER[c.plan.power], comm = COMMS[c.plan.comms], win = WINDOWS[c.plan.window];
+  out.push(t('dz.l.budget', { s: c.spent, b: c.budget, left: c.budgetLeft }));
+  out.push(t('dz.l.power', { name: pick(pow.name), why: pick(pow.blurb) }));
+  out.push(t('dz.l.comms', { name: pick(comm.name), why: pick(comm.blurb) }));
+  out.push(t('dz.l.window', { name: pick(win.name), why: c.windowFit ? pick(win.blurb) : (lang() === 'es' ? 'No coincide con el sitio: el Sol queda en otro ángulo y las sombras cambian.' : 'It does not match the site: the Sun sits at another angle and the shadows change.') }));
+  return out.slice(0, 8);
 }
 const payNames = (pl) => (pl.payload.length ? pl.payload.map((id) => pick(INSTRUMENTS[id].name)).join(', ') : t('dz.none'));
 export function compareHtml(plan) {
   const a = computePlan(plan), b = computePlan(NASA_PLAN), d = diffVsNasa(plan);
   const rows = [['site', pick(SITES[a.plan.site].name), pick(SITES[b.plan.site].name), d.site], ['pay', payNames(a.plan), payNames(b.plan), d.added.length || d.dropped.length],
-    ['fuel', `${fx(a.fuelMult)} · ~${a.marginSec} s`, `${fx(b.fuelMult)} · ~${b.marginSec} s`, d.fuel], ['eva', evaH(a.evaMin), evaH(b.evaMin), d.evaTime], ['mass', `${a.massKg} kg`, `${b.massKg} kg`, a.massKg !== b.massKg]];
+    ['fuel', `${fx(a.fuelMult)} · ~${a.marginSec} s`, `${fx(b.fuelMult)} · ~${b.marginSec} s`, d.fuel], ['eva', evaH(a.evaMin), evaH(b.evaMin), d.evaTime], ['mass', `${a.massKg} kg`, `${b.massKg} kg`, a.massKg !== b.massKg],
+    ['budget', `${a.spent}/${BUDGET_CR}`, `${b.spent}/${BUDGET_CR}`, a.spent !== b.spent], ['power', pick(POWER[a.plan.power].name), pick(POWER[b.plan.power].name), d.power],
+    ['comms', pick(COMMS[a.plan.comms].name), pick(COMMS[b.plan.comms].name), d.comms], ['window', pick(WINDOWS[a.plan.window].name), pick(WINDOWS[b.plan.window].name), d.window]];
   return `<table class="dbr-cmp"><tr><th>${t('dz.col')}</th><th>${t('dz.you')}</th><th>${t('dz.nasa')}</th></tr>${rows.map(([k, y, n, df]) => `<tr><td>${t('dz.r.' + k)}</td><td class="${df ? 'diff' : ''}">${esc(y)}</td><td>${esc(n)}</td></tr>`).join('')}</table>`;
 }
 const designHtml = (plan, R) => {
   const lines = designLines(plan, R);
-  return `<div class="dbr-sec"><h3>${t('dz.title')}</h3>${lines.map((l, i) => `<div class="dbr-line"><i>${i + 1}</i><span>${esc(l)}</span></div>`).join('') || `<div class="dbr-line"><i>-</i><span>${t('dz.same')}</span></div>`}</div>
+  const axes = scoreAxes(plan, R);
+  const axisHtml = `<div class="dbr-axes">${axes.map((a) => `<div><span>${t('dz.ax.' + a.id)}</span><b>${a.pct}</b><i style="--w:${a.pct}%"></i></div>`).join('')}</div>`;
+  return `<div class="dbr-sec"><h3>${t('dz.title')}</h3>${axisHtml}${lines.map((l, i) => `<div class="dbr-line"><i>${i + 1}</i><span>${esc(l)}</span></div>`).join('') || `<div class="dbr-line"><i>-</i><span>${t('dz.same')}</span></div>`}</div>
     <div class="dbr-sec"><h3>${t('dz.vs')}</h3>${compareHtml(plan)}</div>`;
 };
 // «Rediseñar y volver a volar»: abre la sala de diseño y relanza en práctica solo las fases que dependen de lo que cambió
@@ -83,7 +98,7 @@ async function redesign(plan, R, p) {
   const before = activePlan(null, store); const { designRoom } = await import('../design/design-screen.js');
   const next = await designRoom({ mode: 'redesign' });
   const same = (k) => JSON.stringify(before[k]) === JSON.stringify(next[k]);
-  const phase = !same('site') || !same('fuel') ? 'descent' : 'eva';
+  const phase = !same('site') || !same('fuel') || !same('window') ? 'descent' : 'eva';
   shared.redesign = { before: { plan: before, scores: { descent: R.descent?.score ?? 0, eva: R.eva?.score ?? 0 } } };
   const { startMission } = await import('../mission.js'); startMission({ mode: 'solo', role: 'pilot', practice: phase, diff: p.diff });
 }

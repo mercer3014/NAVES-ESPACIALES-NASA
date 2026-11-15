@@ -20,6 +20,7 @@ export function phaseCards(phase, res = {}) {
   }
   if (phase === 'eva') {
     give('primer-paso', 'huella', 'placa', 'magnifica-desolacion', 'llamada-nixon');
+    if (s.tv === 'good') give('millones-lo-vieron');
     if (s.photo > 0) give('hasselblad');
   }
 }

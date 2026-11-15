@@ -320,6 +320,12 @@ export const CARDS = {
       'President Richard Nixon spoke to them “by telephone” from the White House, in the longest-distance call in history. “For one priceless moment in the whole history of man, all the people on this Earth are truly one.”'],
     img: ['Nixon al teléfono en el Despacho Oval mirando la transmisión.', 'Nixon on the phone in the Oval Office watching the broadcast.'],
     src: ALSJ }),
+  'millones-lo-vieron': c(5, 'moment', 'rare', ['650 millones lo vieron', '650 million people watched'], {
+    date: '21 jul 1969',
+    fact: ['La imagen de la caminata llegó por Goldstone, Honeysuckle Creek y el radiotelescopio de Parkes. Parkes, en Australia, sostuvo la señal cuando el viento movía la antena. Unas 600 a 650 millones de personas la vieron en directo.',
+      'The moonwalk picture came through Goldstone, Honeysuckle Creek and the Parkes radio telescope. Parkes, in Australia, held the signal while the wind shook the dish. Some 600 to 650 million people watched it live.'],
+    img: ['La antena de Parkes, de 64 m, durante el Apolo 11.', 'The 64 m Parkes dish during Apollo 11.'],
+    src: 'CSIRO · ' + ALSJ }),
   'huella': c(5, 'science', 'rare', ['El regolito lunar', 'Lunar regolith'], {
     date: '21 jul 1969',
     fact: ['El suelo lunar es un polvo fino y abrasivo formado por miles de millones de años de impactos. Sin viento ni agua que lo erosionen, una huella puede durar millones de años. Armstrong lo describió como «carbón en polvo».',

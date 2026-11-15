@@ -5,6 +5,8 @@ import { THREE, model } from '../../core/engine.js';
 import { makeCabin } from '../../scenes/cabin.js';
 import { sfx } from '../../core/audio.js';
 import { clip } from '../../audio/a11-cues.js';
+import { store } from '../../core/store.js';
+import { activePlan, computePlan } from '../design/plan.js';
 import { runCine, tx } from './cine.js';
 
 const TITLE = ['CAP. 6 · EL DISYUNTOR', 'CH. 6 · THE CIRCUIT BREAKER'];
@@ -28,6 +30,20 @@ export default async function breakerScene() {
   const LOOK = { panel: [0, -0.05], breaker: [yawB + 0.14, pitchB + 0.02], props: [yawB + 0.55, -0.55] }; let look = LOOK.panel.slice(), tgt = LOOK.panel;
   world.update = (dt) => { look[0] += (tgt[0] - look[0]) * Math.min(1, dt * 2.2); look[1] += (tgt[1] - look[1]) * Math.min(1, dt * 2.2); cab.look(look[0], look[1] + 0.12); cab.update(dt); };
   let penAnim = 0, fixed = false; const penHome = pen ? pen.position.clone() : null, penTo = new THREE.Vector3();
+  const energy = computePlan(activePlan(null, store));
+  let stopEnergy = () => {};
+  if (energy.energyS > 0) {
+    const box = document.createElement('div');
+    box.style.cssText = 'position:fixed;z-index:40;top:calc(12px + var(--safe-t,0px));left:50%;transform:translateX(-50%);background:#0B0C0E;color:#FFB000;border:2px solid #FFB000;padding:8px 14px;font:700 14px/1.3 ui-monospace,monospace;letter-spacing:.08em';
+    document.body.append(box);
+    const t0 = performance.now(), secs = energy.energyS;
+    const iv = setInterval(() => {
+      const left = Math.max(0, secs - (performance.now() - t0) / 1000);
+      box.textContent = (left > 0 ? 'POR TU PLAN · ENERGÍA ' + left.toFixed(0) + ' s' : 'POR TU PLAN · BATERÍAS AGOTADAS');
+      if (left <= 0) { box.style.color = '#E0201B'; box.style.borderColor = '#E0201B'; clearInterval(iv); }
+    }, 200);
+    stopEnergy = () => { clearInterval(iv); box.remove(); };
+  }
   return runCine({
     id: 'breaker', world, title: TITLE,
     step(dt) {
@@ -59,6 +75,6 @@ export default async function breakerScene() {
       S.subtitle('', tx(['Motor de ascenso: hipergólico, simple y sin respaldo. Si no encendía, no había otra forma de salir de la Luna.', 'Ascent engine: hypergolic, simple and with no backup. If it did not fire, there was no other way off the Moon.']));
       await sleep(S, 4.5);
     },
-  }).finally(() => world.dispose());
+  }).finally(() => { stopEnergy(); world.dispose(); });
 }
 function sleep(S, s) { const t0 = S.t; return new Promise((r) => { const iv = setInterval(() => { if (S.done || S.t - t0 >= s) { clearInterval(iv); r(); } }, 50); }); }

@@ -46,6 +46,8 @@ extend({
   'e.hammer': ['Clava el mástil: golpea en la zona verde (3)', 'Drive the pole: hit in the green zone (3)'], 'e.hit': ['¡Buen golpe!', 'Good hit!'], 'e.miss': ['Rebotó… el regolito es duro', 'It bounced… the regolith is hard'],
   'e.bar': ['Extiende la barra: mantén y suelta', 'Extend the crossbar: hold and release'], 'e.wrinkle': ['La barra se trabó a medias… igual que en 1969', 'The bar jammed halfway… just like in 1969'],
   'e.salute': ['Saluda a la bandera', 'Salute the flag'], 'e.photo': ['Encuadra la bandera y pulsa FOTO', 'Frame the flag and press PHOTO'], 'e.photoC': ['CAPCOM encuadra la cámara TV…', 'CAPCOM is framing the TV camera…'],
+  'e.tvPoor': ['Por tu plan: solo Goldstone. La televisión se corta.', 'Your plan: Goldstone only. The television drops out.'],
+  'e.tvFair': ['Por tu plan: sin Parkes la imagen pierde detalle.', 'Your plan: without Parkes the picture loses detail.'],
   'e.done': ['Bandera plantada', 'Flag planted'], 'e.swing': ['E: ¡swing!', 'E: swing!'], 'e.swingT': ['ACCIÓN: ¡swing!', 'ACTION: swing!'], 'e.golf': ['Millas y millas y millas…', 'Miles and miles and miles…'],
   'e.act': ['ACCIÓN', 'ACTION'], 'e.jump': ['SALTO', 'JUMP'], 'e.down': ['↓', '↓'], 'e.stepB': ['PASO', 'STEP'], 'e.photoB': ['FOTO', 'PHOTO'], 'e.o2': ['O₂ EVA', 'EVA O₂'],
   'e.science': ['Ciencia opcional', 'Optional science'],
@@ -76,6 +78,7 @@ export default async function eva(ctx) {
       <i class="zone" style="position:absolute;top:0;bottom:0;background:#3ddc8455;border-left:2px solid var(--go);border-right:2px solid var(--go)"></i><i class="cur" style="position:absolute;top:2px;bottom:2px;width:6px;margin-left:-3px;border-radius:3px;background:#fff;box-shadow:0 0 10px #fff"></i></div>
       <div class="phase-tag rtxt" style="text-align:center;margin-top:6px"></div></div>
     <div class="reseau" style="display:none;position:absolute;inset:0;pointer-events:none"></div>
+    <div class="tvsnow" style="display:none;position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.22) 0 1px,transparent 1px 3px),rgba(160,160,160,.35);mix-blend-mode:screen"></div>
     <div class="flash" style="position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;transition:opacity .5s"></div>
     <div class="quote" style="display:none;position:absolute;left:50%;bottom:22%;transform:translateX(-50%);width:min(720px,90vw);text-align:center;font-family:Chakra;font-size:clamp(16px,2.6vw,26px);color:#fff;text-shadow:0 2px 12px #000"></div>
     ${isTouch ? `<div class="tc-stick" style="display:none"><i></i></div><button class="tc-btn mid jumpbtn" style="display:none;right:calc(124px + env(safe-area-inset-right,0px));bottom:calc(40px + var(--safe-b))">${t('e.jump')}</button>` : ''}
@@ -284,6 +287,7 @@ export default async function eva(ctx) {
     } else if (viewMode === 'tv') {
       const base = Math.atan2(site.x - camTV.x, site.z - camTV.z); const yy = base + tvLook.yaw; cam.position.set(camTV.x + Math.sin(base) * 0.45, camTV.y, camTV.z + Math.cos(base) * 0.45); look.set(camTV.x + Math.sin(yy) * 10, camTV.y + 0.3 + tvLook.pitch * 10, camTV.z + Math.cos(yy) * 10); cam.lookAt(look); cam.fov = (cam.aspect < 1 ? 62 : 44) / tvLook.zoom; cam.updateProjectionMatrix();
     }
+    const snow = $('.tvsnow', el); if (snow) { const on = viewMode === 'tv' && PL.tv !== 'good'; snow.style.display = on ? '' : 'none'; snow.style.opacity = PL.tv === 'poor' ? '0.78' : '0.32'; }
     ctx.cc.snap({ x: P.x - lx, z: P.z, mode: P.mode, sample: st.sample, flag: st.flag, o2: 1 - tEva / O2 });
   });
   // Optional proximity actions never gate sample/flag/photo; F / separate touch button avoids stealing E.
@@ -400,6 +404,7 @@ export default async function eva(ctx) {
     const side = new THREE.Vector3(Math.cos(flag.rotation.y), 0, -Math.sin(flag.rotation.y)); const px = spot.x - side.x * 0.9, pz = spot.z - side.z * 0.9; P.x = px; P.z = pz; P.y = ground(px, pz); P.yaw = Math.atan2(spot.x - px, spot.z - pz) ; }
   P.act = 'salute'; sfx('ok', { vol: 0.3 }); await ctx.wait(1.4);
   viewMode = 'tv'; $('.reseau', el).style.display = ''; $('.reseau', el).innerHTML = reseau(); tvLook = { yaw: 0, pitch: -0.03, zoom: 1.5 }; prompt(t(coop && ctx.cc.remote() ? 'e.photoC' : 'e.photo'));
+  if (PL.tv !== 'good') { ctx.banner(t(PL.tv === 'poor' ? 'e.tvPoor' : 'e.tvFair'), '', 2800, 'warn'); if (PL.tv === 'poor') sfx('glitch', { vol: 0.4 }); }
   let framing;
   if (coop && ctx.cc.remote()) { const offF = on('net:ev', (m) => { if (m.k === 'frame' && m.v) tvLook = { ...tvLook, ...m.v }; }); ctx.onCleanup(offF); }
   if (coop && ctx.cc.remote()) framing = await ctx.cc.ask('photo', { site: [site.x - lx, site.z] }, async () => ({ yaw: 0, pitch: -0.03, zoom: 1.5 }), 30);
@@ -426,7 +431,7 @@ export default async function eva(ctx) {
   const goodHits = st.hits.filter(Boolean).length; const timeS = clamp(1 - (tEva - st.t0 - 60) / (O2 / PL.o2Mult - 60), 0, 1); // con la EVA larga se sigue puntuando contra la reserva nominal
   const score = Math.round(clamp((st.step ? 10 : 0) + (st.sample ? 15 : 0) + goodHits * 7 + (Math.abs(st.lean) < 6 ? 6 : 2) + 3 + st.photo * 30 + timeS * 15 + Math.min(20, sciEarned * 0.12), 0, 100));
   dbg('plbEva', { score, hits: goodHits, bar: +st.bar.toFixed(2), photo: +st.photo.toFixed(2) });
-  return { score, stats: { sci: sciEarned, instruments: sciDone, o2Left: +clamp(1 - tEva / O2, 0, 1).toFixed(2), evaMin: PL.evaMin, rockKg: PL.rockKg, hits: goodHits, depth: Math.round(st.depth * 100), lean: Math.round(st.lean), bar: +st.bar.toFixed(2), photo: +st.photo.toFixed(2), golf: st.golf, time: Math.round(tEva) } };
+  return { score, stats: { sci: sciEarned, instruments: sciDone, tv: PL.tv, o2Left: +clamp(1 - tEva / O2, 0, 1).toFixed(2), evaMin: PL.evaMin, rockKg: PL.rockKg, hits: goodHits, depth: Math.round(st.depth * 100), lean: Math.round(st.lean), bar: +st.bar.toFixed(2), photo: +st.photo.toFixed(2), golf: st.golf, time: Math.round(tEva) } };
 
   function clearance(x, z) { let c = 99; for (const [rx, rz, s] of siteRocks) c = Math.min(c, Math.hypot(x - rx, z - rz) - s); for (const [rx, rz, s] of W.rockList) if (Math.abs(rx - x) < 6 && Math.abs(rz - z) < 6) c = Math.min(c, Math.hypot(x - rx, z - rz) - s); return c; }
   function pickFlagSpot() {
@@ -456,7 +461,7 @@ export default async function eva(ctx) {
     renderer.render(W.scene, cam); const src = renderer.domElement; const S = 1080; const c = document.createElement('canvas'); c.width = S; c.height = S; const x = c.getContext('2d');
     const sw = Math.min(src.width, src.height); x.drawImage(src, (src.width - sw) / 2, (src.height - sw) / 2, sw, sw, 0, 0, S, S);
     // grano + viñeta + réseau (Hasselblad)
-    const id = x.getImageData(0, 0, S, S), d = id.data; for (let i = 0; i < d.length; i += 4) { const n = (Math.random() - 0.5) * 22; d[i] += n; d[i + 1] += n; d[i + 2] += n; } x.putImageData(id, 0, 0);
+    const id = x.getImageData(0, 0, S, S), d = id.data; const grain = PL.tv === 'poor' ? 78 : PL.tv === 'fair' ? 40 : 22; for (let i = 0; i < d.length; i += 4) { const n = (Math.random() - 0.5) * grain; d[i] += n; d[i + 1] += n; d[i + 2] += n; } x.putImageData(id, 0, 0);
     const g = x.createRadialGradient(S / 2, S / 2, S * 0.3, S / 2, S / 2, S * 0.75); g.addColorStop(0, '#0000'); g.addColorStop(1, '#000a'); x.fillStyle = g; x.fillRect(0, 0, S, S);
     x.strokeStyle = '#000c'; x.lineWidth = 3; for (let i = 1; i < 5; i++) for (let j = 1; j < 5; j++) { const px = (i / 5) * S, py = (j / 5) * S; x.beginPath(); x.moveTo(px - 14, py); x.lineTo(px + 14, py); x.moveTo(px, py - 14); x.lineTo(px, py + 14); x.stroke(); }
     try { shared.flagPhoto = c.toDataURL('image/jpeg', 0.85); } catch {}

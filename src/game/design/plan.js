@@ -34,23 +34,23 @@ export const SITES = {
 // Carga científica. task = nombre de la tarea del EASEP en eva.js (null: no tiene tarea propia, suma ciencia al recoger la muestra).
 export const INSTRUMENTS = {
   seismometer: {
-    name: ['Sismómetro pasivo', 'Passive seismometer'], kg: 46, sci: 25, task: 'PSEP',
+    name: ['Sismómetro pasivo', 'Passive seismometer'], kg: 46, sci: 25, cost: 18, task: 'PSEP',
     blurb: ['Paneles solares. Detectó lunamotos y hasta los pasos de los astronautas. Duró unas 3 semanas.', 'Solar panels. Felt moonquakes and even the astronauts\' footsteps. Lasted about 3 weeks.'],
   },
   lrrr: {
-    name: ['Retrorreflector láser', 'Laser retroreflector'], kg: 30, sci: 20, task: 'LRRR',
+    name: ['Retrorreflector láser', 'Laser retroreflector'], kg: 30, sci: 20, cost: 12, task: 'LRRR',
     blurb: ['Sin energía. Devuelve láseres de la Tierra: se sigue usando hoy.', 'No power. Bounces lasers back to Earth: still in use today.'],
   },
   'solar-wind': {
-    name: ['Colector de viento solar', 'Solar wind collector'], kg: 1, sci: 10, task: 'SWC',
+    name: ['Colector de viento solar', 'Solar wind collector'], kg: 1, sci: 10, cost: 2, task: 'SWC',
     blurb: ['Una lámina de aluminio casi sin peso. Se trajo de vuelta a la Tierra.', 'A nearly weightless aluminium foil. It came back to Earth.'],
   },
   stereo: {
-    name: ['Cámara estéreo de primer plano', 'Close-up stereo camera'], kg: 3, sci: 12, task: null,
+    name: ['Cámara estéreo de primer plano', 'Close-up stereo camera'], kg: 3, sci: 12, cost: 4, task: null,
     blurb: ['Ligera. Fotografió de cerca el polvo lunar en 3D.', 'Light. Took 3D close-ups of the lunar soil.'],
   },
   tools: {
-    name: ['Herramientas para muestras', 'Extra sample tools'], kg: 18, sci: 18, task: null,
+    name: ['Herramientas para muestras', 'Extra sample tools'], kg: 18, sci: 18, cost: 8, task: null,
     blurb: ['Martillo, pinzas y bolsas: más roca para traer (el Apolo 11 trajo 21,5 kg).', 'Hammer, tongs and bags: more rock to bring home (Apollo 11 brought back 21.5 kg).'],
   },
 };
@@ -62,8 +62,29 @@ export const EVA_TIMES = {
   long: { min: 210, label: ['3 h 30', '3 h 30'], o2: 1.4, sci: 8, risk: 2, blurb: ['Más tiempo y más ciencia, pero más calor y menos O₂ de sobra.', 'More time and more science, but more heat and less spare O₂.'] },
 };
 
-// El plan real de 1969: Mar de la Tranquilidad, EASEP completo + cámara + herramientas, combustible nominal, EVA de 2 h 30.
-export const NASA_PLAN = { site: 'tranquility', payload: ['seismometer', 'lrrr', 'solar-wind', 'stereo', 'tools'], fuel: 1, evaTime: 'short', patch: null };
+// Ventana de lanzamiento: el Sol tiene que quedar bajo (unos 5° a 14°) para ver las rocas por su sombra.
+export const WINDOWS = {
+  jul16: { name: ['16 jul · Tranquilidad', '16 Jul · Tranquility'], site: 'tranquility', sun: 11, blurb: ['El Sol queda bajo y las sombras delatan las rocas. Así despegó el Apolo 11.', 'The Sun stays low and the shadows give the rocks away. That is how Apollo 11 lifted off.'] },
+  jul18: { name: ['18 jul · Sinus Medii', '18 Jul · Sinus Medii'], site: 'sinus', sun: 8, blurb: ['Dos días de retraso y el sitio de respaldo es Sinus Medii.', 'Two days late and the backup site is Sinus Medii.'] },
+  jul21: { name: ['21 jul · sitio 5', '21 Jul · site 5'], site: 'highlands', sun: 5, blurb: ['Tres días más y el Sol ilumina otro lugar. Sombras más largas, terreno más duro.', 'Three more days and the Sun lights another place. Longer shadows, rougher ground.'] },
+};
+// Comunicaciones: más antenas, mejor televisión de la caminata y más costo.
+export const COMMS = {
+  goldstone: { name: ['Solo Goldstone', 'Goldstone only'], cost: 8, tv: 'poor', blurb: ['Una antena. Hay huecos y la televisión de la caminata llega con nieve.', 'One dish. The signal drops out and the moonwalk TV arrives full of snow.'] },
+  honeysuckle: { name: ['+ Honeysuckle Creek', '+ Honeysuckle Creek'], cost: 18, tv: 'fair', blurb: ['Australia cubre la Luna cuando California no la ve. La imagen pierde detalle.', 'Australia covers the Moon when California cannot see it. The picture loses detail.'] },
+  parkes: { name: ['+ radiotelescopio de Parkes', '+ Parkes radio telescope'], cost: 28, tv: 'good', blurb: ['Parkes salvó la imagen que vieron unos 650 millones de personas.', 'Parkes saved the picture about 650 million people watched.'] },
+};
+// Baterías del LM. Las justas no pesan de más, pero en el disyuntor la energía tiene cuenta atrás.
+export const POWER = {
+  tight: { name: ['Baterías justas', 'Tight batteries'], kg: 0, secs: 48, cost: 0, risk: 2, blurb: ['Menos margen. En el Eagle la energía se acaba y el disyuntor tiene cuenta atrás.', 'Less margin. Eagle runs out of power and the breaker has a countdown.'] },
+  nominal: { name: ['Baterías del LM', 'LM batteries'], kg: 0, secs: 0, cost: 12, risk: 0, blurb: ['Cinco en la etapa de descenso y dos en la de ascenso, como en 1969.', 'Five in the descent stage and two in the ascent stage, as in 1969.'] },
+  spare: { name: ['Batería de reserva', 'Spare battery'], kg: 6, secs: 0, cost: 18, risk: 0, blurb: ['Otra batería da margen y pesa. Cada kilo es combustible que no llevas.', 'Another battery gives margin and it weighs. Every kilogram is fuel you do not carry.'] },
+};
+export const BUDGET_CR = 100;
+export const fuelCost = (fuel) => Math.round((fuel - 1) * 40);
+
+// El plan real de 1969: Mar de la Tranquilidad, EASEP completo, combustible nominal, EVA de 2 h 30, Parkes y las baterías del LM.
+export const NASA_PLAN = { site: 'tranquility', payload: ['seismometer', 'lrrr', 'solar-wind', 'stereo', 'tools'], fuel: 1, evaTime: 'short', patch: null, comms: 'parkes', power: 'nominal', window: 'jul16' };
 
 export const PROFILES = {
   safety: { name: ['Seguridad', 'Safety'], plan: { site: 'tranquility', payload: ['lrrr', 'solar-wind', 'stereo'], fuel: 1.25, evaTime: 'short' } },
@@ -84,11 +105,15 @@ export function normalizePlan(plan) {
     fuel: typeof p.fuel === 'number' && isFinite(p.fuel) ? near(p.fuel) : NASA_PLAN.fuel,
     evaTime: EVA_TIMES[p.evaTime] ? p.evaTime : NASA_PLAN.evaTime,
     patch: p.patch ?? null,
+    comms: COMMS[p.comms] ? p.comms : NASA_PLAN.comms,
+    power: POWER[p.power] ? p.power : NASA_PLAN.power,
+    window: WINDOWS[p.window] ? p.window : NASA_PLAN.window,
   };
 }
 export const isNasaPlan = (plan) => {
   const a = normalizePlan(plan), b = NASA_PLAN;
-  return a.site === b.site && a.fuel === b.fuel && a.evaTime === b.evaTime && a.payload.join() === b.payload.join();
+  return a.site === b.site && a.fuel === b.fuel && a.evaTime === b.evaTime && a.payload.join() === b.payload.join()
+    && a.comms === b.comms && a.power === b.power && a.window === b.window;
 };
 
 export const fuelKg = (fuel) => Math.round((fuel - 1) * FUEL_KG_PER_UNIT);
@@ -98,16 +123,22 @@ export const marginSec = (fuel) => Math.round(SEC_BASE + (fuel - 1) * SEC_PER_UN
 export function computePlan(plan) {
   const p = normalizePlan(plan), site = SITES[p.site], eva = EVA_TIMES[p.evaTime];
   const payloadKg = p.payload.reduce((a, id) => a + INSTRUMENTS[id].kg, 0);
+  const pow = POWER[p.power], comm = COMMS[p.comms], win = WINDOWS[p.window];
   const fKg = fuelKg(p.fuel);
-  const massKg = payloadKg + fKg;
+  const massKg = payloadKg + fKg + pow.kg;
   const over = Math.max(0, massKg - LIMIT_KG);
+  const spent = p.payload.reduce((a, id) => a + (INSTRUMENTS[id].cost || 0), 0) + comm.cost + pow.cost + fuelCost(p.fuel);
+  const budgetLeft = BUDGET_CR - spent;
+  const windowFit = win.site === p.site;
   const sciPts = p.payload.reduce((a, id) => a + INSTRUMENTS[id].sci, 0) + site.sci + eva.sci;
   // riesgo: lugar + poco combustible + EVA larga + pasarse de masa
-  const riskPts = clamp(site.risk + (p.fuel < 1 ? (1 - p.fuel) * 20 : -(p.fuel - 1) * 6) + eva.risk + over * 0.5, 0, RISK_MAX);
+  const riskPts = clamp(site.risk + (p.fuel < 1 ? (1 - p.fuel) * 20 : -(p.fuel - 1) * 6) + eva.risk + over * 0.5 + pow.risk + (windowFit ? 0 : 1.5), 0, RISK_MAX);
   const risk = riskPts <= 3 ? 'low' : riskPts <= 6 ? 'mid' : 'high';
   const hasTools = p.payload.includes('tools');
   return {
-    plan: p, ok: over === 0 && p.payload.length > 0, over, massKg, payloadKg, fuelKg: fKg, limitKg: LIMIT_KG, freeKg: LIMIT_KG - massKg,
+    plan: p, ok: over === 0 && budgetLeft >= 0 && p.payload.length > 0, over, massKg, payloadKg, fuelKg: fKg, limitKg: LIMIT_KG, freeKg: LIMIT_KG - massKg,
+    spent, budget: BUDGET_CR, budgetLeft, efficiencyPct: Math.max(0, Math.round((budgetLeft / BUDGET_CR) * 100)),
+    tv: comm.tv, comms: p.comms, power: p.power, energyS: pow.secs, sunDeg: win.sun, windowFit, window: p.window,
     sciPts, sciMax: SCI_MAX, sciPct: Math.round((sciPts / SCI_MAX) * 100),
     riskPts: +riskPts.toFixed(2), risk, riskPct: Math.round((riskPts / RISK_MAX) * 100),
     evaMin: eva.min, o2Mult: eva.o2, fuelMult: p.fuel, marginSec: marginSec(p.fuel),
@@ -122,8 +153,35 @@ export function diffVsNasa(plan) {
   const a = normalizePlan(plan), b = NASA_PLAN;
   return {
     site: a.site !== b.site, fuel: a.fuel !== b.fuel, evaTime: a.evaTime !== b.evaTime,
+    comms: a.comms !== b.comms, power: a.power !== b.power, window: a.window !== b.window,
     added: a.payload.filter((id) => !b.payload.includes(id)), dropped: b.payload.filter((id) => !a.payload.includes(id)),
   };
+}
+
+// Avisos «Por tu plan: …» que el HUD enseña cuando una decisión cambia la misión.
+export function planNotes(plan) {
+  const c = computePlan(plan), p = c.plan, out = [];
+  if (p.site === 'highlands') out.push(['Por tu plan: Tierras altas, el doble de rocas.', 'Your plan: highlands, twice the rocks.']);
+  else if (p.site === 'sinus') out.push(['Por tu plan: Sinus Medii, más rocas que el sitio real.', 'Your plan: Sinus Medii, more rocks than the real site.']);
+  if (p.fuel !== 1) out.push([`Por tu plan: margen de combustible ~${c.marginSec} s.`, `Your plan: fuel margin ~${c.marginSec} s.`]);
+  if (!c.windowFit) out.push(['Por tu plan: la ventana de lanzamiento no coincide con el sitio. El Sol queda en otro ángulo.', 'Your plan: the launch window does not match the site. The Sun sits at another angle.']);
+  if (c.tv === 'poor') out.push(['Por tu plan: solo Goldstone. La televisión de la caminata llega con nieve.', 'Your plan: Goldstone only. The moonwalk TV arrives full of snow.']);
+  else if (c.tv === 'fair') out.push(['Por tu plan: sin Parkes la imagen de la caminata pierde detalle.', 'Your plan: without Parkes the moonwalk picture loses detail.']);
+  if (c.energyS > 0) out.push(['Por tu plan: baterías justas. En el disyuntor la energía tiene cuenta atrás.', 'Your plan: tight batteries. The breaker has an energy countdown.']);
+  if (c.budgetLeft < 15) out.push([`Por tu plan: quedan ${c.budgetLeft} créditos. El presupuesto iba justo.`, `Your plan: ${c.budgetLeft} credits left. The budget was tight.`]);
+  return out;
+}
+
+// Cuatro ejes del informe: Éxito, Ciencia, Seguridad, Eficiencia.
+export function scoreAxes(plan, results) {
+  const c = computePlan(plan);
+  const success = results?.descent?.score ?? (c.plan.fuel >= 1 && c.plan.site === 'tranquility' ? 74 : 58);
+  return [
+    { id: 'success', name: ['Éxito', 'Success'], pct: Math.round(Math.max(0, Math.min(100, success))) },
+    { id: 'science', name: ['Ciencia', 'Science'], pct: c.sciPct },
+    { id: 'safety', name: ['Seguridad', 'Safety'], pct: Math.max(0, 100 - c.riskPct) },
+    { id: 'efficiency', name: ['Eficiencia', 'Efficiency'], pct: c.efficiencyPct },
+  ];
 }
 
 // Plan activo: el del contexto de fase (WP3) o el guardado por la sala de diseño; sin ninguno, el real de la NASA
