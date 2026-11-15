@@ -71,7 +71,7 @@ export function makePad({ lite = false } = {}) {
   // ---------- entorno: matorral costero, playa, Atlántico, caminos, edificios lejanos, línea de árboles, nubes ----------
   const ground = new THREE.Group(); scene.add(ground); const landU = { uT: { value: 0 } };
   const landG = new THREE.PlaneGeometry(26000, 26000, 1, 1); landG.rotateX(-Math.PI / 2);
-  const land = new THREE.Mesh(landG, procMat({ color: 0xffffff, roughness: 1 }, `
+  const land = new THREE.Mesh(landG, lite ? new THREE.MeshStandardMaterial({ color: 0x6d7348, roughness: 1 }) : procMat({ color: 0xffffff, roughness: 1 }, `
     vec2 w=vWP.xz; float shore=${SHORE.toFixed(1)}+60.*sin(w.x/900.)+25.*sin(w.x/260.+1.3);
     if(w.y<shore-4.) discard;
     float n=fbm(w*.004), n2=fbm(w*.03+3.), n3=vn(w*.25);
@@ -85,6 +85,7 @@ export function makePad({ lite = false } = {}) {
     c=mix(c, vec3(.82,.78,.68)*(.85+.2*n3), crawl);
     float road=(1.-smoothstep(4.,5.,abs(w.x+w.y*.2-260.)))*step(-900.,w.y)*step(w.y,2000.); c=mix(c, vec3(.18,.18,.19), road*.9);
     diffuseColor.rgb*=c;`, landU));
+  if (lite) land.material.color.set(0x6d7348);
   land.receiveShadow = true; ground.add(land);
   // océano: normal procedural animada + brillo especular del sol
   const nc = document.createElement('canvas'); nc.width = nc.height = 256; { const x = nc.getContext('2d'), id = x.createImageData(256, 256), hgt = new Float32Array(256 * 256);
@@ -120,10 +121,10 @@ export function makePad({ lite = false } = {}) {
       #include <tonemapping_fragment>
       #include <colorspace_fragment>
       }` });
-  for (const [r, hgt] of [[3200, 30], [6500, 55]]) { const ring = new THREE.Mesh(new THREE.CylinderGeometry(r, r, hgt, 160, 1, true), treeM); ring.position.y = hgt / 2 - 2; ground.add(ring); }
+  if (!lite) for (const [r, hgt] of [[3200, 30], [6500, 55]]) { const ring = new THREE.Mesh(new THREE.CylinderGeometry(r, r, hgt, 160, 1, true), treeM); ring.position.y = hgt / 2 - 2; ground.add(ring); }
   // banco de cúmulos lejanos (sprites suaves)
   const clouds = new THREE.Group(); scene.add(clouds); { const cm = new THREE.SpriteMaterial({ map: puffTex(), color: 0xfaf6f0, transparent: true, depthWrite: false, fog: false, opacity: 0.85 });
-    for (let i = 0; i < (Q.high ? 46 : 22); i++) { const a = (i / 46) * Math.PI * 2 + Math.random() * 0.2, r = 14000 + Math.random() * 6000; const s = new THREE.Sprite(cm); const w = 2500 + Math.random() * 3500; s.scale.set(w, w * (0.35 + Math.random() * 0.2), 1); s.position.set(Math.cos(a) * r, 500 + Math.random() * 900, Math.sin(a) * r); s.center.set(0.5, 0.3); clouds.add(s); } }
+    for (let i = 0; i < (lite ? 0 : Q.high ? 46 : 22); i++) { const a = (i / 46) * Math.PI * 2 + Math.random() * 0.2, r = 14000 + Math.random() * 6000; const s = new THREE.Sprite(cm); const w = 2500 + Math.random() * 3500; s.scale.set(w, w * (0.35 + Math.random() * 0.2), 1); s.position.set(Math.cos(a) * r, 500 + Math.random() * 900, Math.sin(a) * r); s.center.set(0.5, 0.3); clouds.add(s); } }
   // entorno LC-39A del artista (origen = cubierta del ML): sustituye todo el entorno procedural de arriba, que queda de respaldo
   const procEnv = [...ground.children]; procEnv.forEach((o) => (o.position.y += FB_DY));
   const lods = []; let envSea = null, envSurf = null; const SHADOW = /^pad-(mound|deflectors|tanks|light-masts)/, RECV = /^(pad-mound|terrain-near)/;
@@ -164,7 +165,7 @@ export function makePad({ lite = false } = {}) {
     for (const n of ['S1C', 'S2', null, 'LES']) parts.push({ g: n ? node(n) : null, pl: [], loc: [], free: false, v: new THREE.Vector3(), w: new THREE.Vector3(), node: true });
     api.newModel = true;
     // Etapa superior detallada del artista (S-IVB/IU/SLA + CSM Columbia). Su origen = nodo Spacecraft (y 85.68 del Saturn V). Si falla, queda la del Saturn V.
-    Promise.all([model('s4b-sla'), model('csm-columbia')]).then(([s4, csm]) => {
+    if (!lite) Promise.all([model('s4b-sla'), model('csm-columbia')]).then(([s4, csm]) => {
       const up = new THREE.Group(); up.name = 'upper-detail'; up.position.set(0, 85.68, 0); up.add(s4); shadow(up);
       const dock = s4.getObjectByName('csm-dock-launch'); csm.position.set(0, (dock ? dock.position.y : 8.52) + 6.91, 0); up.add(csm); shadow(csm);
       for (const n of ['S4B', 'IU', 'CSM', 'SLA']) { const o = node(n); if (o) o.visible = false; } sv.scene.add(up); // ocultar antes de añadir (mismos nombres)
@@ -193,22 +194,22 @@ export function makePad({ lite = false } = {}) {
   const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: dotTex(), color: 0xffb060, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0 })); glow.scale.setScalar(Q.high ? 40 : 60); glow.position.y = -6; rocket.add(glow);
   const flameLight = new THREE.PointLight(0xff9a40, 0, 700, 1.2); flameLight.position.y = -12; rocket.add(flameLight);
   // ---------- partículas ----------
-  const smoke = makePuffs({ n: Q.high ? 2400 : 900, drag: 0.42, fadeIn: 0.04, fadeOut: 0.5, near: 6 });
-  const steam = makePuffs({ n: Q.high ? 1100 : 450, drag: 0.8, fadeIn: 0.1, fadeOut: 0.6, near: 3 });
-  const fire = makePuffs({ n: Q.high ? 500 : 220, drag: 1.2, additive: true, lit: false, fadeIn: 0.05, fadeOut: 0.7, near: 3 });
+  const smoke = makePuffs({ n: lite ? 4 : Q.high ? 2400 : 900, drag: 0.42, fadeIn: 0.04, fadeOut: 0.5, near: 6 });
+  const steam = makePuffs({ n: lite ? 4 : Q.high ? 1100 : 450, drag: 0.8, fadeIn: 0.1, fadeOut: 0.6, near: 3 });
+  const fire = makePuffs({ n: lite ? 4 : Q.high ? 500 : 220, drag: 1.2, additive: true, lit: false, fadeIn: 0.05, fadeOut: 0.7, near: 3 });
   for (const P of [smoke, steam]) { P.U.uSun.value.copy(sunDir); P.U.uGlowP.value.set(0, 6, 0); P.U.uGlowR.value = 55; }
   steam.U.uAmb.value.set(0.6, 0.65, 0.75); scene.add(smoke.mesh, steam.mesh, fire.mesh);
   // estela de humo del ascenso: sistema propio (no compite con las nubes del suelo) y emisión continua a lo largo del tramo recorrido
-  const trail = makePuffs({ n: Q.high ? 2200 : 800, drag: 0.22, fadeIn: 0.015, fadeOut: 0.55, near: 8 }); trail.U.uSun.value.copy(sunDir); trail.U.uAmb.value.set(0.55, 0.6, 0.7); scene.add(trail.mesh);
+  const trail = makePuffs({ n: lite ? 4 : Q.high ? 2200 : 800, drag: 0.22, fadeIn: 0.015, fadeOut: 0.55, near: 8 }); trail.U.uSun.value.copy(sunDir); trail.U.uAmb.value.set(0.55, 0.6, 0.7); scene.add(trail.mesh);
   const tailPrev = new THREE.Vector3(), tailNow = new THREE.Vector3(); let tailOk = false;
   // hielo que se desprende de la S-IC con la vibración de la ignición
-  const NI = Q.high ? 90 : 40; const iceG = new THREE.IcosahedronGeometry(1, 0); iceG.scale(1, 0.45, 0.8);
+  const NI = lite ? 1 : Q.high ? 90 : 40; const iceG = new THREE.IcosahedronGeometry(1, 0); iceG.scale(1, 0.45, 0.8);
   const ice = new THREE.InstancedMesh(iceG, new THREE.MeshStandardMaterial({ color: 0xeef4ff, roughness: 0.35 }), NI); ice.frustumCulled = false; ice.castShadow = false; scene.add(ice);
   const iceP = Array.from({ length: NI }, () => ({ p: new THREE.Vector3(), v: new THREE.Vector3(), r: new THREE.Euler(), w: new THREE.Vector3(), s: 0, on: false })); let iceI = 0;
   const flashes = makeFlashes(scene);
   // Tierra desde arriba para la parte alta del ascenso
   const E = earth(6371, new THREE.Vector3(0.8, 0.3, -0.3).normalize()); E.visible = false; scene.add(E);
-  const post = makePost(scene, camera);
+  const post = lite ? null : makePost(scene, camera);
   // estado de efectos
   const fx = { ullage: 0, aps: 0, les: 0, lesPos: new THREE.Vector3(), engines: [0, 0, 0, 0, 0], startT: [0, 0, 0, 0, 0] };
   const v3 = new THREE.Vector3(), v4 = new THREE.Vector3(), up = new THREE.Vector3(), dm = new THREE.Object3D(), R = Math.random;

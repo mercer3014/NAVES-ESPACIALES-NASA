@@ -4,6 +4,7 @@
 import { store, AUTO } from '../../core/store.js';
 import { record, run, unlock, setFlag } from './state.js';
 import { a11sfx, stinger } from '../../audio/a11-score.js';
+import { clip, clips } from '../../audio/a11-cues.js';
 import './decisions.css';
 
 const L = () => (store.get('lang') === 'en' ? 1 : 0);
@@ -11,12 +12,12 @@ const tx = (p) => (Array.isArray(p) ? p[L()] : p || '');
 
 export const DECISIONS = {
   'c1-kids': { ch: 1, prompt: ['¿Cómo habla Neil con sus hijos?', 'How does Neil talk to his sons?'], options: [
-    { id: 'truth', historic: true, label: ['Contarles la verdad', 'Tell them the truth'], hint: ['«Es peligroso, pero confío en mi equipo».', '“It’s dangerous, but I trust my team.”'], card: 'decision-hijos', echo: ['Rick escuchará el alunizaje sin miedo.', 'Rick will hear the landing without fear.'] },
-    { id: 'downplay', label: ['Restarle importancia', 'Downplay it'], hint: ['«Es un viaje de trabajo, volveré pronto».', '“It’s a business trip. I’ll be back soon.”'], trust: -5, echo: ['Rick lo descubrirá por la televisión.', 'Rick will find out from the TV.'] },
+    { id: 'truth', historic: true, label: ['Contarles la verdad', 'Tell them the truth'], hint: ['«Es peligroso, pero confío en mi equipo».', '“It’s dangerous, but I trust my team.”'], card: 'decision-hijos', vo: 'c1_dec_armstrong_verdad_en', echo: ['Rick escuchará el alunizaje sin miedo.', 'Rick will hear the landing without fear.'] },
+    { id: 'downplay', label: ['Restarle importancia', 'Downplay it'], hint: ['«Es un viaje de trabajo, volveré pronto».', '“It’s a business trip. I’ll be back soon.”'], trust: -5, vo: 'c1_dec_armstrong_restar_importancia_en', echo: ['Rick lo descubrirá por la televisión.', 'Rick will find out from the TV.'] },
     { id: 'rocket', label: ['Darle a Rick el cohete de Mark', 'Give Rick Mark’s rocket'], hint: ['Para que cuide de su hermano.', 'So he looks after his brother.'], trust: 5, echo: ['Rick cuidará de Mark durante el descenso.', 'Rick will look after Mark during the descent.'] },
   ] },
   'c1-firststep': { ch: 1, prompt: ['Aldrin y el primer paso', 'Aldrin and the first step'], options: [
-    { id: 'accept', historic: true, label: ['Aceptarlo en silencio', 'Accept it quietly'], trust: 5, echo: ['Neil se lo agradecerá.', 'Neil will thank him for it.'] },
+    { id: 'accept', historic: true, label: ['Aceptarlo en silencio', 'Accept it quietly'], trust: 5, vo: 'c1_dec_armstrong_gracias_buzz_en', echo: ['Neil se lo agradecerá.', 'Neil will thank him for it.'] },
     { id: 'talk', label: ['Hablar con Neil, de frente', 'Talk to Neil, face to face'], trust: 10, card: 'fogata-playa', echo: ['Una conversación honesta en la playa.', 'An honest talk on the beach.'] },
     { id: 'complain', label: ['Quejarse con otros astronautas', 'Complain to other astronauts'], trust: -10, echo: ['El rumor llegará a Neil.', 'The rumor will reach Neil.'] },
   ] },
@@ -36,7 +37,7 @@ export const DECISIONS = {
   ] },
   'c5-rest': { ch: 5, prompt: ['El plan dice dormir antes de salir', 'The flight plan says sleep before going out'], options: [
     { id: 'early', historic: true, label: ['Pedir a Houston adelantar la caminata', 'Ask Houston to move the walk up'], echo: ['Houston acepta.', 'Houston agrees.'] },
-    { id: 'sleep', label: ['Dormir según el plan', 'Sleep as planned'], echo: ['Aldrin: «Como si alguien pudiera dormir ahora».', 'Aldrin: “As if anyone could sleep now.”'] },
+    { id: 'sleep', label: ['Dormir según el plan', 'Sleep as planned'], vo: 'c5_dec_aldrin_como_si_alguien_en', echo: ['Aldrin: «Como si alguien pudiera dormir ahora».', 'Aldrin: “As if anyone could sleep now.”'] },
   ] },
   'c5-moment': { ch: 5, prompt: ['Un momento a solas en la superficie', 'A moment alone on the surface'], options: [
     { id: 'well', needTrust: 70, label: ['«Lo hiciste bien ahí abajo»', '“You did good down there”'], trust: 5, card: 'hermanos-armas', echo: ['Neil: «Lo hicimos».', 'Neil: “We did.”'] },
@@ -44,7 +45,7 @@ export const DECISIONS = {
   ] },
   'c5-patch': { ch: 5, prompt: ['¿Quién deja el parche del Apolo 1?', 'Who leaves the Apollo 1 patch?'], options: [
     { id: 'neil', label: ['Neil, pensando en Ed White', 'Neil, thinking of Ed White'], trust: 5 },
-    { id: 'buzz', historic: true, label: ['Buzz, a pedido de Neil', 'Buzz, at Neil’s request'], trust: 10, echo: ['Neil: «Hazlo tú. Ed era tu amigo también».', 'Neil: “You do it. Ed was your friend too.”'] },
+    { id: 'buzz', historic: true, label: ['Buzz, a pedido de Neil', 'Buzz, at Neil’s request'], trust: 10, vo: 'c5_dec_armstrong_hazlo_tu_en', echo: ['Neil: «Hazlo tú. Ed era tu amigo también».', 'Neil: “You do it. Ed was your friend too.”'] },
   ] },
   'c6-collins': { ch: 6, prompt: ['48 minutos sin radio. ¿Qué hace Collins?', '48 minutes without radio. What does Collins do?'], options: [
     { id: 'work', label: ['Trabajar: recalcular el encuentro', 'Work: recompute the rendezvous'], echo: ['Collins tendrá un plan B en el reencuentro.', 'Collins will have a plan B at the reunion.'] },
@@ -60,8 +61,8 @@ export const DECISIONS = {
     { id: 'shake', label: ['La mano, y una broma sobre el polvo', 'A handshake and a dust joke'] },
   ] },
   'c7-laika': { ch: 7, prompt: ['¿Cómo sigue la charla?', 'How does the talk go on?'], options: [
-    { id: 'corporal', label: ['Aldrin: «Bienvenida a bordo, cabo Laika»', 'Aldrin: “Welcome aboard, Corporal Laika”'], trust: 5, echo: ['Collins: «La asciendo a sargento si no ladra en la reentrada».', 'Collins: “I’ll make her sergeant if she doesn’t bark during reentry.”'] },
-    { id: 'belka', label: ['Armstrong cuenta lo de Belka y Strelka', 'Armstrong tells of Belka and Strelka'], card: 'belka-strelka', echo: ['Y una cachorra terminó en la Casa Blanca…', 'And a puppy ended up in the White House…'] },
+    { id: 'corporal', label: ['Aldrin: «Bienvenida a bordo, cabo Laika»', 'Aldrin: “Welcome aboard, Corporal Laika”'], trust: 5, vo: 'c7_dec_aldrin_cabo_laika_en', echo: ['Collins: «La asciendo a sargento si no ladra en la reentrada».', 'Collins: “I’ll make her sergeant if she doesn’t bark during reentry.”'] },
+    { id: 'belka', label: ['Armstrong cuenta lo de Belka y Strelka', 'Armstrong tells of Belka and Strelka'], card: 'belka-strelka', vo: 'c7_71b_armstrong_belka_strelka_en', echo: ['Y una cachorra terminó en la Casa Blanca…', 'And a puppy ended up in the White House…'] },
     { id: 'silent', label: ['Collins se queda mirando la Tierra', 'Collins just looks at the Earth'], card: 'abrieron-camino' },
   ] },
 };
@@ -72,6 +73,7 @@ export const decisionOpen = () => !!open;
 // Muestra la decisión y resuelve el id elegido. opts.timer (s) sobrescribe el de la tabla.
 export function ask(id, { timer } = {}) {
   const D = DECISIONS[id]; if (!D) return Promise.resolve(null);
+  if (id === 'c7-laika') clip('parte1_sputnik_bip');
   const opts = D.options.filter((o) => !o.hidden);
   const hist = opts.find((o) => o.historic) || opts[0];
   if (AUTO()) { apply(D, id, hist); return Promise.resolve(hist.id); }
@@ -110,7 +112,12 @@ export function ask(id, { timer } = {}) {
 function apply(D, id, o, secs = 0) {
   record(id, o.id, { historic: !!o.historic, trust: o.trust || 0, morale: o.morale || 0 });
   if (o.card) unlock(o.card);
+  if (o.vo) clip(o.vo, { radio: true });
+  if (id === 'c5-moment' && o.id === 'well') clips(['c5_dec_aldrin_lo_hiciste_bien_en', 'c5_dec_armstrong_lo_hicimos_en'], { radio: true });
   if (id === 'c4-1202') setFlag('bales-secs', Math.round(secs * 10) / 10);
+  if (id === 'c4-1202' && o.id === 'abort') clip('c4_dec_bales_abortar_en', { radio: true });
+  if (id === 'c4-1202' && o.id !== 'abort' && !flagOf('garmanSheet')) clip('c4_dec_bales_seguimos_go_tembloroso_en', { radio: true });
+  if (id === 'c7-laika' && o.id === 'corporal') clip('c7_dec_collins_sargento_en', { radio: true });
   stinger(o.historic ? 'mus_stinger_ruta_historica_dorada' : 'mus_stinger_decision_tomada');
 }
 

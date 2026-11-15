@@ -9,14 +9,18 @@ body[data-screen^="phase-"] .bit-toasts{bottom:calc(230px + var(--safe-b,0px))}
 .bit{position:fixed;inset:0;z-index:140;display:grid;place-items:center;padding:12px;background:#0B0C0Ed9;opacity:0;transition:opacity .25s}
 .bit.on{opacity:1}
 /* Bitácora abierta: tarjeta papel */
-.bit-panel{width:min(1040px,100%);height:min(720px,calc(100dvh - 24px));display:grid;grid-template-rows:auto auto 1fr;background:#F2EFE6;border:1px solid #0B0C0E;border-left:3px solid #FF4F00;border-radius:2px;color:#0B0C0E;font-family:var(--f-ui,Barlow,system-ui,sans-serif);overflow:hidden}
+.bit-panel{width:min(1040px,100%);height:min(720px,calc(100dvh - 24px));display:grid;grid-template-rows:auto auto auto minmax(0,1fr);background:#F2EFE6;border:1px solid #0B0C0E;border-left:3px solid #FF4F00;border-radius:2px;color:#0B0C0E;font-family:var(--f-ui,Barlow,system-ui,sans-serif);overflow:hidden}
 .bit-panel header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px 8px}
 .bit-panel h2{margin:2px 0 0;font-family:var(--f-title,Jost,sans-serif);font-weight:700;letter-spacing:.06em;font-size:22px;text-transform:uppercase}
 .bit-k{font:500 11px var(--f-mono,monospace);letter-spacing:.22em;color:#3A3D42}
 .bit-x{all:unset;cursor:pointer;width:40px;height:40px;display:grid;place-items:center;border-radius:2px;font-size:22px;border:1.5px solid #0B0C0E;box-sizing:border-box}
 .bit-x:hover,.bit-x:focus-visible{background:#0B0C0E;color:#F2EFE6}
-.bit-tabs{display:flex;gap:6px;overflow-x:auto;padding:0 16px 10px;scrollbar-width:thin}
-.bit-tab{all:unset;cursor:pointer;flex:none;display:grid;gap:1px;padding:7px 11px;border-radius:2px;border:1px solid #3A3D42;font-size:13px;font-weight:600;text-align:center;min-height:36px;box-sizing:border-box}
+.bit-modes{display:flex;gap:6px;overflow-x:auto;padding:0 16px 8px}
+.bit-mode{all:unset;cursor:pointer;flex:none;padding:7px 12px;border:1px solid #0B0C0E;font:600 13px var(--f-ui,Barlow,sans-serif);letter-spacing:.04em;text-transform:uppercase}
+.bit-mode.on{background:#0B0C0E;color:#F2EFE6}
+.bit-tabs{display:flex;gap:6px;overflow-x:auto;align-items:flex-start;padding:0 16px 10px;scrollbar-width:thin}
+.bit-tabs[hidden]{display:none}
+.bit-tab{all:unset;cursor:pointer;flex:none;display:grid;gap:1px;padding:7px 11px;border-radius:2px;border:1px solid #3A3D42;font-size:13px;font-weight:600;text-align:center;min-height:36px;box-sizing:border-box;white-space:nowrap}
 .bit-tab i{font:normal 10.5px var(--f-mono,monospace);color:#3A3D42}
 .bit-tab:hover{border-color:#0B0C0E}
 .bit-tab.on{background:#FF4F00;border-color:#FF4F00;color:#0B0C0E}
@@ -38,6 +42,20 @@ body[data-screen^="phase-"] .bit-toasts{bottom:calc(230px + var(--safe-b,0px))}
 .bit-date{font:500 12px var(--f-mono,monospace);color:#3A3D42;margin-bottom:10px}
 .bit-fact{font-family:var(--f-ui,Barlow,sans-serif);font-size:16px;line-height:1.55;color:#0B0C0E}
 .bit-img{font-size:13px;color:#3A3D42;font-style:italic}
+.bit-why{font-size:15px;line-height:1.45;margin:8px 0;padding:8px 10px;border-left:3px solid #FF4F00;background:#0B0C0E0d}
 .bit-src{font:500 11px var(--f-mono,monospace);color:#3A3D42;margin-top:12px}
 .bit-empty{color:#3A3D42;font-size:14px}
+.bit-listen{all:unset;cursor:pointer;margin-top:12px;padding:8px 12px;background:#0B0C0E;color:#F2EFE6;font:600 13px var(--f-mono,monospace);letter-spacing:.12em;text-transform:uppercase}
+.bit-card.secret{background:#0B0C0E;color:#F2EFE6;border-color:#0B0C0E}
+.bit-card.secret small{color:#A8A59C}
+.bit-badge{display:grid;gap:2px;padding:12px;border:1px solid #3A3D42;background:#F2EFE6;min-height:84px}
+.bit-badge b{font-size:14px;font-weight:700}
+.bit-badge small,.bit-badge i{font:500 12px var(--f-mono,monospace);color:#3A3D42}
+.bit-badge.on{background:#0B0C0E;color:#FFB000;border-color:#FFB000}
+.bit-badge.on small,.bit-badge.on i{color:#F2EFE6}
+.bit-shot{all:unset;cursor:pointer;display:grid;gap:4px}
+.bit-shot img{width:100%;aspect-ratio:1;object-fit:cover;border:1px solid #0B0C0E33;background:#0B0C0E}
+.bit-shot b{font:500 11px var(--f-mono,monospace)}
+.bit-shot.sel img{outline:2px solid #FF4F00}
+.bit-photo{width:100%;max-height:280px;object-fit:cover;border:1px solid #0B0C0E;margin-bottom:8px}
 @media (max-width:760px){.bit-body{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) minmax(0,1fr)}.bit-det{border-left:0;border-top:1px solid #0B0C0E33}.bit-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}}

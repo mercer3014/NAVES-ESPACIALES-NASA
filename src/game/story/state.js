@@ -35,6 +35,16 @@ export const historicRoute = () => Object.values(run.choices).every((c) => c.his
 export function setFlag(k, v = true) { run.flags[k] = v; save(); }
 export const flagOf = (k) => run.flags[k];
 
+// Pista de un evento oculto: se guarda en cuanto un personaje la dice, antes de ganar la tarjeta.
+const hinted = () => store.get('bitacoraHints') || {};
+export function hearHint(id) {
+  if (!CARDS[id]) return false;
+  const h = hinted(); if (h[id]) return false;
+  h[id] = { t: Date.now() }; store.set('bitacoraHints', h);
+  return true;
+}
+export const hintOf = (id) => hinted()[id] || null;
+
 // ---- Bitácora (colección global) ----
 const owned = () => store.get('bitacora') || {};
 export const hasCard = (id) => !!owned()[id];
@@ -43,10 +53,25 @@ export function unlock(id, { quiet = false, note = null } = {}) {
   const o = owned(); if (o[id]) return false;
   o[id] = { t: Date.now(), ...(note ? { note } : {}) }; store.set('bitacora', o);
   emit('bitacora:new', id, card, { quiet });
+  awardBadges();
   return true;
 }
 export function bitacoraProgress(chapter = null) {
   const ids = Object.keys(CARDS).filter((id) => chapter == null || CARDS[id].ch === chapter);
   const o = owned(); const got = ids.filter((id) => o[id]).length;
   return { got, total: ids.length, pct: ids.length ? Math.round((got / ids.length) * 100) : 0 };
+}
+
+// Una insignia por capítulo cuando la bitácora de ese capítulo está al 100 %.
+export const badgesOf = () => store.get('insignias') || {};
+function awardBadges() {
+  const ownedBadges = badgesOf(); let fresh = false;
+  for (let ch = 0; ch < 10; ch++) {
+    const p = bitacoraProgress(ch);
+    if (p.total && p.got >= p.total && !ownedBadges[ch]) { ownedBadges[ch] = Date.now(); fresh = true; }
+  }
+  if (!fresh) return ownedBadges;
+  store.set('insignias', ownedBadges);
+  if (typeof window !== 'undefined') import('../../audio/a11-score.js').then((m) => m.stinger('mus_stinger_insignia_capitulo_100')).catch(() => {});
+  return ownedBadges;
 }

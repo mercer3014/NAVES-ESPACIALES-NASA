@@ -35,7 +35,17 @@ const decide = (id, then) => async () => {
 // tarjeta puente (fecha/hora + 1-2 líneas + cita de radio opcional); ver bridge.js
 const bridge = (id) => async (o) => { const m = await import('./bridge.js'); return m.playBridge(id, o); };
 // Sala de diseño «Tu Apolo 11» (WP5): devuelve el plan, que designRoom guarda en store 'missionPlan'
-const designScene = async (o) => { const b = await import('./bridge.js'); await b.neutralWorld(); if (!o?.ctx) show('<div class="screen"></div>', 'story-design'); const m = await import('../design/design-screen.js'); const plan = await m.designRoom({ mode: 'story' }); return { id: 'design', plan }; };
+const designScene = async (o) => {
+  try {
+    const walked = await explore('design-room')(o);
+    if (walked && !walked.error) {
+      const { activePlan } = await import('../design/plan.js');
+      const { store } = await import('../../core/store.js');
+      return { id: 'design', plan: activePlan(null, store), flags: walked.flags || {} };
+    }
+  } catch (e) { console.warn('sala de diseño caminable', e); }
+  const b = await import('./bridge.js'); await b.neutralWorld(); if (!o?.ctx) show('<div class="screen"></div>', 'story-design'); const m = await import('../design/design-screen.js'); const plan = await m.designRoom({ mode: 'story' }); return { id: 'design', plan };
+};
 // escena No Canon con rótulo permanente (misma convención que el jefe: «NO CANON · …»)
 const noCanon = (run_) => async (o) => { const m = await import('./bridge.js'); const off = m.noCanonTag(); try { return await run_(o); } finally { off(); } };
 

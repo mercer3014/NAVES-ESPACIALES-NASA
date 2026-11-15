@@ -32,3 +32,15 @@ export function stopVoiceLine() {
   const h = cur; cur = null; curFile = null;
   h.fade(h.volume(), 0, 150); setTimeout(() => h.unload(), 180);
 }
+
+// Tonos Quindar reales (NASA). El archivo dura ~24 s: solo suena el ataque, ~280 ms.
+const qHowl = {};
+export function quindar(which = 'in', vol = 0.62) {
+  if (typeof window === 'undefined' || commsMode() === 'off') return null;
+  const file = which === 'out' ? 'nasa_real/ui_quindar_hawaii' : 'nasa_real/ui_quindar_houston';
+  if (!qHowl[file]) qHowl[file] = new Howl({ src: [`/audio/a11/${file}.mp3`], sprite: { beep: [0, 280] } });
+  const h = qHowl[file];
+  h.volume(vol * (store.get('vol')?.voice ?? 1));
+  h.play('beep');
+  return h;
+}

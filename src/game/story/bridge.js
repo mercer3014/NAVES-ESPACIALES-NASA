@@ -3,6 +3,7 @@
 // Se registra en flow.js como STORY `bridge:<id>`; el orden se controla solo con SLOTS. Textos: [es, en].
 import { store, AUTO } from '../../core/store.js';
 import { show } from '../../ui/router.js';
+import { clips } from '../../audio/a11-cues.js';
 import './bridge.css';
 
 const L = () => (store.get('lang') === 'en' ? 1 : 0);
@@ -59,6 +60,8 @@ export const bridgeSecs = (b) => (b.quote ? SECS.max : SECS.min + 1); // 5 s sin
 
 export async function playBridge(id, opts = {}) {
   const b = BRIDGES[id]; if (!b) return { id: 'bridge:' + id, skipped: false };
+  if (id === 'tli') clips(['cap2_go_tli'], { radio: true });
+  if (id === 'undock') clips(['cap4_eagle_tiene_alas', 'c4_41_collins_tomenselo_con_calma_en', 'c4_41_aldrin_okay_mike_en', 'cap4_collins_todo_va_de_maravilla'], { radio: true });
   if (AUTO()) return { id: 'bridge:' + id, skipped: false };
   try { await neutralWorld(); } catch (e) { console.warn('bridge: mundo neutro no disponible', e); }
   if (!opts.ctx) show('<div class="screen"></div>', 'story-bridge-' + id); // entre fases: quita el HUD anterior

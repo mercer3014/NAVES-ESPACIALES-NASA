@@ -1,7 +1,7 @@
 // «Tu Apolo 11»: el plan es datos puros y su evaluación (masa, ciencia, riesgo, margen) es coherente con el simulador del Eagle.
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { NASA_PLAN, LIMIT_KG, FUEL_STEPS, SITES, INSTRUMENTS, EVA_TIMES, PROFILES, computePlan, normalizePlan, isNasaPlan, diffVsNasa, marginSec, activePlan } from '../src/game/design/plan.js';
+import { NASA_PLAN, LIMIT_KG, FUEL_STEPS, SITES, INSTRUMENTS, EVA_TIMES, PROFILES, computePlan, normalizePlan, isNasaPlan, diffVsNasa, marginSec, activePlan, scoreAxes } from '../src/game/design/plan.js';
 import { create, step, guide, agl, judge, ground, PAD, LM, hoverThr } from '../src/sim/lander.js';
 import { CARDS } from '../src/game/story/cards.js';
 const src = (p) => readFileSync(new URL('../src/' + p, import.meta.url), 'utf8');
@@ -12,7 +12,7 @@ assert.ok(N.ok && N.massKg <= LIMIT_KG && N.massKg > 85, 'NASA_PLAN cabe en 100 
 assert.equal(N.risk, 'low'); assert.equal(N.o2Mult, 1); assert.equal(N.fuelMult, 1); assert.deepEqual(N.tasks.sort(), ['LRRR', 'PSEP', 'SWC']);
 assert.deepEqual(N.lander, { boulderR: 95, padR: 24 }, 'por defecto: campo de rocas y zona segura del simulador');
 assert.ok(isNasaPlan(NASA_PLAN) && isNasaPlan(undefined) && isNasaPlan({}), 'sin plan = plan de la NASA');
-assert.deepEqual(diffVsNasa(NASA_PLAN), { site: false, fuel: false, evaTime: false, added: [], dropped: [] });
+assert.deepEqual(diffVsNasa(NASA_PLAN), { site: false, fuel: false, evaTime: false, comms: false, power: false, window: false, added: [], dropped: [] });
 assert.equal(activePlan(null, { get: () => null }).site, 'tranquility'); assert.equal(activePlan({ plan: { site: 'sinus' } }, null).site, 'sinus');
 
 // perfiles: válidos, y cada uno apuesta por algo distinto
@@ -38,10 +38,23 @@ assert.ok(SITES.highlands.boulderR + 20 < Math.abs(PAD.x) - SITES.highlands.padR
 assert.ok(computePlan({ ...NASA_PLAN, evaTime: 'long' }).o2Mult > 1 && computePlan({ ...NASA_PLAN, evaTime: 'long' }).riskPts > N.riskPts && EVA_TIMES.long.min === 210 && EVA_TIMES.short.min === 150);
 // las tareas del EASEP que aparecen en la EVA son solo las de los instrumentos elegidos
 assert.deepEqual(computePlan({ ...NASA_PLAN, payload: ['lrrr', 'stereo'] }).tasks, ['LRRR']);
+// presupuesto, energía, comunicaciones y ventana: cambian el resultado y no hay una sola respuesta
+const gold = computePlan({ ...NASA_PLAN, comms: 'goldstone' });
+const spare = computePlan({ ...NASA_PLAN, power: 'spare' });
+const slip = computePlan({ ...NASA_PLAN, window: 'jul21', site: 'highlands' });
+assert.equal(gold.tv, 'poor'); assert.ok(gold.budgetLeft > N.budgetLeft, 'menos antenas dejan créditos');
+assert.equal(computePlan({ ...NASA_PLAN, power: 'tight' }).energyS, 48);
+assert.equal(slip.windowFit, true); assert.equal(computePlan({ ...NASA_PLAN, window: 'jul21' }).windowFit, false);
+assert.ok(spare.massKg === N.massKg + 6, 'la batería de reserva pesa');
+assert.equal(computePlan({ ...NASA_PLAN, power: 'spare', fuel: 1.3 }).ok, false, 'reserva y mucho combustible no caben');
+assert.ok(computePlan({ ...NASA_PLAN, fuel: 1.2, payload: ['lrrr'] }).marginSec > computePlan({ ...NASA_PLAN, fuel: 0.85, payload: ['lrrr'] }).marginSec);
+const axes = scoreAxes(NASA_PLAN, { descent: { score: 83 } });
+assert.deepEqual(axes.map((a) => a.id), ['success', 'science', 'safety', 'efficiency']);
+assert.equal(axes[0].pct, 83); assert.ok(axes.every((a) => a.pct >= 0 && a.pct <= 100));
 
 // planes corruptos o viejos se normalizan
 const z = normalizePlan({ site: 'marte', payload: ['x', 'lrrr', 'lrrr'], fuel: 'mucho', evaTime: 9 });
-assert.deepEqual(z, { site: 'tranquility', payload: ['lrrr'], fuel: 1, evaTime: 'short', patch: null });
+assert.deepEqual(z, { site: 'tranquility', payload: ['lrrr'], fuel: 1, evaTime: 'short', patch: null, comms: 'parkes', power: 'nominal', window: 'jul16' });
 assert.equal(normalizePlan({ fuel: 1.07 }).fuel, 1.05); assert.equal(normalizePlan(null).fuel, 1);
 
 // el margen estimado coincide con el simulador (piloto automático desde la toma de control P66, 300 m)

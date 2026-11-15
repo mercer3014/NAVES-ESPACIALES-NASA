@@ -22,6 +22,13 @@
 .dsg-card{background:var(--card);border:2px solid var(--gr);border-radius:2px;padding:12px 14px 14px;display:flex;flex-direction:column;gap:8px;min-width:0}
 .dsg-card h2{margin:0;font:700 19px/1.1 var(--f-t);letter-spacing:.03em;text-transform:uppercase;display:flex;gap:10px;align-items:center}
 .dsg-n{flex:none;width:28px;height:28px;display:grid;place-items:center;background:var(--or);color:var(--k);font:700 15px var(--f-m);border-radius:2px}
+.dsg-who{margin:0;font:600 11px var(--f-m);letter-spacing:.14em;text-transform:uppercase;color:var(--am)}
+.dsg.section .dsg-prof{display:none}
+.dsg.focus-site .dsg-card:not([data-part="site"]),
+.dsg.focus-fuel .dsg-card:not([data-part="fuel"]),
+.dsg.focus-comms .dsg-card:not([data-part="comms"]){display:none}
+.dsg.focus-budget .dsg-cards{display:none}
+.dsg.focus-budget .dsg-main{grid-template-columns:minmax(280px,520px)}
 .dsg-q{margin:0;font:500 14px/1.25 var(--f-u);color:#C9C5BA}
 .dsg-opts{display:grid;gap:6px}
 .dsg-opt{appearance:none;text-align:left;background:var(--k);border:2px solid var(--gr);border-radius:2px;padding:8px 10px;min-height:48px;cursor:pointer;display:grid;grid-template-columns:1fr auto;gap:1px 10px;align-items:center;position:relative}
@@ -90,6 +97,12 @@
 .dbr-redo{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .dbr-redo .btn{background:#FF4F00;color:#0B0C0E;border:2px solid #FF4F00;border-radius:2px;font-family:'Barlow Semi Condensed',system-ui,sans-serif;font-weight:700;letter-spacing:.06em;text-transform:uppercase;min-height:44px}
 .dbr-redo small{font:500 13px 'Barlow Semi Condensed',system-ui,sans-serif;color:#C9C5BA;max-width:48ch}
+.dbr-axes{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.dbr-axes div{display:grid;grid-template-columns:1fr auto;gap:2px 8px;align-items:center}
+.dbr-axes span{font:600 12px 'Barlow Semi Condensed',system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.dbr-axes b{font:500 13px 'IBM Plex Mono',ui-monospace,monospace;color:#FFB000}
+.dbr-axes i{grid-column:1/-1;display:block;height:8px;background:#3A3D42;position:relative}
+.dbr-axes i::after{content:'';position:absolute;left:0;top:0;bottom:0;width:var(--w,0%);background:#F2EFE6}
 
 /* Informe: los avisos de logros (Misión 1 completa, Sin ayuda) no tapan el título ni la tarjeta */
 body[data-screen="debrief"] #toasts{top:auto;bottom:calc(12px + var(--safe-b,0px))}

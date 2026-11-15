@@ -2,10 +2,11 @@
 import { THREE } from '../../core/engine.js';
 import { t, extend } from '../../core/i18n.js';
 import { $, h, clamp, damp, toast, achieve, fmt } from '../../core/util.js';
-import { sfx, music, voice, engine, stopEngine } from '../../core/audio.js';
+import { sfx, music, engine, stopEngine } from '../../core/audio.js';
+import { clip, clips } from '../../audio/a11-cues.js';
 import { axis, down, pressed, bindBtn, bdown, bpressed, makeStick, makeThrottle, input } from '../../core/input.js';
 import { isTouch, DEBUG, shared, AUTO, store } from '../../core/store.js';
-import { activePlan, computePlan, isNasaPlan } from '../design/plan.js';
+import { activePlan, computePlan, isNasaPlan, planNotes } from '../design/plan.js';
 import { objectiveCardHtml } from '../../ui/flight-hud.js';
 import { makeMoonSurface } from '../../scenes/moonsurface.js';
 import { create, step, guide, agl, judge, hoverThr, brakingMargin, vsCue, LM, PAD, BOULDERS, ground } from '../../sim/lander.js';
@@ -45,6 +46,7 @@ export default async function descent(ctx) {
   const PL = computePlan(activePlan(ctx, store)); const rock0 = BOULDERS.r, pad0 = PAD.r;
   BOULDERS.r = PL.lander.boulderR; PAD.r = PL.lander.padR; ctx.onCleanup(() => { BOULDERS.r = rock0; PAD.r = pad0; });
   const W = makeMoonSurface({ seed: ctx.seed }); ctx.world(W); const cam = W.camera;
+  const elSun = (PL.sunDeg || 11) * Math.PI / 180; W.sunDir.set(-Math.cos(elSun), Math.sin(elSun), 0.22).normalize();
   const tense = storyInPhase(ctx) ? 'a11/music/mus_c4_descenso_tension_pulso_loop' : 'tension';
   music(tense, { vol: 0.35 });
   const el = ctx.hud(`${objectiveCardHtml({ kicker: `${t('ph.n')} 04 · ${t('ph.descent')}`, titleHtml: `<div class="phase-title prog">${t('d.p63')}</div>`, bodyHtml: `<p class="mhud-note hint">${t('d.watch')}</p>` })}
@@ -54,7 +56,8 @@ export default async function descent(ctx) {
       <div><div class="k">${t('d.thr')}</div><div class="v th">—</div></div><div><div class="k">${t('d.fuel')}</div><div class="v fu">—</div></div></div>
       <div class="vscue"> </div>
       <div class="fuelbar" style="height:4px;background:rgba(186,206,212,.18);margin-top:6px;overflow:hidden"><i style="display:block;height:100%;width:100%;background:var(--mhud-go,#8fbf9b)"></i></div>
-      <div class="lamps"><span class="lampx l-prog">PROG</span><span class="lampx l-cont">CONTACT</span><span class="lampx l-rod">ROD</span></div></div>
+      <div class="lamps"><span class="lampx l-prog">PROG</span><span class="lampx l-cont">CONTACT</span><span class="lampx l-rod">ROD</span></div>
+      <div class="plan-chip" style="display:none;margin-top:8px;padding:6px 8px;background:#FFB000;color:#0B0C0E;font:700 12px/1.2 ui-monospace,monospace;letter-spacing:.08em">TU PLAN</div></div>
       <button class="btn ffw">${t('d.ffw')}</button></aside>
     <div class="bc lpd" style="display:none;width:min(420px,${isTouch ? 86 : 70}vw);${isTouch ? 'top:calc(168px + var(--safe-t));bottom:auto' : 'bottom:calc(18px + var(--safe-b))'}"><div class="strip" style="position:relative;height:8px;width:100%;background:rgba(7,12,16,.72);border:1px solid rgba(186,206,212,.32);overflow:hidden">
       <i class="rk" style="position:absolute;top:0;bottom:0;background:repeating-linear-gradient(45deg,rgba(211,106,92,.45) 0 6px,#0000 6px 12px)"></i><i class="pd" style="position:absolute;top:0;bottom:0;background:rgba(143,191,155,.4)"></i>
@@ -130,6 +133,7 @@ export default async function descent(ctx) {
       const rk = $('.rk', el); rk.style.left = pc(BOULDERS.x - BOULDERS.r) + '%'; rk.style.width = pc(BOULDERS.x + BOULDERS.r) - pc(BOULDERS.x - BOULDERS.r) + '%';
       const dx = PAD.x - s.x; $('.topad', el).textContent = `${t('d.toPad')}: ${dx > 0 ? '→' : '←'} ${Math.abs(dx).toFixed(0)} m`; }
     if (isTouch && thrUI) thrUI.show(s.thr);
+    const chip = $('.plan-chip', el); if (chip) { const show = mode === 'manual'; chip.style.display = show ? '' : 'none'; if (show) chip.textContent = (store.get('lang') === 'en' ? 'YOUR PLAN' : 'TU PLAN') + ' · ~' + PL.marginSec + ' s'; }
     if (mode === 'manual' && !fuelWarn && brakingMargin(s) < 0 && a > 40) {
       fuelWarn = true;
       const o = h(`<div class="overlay"><div class="panel" style="max-width:460px;text-align:center"><h2>${t('d.norecover')}</h2><p class="mono">${t('d.fall')}</p><button class="btn primary">${t('d.retry300')}</button></div></div>`);
@@ -159,8 +163,9 @@ export default async function descent(ctx) {
     const a = agl(s); $('.dustveil', el).style.opacity = clamp(W.dustAmount() * 0.45, 0, 0.38); if (a < 30 && !s.landed) shake = Math.max(shake, 0.05 * s.thr);
     camUpdate(dt0); drawHud();
     if (bpressed('view')) camRig.cycle();
-    if (mode === 'manual') { const sc = sec(); for (const c of [60, 30]) if (sc < c && !callouts[c]) { callouts[c] = 1; ctx.banner(t('d.' + c), '', 1500, c === 30 ? 'warn' : ''); sfx('beep'); if (c === 60) ctx.say('pa.fuel', { ms: 3000 }); ctx.cc.log('d.' + c, null, 'warn'); }
-      if (a < 1.6 && !s.landed && !callouts.c) { callouts.c = 1; $('.l-cont', tele).classList.add('on', 'blue'); W.contactL.intensity = 6; sfx('beep', { rate: 1.6 }); ctx.banner(t('d.contact'), '', 1200); } }
+    if (mode === 'manual') { const sc = sec(); for (const c of [60, 30]) if (sc < c && !callouts[c]) { callouts[c] = 1; ctx.banner(t('d.' + c), '', 1500, c === 30 ? 'warn' : ''); sfx('beep'); clip(c === 60 ? 'cap4_60_segundos' : 'cap4_30_segundos', { radio: true }); if (c === 60) ctx.say('pa.fuel', { ms: 3000 }); ctx.cc.log('d.' + c, null, 'warn'); }
+      if (a < 15 && !s.landed && !callouts.dust) { callouts.dust = 1; clip('cap4_aldrin_polvo_40_pies', { radio: true }); }
+      if (a < 1.6 && !s.landed && !callouts.c) { callouts.c = 1; $('.l-cont', tele).classList.add('on', 'blue'); W.contactL.intensity = 6; sfx('beep', { rate: 1.6 }); ctx.banner(t('d.contact'), '', 1200); clip('cap4_luz_de_contacto_apagado', { radio: true }); } }
     ctx.cc.snap({ alt: a, vs: s.vy, hs: s.vx, tilt: s.tilt, thr: s.thr, fuel: mode === 'manual' ? sec() : null, x: s.x, pad: PAD.x, mode, alarm: frozen });
   });
   // ---- 1) P63/P64 automático + alarma 1202 ----
@@ -168,7 +173,8 @@ export default async function descent(ctx) {
   if (sub === 'p66') { Object.assign(s, { x: -40, vx: 14, vy: -9 }); s.y = ground(s.x) + 299; st.alarmOk = true; st.alarmT = 0; }
   else {
     ctx.banner(t('d.p63'), isNasaPlan(PL.plan) ? 'Eagle' : 'Eagle · ' + t('d.site.' + PL.plan.site), 2000); ctx.cc.log('d.p63');
-    await ctx.until(() => agl(s) < 1000); prog('d.p64'); ctx.cc.log('d.p64');
+    clips(['cap4_go_pdi', 'c4_42_collins_relevo_go_descenso_en'], { radio: true });
+    await ctx.until(() => agl(s) < 1000); prog('d.p64'); ctx.cc.log('d.p64'); clip('c4_43_armstrong_vamos_largos_en', { radio: true });
     await ctx.until(() => agl(s) < 780);
     await alarm1202();
   }
@@ -179,6 +185,7 @@ export default async function descent(ctx) {
   async function handover() {
     mode = 'manual'; s.fuel = s.fuel0 = fuel0; thrTarget = hoverThr(s); rod = !!D.assist && ctx.diffName === 'cadet'; if (rod) rodUsed = true; callouts = {};
     prog('d.p66'); ctx.banner(t('d.control'), '', 2600, 'warn'); ctx.say('pa.control', { ms: 4000 }); ctx.cc.log('d.control', null, 'warn'); hint(null, isTouch ? '' : '');
+    const note = planNotes(PL.plan)[0]; if (note && !isNasaPlan(PL.plan)) setTimeout(() => !ctx.dead && ctx.banner(note[store.get('lang') === 'en' ? 1 : 0], '', 3200, 'warn'), 2700);
     $('.lpd', el).style.display = ''; $('.viewbtn', el).style.display = ''; if (isTouch) ['.tc-stick', '.tc-throttle', '.rodbtn'].forEach((q) => ($(q, el).style.display = ''));
     $('.l-cont', tele).classList.remove('on', 'blue'); W.contactL.intensity = 0;
   }
@@ -189,10 +196,11 @@ export default async function descent(ctx) {
     await new Promise((res) => { landedCb = res; const off = ctx.loop(() => { if (s.out && agl(s) < 0.1) res(); }); ctx.onCleanup(off); });
     landedCb = null; mode = 'done'; stopEngine(); J = judge(s, D); st.result = J.res; W.setLM(s.x, s.y, s.tilt, 0, false);
     if (s.out && J.res === 'good') J.res = 'hard';
-    if (J.res === 'good') { sfx('thud'); voice('eagle'); ctx.banner(t('d.landed'), 'Tranquility Base', 3200, 'good'); ctx.say('pa.landed', { ms: 3500 }); ctx.cc.log('d.landed', null, 'ok'); playCue('eagle', { anchor: () => W.lm, ctx }); if (J.vs < 1 && J.pad < PAD.r) achieve('soft'); if (!rodUsed) achieve('noassist'); if (sec() > 60) achieve('fuel'); break; }
+    if (J.res === 'good') { sfx('thud'); clip('cap4_base_tranquilidad_eagle_aterrizado', { radio: true }); ctx.banner(t('d.landed'), 'Tranquility Base', 3200, 'good'); ctx.say('pa.landed', { ms: 3500 }); ctx.cc.log('d.landed', null, 'ok'); playCue('eagle', { anchor: () => W.lm, ctx }); if (J.vs < 1 && J.pad < PAD.r) achieve('soft'); if (!rodUsed) achieve('noassist'); if (sec() > 60) achieve('fuel'); break; }
     if (J.res === 'hard') { sfx('thud'); sfx('clunk'); shake = 0.8; st.hard = true; W.body.rotation.x = 0.08; ctx.banner(t('d.hard'), t('d.hardD'), 2800, 'warn'); ctx.cc.log('d.hard', null, 'warn'); break; }
     // crash
     st.crashes++; sfx('explosion'); shake = 2.2; W.body.visible = false; const why = J.why ? fill(t('d.why.' + J.why), { v: (J.why === 'vs' ? J.vs : J.why === 'hs' ? J.hs : J.why === 'tilt' ? J.tilt : J.slope).toFixed(1), m: J.L[J.why] && (+J.L[J.why]).toFixed(1) }) : t(s.out ? 'd.fuelout' : 'd.crashD');
+    if (st.crashes === 1 && (s.out || J.why === 'rocks')) await whatIf({ title: s.out ? ['¿Y si…? Combustible cero', 'What if…? Zero fuel'] : ['¿Y si…? Una pata en una roca', 'What if…? A foot on a rock'], text: s.out ? ['Sin combustible el Eagle no frena. En 1969 el aviso de bajo nivel sonó con unos 45 segundos de margen, y Armstrong posó antes.', 'With no fuel Eagle cannot brake. In 1969 the low-level light came on with about 45 seconds left, and Armstrong set it down first.'] : ['Una pata sobre una roca inclina el módulo. El sitio llano de la Tranquilidad se eligió para que eso no pasara.', 'A foot on a rock tips the module. Tranquility’s flat site was chosen so that would not happen.'] });
     ctx.cc.log('d.crash', { why }, 'bad');
     const choice = await new Promise((res) => { const o = h(`<div class="overlay crashbox"><div class="panel" style="max-width:440px;text-align:center"><h2 style="color:var(--red)">${t(s.out ? 'd.fuelout' : 'd.crash')}</h2><p class="mono">${why}</p>
       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px"><button class="btn primary r">${t('d.retry')}</button>${st.crashes >= 1 ? `<button class="btn s">${t('d.skip')}</button>` : ''}</div></div></div>`); el.append(o);

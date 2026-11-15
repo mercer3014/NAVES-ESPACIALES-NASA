@@ -2,7 +2,8 @@
 import { THREE, renderer } from '../../core/engine.js';
 import { t, extend } from '../../core/i18n.js';
 import { $, $$, h, toast, achieve, clamp, damp, lerp, fmt } from '../../core/util.js';
-import { sfx, music, engine, stopEngine, voice } from '../../core/audio.js';
+import { sfx, music, engine, stopEngine } from '../../core/audio.js';
+import { clips } from '../../audio/a11-cues.js';
 import { down, bindBtn, bdown } from '../../core/input.js';
 import { isTouch, shared, dbg, AUTO, AUTO1, store } from '../../core/store.js';
 import { burnPrompt, objectiveCardHtml } from '../../ui/flight-hud.js';
@@ -14,7 +15,7 @@ import { createOrbitState, resolveOrbitPosition, stepOrbit } from '../orbit-came
 import { show } from '../../ui/router.js';
 import { storyInPhase, playStory } from '../story/flow.js';
 import { runDocking } from '../story/docking.js';
-import { record } from '../story/state.js';
+import { record, hearHint } from '../story/state.js';
 import { whatIf } from '../story/decisions.js';
 import { playA11 } from '../../audio/a11-voice.js';
 extend({
@@ -197,12 +198,13 @@ export default async function cruise(ctx) {
   // esperar a llegar a la Luna
   title('c.coast'); hint('pa.tli'); await ctx.until(() => k >= 1); coastOn = false; days.style.display = 'none';
   // ---------- LOI tras la Luna: LOS ----------
-  title('c.loi'); ctx.banner(t('c.los'), 'LOS', 2200); ctx.say('pa.los', { ms: 3000 }); ctx.cc.log('c.los', null, 'warn'); ctx.cc.snap({ stage: 'los', los: true }, true);
+  title('c.loi'); clips(['cap3_go_loi_nos_vemos_otro_lado', 'cap3_perdida_senal_detras_luna'], { radio: true }); hearHint('h-ciegas'); ctx.banner(t('c.los'), 'LOS', 2200); ctx.say('pa.los', { ms: 3000 }); ctx.cc.log('c.los', null, 'warn'); ctx.cc.snap({ stage: 'los', los: true }, true);
   const los = $('.los', el); los.style.display = ''; los.innerHTML = '<div class="static"></div>'; sfx('glitch', { vol: 0.4 });
   W.sun.visible = false; W.scene.children.filter((o) => o.isDirectionalLight).forEach((l) => (l.intensity = 0.25)); // lado oscuro
   ship.rotation.set(0, 0, ship.userData.docked ? -Math.PI / 2 : Math.PI / 2); hint('c.retro'); // acoplado: +Y local = tobera SPS
   await ctx.wait(2.4); los.innerHTML = ''; los.style.display = 'none';
   st.loi = await burn('loi', true);
+  clips(['c3_34_capcom_go_loi_en', 'c3_34_armstrong_estamos_en_orbita_en', 'c3_34_collins_yeso_viejo_en'], { radio: true });
   W.sun.visible = true; W.scene.children.filter((o) => o.isDirectionalLight).forEach((l) => (l.intensity = 3.2));
   sfx('ping'); ctx.banner(t('c.aos'), 'AOS', 1600); ctx.cc.log('c.aos', null, 'ok'); ctx.cc.snap({ stage: 'aos', los: false }, true);
   await ctx.wait(1.6);
@@ -231,7 +233,7 @@ export default async function cruise(ctx) {
   renderer.render(W.scene, cam); try { shared.photo = renderer.domElement.toDataURL('image/jpeg', 0.82); } catch {}
   sfx('click'); const flash = h('<div style="position:absolute;inset:0;background:#fff;opacity:.9;transition:opacity .6s;pointer-events:none"></div>'); el.append(flash); requestAnimationFrame(() => (flash.style.opacity = 0)); setTimeout(() => flash.remove(), 700);
   const ps = shot ? clamp(1 - Math.abs(shot.at - 0.9) / 0.35, 0, 1) : 0; st.photo = ps;
-  ctx.banner(t(ps > 0.5 ? 'c.nice' : 'c.meh'), '', 1600); if (ps > 0.5) { achieve('earthrise'); voice('christmas'); } ctx.cc.log(ps > 0.5 ? 'c.nice' : 'c.meh', null, ps > 0.5 ? 'ok' : 'warn');
+  ctx.banner(t(ps > 0.5 ? 'c.nice' : 'c.meh'), '', 1600); if (ps > 0.5) achieve('earthrise'); ctx.cc.log(ps > 0.5 ? 'c.nice' : 'c.meh', null, ps > 0.5 ? 'ok' : 'warn');
   pf.style.display = 'none'; pb.style.display = 'none';
   await ctx.wait(1.8);
   const alignS = clamp(1 - st.align.wrong * 0.15 - Math.max(0, st.align.time - 12) * 0.02, 0, 1);

@@ -59,5 +59,13 @@ export const VO_MAP = {
  "write them on your blackboards and never erase them": "voz_en_clonada/p_03_kranz_duros_y_competentes_en",
  "you got a bunch of guys about to turn blue we re breathing again": "nasa_real/cap4_duke_respuesta_tipos_azules",
  "you know the good part of my job if something goes wrong down there i m the one who comes back": "voz_en_clonada/c1_13_collins_entrevistas_en",
- "you should have told us dad": "voz_en_clonada/c7_76_rick_nos_lo_tendrias_en"
+ "you should have told us dad": "voz_en_clonada/c7_76_rick_nos_lo_tendrias_en",
+ "that s not in the flight plan": "voz_en_clonada/c6_61c_aldrin_no_esta_en_plan_en",
+ "buzz what do you see": "voz_en_clonada/c6_61c_armstrong_que_ves_en",
+ "dust neil moving dust": "voz_en_clonada/c6_61c_aldrin_polvo_que_se_mueve_en",
+ "sixty seconds": "voz_en_clonada/c6_61c_duke_eco_sesenta_en",
+ "thirty seconds": "voz_en_clonada/c6_61c_duke_eco_treinta_en",
+ "you ll always be second you ll never go home": "voz_en_clonada/c6_61c_susurro_siempre_segundo_en_invertido",
+ "you ll always be second": "voz_en_clonada/c6_61c_susurro_siempre_segundo_en",
+ "i know how to fix this": "voz_en_clonada/c6_61c_aldrin_ya_se_arreglar_en"
 };

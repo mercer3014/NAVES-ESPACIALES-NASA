@@ -9,8 +9,8 @@ import { down, bindBtn, bdown } from '../../core/input.js';
 import { prop, node, disposeScene, envMap } from '../../scenes/cine-kit.js';
 import { skySphere, earth, tickAll } from '../../scenes/space.js';
 import { a11sfx } from '../../audio/a11-score.js';
-import { playA11 } from '../../audio/a11-voice.js';
-import { unlock, setFlag } from './state.js';
+import { clips } from '../../audio/a11-cues.js';
+import { unlock, setFlag, hearHint } from './state.js';
 import { whatIf } from './decisions.js';
 import { runCine, tx, L } from './cine.js';
 import './reentry.css';
@@ -24,6 +24,7 @@ const own = (o) => { o.userData.own = true; return o; };
 
 export default async function reentryScene() {
   if (AUTO()) { unlock('h-angulo'); return { skipped: false, auto: true, clean: true }; }
+  hearHint('h-angulo');
   const diff = store.get('difficulty');
   const WIDE = diff === 'cadet' ? 1.45 : diff === 'veteran' ? 0.8 : 1.05; // media anchura del corredor (grados)
   const DRIFT = diff === 'cadet' ? 0.65 : diff === 'veteran' ? 1.25 : 1;
@@ -169,7 +170,7 @@ export default async function reentryScene() {
     if (rec) rec.root.visible = true;
     if (!S.out) unlock('h-angulo');
     setTimeout(() => !S.done && a11sfx('c7_73_paracaidas_apertura', 0.75), 800);
-    setTimeout(() => !S.done && playA11('nasa_real/cap7_hornet_area_amerizaje', { vol: 0.8 }), 3200);
+    setTimeout(() => !S.done && clips(['cap7_estable_dos', 'cap7_hornet_area_amerizaje'], { radio: true }), 1200);
     sub(tx(['Tres paracaídas principales se abren. Silencio. Solo el viento.', 'Three main parachutes open. Silence. Only the wind.']));
   }
   function finishAll() { if (S.done) return; S.done = true; resolveDone({ clean: !S.out }); }

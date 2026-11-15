@@ -23,6 +23,7 @@ import { makeBossArena, ARENA, SLAM_HIT } from '../../scenes/boss-arena.js';
 import { mountLetterbox } from '../cutscenes/letterbox.js';
 import { mountBossHud, L } from './hud.js';
 import { voiceLine, stopVoiceLine } from '../../audio/a11-voice.js';
+import { clips } from '../../audio/a11-cues.js';
 
 const G = 1.62; // gravedad lunar
 const CAM_MIN = 6; // distancia mínima de la cámara al Guardián (mide ~16 m)
@@ -295,6 +296,7 @@ export async function runBoss(opts = {}) {
   function restartPhase() { S.stats.retries++; resetPhase(S.phase); hud.toast(L('Reintento desde el inicio de la fase', 'Retrying from the start of the phase'), 1500); }
   function fail(reason) {
     if (S.over || S.mode === 'fail') return; S.mode = 'fail'; sfx('jingle_fail', { vol: 0.6 }); document.exitPointerLock?.(); hud.white(1);
+    clips(['c6_61c_armstrong_tampoco_dormir_en', 'c6_61c_aldrin_sone_polvo_en', 'c6_61c_armstrong_duerme_buzz_en']);
     const o = hud.overlay(`<div class="bd-k">${L('NO CANON · SUEÑO', 'NON-CANON · DREAM')}</div><h2>${L('Aldrin despierta de golpe', 'Aldrin jolts awake')}</h2><p>${reason}</p><p>${L('Respira. Vuelve a cerrar los ojos: el sueño continúa desde el inicio de la fase.', 'Breathe. Close your eyes again: the dream resumes from the start of the phase.')}</p><div class="bd-row"><button data-a="r">${L('Reintentar fase', 'Retry phase')}</button><button class="bd-sec" data-a="q">${L('Despertar (salir)', 'Wake up (quit)')}</button></div>`);
     o.onclick = (e) => { const a = e.target.closest('[data-a]')?.dataset.a; if (!a) return; sfx('click'); o.remove(); if (a === 'r') restartPhase(); else finish('lose', 'o2'); };
   }
@@ -353,7 +355,7 @@ export async function runBoss(opts = {}) {
     if (S.slowT > 0) S.slowT -= rdt; const dt = rdt * (S.slowT > 0 ? 0.35 : 1); S.t += dt;
     W.update(dt); for (const e of ents) if (e.g.root.visible) { e.g.mixer.update(dt); paintGuardian(e, tt); }
     W.amber.position.set(R.x, ground(R.x, R.z) + 6, R.z); W.amber.intensity = R.alive && S.mode !== 'end' ? (S.phase === 3 ? 32 : 22) * (0.6 + 0.4 * Math.sin(tt * 5)) : 0;
-    if (cine) { cine.t += rdt; while (cine.lines && cine.said < cine.lines.length && cine.t >= cine.lines[cine.said][0]) { const l = cine.lines[cine.said++]; hud.sub(l[1], L(l[2], l[3]), l[4], 0); } cine.step?.call(cine, cine.t, rdt); poseActors(dt); if (cine && cine.t >= cine.dur) endCine(); return; }
+    if (cine) { cine.t += rdt; while (cine.lines && cine.said < cine.lines.length && cine.t >= cine.lines[cine.said][0]) { const l = cine.lines[cine.said++]; voiceLine(l[3]); hud.sub(l[1], L(l[2], l[3]), l[4], 0); } cine.step?.call(cine, cine.t, rdt); poseActors(dt); if (cine && cine.t >= cine.dur) endCine(); return; }
     if (S.mode === 'end' || S.mode === 'fail') { poseActors(dt); camFollow(dt); return; }
     S.stats.time = totalTime(); S.rt += rdt; S.pt[S.phase] += rdt; if ((S.ptSave = (S.ptSave || 0) + rdt) > 3) savePT();
     // ---------- jugador ----------
