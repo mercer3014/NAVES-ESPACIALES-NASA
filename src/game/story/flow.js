@@ -68,7 +68,7 @@ export const STORY = {
   kids: decide('c1-kids'),
   ksc: explore('ksc'),
   beach: explore('beach'),
-  night: own(() => import('./night.js')),
+  night: explore('columbia'),
   'mocr-briefing': async (o) => {
     const exp = await explore('mocr-bales')(o);
     if (exp?.skipped) return Object.assign({}, exp, { id: 'mocr-briefing' });
@@ -83,7 +83,7 @@ export const STORY = {
   'mocr-landed': earth('mocr-landed'),
   'house-landed': earth('house-landed'),
   'pre-eva': decide('c5-rest'),
-  'collins-solo': own(() => import('./collins-solo.js')),
+  'collins-solo': explore('collins'),
   boss: async (o) => { const m = await import('../boss/story.js'); return m.default({ ...o, briefing: () => missionCard('boss') }); }, // No Canon, opcional: pregunta «Soñar / Saltar» antes
   breaker: withCard('breaker', () => import('./breaker.js')),
   liftoff: withCard('liftoff', () => import('./liftoff.js')),
@@ -138,7 +138,7 @@ export const SCENE_CARDS = {
   'mocr-gonogo': ['go-aterrizar'],
   'mocr-landed': ['eagle-aterrizo'],
   'house-landed': ['squawk-box'],
-  'collins-solo': ['ventana-trasera'],
+  'collins-solo': [],
   breaker: ['motor-ascenso'],
   liftoff: ['despegue-lunar'],
   reunion: ['reencuentro'],

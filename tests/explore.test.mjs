@@ -111,6 +111,11 @@ assert.equal(objectiveLines(goals, 0).some((l) => l.id === 'obj:valve'), false, 
 assert.equal(objectiveLines(goals, 0)[0].id, 'talk:wendt');
 assert.equal(completeObjective(goals, 'obj:valve'), false);
 
+const flo = createBody({ spawn: [0, 1.4, 0], canJump: false });
+for (let i = 0; i < 50; i++) stepBody(flo, { gravity: 0, lift: 0.8, floorY: 0 }, DT);
+assert.ok(flo.y > 1.55, 'sin gravedad, Q/E lo sube: ' + flo.y);
+assert.equal(flo.air, true);
+
 const hold0 = stepHold(0, true, 1, 3);
 assert.equal(hold0.done, false);
 const hold1 = stepHold(hold0.p, true, 2, 3);

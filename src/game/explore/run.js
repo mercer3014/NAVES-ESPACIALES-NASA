@@ -100,6 +100,7 @@ export async function runExplore(def, opts = {}) {
     const at = locate(n, world);
     const use = await actor(n.model, n.clip || 'idle', [at.x, at.y, at.z], n.yaw || 0, 0xffb000);
     if (n.once) { use.play?.(n.clip || 'idle', { once: true }); use.update?.(4); }
+    if (n.tilt) use.root.rotation.z = n.tilt;
     world.scene.add(use.root);
     const marker = makeMarker(THREE, n.marker || '!'); use.root.add(marker);
     items.push({ ...n, ...at, kind: 'talk', root: use.root, actor: use, marker, r: n.r ?? 1.5, label: n.label });
@@ -190,7 +191,8 @@ export async function runExplore(def, opts = {}) {
     now = t; dialogUi.tick(dt);
     const lock = !!(talk || holding || paused);
     const a = lock ? { x: 0, y: 0 } : axis();
-    stepBody(body, { ax: a.x, ay: a.y, camYaw: cam.orbit.yaw, jump: !lock && (pressed('Space') || bpressed('jump')), gravity: def.gravity ?? 9.81, floorY: world.floorY ?? 0, colliders: world.colliders }, dt);
+    const lift = !lock && def.float ? ((down('KeyE') && !focused ? 0.7 : 0) - (down('KeyQ') ? 0.7 : 0)) : 0;
+    stepBody(body, { ax: a.x, ay: a.y, camYaw: cam.orbit.yaw, jump: !lock && (pressed('Space') || bpressed('jump')), gravity: def.gravity ?? 9.81, floorY: world.floorY ?? 0, colliders: world.colliders, lift }, dt);
     pose(player, body, dt);
     for (const it of items) { if (it.actor) { it.actor.update(dt); if (it.marker) it.marker.position.y = 2.05 + Math.sin(t * 3 + it.x) * 0.04; } }
     if (mate && mateBody) { stepCompanion(mateBody, body, dt); pose(mate, { ...mateBody, air: false, jump: false }, dt); }
