@@ -23,7 +23,7 @@ extend({
   'l.ign': ['Secuencia de ignición', 'Ignition sequence'],
   'l.offWarn': ['¡FUERA DE TRAYECTORIA! Vuelve al corredor (A/D)', 'OFF COURSE! Get back in the corridor (A/D)'],
   'l.qWarn': ['¡ESTRUCTURA AL LÍMITE! Baja el empuje (S)', 'STRUCTURE AT LIMIT! Throttle down (S)'],
-  'l.sepGood': ['Separación limpia', 'Clean separation'], 'l.sepBad': ['¡Fallo! Los pernos no cedieron: intenta otra vez', 'Miss! The bolts did not let go: try again'],
+  'l.sepGood': ['Separación armada: se soltará al apagarse la etapa', 'Separation armed: it will release at burnout'], 'l.sepBad': ['¡Fallo! Los pernos no cedieron: intenta otra vez', 'Miss! The bolts did not let go: try again'],
   'l.sepBar': ['SEPARACIÓN · pulsa ESPACIO en la zona verde', 'STAGING · press SPACE in the green zone'], 'l.sepBarT': ['SEPARACIÓN · toca SEPARAR en la zona verde', 'STAGING · tap STAGE in the green zone'],
   'l.sepNow': ['¡Separa YA!', 'Stage NOW!'], 'l.tries': ['Intentos', 'Tries'],
   'l.roll': ['PROGRAMA DE ROLIDO · gira hasta el rumbo 72° (Q / E) y sostenlo', 'ROLL PROGRAM · roll to heading 72° (Q / E) and hold it'],
@@ -122,7 +122,7 @@ export default async function launch(ctx) {
     cam.position.lerpVectors(orbP, LOWCAM, e); if (e > 0) { const k = 1 - (1 - push) * e; cam.position.x *= k; cam.position.z *= k; }
     const look = new THREE.Vector3(0, 62 + DY, 0).lerp(lowLook, e);
     if ([cam.position.x, cam.position.y, cam.position.z, look.x, look.y, look.z].every(Number.isFinite)) cam.lookAt(look); } });
-  const S = { phase: 'count', s: 0, alt: 0, vel: 0, vx: 0, vy: 0, pitch: 90, thr: 1, stage: 0, stress: 0, inCorr: 0, samples: 0, stageDelay: [], maxQ: 0, gust: 0 };
+  const S = { phase: 'count', s: 0, alt: 0, vel: 0, vx: 0, vy: 0, pitch: 90, thr: 1, stage: 0, stress: 0, inCorr: 0, samples: 0, stageDelay: [], maxQ: 0, gust: 0, bar: [], armed: [] };
   let skip = false; $('.skipcd', el).onclick = () => (skip = true);
   const v = clips(['cap2_cuenta_regresiva_despegue'], { radio: true }); ctx.onCleanup(() => v?.stop?.());
   const LIFT = 17; let ct = 0;
@@ -178,20 +178,23 @@ export default async function launch(ctx) {
   function stageBar(i) {
     return new Promise((res) => {
       const box = $('.alarmbox', el); const w = clamp((D.assist ? 0.26 : 0.16) * D.tol, 0.1, 0.32), c = 0.25 + Math.random() * 0.5;
-      const period = D.assist ? 1.9 : 1.45; // s por barrido
+      const period = PERIOD; // s por barrido
+      // Sin frenar el vuelo: la barra sale SWEEPS barridos antes del apagado de la etapa, con los motores aún encendidos.
+      // Acertar «arma» la separación, que ocurre sola al apagarse la etapa. El plazo es el apagado (S.s >= STG[i].end).
       box.innerHTML = `<div class="lsep"><div class="lsep-k">${t(isTouch ? 'l.sepBarT' : 'l.sepBar')} · ${STG[i].name}</div><div class="lsep-bar"><i class="lsep-zone" style="left:${((c - w / 2) * 100).toFixed(1)}%;width:${(w * 100).toFixed(1)}%"></i><b class="lsep-ndl"></b></div><div class="lsep-n"></div></div>`;
       const ndl = $('.lsep-ndl', box), nTxt = $('.lsep-n', box); let tt = 0, misses = 0, done = false, cool = 0;
       const off = ctx.loop((dt) => {
         if (done) return; if (S.phase !== 'fly') { done = true; off?.(); res('dead'); return; }
         tt += dt; cool = Math.max(0, cool - dt);
         const u = (tt / period) % 2, p = u < 1 ? u : 2 - u; ndl.style.left = (p * 100).toFixed(2) + '%';
-        nTxt.textContent = (SWEEPS * period - tt < period * 1.2 ? t('l.sepNow') + ' · ' : '') + t('l.tries') + ' ' + (TRIES - misses) + '/' + TRIES;
-        if (tt > SWEEPS * period) { done = true; off?.(); fail('stage'); res('dead'); return; }
+        const left = STG[i].end - S.s;
+        nTxt.textContent = (left < period * 1.2 ? t('l.sepNow') + ' · ' : `${Math.max(0, left).toFixed(1)} s · `) + t('l.tries') + ' ' + (TRIES - misses) + '/' + TRIES;
+        if (left <= 0) { done = true; off?.(); fail('stage'); res('dead'); return; }
         if (!cool && (pressed('Space') || bpressed('stage'))) {
-          if (Math.abs(p - c) <= w / 2) { done = true; off?.(); sfx('ok', { vol: 0.6 }); ctx.banner(t('l.sepGood'), STG[i].name, 1200); waitingStage = null; res(true); return; }
+          if (Math.abs(p - c) <= w / 2) { done = true; off?.(); sfx('ok', { vol: 0.6 }); ctx.banner(t('l.sepGood'), STG[i].name, 1200); box.innerHTML = ''; res(true); return; }
           // Fuera de la franja: los pernos no ceden limpio. Sacudón, algo de estrés y se gasta un intento (cadete 3 · normal 2 · veterano 1).
           misses++; cool = 0.35; S.stress = clamp(S.stress + 0.2, 0, 1); W.shake = 3; sfx('error'); navigator.vibrate?.([40, 30, 40]);
-          ctx.banner(t('l.sepBad'), '', 1300, 'warn'); tt = Math.min(tt, period); // la cuenta de barridos vuelve a empezar
+          ctx.banner(t('l.sepBad'), '', 1300, 'warn');
           if (misses >= TRIES || S.stress >= 1) { done = true; off?.(); fail(S.stress >= 1 ? 'maxq' : 'stage'); res('dead'); return; }
         }
       });
@@ -202,13 +205,13 @@ export default async function launch(ctx) {
   // Margen por dificultad: intentos de separación, barridos de la aguja y segundos fuera del corredor antes de Range Safety
   const LV = D.tol > 1.2 ? 'cadet' : D.tol < 0.9 ? 'veteran' : 'normal';
   const LVL = { cadet: { tries: 3, sweeps: 4, offSecs: 6.5, rollBand: 9 }, normal: { tries: 2, sweeps: 3, offSecs: 4, rollBand: 6 }, veteran: { tries: 1, sweeps: 2, offSecs: 2.5, rollBand: 4 } }[LV];
-  const TRIES = LVL.tries, SWEEPS = LVL.sweeps;
+  const TRIES = LVL.tries, SWEEPS = LVL.sweeps, PERIOD = D.assist ? 1.9 : 1.45; // PERIOD: s por barrido de la aguja
   // ---------- programa de rolido (minijuego 1 del ascenso) ----------
   // Al librar la torre: el rumbo arranca en 90° y hay que llevarlo a 72° con Q/E y sostenerlo 1,5 s dentro de la franja.
   const ROLL = { on: false, done: false, hdg: 90, v: 0, hold: 0, t: 0, el: null };
   if (isTouch) { bindBtn($('.rollL', el), 'rollL'); bindBtn($('.rollR', el), 'rollR'); }
   function rollStep(dt) {
-    if (ROLL.done || !canFail || S.s < 3.5) return;
+    if (ROLL.done || !canFail || !cleared) return; // ya en el aire: tras librar la torre
     if (!ROLL.on) {
       ROLL.on = true; const box = document.createElement('div'); box.className = 'lroll';
       box.innerHTML = `<div class="lsep-k">${t(isTouch ? 'l.rollT' : 'l.roll')}</div><div class="lroll-g"><i class="lroll-band"></i><span class="lroll-mk">72°</span><b class="lroll-n"></b></div><div class="lroll-v mono"></div>`;
@@ -371,7 +374,14 @@ export default async function launch(ctx) {
       if (S.stress >= 1) return fail('maxq');
     }
     // etapas
-    if (!prompting && st && S.s >= st.end && waitingStage === null && S.stage < 2) { prompting = true; const i = S.stage; stagePrompt(i).then(() => { S.stage = i + 1; prompting = false; if (i === 0) setTimeout(() => !lesDone && !ctx.dead && (toast(t('l.les'), 'info'), sfx('beep')), 3000); }); }
+    // Separaciones en vuelo (modo con consecuencias): la barra se abre antes del apagado y, si quedó armada, la etapa se suelta
+    // justo al apagarse, sin pausa: el cohete nunca deja de volar.
+    if (canFail && st && S.stage < 2) {
+      const i = S.stage;
+      if (!S.bar[i] && S.s >= st.end - SWEEPS * PERIOD) { S.bar[i] = 1; stageBar(i).then((ok) => { if (ok === true) S.armed[i] = true; }); }
+      if (S.armed[i] && S.s >= st.end) { S.stageDelay.push(0); doStage(i); S.stage = i + 1; S.coast = 0.3; if (i === 0) setTimeout(() => !lesDone && !ctx.dead && (toast(t('l.les'), 'info'), sfx('beep')), 3000); }
+    }
+    else if (!prompting && st && S.s >= st.end && waitingStage === null && S.stage < 2) { prompting = true; const i = S.stage; stagePrompt(i).then(() => { S.stage = i + 1; prompting = false; if (i === 0) setTimeout(() => !lesDone && !ctx.dead && (toast(t('l.les'), 'info'), sfx('beep')), 3000); }); }
     if (S.stage === 1 && !lesDone && S.s > STG[0].end + 9) { lesDone = true; doStage(3); } // auto si se olvida
     // visual
     const R = W.rocket; R.rotation.order = 'ZYX'; R.rotation.z = -((90 - S.pitch) * Math.PI) / 180; R.rotation.y = ((90 - ROLL.hdg) * Math.PI) / 180; // rolido sobre su eje const vis = S.alt * Math.min(1, (S.s / 7) ** 2); // la simulación va comprimida; visualmente el despegue es lento y pesado (≈10 s en librar la torre real)
