@@ -364,6 +364,18 @@ html[data-touch] .expedition.mhud .ex-mapbox { bottom: calc(148px + var(--safe-b
 .expedition.mhud [hidden] { display: none !important; }
 .expedition.mhud .ex-cell small, .mhud .tele .k { min-width: 0; }
 .expedition.mhud .ex-cell b, .mhud .tele .v { flex: none; white-space: nowrap; }
+.expedition.mhud.is-landing .ex-cine {
+  display: flex; position: absolute; left: 50%; bottom: max(28px, env(safe-area-inset-bottom));
+  transform: translateX(-50%); gap: 22px; align-items: flex-end; pointer-events: none;
+  text-shadow: 0 2px 10px #000; color: #f7f1e6;
+}
+.expedition.mhud .ex-cine small, .expedition.mhud .ex-fuel-label {
+  display: block; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: #f3d7b0;
+}
+.expedition.mhud .ex-cine-metric b { font-size: 26px; font-weight: 500; line-height: 1.05; }
+.expedition.mhud .ex-fuel-label { margin-bottom: 5px; }
+.expedition.mhud .ex-fuel-track { width: 148px; height: 5px; background: rgba(255,255,255,.18); border-radius: 99px; overflow: hidden; }
+.expedition.mhud .ex-fuel-fill { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #a84828, #f0c27a); }
 @media (prefers-reduced-motion: reduce) {
   .mhud-card, .mhud-rail, .mhud-prompt, .expedition.mhud .mhud-rail, .mhud-card-b, .mhud-card-h .mhud-svg, .phase-stamp {
     animation: none !important;

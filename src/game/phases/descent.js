@@ -11,6 +11,8 @@ import { create, step, guide, agl, judge, hoverThr, brakingMargin, vsCue, LM, PA
 import { attachLook } from '../../core/look.js';
 import { playCue } from '../cutscenes/play.js';
 import { storyInPhase, playStory } from '../story/flow.js';
+import { bindOrbitControls } from '../orbit-view.js';
+import { createOrbitState, applyPointerDelta, resolveOrbitPosition, stepOrbit } from '../orbit-camera.js';
 extend({
   'd.p63': ['PROG 63 · Frenado', 'PROG 63 · Braking'], 'd.p64': ['PROG 64 · Aproximación', 'PROG 64 · Approach'], 'd.p66': ['PROG 66 · Manual', 'PROG 66 · Manual'],
   'd.watch': ['La computadora vuela. Observa la telemetría…', 'The computer is flying. Watch the telemetry…'], 'd.pressG': ['Pulsa G o GO', 'Press G or GO'],
@@ -18,7 +20,7 @@ extend({
   'd.why.vs': ['VELOCIDAD VERTICAL {v} m/s (máx {m})', 'VERTICAL SPEED {v} m/s (max {m})'], 'd.why.hs': ['VELOCIDAD LATERAL {v} m/s (máx {m})', 'LATERAL SPEED {v} m/s (max {m})'],
   'd.why.tilt': ['INCLINACIÓN {v}° (máx {m}°)', 'TILT {v}° (max {m}°)'], 'd.why.slope': ['PENDIENTE {v}° (máx {m}°)', 'SLOPE {v}° (max {m}°)'], 'd.why.rocks': ['Aterrizaste en el campo de rocas', 'You landed in the boulder field'],
   'd.skip': ['Continuar (sin puntos)', 'Continue (no points)'], 'd.view': ['VISTA', 'VIEW'], 'd.rod': ['ROD', 'ROD'], 'd.toPad': ['A la zona', 'To pad'],
-  'd.keysF': ['A/D inclinar · W sube empuje · S baja hasta planeo · R asistente · C vista', 'A/D tilt · W more thrust · S down to coast · R assist · C view'],
+  'd.keysF': ['A/D inclinar · W sube empuje · S baja hasta planeo · R asistente · C/V cámara', 'A/D tilt · W more thrust · S down to coast · R assist · C/V camera'],
   'd.rise': ['SUBIENDO por inercia. S hasta 0% (planeo): la gravedad lunar frena la subida. No hay motor hacia abajo.', 'RISING on momentum. Hold S to 0% (coast): lunar gravity slows the climb. There is no downward engine.'],
   'd.fall': ['BAJANDO. W frena antes del suelo. El mínimo no es suficiente si caes muy rápido.', 'DESCENDING. W brakes before the ground. Idle thrust will not stop a fast fall.'],
   'd.hold': ['Casi quieto. Alrededor del {h}% el peso y el empuje se equilibran.', 'Nearly still. About {h}% balances weight and thrust.'],
@@ -54,21 +56,42 @@ export default async function descent(ctx) {
     <div class="alarm" style="display:none"></div>`);
   const hint = (k, v) => { $('.hint', el).textContent = v ?? t(k); }; const prog = (k) => { $('.prog', el).textContent = t(k); };
   const tele = $('.dtele', el); const V = (c) => $('.' + c, tele);
-  let s = create({ x: -520, y: 1250, vx: 26, vy: -26, fuel: 1400 }); const fuel0 = 1400 * (D.fuel || 1); let mode = 'auto', view = 'ext', rod = false, rodUsed = false, frozen = false, thrTarget = 0.3, thrTouch = null, ffw = 1, orbit = 0.9, fuelWarn = false;
+  let s = create({ x: -520, y: 1250, vx: 26, vy: -26, fuel: 1400 }); const fuel0 = 1400 * (D.fuel || 1); let mode = 'auto', view = 'ext', rod = false, rodUsed = false, frozen = false, thrTarget = 0.3, thrTouch = null, ffw = 1, chaseYaw = 0.9, fuelWarn = false;
+  const orbitState = createOrbitState({ yaw: chaseYaw, pitch: 0.25, distance: 36, minDistance: 11, maxDistance: 120, damp: 6 });
+  const camRig = bindOrbitControls(orbitState, { pointer: false, touch: true, allow: () => !frozen });
+  ctx.onCleanup(() => camRig.dispose());
   const st = { alarmT: null, alarmOk: null, crashes: 0, hard: false, result: null };
   let thrUI = null; if (isTouch) { makeStick($('.tc-stick', el)); thrUI = makeThrottle($('.tc-throttle', el), (v) => (thrTouch = v)); bindBtn($('.rodbtn', el), 'rod'); }
-  const pointerLook = attachLook({ onDelta: (dx) => { if (mode === 'manual' && view === 'ext') orbit -= dx * 0.004; } });
+  const pointerLook = attachLook({ onDelta: (dx, dy) => {
+    if (orbitState.mode === 'orbit') { applyPointerDelta(orbitState, dx, dy); return; }
+    if (mode === 'manual' && orbitState.mode === 'chase') chaseYaw -= dx * 0.004;
+  } });
   ctx.onCleanup(() => pointerLook.dispose());
   bindBtn($('.viewbtn', el), 'view'); $('.ffw', el).onclick = () => { ffw = ffw === 1 ? 3 : 1; sfx('tick'); $('.ffw', el).classList.toggle('on', ffw > 1); };
   // cámara
   const camPos = new THREE.Vector3(-520, 1270, 120), look = new THREE.Vector3(); let shake = 0;
   if (DEBUG) window.__descDbg = { W, s: () => s, set: (o) => Object.assign(s, o), ground, snap: () => { for (let i = 0; i < 60; i++) camUpdate(0.1); } };
+  const placeDescentOrbit = (dt) => {
+    const p = W.lm.position;
+    stepOrbit(orbitState, dt);
+    const target = { x: p.x, y: p.y + 3.4, z: p.z };
+    const pos = resolveOrbitPosition(target, orbitState.smoothYaw, orbitState.smoothPitch, orbitState.smoothDistance, {
+      up: 'y', minDistance: orbitState.minDistance, subjectRadius: 6.2, margin: 0.6,
+      floorAt: (x, _y, z) => ground(x, z) + 1.2,
+    });
+    cam.position.set(pos.x, pos.y, pos.z); cam.up.set(0, 1, 0); cam.lookAt(target.x, target.y, target.z); cam.fov = 50;
+  };
   function camUpdate(dt) {
+    camRig.poll();
+    const owner = camRig.owner();
+    view = owner === 'cockpit' ? 'win' : 'ext';
+    $('.lpdret', el).style.display = owner === 'cockpit' ? '' : 'none';
     const p = W.lm.position, a = Math.max(0, agl(s));
-    if (view === 'win') { cam.position.set(p.x + 1.2, p.y + 4.2, 0.6); look.set(p.x + 30 + s.vx * 2, p.y - 12 - a * 0.35, 0); cam.lookAt(look); cam.fov = 62; }
+    if (owner === 'orbit') placeDescentOrbit(dt);
+    else if (owner === 'cockpit') { cam.position.set(p.x + 1.2, p.y + 4.2, 0.6); look.set(p.x + 30 + s.vx * 2, p.y - 12 - a * 0.35, 0); cam.lookAt(look); cam.fov = 62; }
     else {
       const dist = clamp(26 + Math.sqrt(Math.max(a, 0)) * 1.35, 24, 72) * (cam.aspect < 1 ? 1.35 : 1);
-      const tgt = new THREE.Vector3(p.x + Math.sin(orbit) * dist, p.y + 6 + Math.min(a * 0.015, 10), p.z + Math.cos(orbit) * dist);
+      const tgt = new THREE.Vector3(p.x + Math.sin(chaseYaw) * dist, p.y + 6 + Math.min(a * 0.015, 10), p.z + Math.cos(chaseYaw) * dist);
       // bajo 35 m la cámara baja a ras del suelo y se abre de lado: el polvo radial se lee como láminas contra el horizonte
       const w = clamp(1 - a / 35, 0, 1), wl = w * w * (3 - 2 * w), gy = p.y - a; tgt.y += (gy + 3.6 - tgt.y) * wl; tgt.x += 9 * wl; tgt.z += (34 - dist) * wl;
       camPos.x = damp(camPos.x, tgt.x, 3, dt); camPos.y = damp(camPos.y, tgt.y, 3, dt); camPos.z = damp(camPos.z, tgt.z, 2, dt); camPos.y = Math.max(camPos.y, ground(camPos.x) + 2.4); cam.position.copy(camPos);
@@ -124,7 +147,7 @@ export default async function descent(ctx) {
     W.setLM(s.x, s.y, s.tilt, s.thr, !s.landed && !s.out); engine(s.landed ? 0 : 0.25 + s.thr * 0.5, { low: 0.6 });
     const a = agl(s); $('.dustveil', el).style.opacity = clamp(W.dustAmount() * 0.45, 0, 0.38); if (a < 30 && !s.landed) shake = Math.max(shake, 0.05 * s.thr);
     camUpdate(dt0); drawHud();
-    if (pressed('KeyC') || bpressed('view')) { view = view === 'ext' ? 'win' : 'ext'; $('.lpdret', el).style.display = view === 'win' ? '' : 'none'; sfx('click'); }
+    if (bpressed('view')) camRig.cycle();
     if (mode === 'manual') { const sc = sec(); for (const c of [60, 30]) if (sc < c && !callouts[c]) { callouts[c] = 1; ctx.banner(t('d.' + c), '', 1500, c === 30 ? 'warn' : ''); sfx('beep'); if (c === 60) ctx.say('pa.fuel', { ms: 3000 }); ctx.cc.log('d.' + c, null, 'warn'); }
       if (a < 1.6 && !s.landed && !callouts.c) { callouts.c = 1; $('.l-cont', tele).classList.add('on', 'blue'); W.contactL.intensity = 6; sfx('beep', { rate: 1.6 }); ctx.banner(t('d.contact'), '', 1200); } }
     ctx.cc.snap({ alt: a, vs: s.vy, hs: s.vx, tilt: s.tilt, thr: s.thr, fuel: mode === 'manual' ? sec() : null, x: s.x, pad: PAD.x, mode, alarm: frozen });
@@ -167,9 +190,12 @@ export default async function descent(ctx) {
     s = Object.assign(create(), JSON.parse(ckpt)); W.body.visible = true; W.body.rotation.x = 0; await handover();
   }
   $('.lpd', el).style.display = 'none'; if (isTouch) ['.tc-stick', '.tc-throttle', '.rodbtn'].forEach((q) => ($(q, el).style.display = 'none'));
-  W.pad.visible = false; W.warn.visible = false; view = 'ext'; $('.viewbtn', el).style.display = 'none'; $('.lpdret', el).style.display = 'none';
-  // órbita lenta de la cámara sobre el LM posado
-  let ang = 0; ctx.loop((dt) => { ang += dt * 0.25; const p = W.lm.position; cam.position.set(p.x + Math.sin(ang) * 26, p.y + 7, Math.cos(ang) * 26); cam.lookAt(p.x, p.y + 3, 0); });
+  W.pad.visible = false; W.warn.visible = false; $('.viewbtn', el).style.display = 'none';
+  // plano lento sobre el LM posado; la órbita libre y la cabina lo sustituyen, y el raíl de la cinemática sigue ganando
+  let ang = 0; ctx.loop((dt) => {
+    if (camRig.owner() !== 'chase') return;
+    ang += dt * 0.25; const p = W.lm.position; cam.position.set(p.x + Math.sin(ang) * 26, p.y + 7, Math.cos(ang) * 26); cam.lookAt(p.x, p.y + 3, 0);
+  });
   await ctx.wait(3.5);
   // cap. 4.6–4.7: Houston respira y la familia Armstrong lo oye por la squawk box (solo alunizaje limpio)
   if (st.result === 'good' && storyInPhase(ctx)) { for (const id of ['mocr-landed', 'house-landed']) { if (ctx.dead) break; const r = await playStory(id, { ctx }); if (r.skipped) break; } }

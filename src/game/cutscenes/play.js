@@ -45,6 +45,8 @@ function applySample(cam, anchor, sample) {
   }
 }
 
+export function cueActive() { return current != null; }
+
 export function stopCue() {
   current?.stop();
 }

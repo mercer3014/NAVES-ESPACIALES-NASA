@@ -11,10 +11,12 @@ import { makePad, H, BASE_Y } from '../../scenes/pad.js';
 import { BEACH } from '../../scenes/ksc-crowd.js';
 import { trackFov, sideAxis, chaseStand, trackStand } from '../launch-camera.js';
 import { playCue } from '../cutscenes/play.js';
+import { bindOrbitControls } from '../orbit-view.js';
+import { createOrbitState, resolveOrbitPosition, stepOrbit } from '../orbit-camera.js';
 extend({
   'l.tminus': ['T-', 'T-'], 'l.skip': ['Saltar cuenta', 'Skip countdown'], 'l.stress': ['ESTRÉS', 'STRESS'], 'l.thr': ['EMPUJE', 'THRUST'],
   'l.les': ['¡Expulsa la torre de escape!', 'Jettison the escape tower!'], 'l.waitcc': ['Esperando que Control de Misión separe…', 'Waiting for Mission Control to stage…'],
-  'l.keys': ['A/D o ←/→ cabeceo · W/S empuje · ESPACIO separar · C cámara', 'A/D or ←/→ pitch · W/S thrust · SPACE stage · C camera'], 'l.corr': ['CORREDOR', 'CORRIDOR'],
+  'l.keys': ['A/D o ←/→ cabeceo · W/S empuje · ESPACIO separar · C/V cámara', 'A/D or ←/→ pitch · W/S thrust · SPACE stage · C/V camera'], 'l.corr': ['CORREDOR', 'CORRIDOR'],
   'l.beach': ['Playa de Cabo Kennedy · 16 de julio de 1969', 'Cape Kennedy beach · July 16, 1969'], 'l.beachS': ['Cerca de un millón de personas miran desde las playas y carreteras', 'About a million people watch from the beaches and roads'],
   'l.ign': ['Secuencia de ignición', 'Ignition sequence'], 'l.iss': ['Inicio de la secuencia de ignición', 'Ignition sequence start'], 'l.throk': ['Todos los motores en marcha', 'All engines running'], 'l.hdr': ['Liberación de los anclajes', 'Hold-down release'], 'l.sep': ['Separación', 'Separation'], 'l.maxqok': ['Max-Q superado', 'Through Max-Q'],
 });
@@ -26,6 +28,36 @@ const target = (s) => (s < 5 ? 90 : s > DUR ? 12 : 90 - (78 * Math.pow((s - 5) /
 
 export default async function launch(ctx) {
   const W = makePad(); ctx.world(W); ctx.onCleanup(() => { W.dispose(); stopRumble(); }); const cam = W.camera; cam.far = 60000; cam.near = 1; cam.updateProjectionMatrix();
+  const orbit = createOrbitState({ yaw: Math.PI / 2, pitch: 0.18, distance: 260, minDistance: 22, maxDistance: 1600, damp: 6 });
+  const camRig = bindOrbitControls(orbit);
+  ctx.onCleanup(() => camRig.dispose());
+  const noseOf = (R, up, along) => ({ x: R.position.x + up.x * along, y: R.position.y + up.y * along, z: R.position.z + up.z * along });
+  const placeLaunchOrbit = (dt, R) => {
+    const up = new THREE.Vector3(0, 1, 0).applyQuaternion(R.quaternion);
+    stepOrbit(orbit, dt);
+    const mid = noseOf(R, up, 52);
+    const pos = resolveOrbitPosition(mid, orbit.smoothYaw, orbit.smoothPitch, orbit.smoothDistance, {
+      up: 'y', minDistance: orbit.minDistance, margin: 1.2,
+      capsules: [
+        { ax: R.position.x, ay: R.position.y, az: R.position.z, bx: noseOf(R, up, 106).x, by: noseOf(R, up, 106).y, bz: noseOf(R, up, 106).z, r: 12 },
+        { ax: -22, ay: 0, az: 0, bx: -22, by: BASE_Y + 130, bz: 0, r: 16 },
+      ],
+      floorAt: (x, _y, z) => (Math.hypot(x, z) < 48 ? BASE_Y + 1.6 : 1.4),
+    });
+    cam.position.set(pos.x, pos.y, pos.z); cam.up.set(0, 1, 0); cam.lookAt(mid.x, mid.y, mid.z);
+    if (Math.abs(cam.fov - 46) > 0.4 || cam.near !== 0.6) { cam.fov = 46; cam.near = 0.6; cam.far = 60000; cam.updateProjectionMatrix(); }
+  };
+  const placeLaunchCockpit = (R) => {
+    const up = new THREE.Vector3(0, 1, 0).applyQuaternion(R.quaternion);
+    const ax = sideAxis(up.x, up.y, up.z);
+    const seat = noseOf(R, up, 92);
+    const lateral = 16;
+    cam.position.set(seat.x + ax[0] * lateral, seat.y + ax[1] * lateral, seat.z + ax[2] * lateral);
+    const flank = noseOf(R, up, 46);
+    cam.up.set(0, 1, 0);
+    cam.lookAt(flank.x + ax[0] * 5, flank.y + ax[1] * 5, flank.z + ax[2] * 5);
+    if (Math.abs(cam.fov - 50) > 0.4 || cam.near !== 0.4) { cam.fov = 50; cam.near = 0.4; cam.far = 60000; cam.updateProjectionMatrix(); }
+  };
   const coop = ctx.cc.coop, D = ctx.diff, tol = 7 * D.tol;
   music('tension', { vol: 0.4 });
   const el = ctx.hud(`${objectiveCardHtml({ kicker: `${t('ph.n')} 02 · ${t('ph.launch')}`, titleHtml: '<div class="phase-title">Saturn V</div>', bodyHtml: `<p class="mhud-note">${t('l.hint')}</p>` })}
@@ -57,9 +89,14 @@ export default async function launch(ctx) {
   const DY = BASE_Y - 7.62, LOWCAM = new THREE.Vector3(75, W.env ? BASE_Y + 8 : 8 + DY, 262), lowLook = new THREE.Vector3(0, 52 + DY, 0), orbP = new THREE.Vector3(); let shotA = 0, toLow = 0;
   // cap. 2: primer plano de la cuenta desde la playa, detrás del público (ksc-crowd.glb), hasta T-12 o hasta saltar la cuenta
   let beachShown = false; const BEACH_END = 4.5;
-  ctx.loop((dt) => { if (applyPadCam()) return; if (S.phase === 'count' && W.crowd && ct < BEACH_END && !skip) {
-    if (!beachShown) { beachShown = true; toast(t('l.beach') + ' · ' + t('l.beachS'), 'info'); } // toast: no tapa el número de la cuenta
-    cam.position.set(30, BASE_Y + BEACH.y + 2.6, BEACH.z - 13); cam.lookAt(-40, BASE_Y + 24, 0); return; }
+  ctx.loop((dt) => {
+    if (S.phase !== 'count') return; camRig.poll(); if (applyPadCam()) return;
+    const owner = camRig.owner();
+    if (owner === 'orbit') { placeLaunchOrbit(dt, W.rocket); return; }
+    if (owner === 'cockpit') { placeLaunchCockpit(W.rocket); return; }
+    if (W.crowd && ct < BEACH_END && !skip) {
+      if (!beachShown) { beachShown = true; toast(t('l.beach') + ' · ' + t('l.beachS'), 'info'); } // toast: no tapa el número de la cuenta
+      cam.position.set(30, BASE_Y + BEACH.y + 2.6, BEACH.z - 13); cam.lookAt(-40, BASE_Y + 24, 0); return; }
     if (S.phase === 'count') { shotA += dt * 0.05; orbP.set(Math.sin(shotA + 0.9) * 290, 30 + DY, Math.cos(shotA + 0.9) * 290);
     if (S.ign) toLow = Math.min(1, toLow + dt * 0.6); const e = toLow * toLow * (3 - 2 * toLow); const push = 1 - Math.max(0, ct - (LIFT - 8.9)) * 0.012;
     cam.position.lerpVectors(orbP, LOWCAM, e); if (e > 0) { const k = 1 - (1 - push) * e; cam.position.x *= k; cam.position.z *= k; }
@@ -125,7 +162,11 @@ export default async function launch(ctx) {
     _r.copy(_c).addScaledVector(side, dist);
   };
   function director(dt, R) {
-    if (pressed('KeyC')) man = man + 1 >= MAN.length ? -1 : man + 1; // C: recorre los planos a mano; tras el último vuelve al automático
+    camRig.poll();
+    const owner = camRig.owner();
+    if (owner === 'orbit') { placeLaunchOrbit(dt, R); return; }
+    if (owner === 'cockpit') { placeLaunchCockpit(R); return; }
+    // Persecución: el director de PR #2 (plano de torre, costado, teleobjetivo). C/V no lo reescribe.
     let want = 'pad'; for (const [t0, n] of PLAN) if (S.s >= t0) want = n;
     if (want !== 'pad' && (waitingStage !== null || S.coast > 0)) want = 'chase'; // separaciones siempre en persecución
     if (man >= 0 && want !== 'pad') want = MAN[man];

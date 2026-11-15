@@ -5,6 +5,8 @@ import { $, h, clamp, damp, achieve, toast } from '../../core/util.js';
 import { sfx, music, voice } from '../../core/audio.js';
 import { axis, pressed, down, bindBtn, bdown, bpressed, makeStick } from '../../core/input.js';
 import { attachLook } from '../../core/look.js';
+import { bindOrbitControls } from '../orbit-view.js';
+import { createOrbitState, applyPointerDelta, resolveOrbitPosition, stepOrbit } from '../orbit-camera.js';
 import { ladderWantsDown } from '../ladder-input.js';
 import { commsMode } from '../../core/comms.js';
 import { isTouch, on, DEBUG, shared, dbg, AUTO } from '../../core/store.js';
@@ -182,14 +184,36 @@ export default async function eva(ctx) {
   const P = { x: lx, z: eagle ? 2.35 : 2.2, y: ly + (eagle ? 3.38 : 3), vy: 0, yaw: Math.PI, speed: 0, vx: 0, vz: 0, air: false, act: null, actK: 0, mode: 'ladder' };
   if (evaProps) ctx.loop((dt) => evaProps.update(dt, P));
   let camYaw = 0.35, camPitch = 0.32, camDist = 5.2; const camP = new THREE.Vector3(lx + 2, ly + 4, 10), look = new THREE.Vector3();
-  // arrastrar para girar
-  const pointerLook = attachLook({ onDelta: (dx, dy) => { if (viewMode !== 'follow') return; camYaw -= dx * 0.0022; camPitch = clamp(camPitch + dy * 0.0016, 0.05, 1.1); } });
+  let orbit = null;
+  // arrastrar para girar. En persecución se conserva el tope de cabeceo; la órbita es libre.
+  const pointerLook = attachLook({ onDelta: (dx, dy) => {
+    if (viewMode !== 'follow') return;
+    if (orbit?.mode === 'orbit') { applyPointerDelta(orbit, dx, dy); return; }
+    camYaw -= dx * 0.0022; camPitch = clamp(camPitch + dy * 0.0016, 0.05, 1.1);
+  } });
   ctx.onCleanup(() => pointerLook.dispose());
   let drag = null; const onDown = (e) => { if (e.pointerType !== 'touch' || document.pointerLockElement || e.target.closest('button,.tc-stick,.tc-btn,.panel')) return; drag = { x: e.clientX, y: e.clientY, id: e.pointerId }; };
-  const onMove = (e) => { if (document.pointerLockElement || !drag || e.pointerId !== drag.id) return; camYaw -= (e.clientX - drag.x) * 0.006; camPitch = clamp(camPitch + (e.clientY - drag.y) * 0.004, 0.05, 1.1); drag.x = e.clientX; drag.y = e.clientY; };
+  const onMove = (e) => {
+    if (document.pointerLockElement || !drag || e.pointerId !== drag.id) return;
+    const dx = e.clientX - drag.x, dy = e.clientY - drag.y; drag.x = e.clientX; drag.y = e.clientY;
+    if (viewMode !== 'follow') return;
+    if (orbit?.mode === 'orbit') { applyPointerDelta(orbit, dx, dy, { yaw: 0.006, pitch: 0.004 }); return; }
+    camYaw -= dx * 0.006; camPitch = clamp(camPitch + dy * 0.004, 0.05, 1.1);
+  };
   const onUp = (e) => { if (drag && e.pointerId === drag.id) drag = null; };
   addEventListener('pointerdown', onDown); addEventListener('pointermove', onMove); addEventListener('pointerup', onUp); ctx.onCleanup(() => { removeEventListener('pointerdown', onDown); removeEventListener('pointermove', onMove); removeEventListener('pointerup', onUp); });
   let stepSide = 0, autoTarget = null, viewMode = 'follow', tvLook = { yaw: 0, pitch: 0, zoom: 1 };
+  orbit = createOrbitState({ yaw: camYaw, pitch: camPitch, distance: camDist, minDistance: 1.7, maxDistance: 16, damp: 8 });
+  const camRig = bindOrbitControls(orbit, {
+    pointer: false, touch: false, allow: () => viewMode === 'follow',
+    onMode: (mode) => {
+      if (mode === 'orbit') {
+        orbit.yaw = camYaw; orbit.pitch = clamp(camPitch, orbit.minPitch, orbit.maxPitch);
+        orbit.smoothYaw = orbit.yaw; orbit.smoothPitch = orbit.pitch; orbit.targetDistance = orbit.smoothDistance = camDist;
+      } else if (mode === 'chase') { camYaw = orbit.smoothYaw; camPitch = clamp(orbit.smoothPitch, 0.05, 1.1); camDist = orbit.smoothDistance; }
+    },
+  });
+  ctx.onCleanup(() => camRig.dispose());
   const O2 = 420 * (D.time || 1); let tEva = 0;
   function collide() {
     const dx = P.x - lx, dz = P.z; const r = Math.hypot(dx, dz); if (r > 1e-4 && r < 2.3 && P.mode === 'walk') { P.x = lx + (dx / r) * 2.3; P.z = (dz / r) * 2.3; }
@@ -204,7 +228,7 @@ export default async function eva(ctx) {
       let a = P.act === 'fall' || P.act === 'scoop' ? { x: 0, y: 0 } : axis(); if (AUTO() && autoTarget && P.act !== 'scoop' && P.act !== 'fall') { const dx = autoTarget.x - P.x, dz = autoTarget.z - P.z; const d = Math.hypot(dx, dz); const fw = new THREE.Vector2(-Math.sin(camYaw), -Math.cos(camYaw)), rt = new THREE.Vector2(Math.cos(camYaw), -Math.sin(camYaw)); a = d > 0.25 ? { x: clamp((dx * rt.x + dz * rt.y) / d, -1, 1), y: clamp((dx * fw.x + dz * fw.y) / d, -1, 1) } : { x: 0, y: 0 }; if (d < 1.2) { a.x *= d / 1.2; a.y *= d / 1.2; } }
       const mx = a.x * Math.cos(camYaw) - a.y * Math.sin(camYaw), mz = -a.x * Math.sin(camYaw) - a.y * Math.cos(camYaw); const mag = Math.min(1, Math.hypot(mx, mz));
       const vmax = 1.9; P.vx = damp(P.vx, mx * vmax, P.air ? 0.6 : 3, dt); P.vz = damp(P.vz, mz * vmax, P.air ? 0.6 : 3, dt); P.speed = Math.hypot(P.vx, P.vz);
-      if (mag > 0.15) { const ty = Math.atan2(mx, mz); let d = ty - P.yaw; d = Math.atan2(Math.sin(d), Math.cos(d)); P.yaw += d * Math.min(1, dt * 6); if (!drag && !AUTO()) camYaw += Math.atan2(Math.sin(P.yaw + Math.PI - camYaw), Math.cos(P.yaw + Math.PI - camYaw)) * dt * 0.25; }
+      if (mag > 0.15) { const ty = Math.atan2(mx, mz); let d = ty - P.yaw; d = Math.atan2(Math.sin(d), Math.cos(d)); P.yaw += d * Math.min(1, dt * 6); if (!drag && !AUTO() && orbit.mode !== 'orbit') camYaw += Math.atan2(Math.sin(P.yaw + Math.PI - camYaw), Math.cos(P.yaw + Math.PI - camYaw)) * dt * 0.25; }
       P.x += P.vx * dt; P.z += P.vz * dt; collide();
       const g = ground(P.x, P.z);
       if (!P.air && !P.act && (pressed('Space') || bpressed('jump'))) { P.vy = 2.5; P.air = true; P.jump = true; sfx('switch', { vol: 0.3, rate: 0.6 }); }
@@ -219,7 +243,24 @@ export default async function eva(ctx) {
     sMark.visible = !st.sample && P.mode === 'walk'; sMark.material.opacity = 0.5 + Math.sin(tt * 4) * 0.3; zone.visible = st.sample && !st.flag && P.mode === 'walk'; golf.rotation.y += dt;
     if (flag.visible) setFlag(st.bar, 0, tt);
     // cámara
-    if (viewMode === 'follow') {
+    camRig.poll();
+    const camOwner = viewMode === 'follow' ? camRig.owner() : viewMode;
+    if (camOwner === 'orbit') {
+      stepOrbit(orbit, dt);
+      const target = { x: P.x, y: P.y + 1.15, z: P.z };
+      const pos = resolveOrbitPosition(target, orbit.smoothYaw, orbit.smoothPitch, orbit.smoothDistance, {
+        up: 'y', minDistance: orbit.minDistance, subjectRadius: 0.85, margin: 0.12,
+        floorAt: (x, _y, z) => ground(x, z) + 0.45,
+      });
+      cam.position.set(pos.x, pos.y, pos.z); cam.up.set(0, 1, 0); cam.lookAt(target.x, target.y, target.z);
+      cam.fov = cam.aspect < 1 ? 70 : 55; cam.updateProjectionMatrix();
+    } else if (camOwner === 'cockpit') {
+      const fx = -Math.sin(P.yaw), fz = -Math.cos(P.yaw);
+      const gy = ground(P.x + fx * 0.62, P.z + fz * 0.62) + 0.35;
+      cam.position.set(P.x + fx * 0.62, Math.max(P.y + 1.62, gy), P.z + fz * 0.62);
+      cam.up.set(0, 1, 0); cam.lookAt(P.x + fx * 4, P.y + 1.5, P.z + fz * 4);
+      cam.fov = cam.aspect < 1 ? 74 : 62; cam.updateProjectionMatrix();
+    } else if (viewMode === 'follow') {
       const ty = P.y + 1.3; const cx = P.x + Math.sin(camYaw) * Math.cos(camPitch) * camDist, cz = P.z + Math.cos(camYaw) * Math.cos(camPitch) * camDist; let cy = ty + Math.sin(camPitch) * camDist; cy = Math.max(cy, ground(cx, cz) + 0.5);
       camP.x = damp(camP.x, cx, 5, dt); camP.y = damp(camP.y, cy, 5, dt); camP.z = damp(camP.z, cz, 5, dt); cam.position.copy(camP); look.set(P.x, ty, P.z); cam.lookAt(look); cam.fov = cam.aspect < 1 ? 70 : 55; cam.updateProjectionMatrix();
     } else if (viewMode === 'tv') {

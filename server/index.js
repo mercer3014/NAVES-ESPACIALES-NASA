@@ -12,7 +12,7 @@ const HOST = process.env.HOST || '127.0.0.1';
 const PORT = Number(process.env.PORT || 8787);
 const ROOT = resolveStaticRoot(import.meta.url, process.env.STATIC_DIR || 'dist');
 const PUBLIC_URL = process.env.PUBLIC_URL || '';
-const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.txt': 'text/plain; charset=utf-8', '.json': 'application/json', '.svg': 'image/svg+xml', '.mp4': 'video/mp4', '.webm': 'video/webm', '.jpg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp', '.mp3': 'audio/mpeg', '.glb': 'model/gltf-binary', '.woff2': 'font/woff2', '.vtt': 'text/vtt', '.ico': 'image/x-icon', '.wasm': 'application/wasm' };
+const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.txt': 'text/plain; charset=utf-8', '.json': 'application/json', '.svg': 'image/svg+xml', '.mp4': 'video/mp4', '.webm': 'video/webm', '.jpg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp', '.ktx2': 'image/ktx2', '.mp3': 'audio/mpeg', '.glb': 'model/gltf-binary', '.woff2': 'font/woff2', '.vtt': 'text/vtt', '.ico': 'image/x-icon', '.wasm': 'application/wasm' };
 const GZ = new Set(['.html', '.js', '.css', '.json', '.svg', '.vtt']);
 const rooms = new Map(); // code -> {code, hostRole, members: Map<id,{ws,role,name,flag,alive}>, created}
 
@@ -34,7 +34,8 @@ const server = http.createServer(async (req, res) => {
   res.setHeader('x-frame-options', 'DENY');
   res.setHeader('permissions-policy', 'microphone=(self), camera=(), geolocation=()');
   const wsHost = /^[a-zA-Z0-9.\-:\[\]]+$/.test(req.headers.host || '') ? req.headers.host : 'localhost';
-  res.setHeader('content-security-policy', `default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self' blob: ws://${wsHost} wss://${wsHost}; font-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'`);
+  // Basis transcoder is Emscripten: the worker blob needs eval to bind the wasm module.
+  res.setHeader('content-security-policy', `default-src 'self'; script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self' blob: ws://${wsHost} wss://${wsHost}; font-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'`);
   if (!['GET', 'HEAD'].includes(req.method)) { res.writeHead(405, { allow: 'GET, HEAD' }); return res.end(); }
   try {
     const url = new URL(req.url, 'http://x');
