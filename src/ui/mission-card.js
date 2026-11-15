@@ -6,10 +6,10 @@
 export const CARDS = {
   design: {
     n: '00', title: ['Diseña tu misión', 'Design your mission'],
-    what: ['1967–69: la NASA eligió el lugar, cada experimento y cada kilo del Eagle.', 'In 1967–69 NASA chose the site, every experiment and every kilo of the Eagle.'],
-    goal: ['Diseña tu Apolo 11 sin pasarte del límite de masa.', 'Design your Apollo 11 without going over the mass limit.'],
-    m: [[['CLIC'], ['Elige las cartas', 'Pick the cards']], [['ARRASTRAR'], ['Mueve el control deslizante', 'Drag the slider']]],
-    t: [[['TOCA'], ['Elige las cartas', 'Pick the cards']], [['DESLIZA'], ['Mueve el control', 'Slide the control']]],
+    what: ['Enero de 1969, Houston. Cuatro expertos te esperan en la sala de planificación.', 'January 1969, Houston. Four experts are waiting in the planning room.'],
+    goal: ['Habla con los cuatro, cambia el sitio y el combustible, y sigue hacia la misión.', 'Talk to all four, change the site and the fuel, and go on to the mission.'],
+    m: [[['W', 'A', 'S', 'D'], ['Caminar', 'Walk']], [['E'], ['Hablar', 'Talk']], [['RATÓN'], ['Mirar y elegir en el panel', 'Look and choose on the panel']]],
+    t: [[['PALANCA'], ['Caminar', 'Walk']], [['ACCIÓN'], ['Hablar', 'Talk']]],
   },
   'prep-practice': {
     n: '01', title: ['Preparación · práctica', 'Preparation · practice'],

@@ -23,6 +23,12 @@
 .dsg-card h2{margin:0;font:700 19px/1.1 var(--f-t);letter-spacing:.03em;text-transform:uppercase;display:flex;gap:10px;align-items:center}
 .dsg-n{flex:none;width:28px;height:28px;display:grid;place-items:center;background:var(--or);color:var(--k);font:700 15px var(--f-m);border-radius:2px}
 .dsg-who{margin:0;font:600 11px var(--f-m);letter-spacing:.14em;text-transform:uppercase;color:var(--am)}
+.dsg.section .dsg-prof{display:none}
+.dsg.focus-site .dsg-card:not([data-part="site"]),
+.dsg.focus-fuel .dsg-card:not([data-part="fuel"]),
+.dsg.focus-comms .dsg-card:not([data-part="comms"]){display:none}
+.dsg.focus-budget .dsg-cards{display:none}
+.dsg.focus-budget .dsg-main{grid-template-columns:minmax(280px,520px)}
 .dsg-q{margin:0;font:500 14px/1.25 var(--f-u);color:#C9C5BA}
 .dsg-opts{display:grid;gap:6px}
 .dsg-opt{appearance:none;text-align:left;background:var(--k);border:2px solid var(--gr);border-radius:2px;padding:8px 10px;min-height:48px;cursor:pointer;display:grid;grid-template-columns:1fr auto;gap:1px 10px;align-items:center;position:relative}

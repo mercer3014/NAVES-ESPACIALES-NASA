@@ -37,6 +37,13 @@ const X = {
   kgW: ['{n} kg de combustible extra', '{n} kg of extra fuel'], kgS: ['{n} kg liberados', '{n} kg freed'], kg0: ['combustible nominal', 'nominal fuel'],
   nasaReal: ['La NASA aterrizó con unos 25 s de margen.', 'NASA landed with about 25 s of margin.'],
   signed: ['Plan firmado', 'Plan signed'],
+  done: ['Listo', 'Done'],
+};
+const FOCUS_LINE = {
+  site: ['Farouk El-Baz · el sitio y la ventana. El Sol bajo, entre 5° y 14°, muestra las rocas.', 'Farouk El-Baz · the site and the window. A low Sun, between 5° and 14°, shows the rocks.'],
+  fuel: ['Ingeniero del LM · cada kilo de combustible es un kilo menos de ciencia o de baterías.', 'LM engineer · every kilogram of fuel is a kilogram less of science or batteries.'],
+  comms: ['Charlie Duke · más antenas, más gente ve la caminata. Parkes sostuvo la imagen.', 'Charlie Duke · more dishes, more people see the moonwalk. Parkes held the picture.'],
+  budget: ['Gene Kranz · 100 créditos. Antenas, baterías y combustible extra se pagan de ahí.', 'Gene Kranz · 100 credits. Dishes, batteries and extra fuel are paid from there.'],
 };
 const tr = (p) => (Array.isArray(p) ? p[lang() === 'es' ? 0 : 1] : String(p ?? ''));
 const L = (k, v) => { let s = tr(X[k]); if (v) for (const [a, b] of Object.entries(v)) s = s.replaceAll('{' + a + '}', b); return s; };
@@ -45,7 +52,7 @@ const fmtFuel = (f) => (f === 1 ? '×1,00' : '×' + f.toFixed(2).replace('.', ',
 const fmtEva = (m) => `${Math.floor(m / 60)} h ${String(m % 60).padStart(2, '0')}`;
 const NASA = computePlan(NASA_PLAN);
 
-export function designRoom({ mode = 'story' } = {}) {
+export function designRoom({ mode = 'story', focus = null, overlay = false } = {}) {
   return new Promise((resolve) => {
     let plan = normalizePlan(mode === 'story' ? NASA_PLAN : store.get('missionPlan') || NASA_PLAN);
     let msg = null, cmp = false, done = false;
@@ -56,27 +63,34 @@ export function designRoom({ mode = 'story' } = {}) {
     const commBtn = (id) => { const w = COMMS[id]; return `<button class="dsg-opt${id === NASA_PLAN.comms ? ' nasa' : ''}" data-comm="${id}" aria-pressed="false"><span class="o-name">${esc(tr(w.name))}</span><span class="o-meta">${esc(tr(w.blurb))}</span><span class="o-num">${w.cost} cr</span><i class="nasa-tag">${L('nasa')}</i></button>`; };
     const powBtn = (id) => { const w = POWER[id]; return `<button class="dsg-opt${id === NASA_PLAN.power ? ' nasa' : ''}" data-pow="${id}" aria-pressed="false"><span class="o-name">${esc(tr(w.name))}</span><span class="o-meta">${esc(tr(w.blurb))}</span><span class="o-num">${w.cost} cr</span><i class="nasa-tag">${L('nasa')}</i></button>`; };
     const bar = (k) => `<div class="db" data-bar="${k}"><div class="db-h"><b>${L(k)}</b><span></span></div><div class="db-t"><i></i><em></em></div></div>`;
-    const el = show(`<div class="screen dsg">
-      <header class="dsg-top"><div><div class="dsg-k">${L('kicker')}</div><h1>${L('title')}</h1><p class="dsg-sub">${L('sub')}</p></div>
+    const subLine = focus && FOCUS_LINE[focus] ? esc(tr(FOCUS_LINE[focus])) : L('sub');
+    const markup = `<div class="screen dsg${mode === 'section' ? ' section' : ''}${focus ? ' focus-' + focus : ''}">
+      <header class="dsg-top"><div><div class="dsg-k">${L('kicker')}</div><h1>${L('title')}</h1><p class="dsg-sub">${subLine}</p></div>
         <div class="dsg-prof"><span>${L('prof')}</span>${Object.entries(PROFILES).map(([k, p]) => `<button class="dsg-btn" data-prof="${k}">${esc(tr(p.name))}</button>`).join('')}</div></header>
       <main class="dsg-main">
         <section class="dsg-cards">
-          <article class="dsg-card"><p class="dsg-who">${L('who1')}</p><h2><span class="dsg-n">1</span>${L('c1')}</h2><p class="dsg-q">${L('q1')}</p><div class="dsg-opts">${Object.keys(SITES).map(siteBtn).join('')}</div><p class="dsg-q">${L('q5')}</p><div class="dsg-opts">${Object.keys(WINDOWS).map(winBtn).join('')}</div></article>
-          <article class="dsg-card"><h2><span class="dsg-n">2</span>${L('c2')}</h2><p class="dsg-q">${L('q2')}</p><div class="dsg-opts">${INSTRUMENT_IDS.map(instBtn).join('')}</div></article>
-          <article class="dsg-card"><p class="dsg-who">${L('who3')}</p><h2><span class="dsg-n">3</span>${L('c3')}</h2><p class="dsg-q">${L('q3')}</p>
+          <article class="dsg-card" data-part="site"><p class="dsg-who">${L('who1')}</p><h2><span class="dsg-n">1</span>${L('c1')}</h2><p class="dsg-q">${L('q1')}</p><div class="dsg-opts">${Object.keys(SITES).map(siteBtn).join('')}</div><p class="dsg-q">${L('q5')}</p><div class="dsg-opts">${Object.keys(WINDOWS).map(winBtn).join('')}</div></article>
+          <article class="dsg-card" data-part="payload"><h2><span class="dsg-n">2</span>${L('c2')}</h2><p class="dsg-q">${L('q2')}</p><div class="dsg-opts">${INSTRUMENT_IDS.map(instBtn).join('')}</div></article>
+          <article class="dsg-card" data-part="fuel"><p class="dsg-who">${L('who3')}</p><h2><span class="dsg-n">3</span>${L('c3')}</h2><p class="dsg-q">${L('q3')}</p>
             <div class="dsg-fuel"><div class="big"><span class="f-val"></span><small class="f-sub"></small></div>
               <input class="dsg-range" type="range" min="0" max="${FUEL_STEPS.length - 1}" step="1" aria-label="${esc(L('c3'))}">
               <div class="dsg-ticks"><span>${fmtFuel(FUEL_STEPS[0])}</span><span>${fmtFuel(1)}</span><span>${fmtFuel(FUEL_STEPS.at(-1))}</span></div></div>
             <p class="dsg-q">${L('q7')}</p><div class="dsg-opts">${Object.keys(POWER).map(powBtn).join('')}</div></article>
-          <article class="dsg-card"><h2><span class="dsg-n">4</span>${L('c4')}</h2><p class="dsg-q">${L('q4')}</p><div class="dsg-opts">${Object.keys(EVA_TIMES).map(evaBtn).join('')}</div></article>
-          <article class="dsg-card"><p class="dsg-who">${L('who6')}</p><h2><span class="dsg-n">5</span>${L('c6')}</h2><p class="dsg-q">${L('q6')}</p><div class="dsg-opts">${Object.keys(COMMS).map(commBtn).join('')}</div></article>
+          <article class="dsg-card" data-part="eva"><h2><span class="dsg-n">4</span>${L('c4')}</h2><p class="dsg-q">${L('q4')}</p><div class="dsg-opts">${Object.keys(EVA_TIMES).map(evaBtn).join('')}</div></article>
+          <article class="dsg-card" data-part="comms"><p class="dsg-who">${L('who6')}</p><h2><span class="dsg-n">5</span>${L('c6')}</h2><p class="dsg-q">${L('q6')}</p><div class="dsg-opts">${Object.keys(COMMS).map(commBtn).join('')}</div></article>
         </section>
         <aside class="dsg-bars"><p class="dsg-who">${L('whoK')}</p><h3>${tr(['Presupuesto de la misión', 'Mission budget'])}</h3>
           ${['mass', 'fuel', 'budget', 'link', 'sci', 'risk', 'eva'].map(bar).join('')}
           <div class="dsg-note" role="status" aria-live="polite"></div><div class="dsg-legend">${L('legend')}</div></aside>
       </main>
       <footer class="dsg-foot"><div class="grp">${mode === 'story' ? '' : `<button class="dsg-btn" data-a="back">${L('back')}</button>`}<button class="dsg-btn" data-a="cmp" aria-pressed="false">${L('cmp')}</button></div>
-        <div class="grp"><button class="dsg-btn go" data-a="sign">${L(mode === 'story' ? 'sign' : mode === 'redesign' ? 'fly' : 'save')}</button></div></footer></div>`, 'design');
+        <div class="grp"><button class="dsg-btn go" data-a="sign">${L(mode === 'story' ? 'sign' : mode === 'section' ? 'done' : mode === 'redesign' ? 'fly' : 'save')}</button></div></footer></div>`;
+    let host = null, el;
+    if (overlay) {
+      host = document.createElement('div'); host.className = 'dsg-host';
+      host.style.cssText = 'position:fixed;inset:0;z-index:90;overflow:auto;background:#0B0C0Ef2';
+      host.innerHTML = markup; el = host.querySelector('.dsg'); document.body.append(host);
+    } else el = show(markup, 'design');
 
     const setBar = (k, pct, text, cls, nasaPct) => {
       const b = $(`[data-bar="${k}"]`, el); b.className = 'db ' + (cls || ''); $('span', b).textContent = text; $('i', b).style.width = Math.max(0, Math.min(100, pct)) + '%'; $('em', b).style.left = Math.max(0, Math.min(100, nasaPct)) + '%';
@@ -109,6 +123,7 @@ export function designRoom({ mode = 'story' } = {}) {
       if (done) return; done = true; sfx(saved ? 'ok' : 'click');
       const out = saved ? computePlan(plan).plan : normalizePlan(store.get('missionPlan') || NASA_PLAN);
       if (saved) { store.set('missionPlan', out); void import('../story/state.js').then((s) => { s.unlock('sala-de-diseno', { quiet: mode !== 'story' }); if (diffVsNasa(out).site) s.unlock('elegir-el-sitio', { quiet: true }); }).catch(() => {}); }
+      if (host) host.remove();
       if (mode === 'free') import('../../ui/screens.js').then((m) => m.startScreen());
       resolve(out);
     };

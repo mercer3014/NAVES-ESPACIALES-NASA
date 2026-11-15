@@ -119,7 +119,7 @@ export async function runExplore(def, opts = {}) {
   const arrow = new THREE.ArrowHelper(new THREE.Vector3(0, 0, -1), new THREE.Vector3(), 0.85, 0xff4f00);
   arrow.visible = false; world.scene.add(arrow);
 
-  let talk = null, focused = null, holding = null, paused = false, hold = 0, holdP = 0, ended = false, leaveAt = 0, now = 0;
+  let talk = null, focused = null, holding = null, paused = false, panel = false, hold = 0, holdP = 0, ended = false, leaveAt = 0, now = 0;
   const look = attachLook({ onDelta: (dx, dy) => { if (paused || holding || talk) return; lookExplore(cam, dx, dy); } });
   let drag = null;
   const onDown = (e) => { if (e.pointerType !== 'touch' || e.target.closest?.('button,.tc-stick,.tc-btn,.xp-dialog,.xp-inspect')) return; drag = { x: e.clientX, y: e.clientY, id: e.pointerId }; };
@@ -138,6 +138,10 @@ export async function runExplore(def, opts = {}) {
     if (id) changed('talk:' + id);
     const spec = (def.npcs || []).find((n) => n.id === id);
     if (spec?.card) import('../story/state.js').then(({ unlock }) => unlock(spec.card));
+    if (spec && def.onTalkEnd && !flags['opened:' + id]) {
+      flags['opened:' + id] = true; panel = true;
+      Promise.resolve(def.onTalkEnd(spec, { flags, done })).catch((e) => console.warn(e)).finally(() => { panel = false; });
+    }
   }
   function present() {
     const beat = currentBeat(talk.st);
@@ -184,7 +188,7 @@ export async function runExplore(def, opts = {}) {
   const off = onTick((dt, t) => {
     if (ended) return;
     now = t; dialogUi.tick(dt);
-    const lock = !!(talk || holding || paused);
+    const lock = !!(talk || holding || paused || panel);
     const a = lock ? { x: 0, y: 0 } : axis();
     stepBody(body, { ax: a.x, ay: a.y, camYaw: cam.orbit.yaw, jump: !lock && (pressed('Space') || bpressed('jump')), gravity: def.gravity ?? 9.81, floorY: world.floorY ?? 0, colliders: world.colliders }, dt);
     pose(player, body, dt);
