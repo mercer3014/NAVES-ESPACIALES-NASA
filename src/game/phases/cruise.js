@@ -95,7 +95,8 @@ export default async function cruise(ctx) {
     }
     // Cámara del acople: en la punta de la sonda de Columbia, mirando a lo largo del eje hacia Eagle en el adaptador.
     // Así se ve con qué te acoplas; si te desalineas, Eagle se corre en la retícula.
-    if (dockCam) {
+    // Solo en persecución: órbita y cabina siguen el ciclo C/V.
+    if (dockCam && owner === 'chase') {
       const { csm, yTgt } = dockCam; ship.updateMatrixWorld();
       const gap = csm.position.y - yTgt;
       // Lejos: en la sonda, sin entrar nunca en Eagle. En contacto (calibración): vista lateral con las dos naves unidas.
