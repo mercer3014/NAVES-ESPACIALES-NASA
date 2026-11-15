@@ -6,9 +6,12 @@ import { skySphere, twinkleStars, earth, dotTex } from './space.js';
 import { lunarEnv } from './astronaut.js';
 
 export const ARENA = { r: 27, lm: new THREE.Vector3(0, 0, 21.5) };
+// Instante (s) del clip «slam» del guardian.glb en que las manos tocan el suelo (frame 37 a 30 fps). Lo usan el aviso, el avance y el aturdimiento del jefe.
+export const SLAM_HIT = 1.2333;
 
 export async function makeBossArena() {
   const scene = new THREE.Scene(); const camera = new THREE.PerspectiveCamera(55, innerWidth / innerHeight, 0.1, 6000);
+  const prevShadow = renderer.shadowMap.enabled; // se restaura al salir de la arena
   renderer.shadowMap.enabled = !Q.mobile || Q.high;
   scene.fog = new THREE.FogExp2(0x05060a, 0.0035);
   const sunDir = new THREE.Vector3(-0.9, 0.3, 0.32).normalize(); // sol bajo: sombras largas, imprescindibles para distinguir el clon real
@@ -37,6 +40,10 @@ export async function makeBossArena() {
     for (let j = 0; j <= N; j++) for (let i = 0; i <= N; i++) { o.set(-SPAN / 2 + (i / N) * SPAN, 60, -SPAN / 2 + (j / N) * SPAN); rc.set(o, d); const hit = targets.length ? rc.intersectObjects(targets, true)[0] : null; hgt[j * (N + 1) + i] = hit ? hit.point.y : 0; } }
   const ground = (x, z) => { const fx = Math.min(N - 1e-3, Math.max(0, ((x + SPAN / 2) / SPAN) * N)), fz = Math.min(N - 1e-3, Math.max(0, ((z + SPAN / 2) / SPAN) * N)); const i = Math.floor(fx), j = Math.floor(fz), u = fx - i, v = fz - j;
     const a = hgt[j * (N + 1) + i], b = hgt[j * (N + 1) + i + 1], c = hgt[(j + 1) * (N + 1) + i], e = hgt[(j + 1) * (N + 1) + i + 1]; return (a * (1 - u) + b * u) * (1 - v) + (c * (1 - u) + e * u) * v; };
+
+  // puntos de aparición desde los empties del glb (con respaldo a los valores fijos de siempre)
+  const sp = arena?.getObjectByName('spawn-player'), sg = arena?.getObjectByName('spawn-guardian'); const wp = (o) => o.getWorldPosition(new THREE.Vector3());
+  const spawns = { player: sp ? { x: wp(sp).x, z: wp(sp).z } : { x: 0, z: -18 }, guardian: sg ? { x: wp(sg).x, z: wp(sg).z } : { x: 0, z: 4 } };
 
   // ---------- Eagle en el borde (frente/escalera +Z → mira al centro) ----------
   const lm = new THREE.Group(); lm.position.set(ARENA.lm.x, ground(ARENA.lm.x, ARENA.lm.z), ARENA.lm.z); lm.rotation.y = Math.PI; scene.add(lm);
@@ -85,11 +92,12 @@ export async function makeBossArena() {
     // orientar: el frente es donde está el núcleo DSKY → +Z del grupo exterior
     A.idle?.play(); mixer.update(0); outer.updateMatrixWorld(true);
     const cp = new THREE.Vector3(); nodes['core-dsky']?.getWorldPosition(cp); inner.rotation.y = -Math.atan2(cp.x, cp.z); outer.updateMatrixWorld(true);
-    // medir dónde golpean las manos en el impacto del slam (≈1,42 s) en coordenadas locales del Guardián
+    // medir dónde golpean las manos en el impacto del slam (SLAM_HIT ≈ 1,23 s) en coordenadas locales del Guardián
     const slamLocal = new THREE.Vector3(0, 0, 7);
-    if (A.slam) { A.idle.stop(); A.slam.reset().play(); A.slam.time = 1.42; mixer.update(0); outer.updateMatrixWorld(true); const a = new THREE.Vector3(), b = new THREE.Vector3(); nodes['hand-l']?.getWorldPosition(a); nodes['hand-r']?.getWorldPosition(b); slamLocal.copy(a).add(b).multiplyScalar(0.5); slamLocal.y = 0; A.slam.stop(); A.idle.reset().play(); mixer.update(0); }
+    if (A.slam) { A.idle.stop(); A.slam.reset().play(); A.slam.time = SLAM_HIT; mixer.update(0); outer.updateMatrixWorld(true); const a = new THREE.Vector3(), b = new THREE.Vector3(); nodes['hand-l']?.getWorldPosition(a); nodes['hand-r']?.getWorldPosition(b); slamLocal.copy(a).add(b).multiplyScalar(0.5); slamLocal.y = 0; A.slam.stop(); A.idle.reset().play(); mixer.update(0); }
     const base = { crack: M['crack-amber']?.emissive?.clone(), digits: M['dsky-digits']?.emissive?.clone() };
-    const api = { root: outer, model: g.scene, mixer, A, M, nodes, slamLocal, base, mats: [...mats.values()] };
+    const bb = new THREE.Box3().setFromObject(outer), bs = new THREE.Vector3(); bb.getSize(bs); const radius = Math.max(bs.x, bs.z) * 0.5, height = bs.y; // volumen para la cámara
+    const api = { root: outer, model: g.scene, radius, height, mixer, A, M, nodes, slamLocal, base, mats: [...mats.values()] };
     let cur = A.idle;
     api.play = (n, fade = 0.25) => { const a = A[n]; if (!a) return null; if (a === cur && n === 'idle') return a; a.reset(); a.enabled = true; a.setEffectiveWeight(1); a.timeScale = 1; a.paused = false; a.play(); if (cur && cur !== a) cur.crossFadeTo(a, fade, false); cur = a; return a; };
     api.current = () => cur;
@@ -101,6 +109,6 @@ export async function makeBossArena() {
   }
 
   const update = (dt) => { updDust(dt); };
-  return { scene, camera, sun, sunDir, amber, ground, colliders, lm, hatch, hatchGlow, fx, puff, setDustGravity: (v) => (dustG = v), loadGuardian, update, env,
-    dispose() { scene.traverse((o) => { if (o.isMesh || o.isPoints) { o.geometry?.dispose?.(); } }); dg.dispose(); } };
+  return { scene, camera, spawns, sun, sunDir, amber, ground, colliders, lm, hatch, hatchGlow, fx, puff, setDustGravity: (v) => (dustG = v), loadGuardian, update, env,
+    dispose() { renderer.shadowMap.enabled = prevShadow; scene.traverse((o) => { if (o.isMesh || o.isPoints) { o.geometry?.dispose?.(); } }); dg.dispose(); } };
 }
