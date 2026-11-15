@@ -18,7 +18,7 @@ export const MOCR_SPOTS = {
   garman: [4.55, 1.05, -5.55], // al fondo, en la fila de apoyo (la sala de apoyo real no está modelada)
   chalkboard: [-9.97, 0, 1.5], screens: [0, 0, 7.47],
 };
-const EXTRAS = ['civil-base', 'extra-man-1', 'extra-man-2'];
+const EXTRAS = ['controller-extra', 'extra-man-1', 'controller-extra', 'extra-man-2'];
 const EXTRA_CHAIRS = ['r1-02', 'r1-03', 'r1-06', 'r2-04', 'r2-05', 'r2-07', 'r3-02', 'r3-03', 'r3-06', 'r3-07', 'r4-02', 'r4-04', 'r4-05'];
 
 // era: '1967' (prólogo, discurso de Kranz al frente) o '1969' (alunizaje)

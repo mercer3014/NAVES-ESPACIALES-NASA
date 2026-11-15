@@ -10,8 +10,9 @@ export function envMap() {
   return _env;
 }
 
-const ARM_R = /^(RightShoulder|RightArm|RightForeArm|RightHand)\./;
-const UPPER = /^(Spine|Spine1|Spine2|Neck|Head|LeftShoulder|LeftArm|LeftForeArm|LeftHand|RightShoulder|RightArm|RightForeArm|RightHand)\./;
+// Los rigs de Mixamo (Persona 3) llegan como «mixamorigRightArm»: GLTFLoader quita los «:» de «mixamorig:RightArm»
+const ARM_R = /^(?:mixamorig)?(RightShoulder|RightArm|RightForeArm|RightHand)\./;
+const UPPER = /^(?:mixamorig)?(Spine|Spine1|Spine2|Neck|Head|LeftShoulder|LeftArm|LeftForeArm|LeftHand|RightShoulder|RightArm|RightForeArm|RightHand)\./;
 // Copia de un clip con solo las pistas que pasan el filtro (p. ej. el brazo derecho de 'wave' encima de 'sit')
 export function subClip(clip, re, name) {
   return new THREE.AnimationClip(name || clip.name + '-part', clip.duration, clip.tracks.filter((t) => re.test(t.name)));
