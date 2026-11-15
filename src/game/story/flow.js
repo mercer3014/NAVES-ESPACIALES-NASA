@@ -94,7 +94,7 @@ export const STORY = {
   tv: own(() => import('./tv.js')),
   reentry: withCard('reentry', () => import('./reentry.js')),
   recovery: epi('recovery'),
-  lrl: epi('lrl'),
+  lrl: explore('lrl'),
   parade: epi('parade'),
   epilogue: own(() => import('./epilogue.js')),
 };
@@ -147,7 +147,7 @@ export const SCENE_CARDS = {
   tv: ['ultima-transmision'],
   reentry: ['escudo-termico'],
   recovery: ['amerizaje'],
-  lrl: ['cuarentena', 'ventana-cuarentena'],
+  lrl: ['cuarentena'],
   parade: ['desfile'],
   epilogue: ['legado-lrrr', 'artemis'],
 };
