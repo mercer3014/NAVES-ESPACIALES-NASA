@@ -66,8 +66,8 @@ export const STORY = {
     return Object.assign({}, exp, { id: 'house-farewell', cine });
   },
   kids: decide('c1-kids'),
-  ksc: own(() => import('./ksc.js')),
-  beach: own(() => import('./beach.js')),
+  ksc: explore('ksc'),
+  beach: explore('beach'),
   night: own(() => import('./night.js')),
   'mocr-briefing': async (o) => {
     const exp = await explore('mocr-bales')(o);
@@ -132,7 +132,7 @@ export const SCENE_CARDS = {
   'mocr-tough': ['duros-competentes', 'pizarra-kranz'],
   'house-farewell': ['la-despedida'],
   ksc: ['deke-slayton', 'primer-paso-quien'],
-  beach: ['parche-mision', 'sobres-firmados'],
+  beach: [],
   'mocr-briefing': [],
   'mocr-1202': ['alarmas-1202'],
   'mocr-gonogo': ['go-aterrizar'],

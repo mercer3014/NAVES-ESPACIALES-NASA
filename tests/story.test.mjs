@@ -80,6 +80,10 @@ assert.match(flow, /explore\('hotel'\)/, 'el hotel de 1967 se explora');
 assert.match(flow, /'hotel-prologue': \['tratado-1967', 'apolo-1'\]/, 'la cartera y la libreta no se regalan');
 assert.match(src('game/explore/scenes/hotel.js'), /p_obj_armstrong_recuerdo_ed_white_en/, 'la libreta tiene la voz de Ed White');
 assert.ok(has('models/hotel-room-1967-p3.glb'), 'falta el hotel P3');
+assert.match(flow, /ksc: explore\('ksc'\)/, 'el KSC se camina');
+assert.match(flow, /beach: explore\('beach'\)/, 'la playa se camina');
+assert.match(flow, /beach: \[\]/, 'el parche y los sobres salen de la fogata');
+assert.match(src('game/explore/scenes/ksc.js'), /decision: 'c1-firststep'/, 'c1-firststep vive con Deke');
 
 const score = src('audio/a11-score.js');
 const audio = [...score.matchAll(/M\('([a-z0-9_]+)'\)/g)].map((m) => `audio/a11/music/${m[1]}.mp3`)
