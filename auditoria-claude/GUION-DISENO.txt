@@ -1,0 +1,1045 @@
+
+NASA Space Apps Challenge 2026 · Space Mission Design Game
+APOLO 11
+UN GRAN SALTO
+Guion y diseño narrativo del juego
+Basado en la línea de tiempo histórica de la misión · Sin ciencia ficción
+Estilo 3D realista · Bitácora coleccionable · Eventos ocultos · Secuencia No Canon
+Inspiración: Red Dead Redemption 2 · The Last of Us Part I · God of War (2018) · Detroit: Become Human · A Plague Tale: Requiem
+
+Índice: DISEÑO GENERAL · DIRECCIÓN DE ARTE · Realismo cinematográfico · LA BITÁCORA DEL APOLO 11 · El manual como historial · PRÓLOGO · «Fuego en la plataforma» · CAPÍTULO 1 · «La última cena en la Tierra» · CAPÍTULO 2 · «Fuego y trueno» · CAPÍTULO 3 · «Tres hombres en una lata» · CAPÍTULO 4 · «Doce minutos» · CAPÍTULO 5 · «Magnífica desolación» · CAPÍTULO 6 · «El lado silencioso» · CAPÍTULO 7 · «Volver a casa» · EPÍLOGO · «Un gran salto» · EVENTOS OCULTOS · Desafíos muy difíciles · ANEXO · Finales y rutas · FUENTES
+DISEÑO GENERAL
+Premisa
+Julio de 1969. Tres hombres van a intentar algo que ningún ser humano ha hecho: posarse en otro mundo y volver con vida. «Apolo 11: Un gran salto» es un juego narrativo cinematográfico que cuenta la misión real desde dentro: la cabina, el Control de Misión y las casas de las familias que escuchaban por radio. No hay ciencia ficción. Cada personaje existió, cada hora corresponde al registro de la NASA y las frases marcadas como reales provienen de las transcripciones oficiales (Apollo Flight Journal y Apollo Lunar Surface Journal) o de las memorias de los astronautas.
+Tono
+Íntimo, tenso y humano. La épica está en los detalles pequeños: una alarma que nadie entiende, un interruptor roto, un hombre solo detrás de la Luna, una esposa que escucha la respiración de su marido por un altavoz. El juego no pregunta «¿llegarán?» (todos saben que sí), sino «¿qué les costó llegar?».
+Convenciones del guion
+◆ REAL = frase tomada de transcripciones de la NASA, discursos o memorias publicadas (puede estar traducida y abreviada). ◇ DRAMATIZADO = diálogo escrito para el juego, coherente con lo que se sabe de los personajes. 🎬 CINEMÁTICA = escena no interactiva. 🎮 JUGABLE = el jugador controla. ⚖️ DECISIÓN = elección con consecuencias. 🔍 OBJETO = objeto interactivo. 📘 BITÁCORA = tarjeta que se guarda en la Bitácora del jugador. ⚠️ NO CANON = secuencia que no ocurrió (sueño), solo para emoción. Horas en UTC (Bolivia = UTC−4).
+Personajes jugables (puntos de vista)
+NEIL ARMSTRONG (Comandante) — reservado, preciso, cargando una pérdida que nunca menciona: su hija Karen murió en 1962, con dos años. Arco: de la soledad del deber a dejar que otros lo acompañen.
+BUZZ ALDRIN (Piloto del Módulo Lunar) — brillante, competitivo, doctor del MIT en encuentro orbital. Arco: de querer ser el primero a aceptar ser el segundo… y descubrir que importa más el «nosotros».
+MICHAEL COLLINS (Piloto del Módulo de Mando) — irónico, cálido, el hermano mayor del grupo. Arco: el hombre que nunca pisará la Luna y aun así es imprescindible. Su capítulo en solitario es el corazón emocional del juego.
+STEVE BALES (26 años, Oficial de Guiado, Control de Misión) — un joven que tendrá diez segundos para decidir si la misión sigue o se aborta.
+NPCs principales: Jan Armstrong y sus hijos Rick (12) y Mark (6); Joan Aldrin; Pat Collins; Gene Kranz (director de vuelo, chaleco blanco cosido por su esposa Marta); Charlie Duke (CAPCOM, la voz de Houston); Jack Garman (ingeniero de software de 24 años); Deke Slayton (jefe de astronautas).
+Qué tomamos de cada juego
+RED DEAD REDEMPTION 2 → Medidor de «Confianza de la tripulación» (como el honor de Arthur): pequeñas acciones (ayudar, bromear, discutir) cambian diálogos posteriores. Amistad y tensión reales: la rivalidad Armstrong–Aldrin por el primer paso. Mundo vivo en el Centro Espacial Kennedy con NPCs que reaccionan.
+THE LAST OF US PART I → Pérdida y humanidad: Karen Armstrong, los amigos muertos del Apolo 1 (Ed White era vecino de Neil y ayudó a salvar a su familia del incendio de su casa en 1964). Momentos de calma entre la tensión (las conversaciones nocturnas en la nave, como la jirafa de Joel y Ellie).
+GOD OF WAR (2018) → El viaje padre-hijo: Neil se despide de Rick y Mark antes de la cuarentena; Rick escucha el alunizaje por radio. Plano secuencia continuo en el descenso lunar (sin cortes de cámara).
+DETROIT: BECOME HUMAN → Decisiones con diagrama de flujo al final de cada capítulo («Ruta histórica» señalada con una línea dorada). El jugador puede desviarse: abortar, aterrizar en otro lugar, fallar. Las rutas no canónicas llevan a finales alternativos marcados como «¿Y si…?» y luego permiten volver a la ruta real.
+A PLAGUE TALE: REQUIEM → Hermandad y vínculo protector: Collins como el hermano que cuida de los otros dos desde la órbita; secuencias de tensión silenciosa (detrás de la Luna sin radio), con sonido y luz como mecánicas.
+Sistemas de juego
+Confianza de la tripulación (0–100): sube con decisiones de cooperación, baja con impaciencia o egoísmo. Cambia diálogos y el tono del epílogo, nunca la historia real. Moral del Control de Misión (0–100): depende de las decisiones de Bales y Kranz. Bitácora del Apolo 11 (antes «Manual»): historial que guarda automáticamente cada momento importante y cada objeto con el que interactúas, con rarezas y recompensas (ver sección «La Bitácora»). Modo No Canon: secuencias de acción marcadas claramente que no ocurrieron y solo aportan emoción (ver Escena 6.1B). Diagrama de flujo (estilo Detroit) al final de cada capítulo, con porcentaje mundial de jugadores que tomaron cada camino.
+
+DIRECCIÓN DE ARTE · Realismo cinematográfico
+Estilo visual general
+El juego usa 3D realista, en la línea de Red Dead Redemption 2, The Last of Us Part I, God of War (2018) y A Plague Tale: Requiem: iluminación fotorrealista con iluminación global, materiales PBR (metal, tela, vidrio y polvo físicamente creíbles), animaciones con captura de movimiento y cámara cinematográfica (lente de 35–50 mm, profundidad de campo, cámara al hombro en los momentos de tensión). Nada de estilo anime ni caricaturesco. Cada objeto se modela a partir de fotografías y planos reales de 1969.
+Principios
+1) Fidelidad de época: televisores de tubo, teléfonos de disco, autos de 1969, peinados y ropa de la época, cigarrillos en el Control de Misión, papeles y bolígrafos por todas partes. 2) La luz cuenta la historia: Florida dorada y húmeda; Houston con fluorescentes fríos y humo; el espacio con un único sol durísimo sin luz de relleno (sombras negras absolutas, como en las fotos reales); la Luna con contraste extremo y el gris beige del regolito. 3) Cámara sin cortes en los momentos clave (descenso, primer paso), como God of War. 4) Rostros y miradas: primeros planos largos y silencios, como The Last of Us. 5) Texturas de desgaste: arañazos en los paneles, cinta adhesiva, etiquetas escritas a mano, polvo lunar pegado a los trajes al volver a Eagle.
+Referencias por lugar
+Lugar
+Referencia visual (fuentes reales)
+Paleta y luz
+Juego de referencia
+Casa de los Armstrong (El Lago, Texas)
+Fotos de LIFE Magazine de las familias en julio de 1969
+Interiores cálidos, madera, luz de lámpara, televisor encendido
+The Last of Us (calma doméstica)
+Centro Espacial Kennedy y Plataforma 39A
+Fotos de la NASA del VAB, la torre de lanzamiento y la multitud en las playas
+Cielo de Florida, calor, neblina, amanecer anaranjado
+Red Dead Redemption 2 (mundo vivo, NPCs)
+Control de Misión (Houston)
+Fotos de la sala de control MOCR 2, consolas Philco, pizarras
+Fluorescentes verdosos, humo de cigarro, pantallas monocromas
+Detroit: Become Human (interfaz y tensión)
+Interior de Columbia y Eagle
+Modelos del Smithsonian (Columbia se exhibe en el Museo del Aire y el Espacio), fotos de cabina, planos de Grumman y North American
+Luz de panel, sol entrando por ventanas pequeñas, sombras duras
+A Plague Tale (espacios cerrados, sonido)
+Superficie lunar (Base Tranquilidad)
+Fotos Hasselblad de Apolo 11 (serie AS11-40), mapas del Lunar Reconnaissance Orbiter
+Sol bajo, sombras largas y negras, Tierra azul sobre horizonte negro
+God of War (plano secuencia, escala)
+Océano Pacífico y USS Hornet
+Fotos y filmaciones del rescate del 24 de julio de 1969
+Mar gris azulado, helicópteros, trajes de aislamiento grises
+Red Dead Redemption 2 (cinemáticas)
+Sonido
+Audio real de la NASA (dominio público) en momentos clave, mezclado con orquesta mínima: un piano y cuerdas. En el espacio no hay sonido exterior: solo lo que se oye dentro del casco (respiración, ventiladores, radio). La música se apaga por completo en el primer paso y en el despegue lunar.
+
+LA BITÁCORA DEL APOLO 11 · El manual como historial
+Concepto
+El antiguo Manual de Vuelo se convierte en la Bitácora: un álbum-diario de la misión que se escribe solo mientras juegas. Cada momento importante (cinemática clave, decisión tomada) y cada interacción con un objeto genera automáticamente una tarjeta. La idea es aprender jugando y sentir que ganaste algo: al terminar, el jugador tiene un archivo completo y verídico de la misión que él mismo construyó.
+Cómo funciona
+Se abre con [B] (o desde el menú de pausa). Una notificación discreta («Nueva entrada en la Bitácora · Rara») aparece cada vez que se registra algo. Cada tarjeta incluye: título, fecha y hora (UTC), categoría (Momento, Objeto, Persona, Lugar, Ciencia, Decisión), un dato real verificado, una descripción de la imagen o fotografía asociada, la fuente (por ejemplo «Apollo Lunar Surface Journal») y, si es una decisión, qué eligió el jugador frente a lo que pasó en la historia. Cada capítulo muestra su porcentaje de compleción y la Bitácora entera, un porcentaje global.
+Niveles de rareza
+Rareza
+Color
+Cómo se obtiene
+Ejemplo
+Común
+Gris
+Avanzar en la historia (se obtienen solas)
+«Despegue del Apolo 11»
+Rara
+Azul
+Interactuar con objetos opcionales
+«El sextante de Collins»
+Épica
+Morado
+Diálogos opcionales, decisiones con alta Confianza
+«Marion Moon»
+Legendaria
+Dorado
+Secretos y escenas especiales
+«Laika» / «Pushinka, la perrita de la Casa Blanca»
+Oculta
+Negro
+Solo con los eventos ocultos (ver sección siguiente)
+«Aterrizaje perfecto»
+Recompensas
+Insignias: una por capítulo completado al 100 % (por ejemplo «Duros y competentes», «Base Tranquilidad», «Uno más Dios sabe qué»). Galería: fotos reales de la NASA en alta resolución que se desbloquean (dominio público), por ejemplo «Earthrise» y el retrato de Aldrin con el reflejo de Armstrong en el visor. Audio: fragmentos reales del loop de voz (la alarma 1202, «The Eagle has landed»). Arte conceptual del juego. Parches cosméticos para los trajes, usables solo en el modo No Canon: parches de las misiones Mercury, Gemini y Apolo. Al 100 % se obtiene el título «Historiador del Apolo» y una escena final extra narrada por Collins.
+Entradas por capítulo
+Capítulo
+Momentos (auto)
+Objetos y personas (interacción)
+Prólogo
+Tratado del Espacio (1967), Apolo 1, «Duros y competentes»
+Foto de Karen (privada, no se describe), libreta de Ed White, pizarra de Kranz
+Cap. 1
+La despedida, la decisión del primer paso
+Cohete de juguete (Saturn V), parche de la misión, sobres firmados, Deke Slayton
+Cap. 2
+Despegue 13:32 UTC, TLI, acoplamiento
+Checklist del muslo, órbita de estacionamiento, Bruce McCandless
+Cap. 3
+Modo barbacoa, LOI detrás de la Luna
+Sextante, computadora AGC/DSKY, comida espacial, Marion Moon, Eagle (LM-5)
+Cap. 4
+«The Eagle has wings», alarmas 1202/1201, GO para aterrizar, «The Eagle has landed»
+Hoja de Jack Garman, chaleco de Kranz, squawk box de Jan, West Crater
+Cap. 5
+Primer paso 02:56:15 UTC, magnífica desolación, llamada de Nixon
+Huella, placa, bandera, sismómetro, retrorreflector, lámina solar, Hasselblad, paquete de recuerdos
+Cap. 6
+Collins solo, despegue lunar, reencuentro
+Libreta de Collins, ventana trasera, rotulador de Aldrin, motor de ascenso, discurso de Safire (oculto)
+Cap. 7
+TEI, última transmisión, amerizaje, cuarentena
+Perrito de tela (Laika), Belka y Strelka, Pushinka, escudo térmico, ventana de cuarentena
+Epílogo
+Desfile, gira mundial, legado
+Retrorreflector hoy, programa Artemis
+No Canon
+«Polvo y fuego» (sueño de Aldrin), combate contra el Guardián de Tranquilidad
+Tarjeta Oculta-No Canon «El Guardián de Tranquilidad» (dato real: el polvo lunar). Además, una tarjeta especial que aclara qué parte fue sueño y qué datos eran reales (O2, gravedad, micrometeoritos)
+
+PRÓLOGO · «Fuego en la plataforma»
+
+Fecha: 27 de enero de 1967
+Objetivo: entender por qué esta misión importa y qué costó
+Personaje jugable: Neil Armstrong
+Lugares: Washington D. C. / Houston
+Mecánicas: exploración, diálogo, objetos interactivos
+ESCENA 0.1 — INT. CASA BLANCA, SALÓN — NOCHE
+🎬 CINEMÁTICA
+Copas de champán. Diplomáticos. Neil ARMSTRONG (36) y otros astronautas asisten a la firma del Tratado del Espacio Ultraterrestre, que prohíbe reclamar la Luna para cualquier nación. Neil sonríe por compromiso. Mira el reloj.
+DIPLOMÁTICO
+Señor Armstrong, ¿usted cree que llegaremos antes que los soviéticos?
+ARMSTRONG
+((tras una pausa))
+Creo que llegaremos cuando estemos listos. Ni un día antes.
+Un asistente cruza el salón con el rostro pálido. Se agacha junto a Neil.
+ASISTENTE
+((en voz baja))
+Llamada de Houston, señor. Es urgente.
+ESCENA 0.2 — INT. HOTEL GEORGETOWN INN — NOCHE
+🎮 JUGABLE
+El jugador controla a Neil en una habitación de hotel. El teléfono suena. Al contestar, la voz de un compañero le comunica la noticia.
+VOZ AL TELÉFONO
+((quebrada))
+Hubo un incendio en la cabina. En la prueba. Gus, Ed y Roger… no salieron.
+Silencio. El jugador puede mover la cámara, pero Neil no se mueve. Solo se escucha el tráfico afuera.
+
+🔍 OBJETO: Foto en la cartera de Neil. Una niña rubia de dos años: Karen Armstrong (1959–1962). Neil no habla de ella. Al mirarla, la música baja y la pantalla se desenfoca un segundo. No se desbloquea texto: es un recuerdo privado.
+
+
+🔍 OBJETO: Libreta de direcciones. «Ed White — El Lago, Texas». Recuerdo (voz en off de Neil, dramatizado): «Cuando se quemó mi casa en el 64, Ed saltó la cerca antes que nadie. Me ayudó a sacar a mi familia».
+
+
+📘 BITÁCORA: Apolo 1. El 27 de enero de 1967 un incendio en la cabina del Apolo 1, durante una prueba en tierra con atmósfera de oxígeno puro, mató a Virgil «Gus» Grissom, Edward White y Roger Chaffee. La nave se rediseñó por completo: escotilla de apertura rápida, materiales no inflamables y atmósfera de oxígeno-nitrógeno en tierra.
+
+ESCENA 0.3 — INT. CONTROL DE MISIÓN, HOUSTON — DÍAS DESPUÉS
+🎬 CINEMÁTICA
+Gene KRANZ (33), corte al rape, se planta frente a su equipo de controladores. Habla duro.
+KRANZ
+(◆ REAL (resumen del discurso «Duros y competentes», 1967))
+El espacio no tolera el descuido, la incapacidad ni la negligencia. En algún lugar, de alguna manera, metimos la pata. A partir de hoy, Control de Vuelo será conocido por dos palabras: duros y competentes. Escríbanlas en sus pizarras. Y no las borren nunca.
+Los controladores escriben «TOUGH AND COMPETENT» en sus pizarras. Fundido a negro.
+TEXTO EN PANTALLA
+Dos años y medio después.
+
+CAPÍTULO 1 · «La última cena en la Tierra»
+
+Fecha: julio de 1969
+Objetivo: despedirse de la familia y prepararse para el lanzamiento
+Personajes jugables: Neil (casa), luego Aldrin y Collins (KSC)
+Lugares: El Lago (Texas), Centro Espacial Kennedy (Florida)
+Mecánicas: exploración libre, diálogos con NPCs estilo Genshin, objetos, primera decisión de Confianza
+ESCENA 1.1 — INT. CASA DE LOS ARMSTRONG, EL LAGO — NOCHE (días antes de la cuarentena)
+🎮 JUGABLE
+Casa de suburbio, cajas de mudanza aún sin abrir desde la reconstrucción tras el incendio. Rick (12) ve televisión. Mark (6) juega con un cohete de plástico. Jan ARMSTRONG espera a Neil en la cocina.
+JAN
+(◇ DRAMATIZADO (basado en el relato de Jan Armstrong))
+Neil. Antes de irte tienes que hablar con los niños. Explícales que puede que no vuelvas.
+ARMSTRONG
+(◇)
+Jan, las probabilidades son buenas.
+JAN
+(◇)
+Entonces no te costará decírselo.
+Neil se queda en silencio. Luego camina hacia la sala.
+
+⚖️ DECISIÓN — ¿Cómo habla Neil con sus hijos?
+▸ Contarles la verdad: «Es peligroso, pero confío en mi equipo».
+→ Confianza familiar +; Rick escuchará el alunizaje sin miedo y su diálogo en el Cap. 4 es «Papá dijo que confiaba en ellos». (Ruta histórica: Neil habló con ellos por insistencia de Jan).
+▸ Restarle importancia: «Es un viaje de trabajo, volveré pronto».
+→ Mark no se entera de nada; Rick lo descubre por la televisión y en el epílogo le reprocha: «Nos lo tendrías que haber dicho».
+▸ Darle a Rick el cohete de plástico de Mark para que cuide de su hermano.
+→ Desbloquea la escena extra del Cap. 4 en la que Rick abraza a Mark durante el descenso (eco de God of War / A Plague Tale).
+RICK
+(◇)
+¿Desde la Luna se ve nuestra casa?
+ARMSTRONG
+(◇)
+No. Pero se ve la Tierra entera. Y tú estás en ella. Con eso me alcanza.
+
+🔍 OBJETO: Cohete de plástico de Mark. Un Saturn V de juguete. Al girarlo se separan las etapas. 📘 Desbloquea «Saturn V».
+
+
+📘 BITÁCORA: Saturn V. Cohete de tres etapas, de unos 110 m de altura y ~2.900 toneladas en el despegue. La primera etapa (S-IC) tenía cinco motores F-1; la segunda (S-II), cinco J-2; la tercera (S-IVB), uno J-2 reencendible, el que los enviaría hacia la Luna.
+
+ESCENA 1.2 — EXT. CENTRO ESPACIAL KENNEDY — DÍA (MUNDO ABIERTO)
+🎮 JUGABLE
+Zona explorable al estilo Genshin: edificio de ensamblaje (VAB), cuarteles de la tripulación, la playa. NPCs con signo de exclamación sobre la cabeza. El jugador alterna entre Aldrin y Collins.
+DEKE SLAYTON
+(◇ DRAMATIZADO (el hecho es real: la NASA decidió que el comandante saliera primero))
+Buzz, ya está decidido. Neil sale primero. Es el comandante y la escotilla abre hacia su lado.
+ALDRIN
+(◇)
+En Gemini salía el piloto, no el comandante. Solo digo que hay precedente.
+SLAYTON
+(◇)
+Y yo solo digo que está decidido.
+
+⚖️ DECISIÓN — Aldrin y el primer paso
+▸ Aceptarlo en silencio.
+→ Confianza +5. Más tarde Neil le dice: «Gracias, Buzz. No era fácil».
+▸ Ir a hablar con Neil directamente.
+→ Escena opcional: conversación tensa pero honesta en la playa. Confianza +10 si Aldrin admite que está dolido; −5 si lo plantea como reclamo.
+▸ Quejarse con otros astronautas.
+→ Confianza −10. El rumor llega a Neil; en el Cap. 3 hay un silencio incómodo en la cabina.
+ESCENA 1.3 — EXT. PLAYA DE CABO KENNEDY — ATARDECER
+🎮 JUGABLE
+Collins se sienta en la arena con Aldrin y Armstrong. Puede iniciar una conversación «de fogata» (estilo RDR2).
+COLLINS
+(◇)
+Saben qué es lo bueno de mi trabajo, ¿no? Si algo sale mal ahí abajo, el único que vuelve soy yo. Me harán entrevistas el resto de mi vida.
+ALDRIN
+(◇)
+Qué consuelo, Mike.
+COLLINS
+(◇ (basado en «Carrying the Fire»))
+No es un chiste. Si no suben, no puedo bajar a buscarlos. Lo pienso cada noche.
+Silencio. Las olas.
+ARMSTRONG
+(◇)
+Vamos a subir, Mike.
+
+🔍 OBJETO: Parche de la misión. El águila posada sobre la Luna con una rama de olivo. Collins diseñó buena parte del emblema; decidieron no poner los nombres de la tripulación para que representara a todos los que trabajaron en Apolo. 📘 «Emblema del Apolo 11».
+
+
+🔍 OBJETO: Sobres firmados. Ningún seguro de vida cubría a los astronautas. Firmaban sobres conmemorativos que sus familias podrían vender si no regresaban. (Dato real).
+
+
+CAPÍTULO 2 · «Fuego y trueno»
+
+Fecha: 16 de julio de 1969
+Objetivo: despegar, llegar a la órbita y salir hacia la Luna
+Personajes jugables: Armstrong (despegue), Collins (acoplamiento)
+Lugar: Plataforma 39A, órbita terrestre
+Mecánicas: cuenta regresiva interactiva, separación de etapas con tiempo, minijuego de acoplamiento
+ESCENA 2.1 — INT. CUARTELES DE LA TRIPULACIÓN — 04:15 hora local (08:15 UTC)
+🎬 CINEMÁTICA
+Despertador. Desayuno de bistec con huevos. Los técnicos ayudan a ponerse los trajes. Nadie habla mucho. En la furgoneta, Collins hace una broma que nadie escucha bien por los cascos.
+ESCENA 2.2 — INT. MÓDULO DE MANDO COLUMBIA, CIMA DEL SATURN V — MAÑANA
+🎮 JUGABLE
+El jugador (Armstrong) revisa el panel con la checklist del Manual. Cada interruptor correcto suma «Preparación».
+
+🔍 OBJETO: Checklist pegada al muslo. Página real del procedimiento de lanzamiento. Interacción: tachar ítems.
+
+CONTROL DE LANZAMIENTO (PAO, JACK KING)
+(◆ REAL)
+…12, 11, 10, 9, comienza la secuencia de ignición… 6, 5, 4, 3, 2, 1, cero, todos los motores en marcha. ¡Despegue! Tenemos despegue, 32 minutos pasada la hora. Despegue del Apolo 11.
+13:32:00 UTC. La cabina tiembla. Ruido ensordecedor. El jugador debe mantener la vista en los instrumentos (QTE suave: estabilizar la mirada).
+🎬 CINEMÁTICA
+Plano exterior: el Saturn V asciende sobre una columna de fuego. Corte a la playa: un millón de personas. Corte a la casa de los Aldrin: Joan cierra los ojos.
+ESCENA 2.3 — ÓRBITA TERRESTRE — SEPARACIÓN DE ETAPAS
+🎮 JUGABLE
+Mecánica de ritmo: al apagarse cada etapa, el jugador confirma la separación. Si se adelanta, el Manual explica por qué no se hace manualmente: el cohete lo controla su propia computadora. La misión no falla; esto es aprendizaje.
+
+📘 BITÁCORA: Órbita de estacionamiento. A unos 12 minutos del despegue, Apolo 11 alcanzó una órbita de ~190 km. Dio vuelta y media a la Tierra para comprobar los sistemas antes de partir.
+
+ESCENA 2.4 — ÓRBITA TERRESTRE — 16:16 UTC
+🎬 CINEMÁTICA
+CAPCOM (BRUCE MCCANDLESS)
+(◆ REAL)
+Apolo 11, aquí Houston. Tienen GO para la TLI.
+COLLINS
+(◆ REAL)
+Apolo 11. Gracias.
+La tercera etapa se enciende 5 minutos y 48 segundos. La Tierra empieza a encogerse por la ventana.
+
+📘 BITÁCORA: Inyección translunar (TLI). El reencendido de la S-IVB elevó la velocidad a unos 39.000 km/h, suficiente para escapar hacia la Luna en una trayectoria de «retorno libre».
+
+ESCENA 2.5 — ESPACIO — TRANSPOSICIÓN Y ACOPLAMIENTO
+🎮 JUGABLE
+El jugador controla a COLLINS. Separa Columbia, gira 180° y debe acoplar la sonda en el cono de Eagle, que espera dentro del adaptador de la tercera etapa. Controles de traslación y rotación con poco combustible de maniobra (RCS).
+
+⚖️ DECISIÓN — Velocidad del acoplamiento
+▸ Lento y preciso (como Collins en la realidad).
+→ Ruta histórica. Confianza +5. Aldrin: «Bonito, Mike».
+▸ Rápido para ahorrar tiempo.
+→ Mayor gasto de combustible RCS; Houston lo nota y Duke bromea por radio. Sin consecuencias graves, pero baja la Moral de Control.
+▸ Fallar el contacto 3 veces.
+→ Pantalla «¿Y si…?»: Collins reintenta. No hay muerte; el Manual explica que Collins había entrenado cientos de veces en simulador.
+
+CAPÍTULO 3 · «Tres hombres en una lata»
+
+Fecha: 16–19 de julio de 1969
+Objetivo: sobrevivir a la travesía, preparar a Eagle y entrar en órbita lunar
+Personajes jugables: los tres (cambio libre)
+Lugar: interior de Columbia y Eagle
+Mecánicas: exploración en gravedad cero, tareas de mantenimiento, conversaciones nocturnas, tensión sin radio
+ESCENA 3.1 — INT. COLUMBIA — «MODO BARBACOA»
+🎮 JUGABLE
+Interior explorable flotando. La nave gira lentamente para repartir el calor del Sol; por la ventana pasan, alternadas, la Tierra y la Luna.
+
+🔍 OBJETO: Sextante. Collins toma estrellas para verificar la posición. Minijuego de alinear una estrella con un punto de referencia. 📘 «Navegar con estrellas».
+
+
+🔍 OBJETO: Computadora AGC y teclado DSKY. Verbo + Sustantivo. El jugador introduce un código simple. 📘 «La computadora de guiado Apolo»: unos 4 KB de memoria de trabajo (RAM) y 72 KB de memoria fija; su software fue escrito en el MIT bajo la dirección de Margaret Hamilton.
+
+
+🔍 OBJETO: Comida espacial. Bolsitas deshidratadas. Collins: (◇) «El cóctel de camarones es lo único que se parece a comida de verdad».
+
+ESCENA 3.2 — INT. COLUMBIA — «NOCHE» (luces atenuadas)
+🎮 JUGABLE
+Conversación de calma (estilo TLOU). El jugador elige con quién hablar.
+ALDRIN
+(◇)
+¿Sabes cuál era el apellido de soltera de mi madre? Moon. Marion Moon. (Dato real).
+COLLINS
+(◇)
+Entonces esto es una visita familiar.
+ARMSTRONG
+(◇ (si la Confianza &gt; 60))
+Karen habría cumplido nueve este año.
+Silencio. Es la única vez en el juego que Neil dice su nombre en voz alta. Si la Confianza es menor, Neil solo mira por la ventana y dice: «Duerman. Mañana es largo».
+
+⚖️ DECISIÓN — ¿Cómo responde Aldrin a Neil?
+▸ No decir nada; poner una mano en su hombro.
+→ Confianza +15. Neil, en el Cap. 5: «Gracias por lo de anoche».
+▸ Cambiar de tema hacia la misión.
+→ Sin cambio. Neil agradece en silencio no tener que hablar.
+▸ Preguntar más.
+→ Neil se cierra. Confianza −5. (Así era Armstrong: muy reservado).
+ESCENA 3.3 — INT. EAGLE — 18 DE JULIO
+🎮 JUGABLE
+Armstrong y Aldrin cruzan el túnel hacia Eagle para revisarlo. Checklist de inspección: oxígeno, baterías, interruptores. El jugador descubre lo frágil que es: las paredes en algunas zonas son tan finas como varias capas de papel de aluminio.
+
+📘 BITÁCORA: Módulo Lunar Eagle (LM-5). Dos etapas: la de descenso (motor regulable, patas, equipo científico) se queda en la Luna como plataforma de lanzamiento; la de ascenso, con su único motor, devuelve a los astronautas a la órbita.
+
+ESCENA 3.4 — DETRÁS DE LA LUNA — 19 DE JULIO, 17:21:50 UTC
+🎬 CINEMÁTICA
+CAPCOM
+(◇)
+Apolo 11, tienen GO para LOI. Nos vemos del otro lado.
+La radio se corta: pérdida de señal (LOS). Pantalla: «SIN CONTACTO CON LA TIERRA». Solo se oye la respiración de los tres y el zumbido de los ventiladores.
+🎮 JUGABLE
+El jugador (Collins) vigila el encendido del motor SPS: 357,5 segundos. Barra de tiempo en pantalla. Si el motor fallara, nadie en Houston lo sabría. Mecánica de tensión: no hay nada que hacer salvo esperar y observar los indicadores (como los silencios de A Plague Tale).
+Cuando sale de detrás de la Luna, la nave ve por primera vez la superficie iluminada.
+ARMSTRONG
+(◇)
+Houston, Apolo 11. Estamos en órbita.
+COLLINS
+(◇)
+Miren eso… es como yeso viejo.
+
+📘 BITÁCORA: Inserción en órbita lunar. El 19 de julio a las 17:21:50 UTC, el motor principal frenó la nave durante 357,5 s, dejándola en una órbita de unos 111 × 306 km, ajustada después a ~100 × 113 km.
+
+
+🔀 Fin del Cap. 3 — Diagrama de flujo: Confianza de la tripulación mostrada como una cuerda que une a los tres astronautas; más gruesa cuanto mayor la confianza.
+
+CAPÍTULO 4 · «Doce minutos»
+
+Fecha: 20 de julio de 1969
+Objetivo: aterrizar en el Mar de la Tranquilidad
+Personajes jugables: Armstrong (Eagle) y Steve Bales (Control de Misión), alternando
+Lugares: Eagle, Control de Misión, casas de las familias
+Mecánicas: plano secuencia, decisiones con temporizador, pilotaje con combustible limitado
+ESCENA 4.1 — INT. COLUMBIA / EAGLE — 17:44 UTC — DESACOPLE
+🎬 CINEMÁTICA
+Eagle se separa. Collins lo observa girar por la ventana.
+ARMSTRONG
+(◆ REAL)
+El Águila tiene alas. («The Eagle has wings»).
+COLLINS
+(◆ REAL (fragmento))
+Ustedes, tómenselo con calma allá en la superficie lunar.
+ALDRIN
+(◆ REAL)
+Okay, Mike.
+ESCENA 4.2 — INT. CONTROL DE MISIÓN, HOUSTON — 19:50 UTC
+🎬 CINEMÁTICA
+Kranz se pone su chaleco blanco nuevo. Ordena cerrar las puertas de la sala.
+KRANZ
+(◇ DRAMATIZADO (el hecho de cerrar las puertas y hablar al equipo es real))
+Hoy vamos a hacer algo que nadie ha hecho. Vamos a aterrizar en la Luna. Pase lo que pase, salgo de esta sala con ustedes. Confío en cada uno de los que están aquí.
+Plano de Steve BALES (26), Oficial de Guiado. Detrás, en la sala de apoyo, Jack GARMAN (24) repasa una hoja escrita a mano con códigos de alarma de la computadora.
+
+🔍 OBJETO: Hoja de Jack Garman. Lista manuscrita de alarmas del programa: «1201 – 1202: sobrecarga del ejecutivo. Si no se repiten continuamente → GO». Recogerla es CLAVE para la decisión 4.4. 📘 «Las alarmas 1201/1202».
+
+ESCENA 4.3 — INT. EAGLE — 20:05 UTC — DESCENSO PROPULSADO (PDI)
+🎮 JUGABLE
+PLANO SECUENCIA (God of War): la cámara no se corta hasta el contacto. El jugador ve el panel de Eagle, la ventana y a Aldrin a su lado.
+COLLINS (RELEVANDO A HOUSTON)
+(◆ REAL)
+Eagle, aquí Columbia. Acaban de darles GO para el descenso propulsado.
+El motor se enciende. El HUD muestra ALTITUD, VELOCIDAD y COMBUSTIBLE.
+ARMSTRONG
+(◇)
+Vamos largos. Las marcas del terreno pasan antes de lo previsto.
+ESCENA 4.4 — 20:10 UTC — «ES UNA 1202»
+🎮 JUGABLE
+Una luz amarilla se enciende. Suena un tono en los auriculares.
+ARMSTRONG
+(◆ REAL)
+Alarma de programa.
+ARMSTRONG
+(◆ REAL)
+Es una 1202.
+ALDRIN
+(◆ REAL)
+1202.
+ARMSTRONG
+(◆ REAL (con tensión))
+Danos una lectura sobre la alarma 1202.
+CAMBIO DE PERSONAJE: el jugador pasa a ser STEVE BALES en Houston. La sala está en silencio. Kranz lo mira.
+KRANZ
+(◇)
+Guiado, ¿cómo estamos?
+Temporizador en pantalla: 10 segundos. Bales mira a la sala de apoyo; Garman le hace un gesto por el intercomunicador.
+GARMAN
+(◇ (basado en el loop de voz))
+Mientras no se repita sin parar, estamos bien. Es GO.
+
+⚖️ DECISIÓN — ⏱️ 10 SEGUNDOS — ¿Qué responde Bales?
+▸ «¡Seguimos, Flight! Es GO».
+→ RUTA HISTÓRICA. Moral de Control +20. Duke transmite «Estamos GO con esa alarma». (Si el jugador recogió la hoja de Garman, la respuesta sale con seguridad; si no, la voz de Bales tiembla y Kranz lo nota).
+▸ «Abortar. No podemos arriesgarnos».
+→ FINAL ALTERNATIVO «¿Y si…? — ABORTO A ÓRBITA». Eagle separa la etapa de descenso y vuelve con Collins. Cinemática: el mundo espera. Texto: «En la historia real, el primer alunizaje se habría retrasado. Apolo 12 estaba previsto para noviembre de 1969». Opción: [Volver a la ruta histórica].
+▸ No responder (se acaba el tiempo).
+→ Kranz decide por él: «Seguimos». Moral de Control −10. Bales, en el epílogo: «Me quedé congelado. Gene me cubrió».
+CAPCOM CHARLIE DUKE
+(◆ REAL)
+Entendido. Estamos GO con esa alarma.
+Vuelve el control a Armstrong. Durante el descenso suenan más alarmas 1202 y una 1201; el jugador las verá aparecer y Duke responderá «Mismo tipo. Estamos GO» (◆ REAL).
+
+📘 BITÁCORA: ¿Por qué sonaban las alarmas?. Un interruptor del radar de encuentro en una posición inesperada hizo que la computadora recibiera datos innecesarios y se sobrecargara. Su software, diseñado por el equipo de Margaret Hamilton en el MIT, priorizaba las tareas críticas y descartaba las demás: se reiniciaba sin perder el guiado. Por eso era seguro continuar.
+
+ESCENA 4.5 — INT. CONTROL DE MISIÓN — GO/NO GO PARA ATERRIZAR
+🎬 CINEMÁTICA
+KRANZ
+(◆ REAL (loop del director de vuelo))
+Muy bien, todos los controladores: GO/NO GO para aterrizaje. ¿RETRO?
+CONTROLADORES
+(◆ REAL)
+¡GO! … ¡GO! … ¡GO!
+KRANZ
+(◆ REAL)
+CAPCOM, tenemos GO para aterrizar.
+DUKE
+(◆ REAL)
+Eagle, Houston. Tienen GO para aterrizar.
+ALDRIN
+(◆ REAL)
+Entendido. GO para aterrizar. 3.000 pies.
+ESCENA 4.6 — INT. EAGLE — 20:16 UTC — EL CAMPO DE ROCAS
+🎮 JUGABLE
+Por la ventana: la computadora los lleva directo a un cráter rodeado de rocas del tamaño de autos (West Crater). El jugador (ARMSTRONG) toma el control semimanual. HUD: combustible bajando.
+ALDRIN
+(◆ REAL)
+Bajamos a 2 y medio… Adelante. Adelante. Bien.
+ALDRIN
+(◆ REAL)
+40 pies, bajando 2 y medio. Levantando algo de polvo.
+DUKE
+(◆ REAL)
+Sesenta segundos.
+Mecánica: vuelo horizontal sobre el campo de rocas. Hay tres zonas posibles marcadas sutilmente.
+
+⚖️ DECISIÓN — ¿Dónde aterriza Neil?
+▸ Pasar el campo de rocas y buscar terreno llano más allá.
+→ RUTA HISTÓRICA. Gasto alto de combustible pero aterrizaje seguro.
+▸ Aterrizar ya, junto al cráter.
+→ Pantalla «¿Y si…? — PATA EN UNA ROCA». Eagle queda inclinado más allá del límite; Houston ordena despegue inmediato de emergencia. Final alternativo breve y retorno al punto de control.
+▸ Seguir buscando un lugar perfecto.
+→ Cuando Duke dice «Treinta segundos» y el combustible llega a cero, se dispara el aborto: «¿Y si…? — COMBUSTIBLE CERO». Retorno al punto de control.
+DUKE
+(◆ REAL)
+Treinta segundos.
+ALDRIN
+(◆ REAL)
+Luz de contacto.
+ARMSTRONG
+(◆ REAL)
+Apagado.
+Silencio absoluto. El polvo se asienta en la ventana. Son las 20:17:40 UTC.
+ARMSTRONG
+(◆ REAL)
+Houston, aquí Base Tranquilidad. El Águila ha aterrizado.
+DUKE
+(◆ REAL)
+Entendido, Tranquilidad. Los copiamos en tierra. Tienen a un montón de tipos a punto de ponerse azules. Volvemos a respirar. Muchas gracias.
+ESCENA 4.7 — INT. CASA DE LOS ARMSTRONG — MISMO MOMENTO
+🎬 CINEMÁTICA
+Jan está sentada junto a un altavoz (la «squawk box») que la NASA instaló en las casas de las familias. Rick abraza a Mark (si se eligió la opción del cohete en el Cap. 1). Jan cierra los ojos y suelta el aire.
+RICK
+(◇)
+Mamá… lo hizo.
+JAN
+(◇)
+Todavía no. Todavía tiene que volver.
+
+📘 BITÁCORA: Base Tranquilidad. Eagle se posó en el Mar de la Tranquilidad (0,67° N, 23,47° E) a las 20:17:40 UTC, varios kilómetros más allá del punto previsto. Análisis posteriores estimaron que quedaban unos 45 segundos de combustible utilizable.
+
+
+🔀 Fin del Cap. 4 — Diagrama de flujo con tres ramas cortadas («¿Y si…?») y la línea dorada de la historia que llega al aterrizaje.
+
+CAPÍTULO 5 · «Magnífica desolación»
+
+Fecha: 20–21 de julio de 1969
+Objetivo: realizar la primera caminata lunar y cumplir los experimentos
+Personajes jugables: Armstrong y Aldrin
+Lugar: superficie lunar alrededor de Eagle (zona abierta de ~60 m)
+Mecánicas: movimiento con baja gravedad (saltos tipo canguro), recolección de muestras, colocación de experimentos, fotografía
+ESCENA 5.1 — INT. EAGLE — TRAS EL ALUNIZAJE
+🎮 JUGABLE
+El plan era dormir antes de salir. El jugador puede elegir.
+
+⚖️ DECISIÓN — ¿Descansar o salir antes?
+▸ Pedir a Houston adelantar la caminata.
+→ RUTA HISTÓRICA. Houston acepta.
+▸ Dormir según el plan.
+→ El tiempo avanza; misma caminata, pero Aldrin comenta: «Como si alguien pudiera dormir ahora». Sin consecuencias.
+🎬 CINEMÁTICA
+Aldrin saca en silencio un pequeño kit y comulga en privado (hecho real). Luego habla por radio.
+ALDRIN
+(◆ REAL)
+Quisiera aprovechar esta oportunidad para pedir a cada persona que nos escuche, quien sea y donde esté, que se detenga un momento a contemplar los sucesos de las últimas horas y a dar gracias a su manera.
+ESCENA 5.2 — INT./EXT. EAGLE, ESCALERA — 21 DE JULIO, 02:39–02:56 UTC
+🎮 JUGABLE
+Secuencia de traje: el jugador coloca casco, guantes y mochila de soporte vital (PLSS) en el orden correcto. La escotilla es estrecha; Armstrong sale de espaldas, de rodillas, guiado por Aldrin.
+ALDRIN
+(◇)
+Un poco a la izquierda. Bien. Tu mochila pasa.
+En la escalera, Neil tira de un cable: se despliega una cámara de televisión. 650 millones de personas lo ven en blanco y negro.
+ARMSTRONG
+(◆ REAL)
+Voy a salir del módulo ahora.
+🎮 JUGABLE
+El jugador controla el pie izquierdo. Botón único. La música se detiene por completo. 02:56:15 UTC.
+ARMSTRONG
+(◆ REAL)
+Es un pequeño paso para un hombre, un gran salto para la humanidad.
+ARMSTRONG
+(◆ REAL (fragmento))
+La superficie es fina y polvorienta… Puedo levantarla con la punta del pie.
+
+🔍 OBJETO: Huella de bota. El jugador puede mirar su primera huella. 📘 «El regolito lunar»: polvo fino y abrasivo, sin viento que lo borre; la huella puede durar millones de años.
+
+ESCENA 5.3 — EXT. SUPERFICIE LUNAR — ~03:15 UTC
+🎮 JUGABLE
+Cambio a ALDRIN, que baja la escalera.
+ALDRIN
+(◆ REAL)
+Bonita vista.
+ARMSTRONG
+(◆ REAL)
+¿Verdad que es algo? Una vista magnífica aquí afuera.
+ALDRIN
+(◆ REAL)
+Magnífica desolación.
+
+⚖️ DECISIÓN — (Si la Confianza de la tripulación &gt; 70) Momento a solas
+▸ Aldrin le dice a Neil: «Lo hiciste bien ahí abajo».
+→ Neil responde: (◇) «Lo hicimos». Ambos se quedan en silencio mirando la Tierra. Logro: «Hermanos de armas».
+▸ Seguir con el trabajo.
+→ Sin escena extra.
+ESCENA 5.4 — EXT. SUPERFICIE — LA PLACA Y LA BANDERA (~03:40 UTC)
+🎮 JUGABLE
+
+🔍 OBJETO: Placa en la pata de Eagle. «Aquí hombres del planeta Tierra pusieron por primera vez el pie sobre la Luna. Julio de 1969 d. C. Vinimos en paz en nombre de toda la humanidad». (◆ REAL). Armstrong la lee en voz alta.
+
+Minijuego: clavar el mástil. El suelo es duro bajo unos centímetros de polvo; el jugador no puede hundirlo mucho (hecho real). La bandera se sostiene con una varilla horizontal.
+ESCENA 5.5 — EXT. SUPERFICIE — LA LLAMADA (~03:48 UTC)
+🎬 CINEMÁTICA
+NIXON
+(◆ REAL (fragmentos))
+Neil y Buzz, les hablo por teléfono desde el Despacho Oval de la Casa Blanca… Por un momento invaluable en toda la historia del hombre, todas las personas de esta Tierra son verdaderamente una.
+ARMSTRONG
+(◆ REAL (fragmento))
+Gracias, señor presidente. Es un gran honor y privilegio para nosotros estar aquí, representando no solo a los Estados Unidos sino a hombres de paz de todas las naciones.
+ESCENA 5.6 — EXT. SUPERFICIE — CIENCIA
+🎮 JUGABLE
+Bucle de exploración con temporizador (oxígeno y plan de vuelo). Lista de tareas en el Manual:
+
+🔍 OBJETO: Sismómetro pasivo (PSEP). Colocarlo nivelado. Detectará «lunamotos» y el impacto de objetos. 📘 «EASEP».
+
+
+🔍 OBJETO: Retrorreflector láser (LRRR). Orientarlo hacia la Tierra. 📘 «Aún funciona: los observatorios le disparan láseres y miden que la Luna se aleja ~3,8 cm por año».
+
+
+🔍 OBJETO: Lámina de viento solar. Una cortina de aluminio que atrapa partículas del Sol; se recoge al final.
+
+
+🔍 OBJETO: Tubos de muestras y pinzas. Recolectar rocas: el jugador elige cuáles describir por radio a los geólogos. Meta real: ~21,5 kg.
+
+
+🔍 OBJETO: Cámara Hasselblad. Casi todas las fotos de un astronauta en la superficie son de Aldrin, porque Neil llevaba la cámara casi todo el tiempo (dato real). El jugador puede tomar fotos libres; quedan en un álbum del epílogo.
+
+
+🔍 OBJETO: Paquete de recuerdos. Un parche del Apolo 1, medallas de los cosmonautas Gagarin y Komarov, un disco de silicio con mensajes de 73 países y una rama de olivo dorada. 
+
+
+⚖️ DECISIÓN — ¿Quién deposita el parche del Apolo 1?
+▸ Neil (pensando en Ed White, su vecino).
+→ Primer plano del rostro de Neil. Confianza +5.
+▸ Buzz, a pedido de Neil.
+→ Neil, (◇): «Hazlo tú. Ed era tu amigo también». Confianza +10.
+NOTA HISTÓRICA
+Se sabe que el paquete se dejó en la superficie al final de la caminata; el gesto exacto y quién lo colocó se dramatizan.
+ESCENA 5.7 — EXT./INT. EAGLE — 05:11 UTC — FIN DE LA CAMINATA
+🎮 JUGABLE
+Aldrin entra primero. Neil sube las cajas de muestras con una polea. Se lanzan por la escotilla las mochilas y botas para ahorrar peso.
+Dentro, la cámara muestra el panel. Un interruptor (disyuntor) del circuito de armado del motor de ascenso está roto: se le rompió al chocar con una mochila (hecho real).
+ALDRIN
+(◇)
+Neil… mira esto.
+ARMSTRONG
+(◇)
+Ese es el del motor de ascenso.
+FIN DEL CAPÍTULO. Pantalla en negro con el sonido de una respiración.
+
+CAPÍTULO 6 · «El lado silencioso»
+
+Fecha: 20–21 de julio de 1969
+Objetivo: sobrevivir a la soledad en órbita (Collins) y despegar de la Luna (Armstrong y Aldrin)
+Personajes jugables: Collins y Aldrin
+Lugares: Columbia en órbita lunar; Eagle en la superficie
+Mecánicas: tensión silenciosa, puzle de ingenio, encuentro orbital
+ESCENA 6.1 — INT. COLUMBIA — ÓRBITA LUNAR — DETRÁS DE LA LUNA
+🎮 JUGABLE
+Mientras sus compañeros caminaban, Collins orbitaba solo. Cada vuelta pasa unos 48 minutos sin contacto por radio. La cabina está a oscuras salvo las luces del panel. El jugador puede flotar, mirar estrellas, hacer tareas o simplemente esperar.
+COLLINS (VOZ EN OFF)
+(◆ REAL (memorias «Carrying the Fire», traducido))
+Ahora estoy solo, verdaderamente solo, y absolutamente aislado de cualquier vida conocida. Lo soy. Si se hiciera un recuento, el marcador daría tres mil millones más dos al otro lado de la Luna, y uno más solo Dios sabe qué de este lado.
+
+🔍 OBJETO: Ventana trasera. Un cielo cubierto de estrellas, más denso que el que nunca vio desde la Tierra. 📘 «Por qué detrás de la Luna no hay radio».
+
+
+🔍 OBJETO: Libreta de Collins. Escribe a mano (◇ basado en sus memorias): «Mi miedo secreto de los últimos seis meses ha sido dejarlos en la Luna y volver solo a la Tierra».
+
+
+🔍 OBJETO: Sextante. Collins intenta localizar a Eagle en la superficie con el telescopio, sin conseguirlo (hecho real).
+
+
+⚖️ DECISIÓN — ¿Qué hace Collins durante el silencio?
+▸ Trabajar: revisar sistemas y recalcular el encuentro.
+→ Collins llega al Cap. 6.3 con un plan B preparado. Desbloquea opción especial en el encuentro.
+▸ Mirar por la ventana y escuchar el silencio.
+→ Escena contemplativa larga. Logro: «Uno más Dios sabe qué».
+▸ Hablar en voz alta a Pat (su esposa) aunque nadie lo escuche.
+→ Escena íntima; Pat aparecerá en el epílogo citando estas palabras (◇).
+ESCENA 6.1B — ⚠️ NO CANON — «POLVO Y FUEGO» (SUEÑO DE ALDRIN)
+
+Marco narrativo: sueño de Aldrin durante el descanso en Eagle, antes del despegue lunar
+Estado: NO CANON (no ocurrió; solo aporta emoción y acción)
+Personajes jugables: Aldrin y Armstrong, intercambiables al estilo Genshin
+Lugar: versión onírica de la Base Tranquilidad
+Duración: 10–15 minutos
+🎬 CINEMÁTICA
+INT. EAGLE — NOCHE LUNAR. Hace frío (hecho real: la cabina rondaba los 16 °C y los dos durmieron muy mal). Armstrong duerme en una hamaca sobre la tapa del motor de ascenso; Aldrin, encogido en el suelo. El zumbido de las bombas. Aldrin cierra los ojos. La pantalla se llena de una textura de grano de película y aparece el aviso: «NO CANON · Esto es un sueño».
+🎮 JUGABLE
+EXT. SUPERFICIE LUNAR (SUEÑO). Aldrin está fuera de Eagle, solo. El horizonte está demasiado cerca. Cada salto lo lleva más lejos de lo normal. Una voz por radio, distorsionada: «Buzz… vuelve al módulo».
+MECÁNICAS (estilo Genshin, en 3D realista): 1) Barra de O2 = estamina: correr, saltar alto e impulsarse consumen oxígeno; recuperarlo exige detenerse o tomar cartuchos del suelo. 2) Saltos de baja gravedad: salto largo de canguro, planeo corto controlado en el aire y caída lenta. 3) Esquiva (dash): impulso lateral con un breve sobreconsumo de O2. 4) Rueda de habilidades (equipo real usado como herramientas): Martillo geológico (romper rocas que bloquean el paso), Flash de la Hasselblad (ilumina sombras negras absolutas y revela el camino unos segundos), Pinzas de muestras (agarrarse a bordes y tirar de objetos), Manguera de O2 compartida (habilidad definitiva: recargar al compañero). 5) Cambio de personaje en tiempo real (party swap): Armstrong es más estable en el aire; Aldrin tiene más reserva de O2 y su ráfaga de habilidades es más rápida.
+FASE 1 — LLUVIA DE MICROMETEORITOS. Círculos rojos en el suelo marcan dónde caerán impactos (como los ataques en área de Genshin). El jugador esquiva y se refugia tras rocas mientras recoge cartuchos de O2.
+FASE 2 — LA GRIETA. El suelo se abre (imposible en la realidad: es sueño). Recorrido de plataformas con saltos lunares sobre fragmentos que flotan lentamente. Armstrong aparece al otro lado y tiende la mano: cambio de personaje para cruzar juntos.
+ARMSTRONG (EN EL SUEÑO)
+(◇ DRAMATIZADO · NO CANON)
+Buzz. Te tengo. Salta.
+FASE 3 — JEFE NO CANON: EL GUARDIÁN DE TRANQUILIDAD (ver ficha completa abajo). El Cráter Oeste se hunde y, del polvo, se levanta una criatura. La música se corta; solo se oye la respiración de Aldrin dentro del casco.
+
+👹 EL GUARDIÁN DE TRANQUILIDAD · ⚠️ NO CANON · SOLO EN EL SUEÑO DE ALDRIN
+Jefe de la secuencia onírica. No ocurrió en la historia real: se usa solo para emoción y acción.
+CONCEPTO: el Guardián no es un alienígena ni un ser real: es el miedo de Aldrin hecho de polvo lunar. Nace del regolito que levantó el motor de Eagle al aterrizar y toma forma con todo lo que la tripulación temía: la alarma 1202, el combustible a cero, el fuego del Apolo 1 y la posibilidad de no volver. En la Bitácora y en pantalla se indica siempre: «NO CANON · Sueño».
+DESCRIPCIÓN VISUAL (para arte 3D realista): coloso de unos 15 m, de postura encorvada, entre gigante y bestia de cuatro apoyos. Cuerpo de regolito gris beige compactado, con placas de basalto oscuro como armadura y miles de esférulas de vidrio (como las del suelo lunar real) que brillan al sol. Por las grietas sale una luz ámbar que parpadea al ritmo de la luz de alarma del módulo lunar. En el pecho tiene un núcleo con forma de display DSKY con dígitos verdes que muestran «1202». Los brazos están envueltos en jirones de manta térmica dorada (la lámina Kapton de la etapa de descenso de Eagle), rasgados y ondeando sin viento. No tiene rostro: solo una cavidad oscura donde se refleja el visor de Aldrin. Al moverse no hace ruido (no hay aire en la Luna). Solo se siente: vibración en el mando, polvo que salta del suelo y el sonido apagado que llega a través de las botas. Materiales PBR: polvo con dispersión de luz suave, basalto rugoso, Kapton metálico, vidrio con reflejos especulares duros. Iluminación: un único sol bajo, sombras negras absolutas; el ámbar de las grietas es la única luz de relleno.
+SIMBOLISMO: núcleo «1202» = miedo a que la computadora falle; indicador de combustible en la espalda = los «60 segundos… 30 segundos»; brillo naranja de la fase final = el fuego del Apolo 1, tratado con respeto (sin imágenes de la tragedia, solo calor, luz y el silencio de Aldrin); intento de sellar la escotilla de Eagle = miedo a quedarse en la Luna y a que Collins vuelva solo; susurros por la radio con la voz del propio Aldrin = el miedo a ser «el segundo».
+PUNTOS DÉBILES: 1) núcleo DSKY del pecho (solo vulnerable tras aturdirlo con el flash de la Hasselblad); 2) placas de basalto de los hombros y las rodillas (se rompen con el martillo geológico); 3) depósito de «combustible» de la espalda (fase 2; se alcanza saltando sobre su lomo); 4) disyuntor final del núcleo (fase 3).
+HABILIDADES DEL JUGADOR (equipo real como herramientas): MARTILLO GEOLÓGICO: golpes pesados que rompen el basalto y causan daño a la armadura. FLASH DE LA HASSELBLAD: destello cegador que aturde 3 s y revela el núcleo y las grietas; recarga lenta (solo hay 12 «disparos» por carrete y hay que cambiar el carrete). PINZAS DE MUESTRAS: arrancan fragmentos de vidrio del núcleo y sirven de gancho corto para subir por placas. MANGUERA DE O2 COMPARTIDA (habilidad definitiva): conecta a los dos astronautas, recarga O2 a ambos y durante 10 s los ataques combinados hacen el doble de daño.
+COMBOS DE CAMBIO DE PERSONAJE (estilo Genshin): «SALTO DEL ÁGUILA»: Armstrong se agacha y lanza a Aldrin en un súper salto lunar hacia el lomo del Guardián. «FOTO Y GOLPE»: flash de Aldrin y cambio inmediato a Armstrong para un golpe crítico de martillo sobre el núcleo expuesto (×2,5). «RESPIRAR JUNTOS»: si los dos tienen menos del 25 % de O2, la manguera se carga al instante. «ESQUIVA EN CADENA»: esquivar en el último instante y cambiar de personaje ralentiza el tiempo 1 s (cámara lenta con polvo suspendido).
+DIFICULTAD: Normal (historia), Difícil y «Duros y competentes» (difícil extremo: el O2 no se recupera solo y los avisos del suelo duran la mitad). Duración: 6–10 minutos. Si el O2 llega a 0: Aldrin despierta de golpe y se reintenta desde el inicio de la fase.
+Fase
+Ataques del Guardián
+Aviso visual (telegraph)
+Cómo vencerla
+1 · POLVO (100–70 %)
+Barrido de brazo; lanzas de regolito que brotan del suelo; «lluvia 1202»: esferas ámbar que, si te tocan, apagan el HUD 4 s
+El polvo del suelo tiembla en abanico antes del barrido; círculos rojos antes de las lanzas; pitido de alarma maestra antes de la lluvia
+Romper las 4 placas de basalto con el martillo; flash para aturdir y golpear el núcleo
+2 · COMBUSTIBLE (70–35 %)
+Se divide en 3 clones de polvo; el escenario se reduce; en la espalda aparece un indicador que cuenta 60… 30… (voz de Charlie Duke, distorsionada). Si llega a 0, golpe de área que vacía tu O2
+Los clones reales proyectan sombra y los falsos no (detalle de la iluminación realista); el indicador cambia de verde a rojo
+Usar el flash para distinguir el clon real (el real tiene sombra), «Salto del Águila» al lomo y destruir el depósito con las pinzas antes de que la cuenta llegue a cero
+3 · FUEGO (35–0 %)
+Las grietas pasan a naranja; ondas de calor en anillo; se arrastra hacia Eagle e intenta cubrir la escotilla con polvo; susurros por radio con la voz de Aldrin («Siempre serás el segundo»)
+Anillos de distorsión de calor en el suelo antes de cada onda; la escotilla de Eagle parpadea cuando empieza a cubrirse
+Saltar los anillos; activar la manguera de O2 compartida; con el núcleo expuesto, golpe final: aparece un disyuntor roto en el núcleo y Aldrin lo cierra con su rotulador de punta de fieltro (eco del hecho real del Cap. 6)
+ESCENA 6.1C — ⚠️ NO CANON — «EL GUARDIÁN» (GUION DEL COMBATE)
+🎬 CINEMÁTICA
+EXT. CRÁTER OESTE (SUEÑO). El polvo se eleva sin viento, en espiral, en total silencio. Se compacta. Placas de basalto encajan como piezas de un motor. En el pecho se enciende una luz: «1202».
+ALDRIN
+(◇ DRAMATIZADO · NO CANON)
+…Eso no está en el plan de vuelo.
+ARMSTRONG (POR RADIO, LEJOS)
+(◇ · NO CANON)
+Buzz, ¿qué ves?
+ALDRIN
+(◇ · NO CANON)
+Polvo, Neil. Polvo que se mueve.
+🎮 JUGABLE
+FASE 1. El Guardián barre el suelo. El jugador esquiva entre las esférulas de vidrio que saltan como chispas.
+ARMSTRONG
+(◇ · NO CANON)
+Tiene placas en los hombros. Rómpelas. Yo lo distraigo.
+ALDRIN
+(◇ · NO CANON (al usar el flash))
+¡Sonríe!
+El núcleo queda expuesto: los dígitos «1202» tiemblan.
+VOZ DE BALES (ECO, DISTORSIONADA)
+(◇ · NO CANON)
+…Es GO. Es GO con esa alarma…
+🎮 JUGABLE
+FASE 2. El Guardián se divide en tres. Un indicador de combustible se enciende en su espalda.
+VOZ DE DUKE (ECO)
+(◇ · NO CANON (eco onírico de la frase real «Sesenta segundos»))
+Sesenta segundos…
+ARMSTRONG
+(◇ · NO CANON)
+Mira las sombras. El de verdad tiene sombra.
+ALDRIN
+(◇ · NO CANON)
+¡Neil, lánzame!
+Combo «Salto del Águila». Aldrin aterriza en el lomo y arranca el depósito con las pinzas.
+VOZ DE DUKE (ECO)
+(◇ · NO CANON)
+Treinta segundos…
+🎮 JUGABLE
+FASE 3. Las grietas se vuelven naranjas. El calor deforma el aire, aunque en la Luna no hay aire: es un sueño. El Guardián se arrastra hacia Eagle.
+SUSURRO (VOZ DE ALDRIN, INVERTIDA)
+(◇ · NO CANON)
+Siempre serás el segundo… nunca volverás…
+ARMSTRONG
+(◇ · NO CANON)
+No le hagas caso. Conéctate. Respiramos juntos.
+Manguera de O2 compartida: la pantalla se aclara y la música vuelve, solo piano. Golpe combinado. El núcleo se abre: dentro hay un disyuntor roto.
+ALDRIN
+(◇ · NO CANON (saca el rotulador))
+Ya sé cómo arreglar esto.
+🎬 CINEMÁTICA
+Aldrin empuja el disyuntor con la punta del rotulador. Clic. El Guardián se detiene, se deshace en polvo y cae lentamente, como nieve gris. Cuando el polvo se asienta, solo queda una huella de bota en el suelo.
+ALDRIN
+(◇ · NO CANON (en voz baja))
+Segundo… pero juntos.
+
+📘 BITÁCORA: ⚠️ NO CANON · El Guardián de Tranquilidad. Tarjeta de rareza Oculta-No Canon. Aviso: «Esta criatura nunca existió; fue un sueño». DATO REAL APRENDIDO: el polvo lunar (regolito) es un enemigo real. Sus granos son afilados como vidrio roto porque no hay viento ni agua que los desgaste; se pega a todo por carga electrostática, rayó visores, dañó cierres y sellos de los trajes, y dentro del módulo olía «a pólvora quemada», según los astronautas. En el Apolo 17, Harrison Schmitt sufrió una especie de «alergia» al polvo lunar. Además, contiene diminutas esférulas de vidrio formadas por impactos de meteoritos. Fuentes: NASA, Apollo Lunar Surface Journal.
+
+
+📘 BITÁCORA: Recompensas del jefe (No Canon). Insignia «Segundo, pero juntos»; parche cosmético «Guardián de Tranquilidad» (solo modo No Canon); 4 láminas de arte conceptual del monstruo; en dificultad «Duros y competentes», además, un audio real de la NASA: Aldrin describiendo el polvo lunar. Logro oculto: vencerlo sin recibir ningún golpe de la «lluvia 1202».
+
+Tras vencer al Guardián, Aldrin corre hacia la escalera de Eagle mientras el polvo sigue cayendo a su alrededor.
+🎬 CINEMÁTICA
+Aldrin llega a la escalera. Toca el primer peldaño. Corte brusco: INT. EAGLE. Aldrin abre los ojos, sudando a pesar del frío. Armstrong lo mira desde la hamaca.
+ARMSTRONG
+(◇ DRAMATIZADO)
+¿Tampoco puedes dormir?
+ALDRIN
+(◇)
+Soñé que el polvo se levantaba y tenía forma. Que no nos dejaba volver.
+ARMSTRONG
+(◇)
+Ya lo dejamos atrás una vez. Duerme, Buzz. Mañana volvemos a casa. Los tres.
+
+📘 BITÁCORA: Lo que era real en el sueño. Tarjeta especial (no histórica): el O2 de la mochila PLSS era limitado (unas 4 horas de diseño); la gravedad lunar es 1/6 de la terrestre; los micrometeoritos existen, pero el riesgo durante una caminata de 2,5 h era muy bajo; no hay grietas que se abran ni cráteres que se derrumben. Recompensa: parche cosmético «Polvo y fuego» (solo para el modo No Canon). Tras terminar el juego, el modo «Sueños lunares» queda disponible como desafío rejugable con clasificación.
+
+ESCENA 6.2 — INT. EAGLE — 21 DE JULIO, ANTES DEL DESPEGUE
+🎮 JUGABLE
+Puzle de ingenio. El disyuntor roto debe cerrarse para armar el motor de ascenso. No se puede tocar con los dedos (riesgo de cortocircuito con metal). El jugador revisa los objetos de la cabina.
+
+🔍 OBJETO: Rotulador de punta de fieltro. Aldrin lo usó para empujar el disyuntor (hecho real). Es la solución correcta.
+
+
+🔍 OBJETO: Lápiz metálico / herramienta. Opción incorrecta: el Manual advierte del riesgo de un cortocircuito. Si se usa, Houston interviene: «Negativo, Eagle. Nada conductor». No hay muerte: el jugador vuelve a elegir.
+
+
+📘 BITÁCORA: El motor de ascenso. Hipergólico (los propelentes se encienden al contacto), muy simple y sin respaldo: si no encendía, no había otra manera de salir de la Luna.
+
+ESCENA 6.3 — INT. EAGLE — 17:54 UTC — DESPEGUE LUNAR
+🎮 JUGABLE
+Un solo botón. La música se apaga. Cuenta regresiva.
+ALDRIN
+(◆ REAL)
+9, 8, 7, 6, 5, separación de aborto, motor armado, ascenso, proceder.
+El jugador pulsa. Encendido. La etapa de ascenso sale disparada; la de descenso queda como plataforma.
+ALDRIN
+(◆ REAL)
+Precioso.
+🎬 CINEMÁTICA
+Por la ventana, Aldrin ve caer la bandera por el chorro del motor (hecho real). Habían pasado 21 horas y 36 minutos en la superficie.
+
+⚖️ DECISIÓN — «¿Y si…?» — modo opcional desbloqueable tras terminar el juego
+▸ Ver qué habría pasado si el motor no encendía.
+→ Cinemática alternativa en blanco y negro: Nixon en la televisión lee el discurso que William Safire escribió por si ocurría un desastre (◆ REAL, documento existente): «El destino ha querido que los hombres que fueron a la Luna a explorar en paz se queden en la Luna para descansar en paz». Texto final: «Este discurso nunca tuvo que leerse».
+ESCENA 6.4 — ÓRBITA LUNAR — 21:35 UTC — EL REENCUENTRO
+🎮 JUGABLE
+El jugador (COLLINS) dirige el acoplamiento final: Eagle se acerca, brillante sobre la superficie gris. Es el eco del tutorial Gemini y del Cap. 2.
+COLLINS
+(◇)
+Ahí están. Ahí están los dos.
+Tras el acople, la escotilla se abre. Llegan el olor a pólvora del polvo lunar y las cajas de muestras.
+COLLINS
+(◇ (basado en sus memorias: tenía ganas de abrazarlos))
+Vengan acá.
+
+⚖️ DECISIÓN — El reencuentro
+▸ Collins abraza a los dos (si Confianza &gt; 50).
+→ Escena cálida; música principal del juego por primera vez completa.
+▸ Collins les da la mano, profesional, y bromea sobre el polvo.
+→ Escena ligera. Igualmente emotiva por la música.
+Eagle se abandona en órbita lunar. Aldrin lo mira alejarse.
+
+CAPÍTULO 7 · «Volver a casa»
+
+Fecha: 22–24 de julio de 1969
+Objetivo: escapar de la Luna, cruzar el espacio y reentrar en la atmósfera
+Personaje jugable: Collins (TEI), Armstrong (reentrada)
+Lugares: Columbia, océano Pacífico, USS Hornet
+Mecánicas: tensión sin radio, reentrada con control de ángulo, epílogo en cuarentena
+ESCENA 7.1 — DETRÁS DE LA LUNA — 22 DE JULIO, 04:55 UTC
+🎮 JUGABLE
+Último encendido detrás de la Luna: la inyección transterrestre (TEI). Otra vez sin radio. Esta vez los tres están juntos.
+COLLINS
+(◆ REAL (al reaparecer))
+Eh, Houston, Apolo 11 vuelve a casa a todo trapo. («…is beaming all the way home»).
+ESCENA 7.1B — INT. COLUMBIA — CAMINO A CASA — «LA PERRITA» (◇ DRAMATIZADO)
+🎮 JUGABLE
+Calma tras el último encendido. La Luna se aleja por la ventana. El jugador (Collins) puede revisar su bolsillo personal: aparece un pequeño perrito de tela, gastado, atado con hilo a su bolsa de vuelo. (Objeto dramatizado: no está documentado que Collins lo llevara; el juego lo presenta como regalo inventado de su hija).
+
+🔍 OBJETO: Perrito de tela. «Para que no estés solo, papá». Al tomarlo, Collins lo deja flotar en el centro de la cabina. Tarjeta Legendaria «Laika».
+
+ALDRIN
+(◇)
+¿Trajiste una mascota? No está en el plan de vuelo, Mike.
+COLLINS
+(◇)
+Es una tripulante no oficial. Pasajera de honor. Se llama Laika.
+ARMSTRONG
+(◇)
+La primera perra en órbita.
+COLLINS
+(◇)
+Noviembre del 57. Sputnik 2. Una perrita callejera de Moscú. Antes de nosotros, antes de Gagarin, antes de todo… ella dio la vuelta a la Tierra.
+ALDRIN
+(◇ (serio por un momento))
+Y no volvió.
+COLLINS
+(◇)
+No. Sabían que no volvería. Por eso la traje. Para que alguien de los que abrieron el camino haga el viaje completo, aunque sea de tela.
+Silencio. El perrito gira lentamente frente a la ventana, con la Tierra detrás.
+
+⚖️ DECISIÓN — ¿Cómo sigue la charla?
+▸ Aldrin lo saluda: «Bienvenida a bordo, cabo Laika».
+→ Confianza +5. Collins: «La asciendo a sargento si no ladra en la reentrada». Risas.
+▸ Armstrong cuenta lo de Belka y Strelka.
+→ Ver diálogo extra. Tarjeta Épica «Belka y Strelka».
+▸ Collins se queda callado mirando la Tierra.
+→ Escena contemplativa. Tarjeta Rara «Los que abrieron camino».
+ARMSTRONG
+(◇ (diálogo extra))
+En 1960 los soviéticos mandaron a Belka y Strelka y volvieron vivas. Y una cachorra de Strelka, Pushinka, terminó en la Casa Blanca. Jruschov se la regaló a Kennedy.
+ALDRIN
+(◇)
+¿Una perra espacial soviética viviendo en la Casa Blanca? Eso sí que es diplomacia.
+COLLINS
+(◇ (al perrito))
+¿Oíste? Tienes parientes famosos.
+ALDRIN
+(◇)
+Mike, si en Houston preguntan por qué hay pelos en los filtros…
+COLLINS
+(◇)
+Diles que es polvo lunar. Nadie sabe de qué color es.
+
+📘 BITÁCORA: Laika y los perros del espacio. Laika viajó en el Sputnik 2 el 3 de noviembre de 1957 y fue el primer animal en orbitar la Tierra (antes habían viajado al espacio en vuelos suborbitales moscas de la fruta, en 1947, y otros animales). Murió a las pocas horas del lanzamiento por sobrecalentamiento de la cápsula; la misión no estaba diseñada para su regreso. En agosto de 1960, Belka y Strelka orbitaron la Tierra y regresaron con vida. En 1961, Nikita Jruschov regaló a Caroline Kennedy a Pushinka, cachorra de Strelka. Fuentes: NASA History, Smithsonian.
+
+ESCENA 7.2 — INT. COLUMBIA — ÚLTIMA TRANSMISIÓN (23 DE JULIO)
+🎬 CINEMÁTICA
+Los tres ante la cámara de televisión. Cada uno da un mensaje.
+COLLINS
+(◆ REAL (fragmento))
+Todo esto es posible solo gracias a la sangre, el sudor y las lágrimas de muchas personas… A todas esas personas me gustaría decirles: muchas gracias.
+ALDRIN
+(◆ REAL (fragmento))
+Esto ha sido mucho más que tres hombres en una misión a la Luna… Creemos que es un símbolo de la curiosidad insaciable de toda la humanidad por explorar lo desconocido.
+ARMSTRONG
+(◆ REAL (fragmento))
+…A esas personas, esta noche, les damos un agradecimiento especial, y a todas las demás que nos escuchan y nos ven, Dios los bendiga. Buenas noches desde el Apolo 11.
+ESCENA 7.3 — REENTRADA — 24 DE JULIO, ~16:35 UTC
+🎮 JUGABLE
+El módulo de servicio se separa. El jugador debe mantener el ángulo de entrada dentro de un corredor estrecho: demasiado empinado y la desaceleración y el calor son excesivos; demasiado plano y la cápsula rebota en la atmósfera. La pantalla se vuelve naranja; se pierde la radio por el plasma (apagón de comunicaciones).
+
+📘 BITÁCORA: Reentrada. La cápsula entró a unos 40.000 km/h; su escudo térmico ablativo soportó temperaturas de unos 2.700 °C. Por mal tiempo, la zona de amerizaje se desplazó unos 400 km.
+
+Tres paracaídas principales se abren. Silencio. El sonido del viento.
+ESCENA 7.4 — EXT. OCÉANO PACÍFICO — 16:50:35 UTC — AMERIZAJE
+🎬 CINEMÁTICA
+Columbia cae al agua y queda boca abajo; se inflan unas boyas que la enderezan. Un helicóptero del USS Hornet se acerca. El buzo Clancy Hatleberg abre la escotilla y lanza trajes de aislamiento biológico.
+ARMSTRONG
+(◇)
+Póngase el traje, caballeros. Todavía no estamos en casa.
+ESCENA 7.5 — INT. USS HORNET — INSTALACIÓN MÓVIL DE CUARENTENA
+🎮 JUGABLE
+Los tres dentro de una casa rodante sellada. El presidente Nixon habla con ellos a través de una ventana.
+NIXON
+(◆ REAL)
+Esta es la semana más grande en la historia del mundo desde la Creación.
+
+🔍 OBJETO: Ventana de cuarentena. Al acercarse, el jugador ve su reflejo junto a los de sus compañeros.
+
+
+📘 BITÁCORA: Cuarentena. Por precaución ante posibles microbios lunares, la tripulación pasó 21 días aislada (hasta el 10 de agosto), primero en el Hornet y luego en el Laboratorio de Recepción Lunar de Houston. No se encontró ningún organismo.
+
+ESCENA 7.6 — INT. LABORATORIO DE RECEPCIÓN LUNAR, HOUSTON — DÍA
+🎮 JUGABLE
+Las familias pueden ver a los astronautas a través de un vidrio y hablar por teléfono. El jugador (Neil) se acerca al cristal: allí están Jan, Rick y Mark.
+MARK
+(◇)
+¿Trajiste una piedra?
+ARMSTRONG
+(◇)
+Trajimos veintiún kilos. Pero no son nuestras. Son de todos.
+RICK
+(◇ (varía según la decisión del Cap. 1))
+Te escuché aterrizar. / Nos lo tendrías que haber dicho, papá.
+Neil pone la mano en el vidrio. Rick pone la suya del otro lado. (Eco God of War: el padre aprende a dejar entrar a su hijo).
+
+EPÍLOGO · «Un gran salto»
+
+Fecha: 1969 – hoy
+Objetivo: cerrar los arcos y mostrar el legado
+Mecánicas: álbum de fotos, Manual completo, diagrama de flujo final
+ESCENA E.1 — EXT. NUEVA YORK — 13 DE AGOSTO DE 1969
+🎬 CINEMÁTICA
+Desfile con lluvia de papel. Los tres saludan. Después, una gira mundial de 45 días por 24 países. Collins mira la multitud.
+COLLINS (VOZ EN OFF)
+(◇)
+En todas partes la gente no decía «ustedes lo lograron». Decía «lo logramos». Eso era lo correcto.
+ESCENA E.2 — EPÍLOGOS DE PERSONAJES (texto + imagen)
+NEIL ARMSTRONG: dejó la NASA en 1971 y enseñó ingeniería en la Universidad de Cincinnati. Evitó la fama toda su vida. Falleció en 2012.
+BUZZ ALDRIN: habló públicamente de su lucha contra la depresión tras la misión, algo poco común en su época, y se convirtió en un gran defensor de la exploración espacial.
+MICHAEL COLLINS: dirigió el Museo Nacional del Aire y el Espacio del Smithsonian. Escribió «Carrying the Fire», uno de los mejores libros escritos por un astronauta. Falleció en 2021.
+STEVE BALES y el equipo de Control de Misión recibieron la Medalla Presidencial de la Libertad en nombre del equipo de operaciones de la misión.
+Variaciones según Confianza: con Confianza alta, una foto final de los tres riendo en la cuarentena; con Confianza baja, la misma foto, pero cada uno mira hacia un lado distinto. La historia no cambia; cambia cómo la recordaron.
+ESCENA E.3 — EXT. MAR DE LA TRANQUILIDAD — HOY
+🎬 CINEMÁTICA
+Plano lento sobre la Base Tranquilidad: la etapa de descenso de Eagle, las huellas intactas, la bandera caída. Un rayo láser verde, disparado desde un observatorio en la Tierra, toca el retrorreflector y vuelve.
+NARRADOR (VOZ DE KENNEDY, UNIVERSIDAD RICE, 1962)
+(◆ REAL)
+Elegimos ir a la Luna en esta década y hacer las otras cosas, no porque sean fáciles, sino porque son difíciles.
+TEXTO EN PANTALLA
+Seis misiones Apolo alunizaron entre 1969 y 1972. Doce personas caminaron sobre la Luna. Unas 400.000 personas hicieron posible el programa. Hoy, el programa Artemis prepara el regreso.
+
+🔀 Diagrama de flujo final: toda la ruta histórica en dorado, las ramas «¿Y si…?» que el jugador visitó y el porcentaje mundial de jugadores que eligió cada opción.
+
+EVENTOS OCULTOS · Desafíos muy difíciles
+No se anuncian en ningún menú. Solo se insinúan con pistas en diálogos de NPCs o en tarjetas de la Bitácora. Cada uno da una recompensa y enseña un hecho real.
+
+🔒 EVENTO OCULTO 1. «Cuarenta y cinco segundos»   · Dificultad 5/5
+Activación: Cap. 4: aterrizar en modo manual, fuera del campo de rocas, con menos de 20 s de combustible y una velocidad vertical menor de 1 m/s, sin abortar.
+Recompensa: Tarjeta Oculta + audio real completo del descenso + parche «Tranquility Base».
+Lo que aprendes: Armstrong aterrizó con margen escaso; análisis posteriores estimaron unos 45 s de combustible útil. El sensor de nivel de combustible se veía alterado por el chapoteo del propelente, de ahí la alarma prematura.
+
+🔒 EVENTO OCULTO 2. «Lo que dejamos atrás»   · Dificultad 4/5
+Activación: Cap. 5: encontrar y colocar los 5 objetos del paquete de recuerdos: parche del Apolo 1, medalla de Gagarin, medalla de Komarov, disco de silicio con mensajes de 73 países y rama de olivo dorada.
+Recompensa: Tarjeta Legendaria + insignia «Vinimos en paz».
+Lo que aprendes: Estos objetos siguen en la Luna. Honran a los muertos de ambos lados de la Carrera Espacial.
+
+🔒 EVENTO OCULTO 3. «Un láser desde la Tierra»   · Dificultad 4/5
+Activación: Cap. 5: alinear el retrorreflector con precisión total (burbuja de nivel centrada y orientación exacta) en un solo intento.
+Recompensa: Escena extra: un observatorio en 1969 (Lick, California) recibe el primer eco. Foto real desbloqueada.
+Lo que aprendes: El LRRR sigue funcionando y muestra que la Luna se aleja unos 3,8 cm al año.
+
+🔒 EVENTO OCULTO 4. «Tres segundos»   · Dificultad 4/5
+Activación: Cap. 4: como Bales, responder a la alarma 1202 en menos de 3 s y después elegir la explicación correcta en un mini-cuestionario («sobrecarga de la computadora que prioriza tareas»).
+Recompensa: Tarjeta Oculta «Margaret Hamilton» + audio real del loop de Control.
+Lo que aprendes: El software del MIT priorizaba tareas críticas; su diseño robusto salvó el alunizaje.
+
+🔒 EVENTO OCULTO 5. «El cartógrafo solitario»   · Dificultad 4/5
+Activación: Cap. 6: con Collins, fotografiar los 6 puntos de referencia de la órbita lunar (por ejemplo los cráteres Maskelyne y Moltke y el Mar de la Tranquilidad) en una sola órbita.
+Recompensa: Galería de fotos reales de la órbita de Apolo 11 + parche «Columbia».
+Lo que aprendes: Los puntos de referencia servían para navegar; Collins buscó a Eagle desde la órbita sin poder verlo.
+
+🔒 EVENTO OCULTO 6. «Navegar a ciegas»   · Dificultad 5/5
+Activación: Cap. 3 o 7: completar la maniobra detrás de la Luna sin abrir ninguna ayuda del HUD, solo con el DSKY y el reloj.
+Recompensa: Tarjeta Oculta «Sin radio» + insignia «Detrás de la Luna».
+Lo que aprendes: Detrás de la Luna no hay contacto con la Tierra; los encendidos clave (LOI y TEI) se hicieron sin que Houston pudiera ver nada.
+
+🔒 EVENTO OCULTO 7. «El ángulo perfecto»   · Dificultad 4/5
+Activación: Cap. 7: reentrar manteniendo el ángulo dentro del corredor ideal todo el tiempo, sin salir ni un instante.
+Recompensa: Tarjeta Oculta + foto real del Hornet + parche «Splashdown».
+Lo que aprendes: El corredor de reentrada era estrecho: demasiado empinado aumentaba el calor y la desaceleración; demasiado plano hacía rebotar la cápsula.
+
+🔒 EVENTO OCULTO 8. «Historiador del Apolo»   · Dificultad 5/5
+Activación: Completar la Bitácora al 100 %, incluidos todos los eventos ocultos.
+Recompensa: Escena final extra narrada por Collins y título «Historiador del Apolo».
+Lo que aprendes: Unas 400.000 personas trabajaron en el programa Apolo; el juego termina dándoles las gracias por su nombre en los créditos extendidos.
+
+ANEXO · Finales y rutas
+FINAL CANÓNICO «Un gran salto»: se toman las decisiones históricas en los puntos críticos (alarma 1202, lugar de aterrizaje, disyuntor, despegue). Es el único final que avanza al epílogo completo.
+«¿Y si…? — Aborto a órbita» (Cap. 4): Bales ordena abortar. Final breve: la misión vuelve sin alunizar. Se explica que el siguiente intento habría sido el Apolo 12. Botón: volver a la decisión.
+«¿Y si…? — Pata en una roca» / «Combustible cero» (Cap. 4): aterrizaje fallido o aborto por falta de combustible. Retorno al punto de control.
+«¿Y si…? — En caso de desastre lunar» (Cap. 6, desbloqueable): cinemática del discurso real de Safire que nunca se leyó.
+Secuencia NO CANON «Polvo y fuego» (Cap. 6): sueño de Aldrin con jugabilidad de acción; no afecta la historia ni los finales. Se rejuega en el modo «Sueños lunares».
+Variables que no cambian la historia pero sí el tono: Confianza de la tripulación, Moral de Control, decisiones familiares (Cap. 1), conversaciones nocturnas (Cap. 3) y las fotos tomadas en la Luna.
+
+FUENTES
+NASA – Apollo 11 Flight Journal: https://www.nasa.gov/history/afj/ap11fj/ (transcripciones aire-tierra y de cabina).
+NASA – Apollo Lunar Surface Journal, Apollo 11: https://www.nasa.gov/history/alsj/a11/
+NASA – Apollo 11 Mission Overview: https://www.nasa.gov/history/apollo-11-mission-overview/
+NASA – Apollo 11 Mission Report (MSC-00171) y Apollo by the Numbers (SP-2000-4029).
+NASA History / Smithsonian – Laika (Sputnik 2, 1957), Belka y Strelka (1960), Pushinka.
+Michael Collins, «Carrying the Fire» (1974). James R. Hansen, «First Man: The Life of Neil A. Armstrong» (2005). Gene Kranz, «Failure Is Not an Option» (2000).
+William Safire, memorándum «In Event of Moon Disaster» (18 de julio de 1969), Archivos Nacionales de EE. UU.
+John F. Kennedy, discurso en la Universidad Rice (12 de septiembre de 1962).
+
