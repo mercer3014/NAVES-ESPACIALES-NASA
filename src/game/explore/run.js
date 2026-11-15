@@ -98,6 +98,7 @@ export async function runExplore(def, opts = {}) {
   for (const n of def.npcs || []) {
     const at = locate(n, world);
     const use = await actor(n.model, n.clip || 'idle', [at.x, at.y, at.z], n.yaw || 0, 0xffb000);
+    if (n.once) { use.play?.(n.clip || 'idle', { once: true }); use.update?.(4); }
     world.scene.add(use.root);
     const marker = makeMarker(THREE, n.marker || '!'); use.root.add(marker);
     items.push({ ...n, ...at, kind: 'talk', root: use.root, actor: use, marker, r: n.r ?? 1.5, label: n.label });
@@ -138,6 +139,7 @@ export async function runExplore(def, opts = {}) {
     if (id) changed('talk:' + id);
     const spec = (def.npcs || []).find((n) => n.id === id);
     if (spec?.card) import('../story/state.js').then(({ unlock }) => unlock(spec.card));
+    if (spec?.once && spec.clip) items.find((i) => i.id === id)?.actor?.play?.(spec.clip, { once: true });
   }
   function present() {
     const beat = currentBeat(talk.st);
@@ -156,7 +158,7 @@ export async function runExplore(def, opts = {}) {
     if (dialogUi.typing) { dialogUi.finish(); return; }
     advanceDialog(talk.st); if (talk.st.done) endTalk(); else present();
   }
-  function openInspect(item) { holding = item; inspectUi.show(inspectPanel(item.inspect, L), L, () => advanceInspect()); }
+  function openInspect(item) { item.onOpen?.(); holding = item; inspectUi.show(inspectPanel(item.inspect, L), L, () => advanceInspect()); }
   function advanceInspect() {
     if (!holding) return;
     if (inspectUi.hasChecks() && !inspectUi.mark()) return;
@@ -166,6 +168,7 @@ export async function runExplore(def, opts = {}) {
     const item = holding; holding = null; inspectUi.hide(); if (!item) return;
     if (item.thenHold && !item._held) { item.kind = 'hold'; item.hold = item.thenHold; item.label = item.holdLabel || item.label; item._held = true; return; }
     if (item.inspect?.card) import('../story/state.js').then(({ unlock }) => unlock(item.inspect.card));
+    if (item.flag) { flags[item.flag] = item.flagValue ?? true; import('../story/state.js').then(({ setFlag }) => setFlag(item.flag, item.flagValue ?? true)); }
     if (item.objective) changed(item.objective); else changed('obj:' + item.id);
   }
   function grant(res) {
