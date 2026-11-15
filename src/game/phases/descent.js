@@ -217,7 +217,8 @@ export default async function descent(ctx) {
   });
   await ctx.wait(3.5);
   // cap. 4.6–4.7: Houston respira y la familia Armstrong lo oye por la squawk box (solo alunizaje limpio)
-  if (st.result === 'good' && storyInPhase(ctx)) { for (const id of ['mocr-landed', 'house-landed']) { if (ctx.dead) break; const r = await playStory(id, { ctx }); if (r.skipped) break; } }
+  // Houston y la casa Armstrong tras el alunizaje eran charlas: quedan en el menú; sus tarjetas se ganan al alunizar limpio
+  if (st.result === 'good' && storyInPhase(ctx)) { const { passScene } = await import('../story/flow.js'); passScene('mocr-landed'); passScene('house-landed'); }
   let score = 0; if (st.result === 'good' || st.result === 'hard') {
     const q = clamp(1 - J.over * 0.6, 0, 1); const fuelS = clamp(s.fuel / s.fuel0 / 0.4, 0, 1); const padS = clamp(1 - J.pad / (PAD.r * 3), 0, 1);
     score = (st.result === 'good' ? 40 + q * 15 : 22) + fuelS * 15 + (st.alarmOk ? 15 : 5) + padS * 15 - st.crashes * 10; if (rodUsed) score *= 0.7; score = Math.round(clamp(score, 5, 100));

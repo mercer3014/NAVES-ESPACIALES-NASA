@@ -35,11 +35,17 @@ for (const id of ['hotel-prologue', 'mocr-tough', 'design', 'white-room', 'house
 for (const id of ['house-farewell', 'kids', 'ksc', 'beach', 'design']) assert.ok(!slotOf['before:launch'].includes(id), `${id} debe ir antes de la Fase 1`);
 assert.deepEqual(slotOf['before:launch'], ['bridge:t-minus']);
 assert.deepEqual(slotOf['before:cruise'], ['bridge:tli']);
-assert.deepEqual(slotOf['before:descent'], ['bridge:undock', 'mocr-briefing']);
+assert.deepEqual(slotOf['before:descent'], ['bridge:undock']);
 assert.deepEqual(slotOf['before:eva'], ['pre-eva', 'bridge:hatch']);
 const after = slotOf['after:eva']; const at = (id) => after.indexOf(id);
 assert.ok(at('breaker') > -1 && at('breaker') < at('boss'), 'el disyuntor va antes del jefe');
-assert.ok(at('collins-solo') < at('breaker') && at('boss') < at('liftoff'), 'collins → disyuntor → jefe → despegue');
+assert.ok(at('collins-choice') > -1 && at('collins-choice') < at('breaker') && at('boss') < at('liftoff'), 'collins → disyuntor → jefe → despegue');
+// Sin charlas entre fases: las escenas de conversación son extras del menú y sus tarjetas de momento se pasan en PASSED
+for (const id of ['night', 'mocr-briefing', 'mocr-landed', 'house-landed', 'collins-solo', 'tei', 'tv', 'lrl']) { assert.ok(!slotIds.includes(id), `${id} no va en la misión`); assert.ok(story.has(id), `${id} sigue en el menú`); }
+const { PASSED } = await import('../src/game/story/flow.js').catch(() => ({ PASSED: null }));
+if (PASSED) for (const id of Object.values(PASSED).flat()) assert.ok(story.has(id), `PASSED ${id} sin STORY`);
+assert.match(src('game/phases/descent.js'), /passScene\('mocr-landed'\)/, 'el alunizaje limpio da las tarjetas de Houston y la casa');
+assert.match(src('game/phases/cruise.js'), /playStory\('night-choice'/, 'el crucero conserva la decisión de la noche');
 assert.equal(after[0], 'bridge:meanwhile'); assert.equal(after.at(-1), 'bridge:report'); assert.equal(after.at(-2), 'epilogue');
 
 // Tarjetas puente: las 10 del plan, con fecha y texto ES/EN, sin emojis y con registro STORY `bridge:<id>`

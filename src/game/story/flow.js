@@ -80,6 +80,9 @@ export const STORY = {
   kids: decide('c1-kids'),
   // KSC sin caminar: la decisión de Aldrin sobre el primer paso queda como elección rápida (el rumor llega a la noche en Columbia)
   firststep: decide('c1-firststep', (o) => { if (o === 'complain') setFlag('rumor', true); }),
+  // Sin la noche en Columbia ni Collins solo: sus decisiones quedan como elección rápida (mismas consecuencias en el epílogo)
+  'night-choice': decide('c3-night'),
+  'collins-choice': decide('c6-collins', (o) => { if (o === 'pat') setFlag('pat-words', true); }),
   ksc: explore('ksc'),
   beach: explore('beach'),
   night: explore('columbia'),
@@ -179,12 +182,26 @@ export const SLOTS = {
   'before:prep': ['bridge:jul69', 'kids', 'firststep', 'bridge:launch-morning'],
   'before:launch': ['bridge:t-minus'],
   'before:cruise': ['bridge:tli'],
-  'before:descent': ['bridge:undock', 'mocr-briefing'],
+  'before:descent': ['bridge:undock'],
   'after:descent': [],
   'before:eva': ['pre-eva', 'bridge:hatch'],
   // Laika (No Canon), el rescate y el desfile son cinemáticas de charla: quedan como extras en «Escenas del guion».
-  'after:eva': ['bridge:meanwhile', 'collins-solo', 'breaker', 'boss', 'liftoff', 'reunion', 'tei', 'tv', 'reentry', 'lrl', 'epilogue', 'bridge:report'],
+  // Tras la EVA solo quedan los minijuegos (disyuntor, jefe opcional, despegue, acople, reentrada) y el epílogo.
+  // Collins solo, TEI, la última transmisión y la cuarentena son charlas: extras del menú.
+  'after:eva': ['bridge:meanwhile', 'collins-choice', 'breaker', 'boss', 'liftoff', 'reunion', 'reentry', 'epilogue', 'bridge:report'],
 };
+// Escenas de charla que salieron de la misión: sus tarjetas de «Momento» se ganan igual (son hechos que ocurrieron),
+// en silencio y en el punto donde iban. Los objetos que había que inspeccionar se siguen ganando desde el menú.
+export const PASSED = {
+  'before:prep': ['hotel-prologue', 'mocr-tough', 'house-farewell', 'ksc'],
+  'before:descent': ['mocr-briefing'],
+  'after:eva': ['collins-solo', 'tei', 'tv', 'lrl', 'recovery', 'parade'],
+};
+export function passScene(id) {
+  for (const c of SCENE_CARDS[id] || []) unlock(c, { quiet: true });
+  // la hoja de Garman era del MOCR de Bales: sin esa escena, Bales tiene la hoja (como en 1969) y su «GO» suena firme
+  if (id === 'mocr-briefing') setFlag('garmanSheet', true);
+}
 export const STORY_IDS = Object.keys(STORY);
 const params = new URLSearchParams(location.search);
 export const storyEnabled = () => !AUTO() && !params.has('nostory');
@@ -205,6 +222,7 @@ export async function playStory(id, opts = {}) {
 // alive(): false si la misión se abandonó a mitad de un interludio
 export async function interlude(slot, { alive = () => true } = {}) {
   if (!storyEnabled()) return;
+  for (const id of PASSED[slot] || []) passScene(id);
   for (const id of SLOTS[slot] || []) { if (!alive()) return; await playStory(id); }
 }
 dbg('storyRun', run);
