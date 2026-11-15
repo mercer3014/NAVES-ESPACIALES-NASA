@@ -70,7 +70,7 @@ export function makeStack() {
       legs = { deploy: () => { if (!dep) return; stow?.stop(); dep.reset().play(); } }; }
     // interior del CM (cm-interior.glb): mismo origen que el nodo CM, transform identidad. Oculto hasta que se entra; dentro se ocultan CM-shell y la escotilla exterior (tapaba su ventanuco).
     const cmN = NC('CM'), shell = NC('CM-shell'), hatchX = NC('CM-hatch');
-    if (CI && cmN) { const cab = CI.scene; cab.visible = false; cmN.add(cab); const mI = new THREE.AnimationMixer(cab); mixers.push(mI);
+    if (CI && cmN) { const cab = CI.scene; cab.traverse((m) => { if (m.isMesh) for (const mat of [].concat(m.material)) if (mat && /^CMI-(Pared|Mamparo)/.test(mat.name)) { mat.side = THREE.DoubleSide; mat.needsUpdate = true; } }); cab.visible = false; cmN.add(cab); const mI = new THREE.AnimationMixer(cab); mixers.push(mI);
       cab.traverse((m) => { if (m.isMesh && m.material && 'envMap' in m.material) { m.material = m.material.clone(); m.material.envMap = env; m.material.envMapIntensity = 0.5; } });
       if (isTouch) ['wall-stringers', 'suit-hoses', 'cb-5', 'cb-8'].forEach((n) => { const o = cab.getObjectByName(n); if (o) o.visible = false; }); // recorte móvil (−14.8k tris)
       // focos: siempre en la escena (intensidad 0 fuera) para no recompilar shaders al entrar/salir

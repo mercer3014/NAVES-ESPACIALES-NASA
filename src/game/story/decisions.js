@@ -122,10 +122,17 @@ export function quiz(prompt, options, correct) {
     const el = document.createElement('div'); el.className = 'dec-overlay';
     el.innerHTML = `<div class="dec-card"><div class="dec-k">${li ? 'QUESTION' : 'PREGUNTA'}</div><h2 class="dec-q"></h2><div class="dec-opts"></div><div class="dec-echo"></div></div>`;
     el.querySelector('.dec-q').textContent = tx(prompt); const box = el.querySelector('.dec-opts');
+    const btns = [];
     options.forEach((o, i) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'dec-opt'; b.innerHTML = `<span class="dec-n">${i + 1}</span><span class="dec-l"></span>`; b.querySelector('.dec-l').textContent = tx(o.label);
-      b.onclick = () => { const ok = o.id === correct; box.querySelectorAll('button').forEach((x) => (x.disabled = true)); b.classList.add('chosen'); if (ok) b.classList.add('gold');
-        el.querySelector('.dec-echo').textContent = ok ? (li ? 'Correct.' : 'Correcto.') : (li ? 'Not quite.' : 'No exactamente.'); setTimeout(() => { el.classList.remove('on'); setTimeout(() => { el.remove(); resolve(ok); }, 300); }, 1300); };
-      box.append(b); });
+      b.onclick = () => pick(o, b); box.append(b); btns.push([b, o]); });
+    let done = false;
+    const key = (e) => { const n = +e.key; if (n >= 1 && n <= options.length && !done) { e.preventDefault(); e.stopPropagation(); const [b, o] = btns[n - 1]; pick(o, b); } };
+    addEventListener('keydown', key, true);
+    function pick(o, b) {
+      if (done) return; done = true; removeEventListener('keydown', key, true);
+      const ok = o.id === correct; box.querySelectorAll('button').forEach((x) => (x.disabled = true)); b.classList.add('chosen'); if (ok) b.classList.add('gold');
+      el.querySelector('.dec-echo').textContent = ok ? (li ? 'Correct.' : 'Correcto.') : (li ? 'Not quite.' : 'No exactamente.'); setTimeout(() => { el.classList.remove('on'); setTimeout(() => { el.remove(); resolve(ok); }, 300); }, 1300);
+    }
     document.body.append(el); requestAnimationFrame(() => el.classList.add('on'));
   });
 }
@@ -138,7 +145,11 @@ export function whatIf({ title, text, back = ['Volver a la ruta histórica', 'Ba
     const el = document.createElement('div'); el.className = 'dec-overlay whatif';
     el.innerHTML = `<div class="dec-card"><div class="dec-k">${L() ? 'WHAT IF…?' : '¿Y SI…?'}</div><h2 class="dec-q"></h2><p class="whatif-t"></p><div class="dec-opts"><button type="button" class="dec-opt gold"><span class="dec-n">&lt;</span><span class="dec-l"></span></button></div></div>`;
     el.querySelector('.dec-q').textContent = tx(title); el.querySelector('.whatif-t').textContent = tx(text); el.querySelector('.dec-l').textContent = tx(back);
-    const b = el.querySelector('button'); b.onclick = () => { stinger('mus_stinger_ruta_historica_dorada'); el.classList.remove('on'); setTimeout(() => { el.remove(); resolve(); }, 300); };
+    const b = el.querySelector('button'); let done = false;
+    const close = () => { if (done) return; done = true; removeEventListener('keydown', key, true); stinger('mus_stinger_ruta_historica_dorada'); el.classList.remove('on'); setTimeout(() => { el.remove(); resolve(); }, 300); };
+    const key = (e) => { if (e.key === '1' || e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); close(); } };
+    b.onclick = close;
+    addEventListener('keydown', key, true);
     document.body.append(el); requestAnimationFrame(() => { el.classList.add('on'); b.focus(); });
   });
 }

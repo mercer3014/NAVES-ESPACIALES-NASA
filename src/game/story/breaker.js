@@ -12,7 +12,7 @@ const BRK = new THREE.Vector3(0.8, 0.1, -0.08);
 export const PROPS_AT = { pos: [0.5, -0.3, -0.42], yaw: -0.9 }; // repisa bajo el panel derecho, al alcance de Aldrin
 
 export default async function breakerScene() {
-  const cab = makeCabin(); const world = { scene: cab.scene, camera: cab.camera, update: (dt) => cab.update(dt), dispose: () => cab.dispose() };
+  const cab = makeCabin({ clock: false }); const world = { scene: cab.scene, camera: cab.camera, update: (dt) => cab.update(dt), dispose: () => cab.dispose() };
   await cab.ready.catch((e) => console.warn('cabin-panels.glb no disponible', e));
   const brk = await model('cabin-breaker').catch((e) => { console.warn('cabin-breaker.glb no disponible', e); return null; });
   let broken = null, q0 = null; if (brk) { cab.scene.add(brk); broken = brk.getObjectByName('lm-breaker-broken'); q0 = broken?.quaternion.clone(); }

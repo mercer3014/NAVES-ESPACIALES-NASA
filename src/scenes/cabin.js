@@ -6,7 +6,8 @@ const deg = THREE.MathUtils.degToRad;
 // interruptor del HTML → nodo del panel (según userData.action)
 export const SW_MAP = { fc1: 'switch-01', fc2: 'switch-02', fc3: 'switch-03', batA: 'switch-06', batB: 'switch-07', batC: 'switch-09', gnc: 'switch-11', abort: 'switch-12', o2: 'switch-18', sband: 'switch-23' };
 // props: añade cabin-props.glb (checklist, sextante, bolsas de comida, rotulador, cinta) en la repisa derecha bajo el panel
-export function makeCabin({ props = false } = {}) {
+// clock: false oculta el reloj de misión (mission-timer-display): en el Eagle la cuenta atrás del lanzamiento no tiene sentido (G9)
+export function makeCabin({ props = false, clock = true } = {}) {
   const scene = new THREE.Scene(); scene.background = new THREE.Color(0x05070b);
   const camera = new THREE.PerspectiveCamera(74, innerWidth / innerHeight, 0.02, 50);
   const pm = new THREE.PMREMGenerator(renderer); const env = pm.fromScene(new RoomEnvironment(), 0.04).texture; pm.dispose();
@@ -38,6 +39,7 @@ export function makeCabin({ props = false } = {}) {
     o.traverse((c) => { if (c.name) N[c.name] = c; if (c.isMesh) { const m = c.material; if (m && 'envMapIntensity' in m) m.envMapIntensity = 0.45; } });
     for (const [n, c] of Object.entries(N)) if (/^switch-\d+$/.test(n) && c.userData.angles_deg) { const u = c.userData; c.rotation.x = deg(u.angles_deg[u.default ?? 0]); tgt[n] = c.rotation.x; }
     for (let i = 1; i <= 3; i++) { const c = N['talkback-fc-' + i]; if (c) { c.rotation.x = 0; tgt[c.name] = 0; } } // tambores: gris al empezar
+    if (!clock && N['mission-timer-display']) N['mission-timer-display'].visible = false;
     o.traverse((c) => { if (c.isMesh && c.material?.name === 'WindowGlass') c.material = winMat; }); // ventanas: cielo por dirección de vista
     return o;
   });

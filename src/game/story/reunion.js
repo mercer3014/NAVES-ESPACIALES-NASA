@@ -73,6 +73,7 @@ async function hatchPart() {
   const cam = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.02, 200);
   const cab = await model('cm-interior').catch(() => null);
   let c = new THREE.Vector3(0, 0, 0), top = 1.4;
+  if (cab) cab.traverse((m) => { if (m.isMesh) for (const mat of [].concat(m.material)) if (mat && /^CMI-(Pared|Mamparo)/.test(mat.name)) { mat.side = THREE.DoubleSide; mat.needsUpdate = true; } }); // G4
   if (cab) { metal(cab); scene.add(cab); cab.updateMatrixWorld(true); const b = new THREE.Box3().setFromObject(cab); b.getCenter(c); top = b.max.y; }
   scene.add(new THREE.AmbientLight(0x3a3a44, 1.1), new THREE.HemisphereLight(0xfff0dc, 0x202430, 0.7));
   const lamp = new THREE.PointLight(0xffe2b8, 4, 6, 1.6); lamp.position.set(c.x, c.y + 0.6, c.z + 0.4); scene.add(lamp);

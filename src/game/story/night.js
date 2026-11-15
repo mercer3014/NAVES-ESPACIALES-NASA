@@ -22,6 +22,8 @@ export async function makeColumbia({ light = 'night', spin = 0.06, withEarth = t
   scene.environment = envMap(); scene.environmentIntensity = light === 'dark' ? 0.06 : 0.14;
   const { scene: cab } = await modelAnim('cm-interior');
   cab.traverse((m) => { if (m.isMesh) { m.frustumCulled = false; } });
+  // G4: las paredes del interior (CMI-Pared, CMI-Mamparo) son de una cara; sin DoubleSide la cabina se ve abierta al espacio
+  cab.traverse((m) => { if (m.isMesh) for (const mat of [].concat(m.material)) if (mat && /^CMI-(Pared|Mamparo)/.test(mat.name)) { mat.side = THREE.DoubleSide; mat.needsUpdate = true; } });
   scene.add(cab);
   const night = light !== 'dark';
   scene.add(new THREE.AmbientLight(0x1c2838, night ? 0.55 : 0.25));

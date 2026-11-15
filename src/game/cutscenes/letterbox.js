@@ -1,7 +1,17 @@
 import './letterbox.css';
 
 // Barras negras y botón de salto. El centro de la pantalla sigue recibiendo el juego.
+// Mientras hay letterbox, body.cine-on oculta el HUD de fase (G7).
+let cineStyled = false, cineOpen = 0;
+function ensureCineStyle() {
+  if (cineStyled) return; cineStyled = true;
+  const st = document.createElement('style');
+  st.textContent = 'body.cine-on .mhud{visibility:hidden}';
+  document.head.append(st);
+}
 export function mountLetterbox({ id, title, sub, skipLabel, onSkip }) {
+  ensureCineStyle();
+  cineOpen++; document.body.classList.add('cine-on');
   const root = document.createElement('div');
   root.className = 'plb-letterbox';
   root.dataset.cue = id;
@@ -26,5 +36,6 @@ export function mountLetterbox({ id, title, sub, skipLabel, onSkip }) {
   top.addEventListener('pointerdown', skip);
   bottom.addEventListener('pointerdown', skip);
   document.body.append(root);
-  return () => root.remove();
+  let closed = false;
+  return () => { root.remove(); if (!closed && --cineOpen <= 0) { cineOpen = 0; document.body.classList.remove('cine-on'); } closed = true; };
 }

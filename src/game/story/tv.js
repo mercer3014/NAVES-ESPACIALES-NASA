@@ -22,6 +22,7 @@ export default async function tvScene() {
   const flood = new THREE.PointLight(0xfff1dc, 2.4, 6, 1.4); flood.position.set(0.2, 1.9, 0.9); scene.add(flood);
   const fill = new THREE.PointLight(0xdfe8ff, 1.1, 5, 1.6); fill.position.set(-0.9, 1.0, 1.2); scene.add(fill);
   const cab = await model('cm-interior').catch((e) => { console.warn('cm-interior.glb no disponible', e); return null; });
+  if (cab) cab.traverse((m) => { if (m.isMesh) for (const mat of [].concat(m.material)) if (mat && /^CMI-(Pared|Mamparo)/.test(mat.name)) { mat.side = THREE.DoubleSide; mat.needsUpdate = true; } }); // G4
   if (cab) { cab.traverse((c) => { if (c.isMesh) c.frustumCulled = false; }); scene.add(cab); }
   // de izquierda a derecha en la imagen: Collins, Armstrong, Aldrin; ingrávidos sobre los asientos, frente a la cámara (+Z)
   const SPOTS = { collins: [-0.5, -0.56, -0.18, 0.18], armstrong: [0.02, -0.5, -0.42, 0], aldrin: [0.52, -0.6, -0.22, -0.16] };
