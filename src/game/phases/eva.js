@@ -88,7 +88,7 @@ export default async function eva(ctx) {
     <div class="tvsnow" style="display:none;position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.22) 0 1px,transparent 1px 3px),rgba(160,160,160,.35);mix-blend-mode:screen"></div>
     <div class="flash" style="position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;transition:opacity .5s"></div>
     <div class="quote" style="display:none;position:absolute;left:50%;bottom:22%;transform:translateX(-50%);width:min(720px,90vw);text-align:center;font-family:Chakra;font-size:clamp(16px,2.6vw,26px);color:#fff;text-shadow:0 2px 12px #000"></div>
-    ${isTouch ? `<div class="tc-stick" style="display:none"><i></i></div><button class="tc-btn mid jumpbtn" style="display:none;right:calc(124px + env(safe-area-inset-right,0px));bottom:calc(40px + var(--safe-b))">${t('e.jump')}</button>` : ''}
+    ${isTouch ? `<div class="tc-stick" style="display:none"><i></i></div><button class="tc-btn mid jumpbtn" style="display:none;right:calc(30px + clamp(84px,22vw,120px) + env(safe-area-inset-right,0px));bottom:calc(40px + var(--safe-b))">${t('e.jump')}</button>` : ''}
     <button class="tc-btn big actbtn amber" style="display:${isTouch ? '' : 'none'};right:calc(18px + env(safe-area-inset-right,0px));bottom:calc(30px + var(--safe-b))">${t('e.down')}</button>
     <button class="btn sciencebtn" style="display:none;position:absolute;right:12px;bottom:calc(175px + var(--safe-b));max-width:44vw;font-size:.72rem"></button>
     <button class="btn primary photobtn" style="display:none;position:absolute;left:50%;transform:translateX(-50%);bottom:calc(${isTouch ? 178 : 64}px + var(--safe-b));pointer-events:auto">${t('e.photoB')}</button>`);

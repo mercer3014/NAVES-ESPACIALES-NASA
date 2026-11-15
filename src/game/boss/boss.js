@@ -129,8 +129,8 @@ export async function runBoss(opts = {}) {
   if (isTouch) { makeStick(hud.q('.bd-tc-stick')); for (const b of hud.el.querySelectorAll('.bd-tcb')) bindBtn(b, b.dataset.b); }
   cleanups.push(() => clearBtns());
   // pausa propia
-  let pauseEl = null;
-  const pause = () => { if (pauseEl || S.over || S.mode === 'cine') return; setPaused(true); document.exitPointerLock?.(); document.body.dataset.paused = '1';
+  let pauseEl = null, failEl = null; // failEl: diálogo de derrota abierto (no se apila con la pausa)
+  const pause = () => { if (pauseEl || failEl || S.over || S.mode === 'cine' || S.mode === 'fail' || S.mode === 'end') return; setPaused(true); document.exitPointerLock?.(); document.body.dataset.paused = '1';
     pauseEl = hud.overlay(`<div class="bd-k">${L('PAUSA', 'PAUSED')}</div><h2>${L('El Guardián de Tranquilidad', 'The Guardian of Tranquility')}</h2><div class="bd-row"><button data-a="r">${L('Reanudar', 'Resume')}</button><button class="bd-sec" data-a="p">${L('Reintentar fase', 'Retry phase')}</button><button class="bd-sec" data-a="q">${L('Despertar (salir)', 'Wake up (quit)')}</button></div>`);
     pauseEl.onclick = (e) => { const a = e.target.closest('[data-a]')?.dataset.a; if (!a) return; sfx('click'); pauseEl.remove(); pauseEl = null; setPaused(false); delete document.body.dataset.paused; if (a === 'p') restartPhase(); if (a === 'q') finish('lose', 'quit'); }; };
   const onKey = (e) => { if (e.code === 'Escape') { e.stopImmediatePropagation(); pause(); } if (e.code === 'Tab' && S.mode === 'play') { e.preventDefault(); lock = !lock; manualYaw = 0; hud.toast(lock ? L('Cámara fijada en el Guardián', 'Camera locked on the Guardian') : L('Cámara libre', 'Free camera'), 1000); } };
@@ -340,12 +340,12 @@ export async function runBoss(opts = {}) {
     if (ph === 2) { shuffle(true); }
     if (ph === 3) { for (const f of fakes) f.respawn = 1e9; if (tank) tank.visible = false; }
   }
-  function restartPhase() { S.stats.retries++; resetPhase(S.phase); hud.toast(L('Reintento desde el inicio de la fase', 'Retrying from the start of the phase'), 1500); }
+  function restartPhase() { failEl?.remove(); failEl = null; S.stats.retries++; resetPhase(S.phase); hud.toast(L('Reintento desde el inicio de la fase', 'Retrying from the start of the phase'), 1500); }
   function fail(reason) {
     if (S.over || S.mode === 'fail') return; S.mode = 'fail'; nc('nc_61c_despertar_sobresalto', { vol: 0.85 }); sfx('jingle_fail', { vol: 0.35 }); hum.stop(); document.exitPointerLock?.(); hud.white(1);
     clips(['c6_61c_armstrong_tampoco_dormir_en', 'c6_61c_aldrin_sone_polvo_en', 'c6_61c_armstrong_duerme_buzz_en']);
-    const o = hud.overlay(`<div class="bd-k">${L('NO CANON · SUEÑO', 'NON-CANON · DREAM')}</div><h2>${L('Aldrin despierta de golpe', 'Aldrin jolts awake')}</h2><p>${reason}</p><p>${L('Respira. Vuelve a cerrar los ojos: el sueño continúa desde el inicio de la fase.', 'Breathe. Close your eyes again: the dream resumes from the start of the phase.')}</p><div class="bd-row"><button data-a="r">${L('Reintentar fase', 'Retry phase')}</button><button class="bd-sec" data-a="q">${L('Despertar (salir)', 'Wake up (quit)')}</button></div>`);
-    o.onclick = (e) => { const a = e.target.closest('[data-a]')?.dataset.a; if (!a) return; sfx('click'); o.remove(); if (a === 'r') restartPhase(); else finish('lose', 'o2'); };
+    failEl?.remove(); const o = failEl = hud.overlay(`<div class="bd-k">${L('NO CANON · SUEÑO', 'NON-CANON · DREAM')}</div><h2>${L('Aldrin despierta de golpe', 'Aldrin jolts awake')}</h2><p>${reason}</p><p>${L('Respira. Vuelve a cerrar los ojos: el sueño continúa desde el inicio de la fase.', 'Breathe. Close your eyes again: the dream resumes from the start of the phase.')}</p><div class="bd-row"><button data-a="r">${L('Reintentar fase', 'Retry phase')}</button><button class="bd-sec" data-a="q">${L('Despertar (salir)', 'Wake up (quit)')}</button></div>`);
+    o.onclick = (e) => { const a = e.target.closest('[data-a]')?.dataset.a; if (!a) return; sfx('click'); o.remove(); if (failEl === o) failEl = null; if (a === 'r') restartPhase(); else finish('lose', 'o2'); };
   }
   function finish(result, reason = '') {
     if (S.over) return; S.over = true; dead = true;

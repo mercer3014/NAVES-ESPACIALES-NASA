@@ -33,7 +33,10 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family
 @keyframes scan{0%{opacity:0;transform:translateY(-100%)}30%{opacity:1}100%{opacity:0;transform:translateY(100%)}}
 body.cardboard #gl{filter:sepia(.55) saturate(1.4) contrast(1.15) brightness(1.05)}
 body.cardboard::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:40;background:radial-gradient(transparent 60%,rgba(80,50,20,.35)),repeating-linear-gradient(45deg,rgba(120,80,40,.06) 0 3px,transparent 3px 7px)}
-button{font:inherit;color:inherit}
+button{font:inherit;color:inherit;touch-action:manipulation}
+/* Foco de teclado visible en cualquier control que no defina el suyo (accesibilidad); no aparece al usar ratón o dedo */
+:where(button,a,input,select,[tabindex]):focus-visible{outline:2px solid var(--orange);outline-offset:2px}
+html,body{-webkit-touch-callout:none}
 .screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:calc(16px + var(--safe-t)) 16px calc(16px + var(--safe-b));animation:fadeIn .4s var(--ease)}
 .screen.out{animation:fadeOut .2s var(--ease) forwards}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}}
@@ -391,6 +394,7 @@ body.touch .pancho.lift{bottom:calc(200px + var(--safe-b))}
 .radio.hidden{opacity:0;pointer-events:none;transform:translate(-50%,-14px)}
 .radio button{all:unset;cursor:pointer;display:grid;place-items:center;border-radius:50%;width:34px;height:34px;flex:none;transition:background .2s,transform .12s}
 .radio button:active{transform:scale(.92)}
+.radio button{position:relative}.radio button::after{content:"";position:absolute;inset:-5px}
 .radio button:focus-visible{outline:2px solid var(--orange);outline-offset:2px}
 .r-mic{background:#2A2D31;box-shadow:inset 0 0 0 1px var(--line)}
 .r-mic svg{width:18px;height:18px;fill:#CFCCC2;stroke:#CFCCC2;stroke-width:2;stroke-linecap:round}

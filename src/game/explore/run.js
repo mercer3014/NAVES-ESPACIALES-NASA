@@ -81,7 +81,7 @@ export async function runExplore(def, opts = {}) {
   if (isTouch) {
     el.insertAdjacentHTML('beforeend', `<div class="tc-stick"><i></i></div><button class="tc-btn big actbtn" type="button">${L ? 'ACT' : 'ACCIÓN'}</button><button class="tc-btn mid jumpbtn" type="button">${L ? 'JUMP' : 'SALTO'}</button>`);
     makeStick(el.querySelector('.tc-stick')); bindBtn(el.querySelector('.actbtn'), 'act'); bindBtn(el.querySelector('.jumpbtn'), 'jump');
-    el.querySelector('.jumpbtn').style.cssText = 'right:calc(124px + env(safe-area-inset-right,0px));bottom:calc(40px + var(--safe-b))';
+    el.querySelector('.jumpbtn').style.cssText = 'right:calc(30px + clamp(84px,22vw,120px) + env(safe-area-inset-right,0px));bottom:calc(40px + var(--safe-b))';
     el.querySelector('.actbtn').style.cssText = 'right:calc(18px + env(safe-area-inset-right,0px));bottom:calc(30px + var(--safe-b))';
   }
   // Punto de mira en el centro: dice a dónde mira el jugador y se enciende sobre lo que se puede usar
