@@ -384,7 +384,8 @@ export default async function launch(ctx) {
     else if (!prompting && st && S.s >= st.end && waitingStage === null && S.stage < 2) { prompting = true; const i = S.stage; stagePrompt(i).then(() => { S.stage = i + 1; prompting = false; if (i === 0) setTimeout(() => !lesDone && !ctx.dead && (toast(t('l.les'), 'info'), sfx('beep')), 3000); }); }
     if (S.stage === 1 && !lesDone && S.s > STG[0].end + 9) { lesDone = true; doStage(3); } // auto si se olvida
     // visual
-    const R = W.rocket; R.rotation.order = 'ZYX'; R.rotation.z = -((90 - S.pitch) * Math.PI) / 180; R.rotation.y = ((90 - ROLL.hdg) * Math.PI) / 180; // rolido sobre su eje const vis = S.alt * Math.min(1, (S.s / 7) ** 2); // la simulación va comprimida; visualmente el despegue es lento y pesado (≈10 s en librar la torre real)
+    const R = W.rocket; R.rotation.order = 'ZYX'; R.rotation.z = -((90 - S.pitch) * Math.PI) / 180; R.rotation.y = ((90 - ROLL.hdg) * Math.PI) / 180; // rolido sobre su eje
+    const vis = S.alt * Math.min(1, (S.s / 7) ** 2); // la simulación va comprimida; visualmente el despegue es lento y pesado (≈10 s en librar la torre real)
     R.position.y = (W.newModel ? BASE_Y : BASE_Y - 0.62) + vis; R.position.x += S.vx * dt * 2.4;
     W.alt = vis; W.shake = Math.max(W.shake * Math.exp(-dt * 2), thrust * (S.alt < 8000 ? 0.5 : 0.12) + S.stress * 0.8);
     W.emit(dt, thrust); rumble(thrust * (S.stage === 0 ? 1 : 0.35) * clamp(1 - S.alt / 40000, 0.15, 1), thrust * (S.stage === 0 ? 1 : 0.2));
