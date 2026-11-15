@@ -550,6 +550,8 @@ body[data-screen="phase-eva"] .pancho{top:calc(240px + var(--safe-t));bottom:aut
 /* Menu cursor stays visible. Gameplay hides it except on controls. Pointer lock itself is unchanged. */
 :root{--menu-cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpath d='M5 3 L5 22 L10.2 17.2 L14.2 25 L17.2 23.6 L13 15.6 L20.5 15.2 Z' fill='%23f4f7ff' stroke='%23020608' stroke-width='1.4' stroke-linejoin='round'/%3E%3C/svg%3E") 4 2,auto}
 body[data-cursor="menu"],body[data-cursor="menu"] *{cursor:var(--menu-cursor)}
+/* Sobre papel crema (tareas, tarjetas de misión, Bitácora, decisiones claras) la flecha clara no se ve: va en negro con borde crema */
+.pt-win,.mc-card,.bit-panel,.xp-inspect-card.light{--menu-cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpath d='M5 3 L5 22 L10.2 17.2 L14.2 25 L17.2 23.6 L13 15.6 L20.5 15.2 Z' fill='%230B0C0E' stroke='%23F2EFE6' stroke-width='1.6' stroke-linejoin='round'/%3E%3C/svg%3E") 4 2,auto}
 body[data-cursor="menu"] :is(input,textarea){cursor:text}
 body[data-cursor="play"] .hud-screen,body[data-cursor="play"] .hud-screen .hud{cursor:none}
 body[data-cursor="play"] .hud-screen :is(button,a,input,select,textarea,.sw,.station,.dsky,.cpanel,.panel,.overlay,label){cursor:var(--menu-cursor)}

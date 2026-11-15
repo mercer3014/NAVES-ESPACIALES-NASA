@@ -8,7 +8,7 @@ import { stopCue } from '../cutscenes/play.js';
 import { show } from '../../ui/router.js';
 import { score, stopAmbience } from '../../audio/a11-score.js';
 import { unlock, chose, record, run, setFlag } from './state.js';
-import { ask } from './decisions.js';
+import { ask, DECISIONS } from './decisions.js';
 import { missionCard } from '../../ui/mission-card.js';
 
 const own = (load) => async (o) => { const m = await load(); return m.default(o); };
@@ -179,26 +179,34 @@ export const SLOTS = {
   // y siguen en «Escenas del guion». Sus dos decisiones se conservan como elección rápida para no perder consecuencias.
   // Lo importante es el despegue: antes de la Fase 1 solo quedan las dos decisiones del cap. 1 (10 s cada una) y la tarjeta
   // de la mañana del lanzamiento. La sala de diseño sigue en el menú y en el informe final («Rediseñar»); sin ella vale el plan de 1969.
-  'before:prep': ['bridge:jul69', 'kids', 'firststep', 'bridge:launch-morning'],
+  // Directo al despegue: solo la tarjeta de la mañana del 16 de julio. Las decisiones sueltas sobre fondo negro (hijos, primer paso,
+  // noche, Collins, descanso) cambiaban apenas una frase del epílogo: salen y se toma la respuesta histórica (ver PASSED).
+  'before:prep': ['bridge:launch-morning'],
   'before:launch': ['bridge:t-minus'],
   'before:cruise': ['bridge:tli'],
   'before:descent': ['bridge:undock'],
   'after:descent': [],
-  'before:eva': ['pre-eva', 'bridge:hatch'],
+  'before:eva': ['bridge:hatch'],
   // Laika (No Canon), el rescate y el desfile son cinemáticas de charla: quedan como extras en «Escenas del guion».
   // Tras la EVA solo quedan los minijuegos (disyuntor, jefe opcional, despegue, acople, reentrada) y el epílogo.
   // Collins solo, TEI, la última transmisión y la cuarentena son charlas: extras del menú.
-  'after:eva': ['bridge:meanwhile', 'collins-choice', 'breaker', 'boss', 'liftoff', 'reunion', 'reentry', 'epilogue', 'bridge:report'],
+  'after:eva': ['bridge:meanwhile', 'breaker', 'boss', 'liftoff', 'reunion', 'reentry', 'epilogue', 'bridge:report'],
 };
 // Escenas de charla que salieron de la misión: sus tarjetas de «Momento» se ganan igual (son hechos que ocurrieron),
 // en silencio y en el punto donde iban. Los objetos que había que inspeccionar se siguen ganando desde el menú.
 export const PASSED = {
-  'before:prep': ['hotel-prologue', 'mocr-tough', 'house-farewell', 'ksc'],
+  'before:prep': ['hotel-prologue', 'mocr-tough', 'house-farewell', 'kids', 'ksc', 'firststep'],
+  'before:cruise': ['night-choice'],
   'before:descent': ['mocr-briefing'],
-  'after:eva': ['collins-solo', 'tei', 'tv', 'lrl', 'recovery', 'parade'],
+  'before:eva': ['pre-eva'],
+  'after:eva': ['collins-solo', 'collins-choice', 'tei', 'tv', 'lrl', 'recovery', 'parade'],
 };
+// decisión suelta que ya no se pregunta → su respuesta histórica (si la hay); c3-night no tiene: el epílogo omite esa frase
+const PASSED_DECISION = { kids: 'c1-kids', firststep: 'c1-firststep', 'night-choice': 'c3-night', 'pre-eva': 'c5-rest', 'collins-choice': 'c6-collins' };
 export function passScene(id) {
   for (const c of SCENE_CARDS[id] || []) unlock(c, { quiet: true });
+  const dec = PASSED_DECISION[id], opt = dec && !chose(dec) && DECISIONS[dec]?.options.find((o) => o.historic);
+  if (opt) { record(dec, opt.id, { historic: true }); if (opt.card) unlock(opt.card, { quiet: true }); }
   // la hoja de Garman era del MOCR de Bales: sin esa escena, Bales tiene la hoja (como en 1969) y su «GO» suena firme
   if (id === 'mocr-briefing') setFlag('garmanSheet', true);
 }

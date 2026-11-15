@@ -189,12 +189,8 @@ export default async function cruise(ctx) {
     ctx.cc.snap({ stage: 'align', targets, got: [] }, true);
   });
   st.align = { time: ctx.time - tA, wrong: st.wrong }; layer.innerHTML = ''; sprites.forEach((s) => W.scene.remove(s)); ctx.banner(t('c.alignok'), '', 1500); ctx.cc.log('c.alignok', null, 'ok'); await ctx.wait(1); rollK = 1; lockView(null, false);
-  // Cap. 3.2: noche en Columbia (modo historia). El crucero se congela mientras dura y luego se recuperan mundo, HUD y música.
-  if (storyInPhase(ctx)) {
-    const cw = coastOn, sv = sock.visible; coastOn = false; sock.visible = false;
-    await playStory('night-choice', { ctx }); // la noche en Columbia (charla) quedó en el menú; aquí solo su decisión if (ctx.dead) return { score: 0, stats: {} };
-    ctx.world(W); el.classList.remove('out'); show(el, 'phase-cruise'); coastOn = cw; sock.visible = sv && !st.sock; music('cruise', { vol: 0.45 });
-  }
+  // Cap. 3.2: la noche en Columbia (charla) y su decisión salieron de la misión; siguen en «Escenas del guion».
+  // Su respuesta histórica se toma en PASSED (flow.js). El crucero sigue sin cortes hasta la LOI.
   // esperar a llegar a la Luna
   title('c.coast'); hint('pa.tli'); await ctx.until(() => k >= 1); coastOn = false; days.style.display = 'none';
   // ---------- LOI tras la Luna: LOS ----------

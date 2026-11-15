@@ -30,22 +30,24 @@ assert.deepEqual(badSlot, [], 'escenas en SLOTS sin STORY');
 const slotOf = Object.fromEntries([...slots.matchAll(/'(before|after):([a-z]+)': \[([^\]]*)\]/g)].map((m) => [m[1] + ':' + m[2], [...m[3].matchAll(/'([a-z0-9:-]+)'/g)].map((x) => x[1])]));
 assert.equal(new Set(slotIds).size, slotIds.length, 'ids repetidos en SLOTS');
 // Intro corta (pedido del equipo): sin escenas de charla antes de la Fase 1; las decisiones del cap. 1 quedan como elección rápida
-assert.deepEqual(slotOf['before:prep'], ['bridge:jul69', 'kids', 'firststep', 'bridge:launch-morning'], 'orden de before:prep');
+assert.deepEqual(slotOf['before:prep'], ['bridge:launch-morning'], 'directo al despegue');
 for (const id of ['hotel-prologue', 'mocr-tough', 'design', 'white-room', 'house-farewell', 'ksc', 'beach', 'laika', 'recovery', 'parade']) { assert.ok(!slotIds.includes(id), `${id} es un extra del menú, no va en la misión`); assert.ok(story.has(id), `${id} sigue en STORY para el menú`); }
 for (const id of ['house-farewell', 'kids', 'ksc', 'beach', 'design']) assert.ok(!slotOf['before:launch'].includes(id), `${id} debe ir antes de la Fase 1`);
 assert.deepEqual(slotOf['before:launch'], ['bridge:t-minus']);
 assert.deepEqual(slotOf['before:cruise'], ['bridge:tli']);
 assert.deepEqual(slotOf['before:descent'], ['bridge:undock']);
-assert.deepEqual(slotOf['before:eva'], ['pre-eva', 'bridge:hatch']);
+assert.deepEqual(slotOf['before:eva'], ['bridge:hatch']);
+// sin decisiones sueltas sobre fondo negro: se toma la respuesta histórica
+for (const id of ['kids', 'firststep', 'night-choice', 'pre-eva', 'collins-choice']) assert.ok(!slotIds.includes(id), `${id} no se pregunta en la misión`);
 const after = slotOf['after:eva']; const at = (id) => after.indexOf(id);
 assert.ok(at('breaker') > -1 && at('breaker') < at('boss'), 'el disyuntor va antes del jefe');
-assert.ok(at('collins-choice') > -1 && at('collins-choice') < at('breaker') && at('boss') < at('liftoff'), 'collins → disyuntor → jefe → despegue');
+assert.ok(at('boss') < at('liftoff'), 'disyuntor → jefe → despegue');
 // Sin charlas entre fases: las escenas de conversación son extras del menú y sus tarjetas de momento se pasan en PASSED
 for (const id of ['night', 'mocr-briefing', 'mocr-landed', 'house-landed', 'collins-solo', 'tei', 'tv', 'lrl']) { assert.ok(!slotIds.includes(id), `${id} no va en la misión`); assert.ok(story.has(id), `${id} sigue en el menú`); }
 const { PASSED } = await import('../src/game/story/flow.js').catch(() => ({ PASSED: null }));
 if (PASSED) for (const id of Object.values(PASSED).flat()) assert.ok(story.has(id), `PASSED ${id} sin STORY`);
 assert.match(src('game/phases/descent.js'), /passScene\('mocr-landed'\)/, 'el alunizaje limpio da las tarjetas de Houston y la casa');
-assert.match(src('game/phases/cruise.js'), /playStory\('night-choice'/, 'el crucero conserva la decisión de la noche');
+assert.doesNotMatch(src('game/phases/cruise.js'), /playStory\('night/, 'el crucero no se corta');
 assert.equal(after[0], 'bridge:meanwhile'); assert.equal(after.at(-1), 'bridge:report'); assert.equal(after.at(-2), 'epilogue');
 
 // Tarjetas puente: las 10 del plan, con fecha y texto ES/EN, sin emojis y con registro STORY `bridge:<id>`
@@ -55,7 +57,7 @@ const body = bridgeSrc.split('export const BRIDGES = {')[1].split('\n};')[0];
 for (const id of bridgeIds) {
   assert.ok(new RegExp(`(^|\\n)  '?${id}'?: \\{ when: \\[`).test(body), `bridge ${id}: sin definición con fecha`);
   assert.ok(story.has('bridge:' + id), `bridge:${id} sin STORY`);
-  if (id !== 'intro' && id !== 'design') assert.ok(slotIds.includes('bridge:' + id), `bridge:${id} no está en SLOTS`); // «intro» hablaba del hotel de 1967, que ya no abre la misión
+  if (!['intro', 'design', 'jul69'].includes(id)) assert.ok(slotIds.includes('bridge:' + id), `bridge:${id} no está en SLOTS`); // «intro» hablaba del hotel de 1967, que ya no abre la misión
 }
 assert.equal([...body.matchAll(/(^|\n)  '?[a-z0-9-]+'?: \{ when:/g)].length, bridgeIds.length, 'número de tarjetas puente');
 for (const m of body.matchAll(/(when|text|quote|who): \[('(?:[^'\\]|\\.)*'), ('(?:[^'\\]|\\.)*')\]/g)) assert.ok(m[2].length > 2 && m[3].length > 2, `bridge: par [es, en] vacío en ${m[1]}`);
