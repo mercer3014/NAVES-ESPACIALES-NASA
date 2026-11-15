@@ -56,7 +56,7 @@ export function runDocking(opts = {}) {
       S.range = 0; S.contact = true; apply(S, 0); a11sfx('c2_25_acople_captura_pestillos', 0.6);
       if (AUTO()) { setTimeout(() => finish(true), 900); return; }
       const cal = q('.dock-cal'), ndl = q('.dock-cal-n'), bar = q('.dock-cal-p i'), txt = q('.dock-cal-t'); cal.hidden = false;
-      q('.dock-coas').classList.add('dim'); msgT = 0;
+      q('.dock-coas').style.display = 'none'; q('.dock-dist').style.display = 'none'; msgT = 0; // en contacto: vista lateral, sin retícula
       hint.textContent = isTouch ? tx(['Mueve la palanca para mantener la aguja en verde', 'Move the stick to keep the needle in the green'])
         : tx(['A / D: mantén la aguja de rolido en la franja verde para cerrar los pestillos', 'A / D: keep the roll needle in the green band to close the latches']);
       hint.className = 'dock-hint go';
@@ -94,17 +94,21 @@ export function runDocking(opts = {}) {
         // Asistente (idea del equipo): con la cruz en verde la nave avanza sola, despacio. Si te desalineas, frena y espera.
         // R / F siguen mandando: acelerar o frenar a mano.
         const aligned = Math.hypot(S.x, S.y) <= tolLat;
-        S.auto = ar === 0 && S.rcs > 0;
-        if (S.auto && aligned) { const want = Math.min(0.14, tolClose * 0.55); S.vr += Math.max(-0.05, Math.min(0.05, want - S.vr)) * dt * 2.5; }
+        S.auto = ar === 0; // el avance asistido no gasta RCS: con el tanque vacío la computadora te sigue acercando
+        // Amortiguación lateral: al soltar WASD la nave frena sola (como el control de actitud). Sin esto la cruz oscilaba.
+        if (Math.abs(ax) < 0.15) S.vx *= Math.exp(-dt * 1.6);
+        if (Math.abs(ay) < 0.15) S.vy *= Math.exp(-dt * 1.6);
+        // De lejos se acerca a 0,4 m/s; en los últimos 4 m baja a velocidad de contacto
+        if (S.auto && aligned) { const want = S.range > 4 ? 0.4 : Math.min(0.14, tolClose * 0.55); S.vr += Math.max(-0.05, Math.min(0.05, want - S.vr)) * dt * 2.5; }
         else if (S.auto && S.vr > 0) S.vr *= Math.exp(-dt * 0.9);
       }
       const thrusting = S.rcs > 0 && (Math.abs(ax) > 0.15 || Math.abs(ay) > 0.15 || ar !== 0);
-      if (S.rcs <= 0) { ax = ay = ar = 0; }
+      if (S.rcs <= 0) { ax = ay = ar = 0; S.vx *= Math.exp(-dt * 0.6); S.vy *= Math.exp(-dt * 0.6); S.x -= S.x * 0.12 * dt; S.y -= S.y * 0.12 * dt; } // sin RCS: la computadora centra despacio
       S.vx += ax * 0.16 * dt; S.vy += ay * 0.16 * dt; S.vr += ar * 0.07 * dt;
       // deriva leve (actitud mantenida por la computadora, pero no perfecta)
       S.pitch += (Math.sin(S.secs * 0.7) * 0.02 - S.pitch * 0.5) * dt; S.yaw += (Math.cos(S.secs * 0.5) * 0.02 - S.yaw * 0.5) * dt;
       S.vx += S.yaw * 0.01 * dt; S.vy += S.pitch * 0.01 * dt;
-      if (thrusting) { const use = (Math.min(1, Math.abs(ax)) + Math.min(1, Math.abs(ay)) + Math.abs(ar)) * 1.6 * dt; S.rcs = Math.max(0, S.rcs - use); S.rcsUsed += use;
+      if (thrusting) { const use = (Math.min(1, Math.abs(ax)) + Math.min(1, Math.abs(ay)) + Math.abs(ar)) * 1.0 * dt; S.rcs = Math.max(0, S.rcs - use); S.rcsUsed += use;
         pulseT -= dt; if (pulseT <= 0) { pulseT = 0.28; a11sfx('c2_25_rcs_propulsor_pulso', 0.35); } }
       S.x += S.vx * dt; S.y += S.vy * dt; S.range -= S.vr * dt;
       S.range = Math.min(S.range, (opts.range0 ?? 14) + 8);
@@ -132,7 +136,7 @@ export function runDocking(opts = {}) {
       else {
         const R = isTouch ? (L() ? 'CLOSE IN' : 'ACERCAR') : 'R', F = isTouch ? (L() ? 'BRAKE' : 'FRENAR') : 'F', MOVE = isTouch ? (L() ? 'the stick' : 'la palanca') : 'WASD';
         let m, cls = '';
-        if (S.rcs <= 0) { m = ['RCS agotado: deriva hasta el contacto', 'RCS empty: drifting to contact']; cls = 'warn'; }
+        if (S.rcs <= 0) { m = ['RCS agotado: la computadora te acerca despacio, espera el contacto', 'RCS empty: the computer brings you in slowly, wait for contact']; cls = 'warn'; }
         else if (S.range < 3 && S.vr > tolClose) { m = [`¡Demasiado rápido! Mantén ${F} para frenar`, `Too fast! Hold ${F} to brake`]; cls = 'warn'; }
         else if (!latOk) { m = [`1 · Lleva la cruz al centro con ${MOVE} hasta que se ponga verde`, `1 · Bring the cross to the centre with ${MOVE} until it turns green`]; }
         else if (S.auto) { m = [`2 · ¡Alineado! Acercándote solo… mantén la cruz en verde (${R} más rápido · ${F} frenar)`, `2 · Aligned! Closing in on your own… keep the cross green (${R} faster · ${F} brake)`]; cls = 'go'; }

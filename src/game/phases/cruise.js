@@ -91,8 +91,22 @@ export default async function cruise(ctx) {
       if (view) placeInView();
       else if (owner === 'cockpit') { cam.position.lerp(fw, 0.62); cam.lookAt(fw); }
     }
+    // Cámara del acople: en la punta de la sonda de Columbia, mirando a lo largo del eje hacia Eagle en el adaptador.
+    // Así se ve con qué te acoplas; si te desalineas, Eagle se corre en la retícula.
+    if (dockCam) {
+      const { csm, yTgt } = dockCam; ship.updateMatrixWorld();
+      const gap = csm.position.y - yTgt;
+      // Lejos: en la sonda, sin entrar nunca en Eagle. En contacto (calibración): vista lateral con las dos naves unidas.
+      const eye = gap > 0.4 ? ship.localToWorld(new THREE.Vector3(csm.position.x, Math.max(csm.position.y - 1.6, yTgt + 2.2), csm.position.z))
+        : ship.localToWorld(new THREE.Vector3(7, yTgt + 3.5, 7));
+      const at = gap > 0.4 ? ship.localToWorld(new THREE.Vector3(csm.position.x, yTgt - 2, csm.position.z)) : ship.localToWorld(new THREE.Vector3(0, yTgt + 1, 0));
+      cam.up.copy(new THREE.Vector3(0, 0, 1).transformDirection(ship.matrixWorld));
+      cam.position.copy(eye); cam.lookAt(at);
+      const fov = cam.aspect < 1 ? 70 : 52; if (Math.abs(cam.fov - fov) > 0.5 || cam.near > 0.05) { cam.fov = fov; cam.near = 0.03; cam.updateProjectionMatrix(); }
+    }
     W.update(dt, ctx.time);
   });
+  let dockCam = null;
   E.position.set(-10, -78, 0); M.position.set(2600, 120, -500);
 
   // ---------- quemado (TLI / LOI) ----------
@@ -141,7 +155,7 @@ export default async function cruise(ctx) {
     const s4 = ship.children.find((c) => c !== csm && c.getObjectByName?.('j2-thrust-point'));
     if (!csm || !s4) return;
     const yTgt = s4.getObjectByName('lm-docking-target')?.position.y ?? 5.72, y0 = csm.position.y, range0 = Math.max(6, y0 - yTgt);
-    if (ship.userData.interior) lockView('win'); else camOff.set(3, 3.5, 17);
+    lockView(null); viewLock = true; dockCam = { csm, yTgt }; // vista externa desde la sonda (antes: la ventanilla, sin ver a Eagle)
     title('c.td'); hint('c.td2');
     const res = await runDocking({
       loop: (f) => ctx.loop(f), onCleanup: (f) => ctx.onCleanup(f), range0, x0: 0.7, y0: -0.45,
@@ -149,7 +163,7 @@ export default async function cruise(ctx) {
       note: ['Eres Collins. Alinea la sonda con el cono de Eagle.', 'You are Collins. Line the probe up with Eagle’s drogue.'],
       apply: (S) => csm.position.set(S.x, yTgt + Math.max(0, S.range), S.y),
     });
-    lockView(null); camOff.set(3, 3.5, 17);
+    dockCam = null; cam.up.set(0, 1, 0); cam.near = 0.1; cam.fov = baseFov; cam.updateProjectionMatrix(); lockView(null); camOff.set(3, 3.5, 17);
     if (!res.ok) await whatIf({ title: ['¿Y si…? Collins falla el contacto', 'What if…? Collins misses the contact'],
       text: ['Tres contactos fallidos. En la realidad no hubo drama: Collins había ensayado esta maniobra cientos de veces en el simulador y acopló a la primera, despacio y con poco combustible. La computadora completa ahora el acople.',
         'Three failed contacts. In reality there was no drama: Collins had rehearsed this maneuver hundreds of times in the simulator and docked on the first try, slowly and with little fuel. The computer now completes the docking.'] });
