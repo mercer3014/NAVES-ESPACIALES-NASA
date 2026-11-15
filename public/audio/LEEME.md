@@ -2,15 +2,14 @@
 
 Paquete de audio para el juego narrativo «Apolo 11: Un gran salto» (NASA Space Apps 2026), armado a partir de los guiones.
 
-**Contenido:** 363 archivos (cada uno en `.wav` 48 kHz/24 bit y en `.ogg` Vorbis q6).
+**Contenido:** 263 archivos `.wav` a 48 kHz / 24 bit.
 
 | Carpeta | Archivos | Qué contiene |
 |---|---|---|
 | `nasa_real/` | 49 | Audio REAL de la misión, recortado de fuentes de dominio público (NASA, Voz de América) |
 | `sfx/` | 95 | Efectos de sonido generados en el box (síntesis procedural) |
 | `music/` | 19 | Música original (piano mínimo + cuerdas) compuesta y renderizada en el box |
-| `voz_en_clonada/` | 100 | **NUEVO:** todas las líneas en INGLÉS con emoción y voces CLONADAS de los protagonistas reales (ver la advertencia de derechos). Muestras en `voz_en_clonada/_muestras/` |
-| `voz_placeholder/` | 100 | Voces provisionales en español con TTS neural (Piper). **Son placeholders:** hay que reemplazarlas por actores |
+| `voz_en_clonada/` | 100 | Líneas en inglés con emoción y voces clonadas de los protagonistas reales (ver la advertencia de derechos). |
 
 `catalog.csv` (UTF-8, se abre en Excel) tiene una fila por archivo con capítulo/escena, línea del guion, origen, URL de la fuente, timestamp, GET, duración, LUFS, si es loop, y licencia. Al final hay filas `FALTANTE` para las pistas sin audio.
 
@@ -18,12 +17,12 @@ Paquete de audio para el juego narrativo «Apolo 11: Un gran salto» (NASA Space
 - **Sonoridad:** diálogos y audio real a −16 LUFS (pico −1 dBFS). La llamada completa de Nixon y el descenso completo están a −18 LUFS. Los ambientes y loops están entre −32 y −20 LUFS, la música en general a −18 LUFS, y las capas de tensión y drones entre −24 y −21 LUFS. Los SFX cortos están normalizados a pico −3 dBFS.
 - **Loops:** los archivos con `loop` en el nombre (o `loop=sí` en el catálogo) tienen un crossfade de 1 s y empalman sin clic.
 - **Cortes de música que pide el guion:** la música se corta en seco en el primer paso (`nasa_real/cap5_un_pequeno_paso`) y en el despegue lunar (`nasa_real/cap6_despegue_lunar_cuenta`). El tema principal completo (`mus_tema_principal_completo`) suena por primera vez en el reencuentro (6.4). En la fase 3 del Guardián vuelve el piano solo (`mus_tema_principal_piano_solo`).
-- **Radio:** para el audio real conviene usar los tonos quindar reales de NASA (`nasa_real/ui_quindar_*`). Las voces placeholder con efecto `radio` ya traen quindar sintético.
+- **Radio:** para el audio real conviene usar los tonos quindar reales de NASA (`nasa_real/ui_quindar_*`). Las líneas de `voz_en_clonada/` con efecto `radio` ya traen quindar sintético.
 - **Bitácora:** las recompensas de audio real son `cap4_alarma_1202_loop_flight` (loop MOCR), `cap4_base_tranquilidad_eagle_aterrizado`, `cap4_descenso_completo` (evento oculto), `cap4_aldrin_polvo_40_pies` (Aldrin describe el polvo lunar) y `cap5_un_pequeno_paso`. Los sonidos de desbloqueo están en `sfx/ui_bitacora_*`.
 - **Sputnik:** el objeto radio de la Parte I usa `nasa_real/parte1_sputnik_bip`.
 
 ## Voces en inglés clonadas y con emoción (voz_en_clonada/)
-- **Qué es:** las 100 líneas de voz del guion, traducidas a un inglés natural y actuadas con emoción según la escena. Las líneas REALES usan sus palabras originales en inglés: el discurso «Tough and Competent» de Kranz, las memorias de Collins, el texto de Safire, «You cats take it easy…», «beaming all the way home», la placa. Se mantienen los efectos de radio con quindar, teléfono, casco, eco y susurro, y la normalización a −16 LUFS. El archivo `_en` corresponde al mismo id de `voz_placeholder/`.
+- **Qué es:** las 100 líneas de voz del guion, traducidas a un inglés natural y actuadas con emoción según la escena. Las líneas REALES usan sus palabras originales en inglés: el discurso «Tough and Competent» de Kranz, las memorias de Collins, el texto de Safire, «You cats take it easy…», «beaming all the way home», la placa. Se mantienen los efectos de radio con quindar, teléfono, casco, eco y susurro, y la normalización a −16 LUFS.
 - **Motor:** Chatterbox TTS en inglés, de Resemble AI. Licencia **MIT**, con uso comercial del software permitido. Hace clonación de voz *zero-shot* con control de emoción por «exaggeration» y CFG, y corre en CPU (unas 3 veces más lento que el tiempo real). Cada archivo lleva la marca de agua inaudible PerTh. Se descartaron estas alternativas:
   - XTTS-v2 y F5-TTS: sus pesos tienen licencia no comercial.
   - Zonos: necesita GPU o espeak y es más pesado.
@@ -32,7 +31,6 @@ Paquete de audio para el juego narrativo «Apolo 11: Un gran salto» (NASA Space
 - **Personajes de ficción o sin audio libre:** voces elegidas de **LibriTTS-R** (CC-BY 4.0, hay que dar atribución). Los niños usan voces agudas con un ajuste de tono.
 - **Control de calidad:** cada línea se transcribió con Whisper y se comparó con el texto. Las que fallaron (repeticiones o palabras cambiadas) se regeneraron con otras semillas y se eligió la mejor. La similitud de hablante con la referencia (embeddings de voz) da en promedio entre 0,88 y 0,90 para Armstrong, Aldrin, Collins y Kranz.
 - **⚠️ DERECHOS:** las voces clonadas de personas reales (Armstrong, Aldrin, Collins, Kranz, Duke, Garman, Bales, Nixon y el CAPCOM) imitan su identidad vocal. Que las grabaciones fuente sean de dominio público **no** autoriza a imitar la voz. Para una publicación comercial puede hacer falta **permiso de los herederos o titulares de los derechos de imagen y voz** (derecho de publicidad), y conviene indicar en los créditos que son voces sintéticas recreadas. Para un prototipo educativo o un hackathon, márquenlas como «voz recreada por IA».
-- El intento anterior de voces en español con emoción se descartó a pedido del usuario. `voz_placeholder/` (Piper, español) queda como respaldo.
 
 | Personaje | Referencia de voz | Origen |
 |---|---|---|
@@ -65,44 +63,18 @@ Paquete de audio para el juego narrativo «Apolo 11: Un gran salto» (NASA Space
   - Para usar el nombre o el logo de NASA hay que seguir sus pautas de marca. El audio en sí es libre.
 - **SFX (`sfx/`):** síntesis procedural original (numpy/scipy/pedalboard). CC0, libre para el proyecto. La alarma de programa en los auriculares es una **recreación** y no audio real.
 - **Música (`music/`):** composición original (MIDI generado en el box) renderizada con fluidsynth. Se usaron **Salamander Grand Piano V3** (Alexander Holm, **CC-BY 3.0**, hay que darle crédito) y **FluidR3_GM** (Frank Wen, licencia MIT) para las cuerdas y las texturas. Los MIDI y los stems quedan en el box en `/workspace/build/mid/`.
-- **Voces placeholder (`voz_placeholder/`):** Piper TTS (MIT). Licencias de las voces:
-  - es_ES-davefx: CC0
-  - es_ES-sharvard: CC-BY 3.0, con atribución
-  - es_MX-ald: Unlicense
-  - es_MX-claude: Apache-2.0
-  - es_AR-daniela: CC-BY-SA 4.0, con atribución y share-alike
-
-  Son solo para el prototipo y para sincronizar subtítulos: **hay que reemplazarlas por actores**. Las líneas REALES traducidas al español tienen además su original en inglés en `nasa_real/`.
-
-  Reparto de voces:
-
-  | Personaje | Voz y ajuste |
-  |---|---|
-  | Armstrong | davefx, más lento |
-  | Aldrin | ald |
-  | Collins | sharvard |
-  | Kranz | davefx −2 st |
-  | Slayton | sharvard −2,5 st |
-  | CAPCOM/Duke | ald −1,5 st |
-  | Garman | sharvard +1,5 st |
-  | Bales | ald +1,5 st |
-  | Jan | claude |
-  | Rick | daniela +2,5 st |
-  | Mark | claude +5 st |
-  | Nixon (lectura) | davefx −1,5 st |
 
 ## Pistas faltantes (sin audio real disponible)
 | Cap. | Escena | Línea | Motivo | Sustituto incluido |
 |---|---|---|---|---|
-| Cap. 4 | 4.1 Desacople | COLLINS: «Ustedes, tómenselo con calma allá en la superficie lunar» (You cats take it easy…) | Grabación a bordo (DSE, GET 099:46:21), no está en los loops MOCR públicos ni en los Highlights de NASA | voz_placeholder/c4_41_collins_tomenselo_con_calma.wav; recreación en inglés con voz clonada: voz_en_clonada/c4_41_collins_tomenselo_con_calma_en.wav |
-| Cap. 4 | 4.1 Desacople | ALDRIN: «Okay, Mike» | Ídem (grabación a bordo) | voz_placeholder/c4_41_aldrin_okay_mike.wav; recreación en inglés con voz clonada: voz_en_clonada/c4_41_aldrin_okay_mike_en.wav |
-| Cap. 4 | 4.2 | COLLINS (relevo): «Eagle, aquí Columbia. Acaban de darles GO para el descenso propulsado» | No localizado en los Highlights ni en el loop CAPCOM (canal 14, GET 102:30:50–102:34:00) por ASR | nasa_real/cap4_go_pdi.wav (GO real de CAPCOM) + voz_placeholder/c4_42_collins_relevo_go_descenso.wav; recreación en inglés con voz clonada: voz_en_clonada/c4_42_collins_relevo_go_descenso_en.wav |
-| Cap. 7 | 7.1 | COLLINS: «Hey Houston, Apollo 11 is beaming all the way home» | No localizado en el loop FLIGHT (GET 135:28–135:40) ni en los Highlights | nasa_real/cap7_houston_volviendo_a_casa_lrl.wav (intercambio real) + voz_placeholder/c7_71_collins_vuelve_a_casa_a_todo_trapo.wav; recreación en inglés con voz clonada: voz_en_clonada/c7_71_collins_vuelve_a_casa_a_todo_trapo_en.wav |
-| Prólogo | 0.3 | KRANZ: discurso «Duros y competentes» (1967) | No existe grabación del discurso | voz_placeholder/p_03_kranz_duros_y_competentes.wav; recreación en inglés con voz clonada: voz_en_clonada/p_03_kranz_duros_y_competentes_en.wav |
-| Cap. 6 | 6.1 | COLLINS (VO): memorias «Carrying the Fire» | Es un texto de un libro, no audio de la misión | voz_placeholder/c6_61_collins_solo_vo.wav; recreación en inglés con voz clonada: voz_en_clonada/c6_61_collins_solo_vo_en.wav |
-| Cap. 6 | 6.3 ¿Y si…? | NIXON: discurso de Safire «In Event of Moon Disaster» | Nunca se leyó en 1969, así que no hay grabación | voz_placeholder/c6_dec_safire_discurso_desastre.wav; recreación en inglés con voz clonada: voz_en_clonada/c6_dec_safire_discurso_desastre_en.wav |
+| Cap. 4 | 4.1 Desacople | COLLINS: «Ustedes, tómenselo con calma allá en la superficie lunar» (You cats take it easy…) | Grabación a bordo (DSE, GET 099:46:21), no está en los loops MOCR públicos ni en los Highlights de NASA | Recreación en inglés con voz clonada: voz_en_clonada/c4_41_collins_tomenselo_con_calma_en.wav |
+| Cap. 4 | 4.1 Desacople | ALDRIN: «Okay, Mike» | Ídem (grabación a bordo) | Recreación en inglés con voz clonada: voz_en_clonada/c4_41_aldrin_okay_mike_en.wav |
+| Cap. 4 | 4.2 | COLLINS (relevo): «Eagle, aquí Columbia. Acaban de darles GO para el descenso propulsado» | No localizado en los Highlights ni en el loop CAPCOM (canal 14, GET 102:30:50–102:34:00) por ASR | nasa_real/cap4_go_pdi.wav (GO real de CAPCOM) y recreación en inglés con voz clonada: voz_en_clonada/c4_42_collins_relevo_go_descenso_en.wav |
+| Cap. 7 | 7.1 | COLLINS: «Hey Houston, Apollo 11 is beaming all the way home» | No localizado en el loop FLIGHT (GET 135:28–135:40) ni en los Highlights | nasa_real/cap7_houston_volviendo_a_casa_lrl.wav (intercambio real) y recreación en inglés con voz clonada: voz_en_clonada/c7_71_collins_vuelve_a_casa_a_todo_trapo_en.wav |
+| Prólogo | 0.3 | KRANZ: discurso «Duros y competentes» (1967) | No existe grabación del discurso | Recreación en inglés con voz clonada: voz_en_clonada/p_03_kranz_duros_y_competentes_en.wav |
+| Cap. 6 | 6.1 | COLLINS (VO): memorias «Carrying the Fire» | Es un texto de un libro, no audio de la misión | Recreación en inglés con voz clonada: voz_en_clonada/c6_61_collins_solo_vo_en.wav |
+| Cap. 6 | 6.3 ¿Y si…? | NIXON: discurso de Safire «In Event of Moon Disaster» | Nunca se leyó en 1969, así que no hay grabación | Recreación en inglés con voz clonada: voz_en_clonada/c6_dec_safire_discurso_desastre_en.wav |
 | Cap. 4 | 4.4 | Tono de la alarma 1202 en los auriculares | El tono del LM no está en las cintas públicas | sfx/ (recreación con el nombre c4_44_alarma_programa_tono_casco, marcada como NO real) |
-| Todos | — | Versiones en español de las líneas reales | No hay originales en español: el audio real está en inglés | voz_placeholder/ (TTS en español para subtítulos o doblaje provisional) |
 
 
 ## Herramientas usadas e instaladas en el box
@@ -112,7 +84,6 @@ Paquete de audio para el juego narrativo «Apolo 11: Un gran salto» (NASA Space
 - Python: numpy, scipy, pedalboard (Spotify; reverb, EQ, compresión, pitch), librosa, pyloudnorm (LUFS), soundfile, mido (MIDI), yt-dlp, python-docx
 - faster-whisper (modelos base.en y small.en), para ubicar los momentos exactos en las grabaciones NASA
 - Chatterbox TTS (inglés, clonación de voz) en un entorno Python 3.11 (`/home/box/cbx`), con PyTorch CPU 2.6, DeepFilterNet y referencias de LibriTTS-R
-- Piper TTS con 5 voces en español (es_ES davefx y sharvard, es_MX ald y claude, es_AR daniela)
 - No se instalaron Coqui XTTS (demasiado pesado para CPU y con licencia no comercial) ni espeak-ng (apt roto; no hacía falta)
 
 ## Catálogo por carpeta
@@ -394,108 +365,3 @@ Paquete de audio para el juego narrativo «Apolo 11: Un gran salto» (NASA Space
 | `c4_41_aldrin_okay_mike_en` | Cap. 4 · 4.1 Desacople | ALDRIN: «Okay, Mike.» (guion ES: «Okay, Mike.») | Generado (Chatterbox TTS inglés, voz clonada de ALDRIN; emoción «calma»; efecto radio) | 3.63 |
 | `c4_42_collins_relevo_go_descenso_en` | Cap. 4 · 4.2/4.3 | COLLINS: «Eagle, this is Columbia. They just gave you a go for powered descent.» (guion ES: «Eagle, aquí Columbia. Acaban de darles GO para  | Generado (Chatterbox TTS inglés, voz clonada de COLLINS; emoción «urgencia»; efecto radio) | 5.21 |
 | `c7_71_collins_vuelve_a_casa_a_todo_trapo_en` | Cap. 7 · 7.1 Tras TEI | COLLINS: «Hey, Houston, Apollo 11 is beaming all the way home!» (guion ES: «Eh, Houston, Apolo 11 vuelve a casa a todo trapo.») | Generado (Chatterbox TTS inglés, voz clonada de COLLINS; emoción «euforia»; efecto radio) | 4.59 |
-
-### voz_placeholder/
-| Archivo | Cap./escena | Línea / uso | Origen | Dur. (s) |
-|---|---|---|---|---|
-| `p_01_diplomatico_soviéticos` | Prólogo · 0.1 | DIPLOMÁTICO: «Señor Armstrong, ¿usted cree que llegaremos antes que los soviéticos?» | Generado (TTS Piper, voz es_ES-davefx-medium, tono -3.0 st, efecto sala) — PLACEHOLDER | 3.78 |
-| `p_01_armstrong_cuando_estemos_listos` | Prólogo · 0.1 | ARMSTRONG: «Creo que llegaremos cuando estemos listos. Ni un día antes.» | Generado (TTS Piper, voz es_ES-davefx-medium, tono +0 st, efecto sala) — PLACEHOLDER | 4.88 |
-| `p_01_asistente_llamada_houston` | Prólogo · 0.1 | ASISTENTE: «Llamada de Houston, señor. Es urgente.» | Generado (TTS Piper, voz es_MX-ald-medium, tono -1.0 st, efecto sala_baja) — PLACEHOLDER | 4.38 |
-| `p_02_voz_telefono_incendio` | Prólogo · 0.2 | VOZ AL TELÉFONO: «Hubo un incendio en la cabina. En la prueba. Gus, Ed y Roger… no salieron.» | Generado (TTS Piper, voz es_ES-sharvard-medium spk0, tono -1.0 st, efecto telefono) — PLACEHOLDER | 6.4 |
-| `p_obj_armstrong_recuerdo_ed_white` | Prólogo · 0.2 Objeto: libreta de direcciones | ARMSTRONG (VOZ EN OFF): «Cuando se quemó mi casa en el sesenta y cuatro, Ed saltó la cerca antes que nadie. Me ayudó a sacar a mi familia.» | Generado (TTS Piper, voz es_ES-davefx-medium, tono +0 st, efecto vo) — PLACEHOLDER | 7.35 |
-| `p_03_kranz_duros_y_competentes` | Prólogo · 0.3 | KRANZ: «El espacio no tolera el descuido, la incapacidad ni la negligencia. En algún lugar, de alguna manera, metimos la pata. A partir de h | Generado (TTS Piper, voz es_ES-davefx-medium, tono -2.0 st, efecto sala_grande) — PLACEHOLDER | 16.79 |
-| `c1_11_jan_habla_con_los_ninos` | Cap. 1 · 1.1 | JAN: «Neil. Antes de irte tienes que hablar con los niños. Explícales que puede que no vuelvas.» | Generado (TTS Piper, voz es_MX-claude-high, tono +0 st, efecto casa) — PLACEHOLDER | 6.64 |
-| `c1_11_armstrong_probabilidades` | Cap. 1 · 1.1 | ARMSTRONG: «Jan, las probabilidades son buenas.» | Generado (TTS Piper, voz es_ES-davefx-medium, tono +0 st, efecto casa) — PLACEHOLDER | 2.88 |
-| `c1_11_jan_no_te_costara` | Cap. 1 · 1.1 | JAN: «Entonces no te costará decírselo.» | Generado (TTS Piper, voz es_MX-claude-high, tono +0 st, efecto casa) — PLACEHOLDER | 2.67 |
-| `c1_11_rick_se_ve_nuestra_casa` | Cap. 1 · 1.1 | RICK: «¿Desde la Luna se ve nuestra casa?» | Generado (TTS Piper, voz es_AR-daniela-high, tono +2.5 st, efecto casa) — PLACEHOLDER | 2.05 |
-| `c1_11_armstrong_se_ve_la_tierra` | Cap. 1 · 1.1 | ARMSTRONG: «No. Pero se ve la Tierra entera. Y tú estás en ella. Con eso me alcanza.» | Generado (TTS Piper, voz es_ES-davefx-medium, tono +0 st, efecto casa) — PLACEHOLDER | 7.35 |
-| `c1_dec_armstrong_verdad` | Cap. 1 · 1.1 Decisión | ARMSTRONG: «Es peligroso, pero confío en mi equipo.» | Generado (TTS Piper, voz es_ES-davefx-medium, tono +0 st, efecto casa) — PLACEHOLDER | 2.92 |
-| `c1_dec_armstrong_restar_importancia` | Cap. 1 · 1.1 Decisión | ARMSTRONG: «Es un viaje de trabajo, volveré pronto.» | Generado (TTS Piper, voz es_ES-davefx-medium, tono +0 st, efecto casa) — PLACEHOLDER | 3.04 |
-| `c1_12_slayton_neil_sale_primero` | Cap. 1 · 1.2 | DEKE SLAYTON: «Buzz, ya está decidido. Neil sale primero. Es el comandante y la escotilla abre hacia su lado.» | Generado (TTS Piper, voz es_ES-sharvard-medium spk0, tono -2.5 st, efecto exterior) — PLACEHOLDER | 6.64 |
-| `c1_12_aldrin_precedente_gemini` | Cap. 1 · 1.2 | ALDRIN: «En Gemini salía el piloto, no el comandante. Solo digo que hay precedente.» | Generado (TTS Piper, voz es_MX-ald-medium, tono +0 st, efecto exterior) — PLACEHOLDER | 6.63 |
-| `c1_12_slayton_esta_decidido` | Cap. 1 · 1.2 | DEKE SLAYTON: «Y yo solo digo que está decidido.» | Generado (TTS Piper, voz es_ES-sharvard-medium spk0, tono -2.5 st, efecto exterior) — PLACEHOLDER | 2.15 |
-| `c1_dec_armstrong_gracias_buzz` | Cap. 1 · 1.2 Decisión (aceptar) | ARMSTRONG: «Gracias, Buzz. No era fácil.» | Generado (TTS Piper, voz es_ES-davefx-medium, tono +0 st, efecto exterior) — PLACEHOLDER | 3.46 |
-| `c1_13_collins_entrevistas` | Cap. 1 · 1.3 | COLLINS: «Saben qué es lo bueno de mi trabajo, ¿no? Si algo sale mal ahí abajo, el único que vuelve soy yo. Me harán entrevistas el resto de | Generado (TTS Piper, voz es_ES-sharvard-medium spk0, tono +0 st, efecto exterior) — PLACEHOLDER | 8.92 |
-| `c1_13_aldrin_que_consuelo` | Cap. 1 · 1.3 | ALDRIN: «Qué consuelo, Mike.» | Generado (TTS Piper, voz es_MX-ald-medium, tono +0 st, efecto exterior) — PLACEHOLDER | 2.33 |
-| `c1_13_collins_no_es_un_chiste` | Cap. 1 · 1.3 | COLLINS: «No es un chiste. Si no suben, no puedo bajar a buscarlos. Lo pienso cada noche.» | Generado (TTS Piper, voz es_ES-sharvard-medium spk0, tono +0 st, efecto exterior) — PLACEHOLDER | 5.98 |
-| `c1_13_armstrong_vamos_a_subir` | Cap. 1 · 1.3 | ARMSTRONG: «Vamos a subir, Mike.» | Generado (TTS Piper, voz es_ES-davefx-medium, tono +0 st, efecto exterior) — PLACEHOLDER | 2.16 |
-| `c2_dec_aldrin_bonito_mike` | Cap. 2 · 2.5 Decisión (lento) | ALDRIN: «Bonito, Mike.» | Generado (TTS Piper, voz es_MX-ald-medium, tono +0 st, efecto cabina) — PLACEHOLDER | 1.8 |
-| `c3_obj_collins_coctel_camarones` | Cap. 3 · 3.1 Objeto: comida espacial | COLLINS: «El cóctel de camarones es lo único que se parece a comida de verdad.» | Generado (TTS Piper, voz es_ES-sharvard-medium spk0, tono +0 st, efecto cabina) — PLACEHOLDER | 4.39 |
-| `c3_32_aldrin_marion_moon` | Cap. 3 · 3.2 | ALDRIN: «¿Sabes cuál era el apellido de soltera de mi madre? Moon. Marion Moon.» | Generado (TTS Piper, voz es_MX-ald-medium, tono +0 st, efecto cabina_noche) — PLACEHOLDER | 7.21 |
-| `c3_32_collins_visita_familiar` | Cap. 3 · 3.2 | COLLINS: «Entonces esto es una visita familiar.» | Generado (TTS Piper, voz es_ES-sharvard-medium spk0, tono +0 st, efecto cabina_noche) — PLACEHOLDER | 2.88 |
-| `c3_32_armstrong_karen_nueve` | Cap. 3 · 3.2 (Confianza > 60) | ARMSTRONG: «Karen habría cumplido nueve este año.» | Generado (TTS Piper, voz es_ES-davefx-medium, tono +0 st, efecto cabina_noche) — PLACEHOLDER | 2.64 |
-| `c3_32_armstrong_duerman` | Cap. 3 · 3.2 (Confianza baja) | ARMSTRONG: «Duerman. Mañana es largo.» | Generado (TTS Piper, voz es_ES-davefx-medium, tono +0 st, efecto cabina_noche) — PLACEHOLDER | 3.67 |
-| `c3_34_capcom_go_loi` | Cap. 3 · 3.4 | CAPCOM: «Apolo 11, tienen GO para LOI. Nos vemos del otro lado.» | Generado (TTS Piper, voz es_MX-ald-medium, tono -1.5 st, efecto radio) — PLACEHOLDER | 6.04 |
-| `c3_34_armstrong_estamos_en_orbita` | Cap. 3 · 3.4 | ARMSTRONG: «Houston, Apolo 11. Estamos en órbita.» | Generado (TTS Piper, voz es_ES-davefx-medium, tono +0 st, efecto radio) — PLACEHOLDER | 4.81 |
-| `c3_34_collins_yeso_viejo` | Cap. 3 · 3.4 | COLLINS: «Miren eso… es como yeso viejo.» | Generado (TTS Piper, voz es_ES-sharvard-medium spk0, tono +0 st, efecto cabina) — PLACEHOLDER | 2.19 |
-| `c4_42_kranz_cerrar_puertas` | Cap. 4 · 4.2 | KRANZ: «Hoy vamos a hacer algo que nadie ha hecho. Vamos a aterrizar en la Luna. Pase lo que pase, salgo de esta sala con ustedes. Confío en | Generado (TTS Piper, voz es_ES-davefx-medium, tono -2.0 st, efecto sala_grande) — PLACEHOLDER | 10.58 |
-| `c4_43_armstrong_vamos_largos` | Cap. 4 · 4.3 | ARMSTRONG: «Vamos largos. Las marcas del terreno pasan antes de lo previsto.» | Generado (TTS Piper, voz es_ES-davefx-medium, tono +0 st, efecto casco) — PLACEHOLDER | 5.55 |
-| `c4_44_kranz_guiado_como_estamos` | Cap. 4 · 4.4 | KRANZ: «Guiado, ¿cómo estamos?» | Generado (TTS Piper, voz es_ES-davefx-medium, tono -2.0 st, efecto sala_grande) — PLACEHOLDER | 1.82 |
-| `c4_44_garman_es_go` | Cap. 4 · 4.4 | GARMAN: «Mientras no se repita sin parar, estamos bien. Es GO.» | Generado (TTS Piper, voz es_ES-sharvard-medium spk0, tono +1.5 st, efecto intercom) — PLACEHOLDER | 4.09 |
-| `c4_dec_bales_seguimos_go` | Cap. 4 · 4.4 Decisión A | BALES: «¡Seguimos, Flight! Es GO.» | Generado (TTS Piper, voz es_MX-ald-medium, tono +1.5 st, efecto intercom) — PLACEHOLDER | 3.52 |
-| `c4_dec_bales_seguimos_go_tembloroso` | Cap. 4 · 4.4 Decisión A (sin la hoja de Garman) | BALES: «Se… seguimos, Flight. Es GO.» | Generado (TTS Piper, voz es_MX-ald-medium, tono +1.5 st, efecto intercom) — PLACEHOLDER | 3.55 |
-| `c4_dec_bales_abortar` | Cap. 4 · 4.4 Decisión B | BALES: «Abortar. No podemos arriesgarnos.» | Generado (TTS Piper, voz es_MX-ald-medium, tono +1.5 st, efecto intercom) — PLACEHOLDER | 3.57 |
-| `c4_dec_kranz_seguimos` | Cap. 4 · 4.4 Decisión C (tiempo agotado) | KRANZ: «Seguimos.» | Generado (TTS Piper, voz es_ES-davefx-medium, tono -2.0 st, efecto sala_grande) — PLACEHOLDER | 1.54 |
-| `c4_47_rick_lo_hizo` | Cap. 4 · 4.7 | RICK: «Mamá… lo hizo.» | Generado (TTS Piper, voz es_AR-daniela-high, tono +2.5 st, efecto casa) — PLACEHOLDER | 1.2 |
-| `c4_47_jan_todavia_no` | Cap. 4 · 4.7 | JAN: «Todavía no. Todavía tiene que volver.» | Generado (TTS Piper, voz es_MX-claude-high, tono +0 st, efecto casa) — PLACEHOLDER | 3.56 |
-| `c4_47_rick_papa_confiaba` | Cap. 4 · 4.7 (decisión «verdad») | RICK: «Papá dijo que confiaba en ellos.» | Generado (TTS Piper, voz es_AR-daniela-high, tono +2.5 st, efecto casa) — PLACEHOLDER | 2.15 |
-| `c5_dec_aldrin_como_si_alguien` | Cap. 5 · 5.1 Decisión (dormir) | ALDRIN: «Como si alguien pudiera dormir ahora.» | Generado (TTS Piper, voz es_MX-ald-medium, tono +0 st, efecto cabina) — PLACEHOLDER | 2.88 |
-| `c5_52_aldrin_un_poco_izquierda` | Cap. 5 · 5.2 | ALDRIN: «Un poco a la izquierda. Bien. Tu mochila pasa.» | Generado (TTS Piper, voz es_MX-ald-medium, tono +0 st, efecto cabina) — PLACEHOLDER | 5.69 |
-| `c5_dec_aldrin_lo_hiciste_bien` | Cap. 5 · 5.4 Decisión (Confianza > 70) | ALDRIN: «Lo hiciste bien ahí abajo.» | Generado (TTS Piper, voz es_MX-ald-medium, tono +0 st, efecto casco) — PLACEHOLDER | 2.7 |
-| `c5_dec_armstrong_lo_hicimos` | Cap. 5 · 5.4 Decisión (Confianza > 70) | ARMSTRONG: «Lo hicimos.» | Generado (TTS Piper, voz es_ES-davefx-medium, tono +0 st, efecto casco) — PLACEHOLDER | 1.72 |
-| `c5_obj_armstrong_lee_placa` | Cap. 5 · 5.4 Objeto: placa | ARMSTRONG: «Aquí hombres del planeta Tierra pusieron por primera vez el pie sobre la Luna. Julio de 1969 después de Cristo. Vinimos en paz e | Generado (TTS Piper, voz es_ES-davefx-medium, tono +0 st, efecto casco) — PLACEHOLDER | 11.19 |
-| `c5_dec_armstrong_hazlo_tu` | Cap. 5 · 5.6 Decisión (parche Apolo 1) | ARMSTRONG: «Hazlo tú. Ed era tu amigo también.» | Generado (TTS Piper, voz es_ES-davefx-medium, tono +0 st, efecto casco) — PLACEHOLDER | 3.61 |
-| `c5_dec_armstrong_gracias_anoche` | Cap. 5 · 5.x (Confianza +15 en Cap. 3) | ARMSTRONG: «Gracias por lo de anoche.» | Generado (TTS Piper, voz es_ES-davefx-medium, tono +0 st, efecto casco) — PLACEHOLDER | 2.15 |
-| `c5_57_aldrin_mira_esto` | Cap. 5 · 5.7 | ALDRIN: «Neil… mira esto.» | Generado (TTS Piper, voz es_MX-ald-medium, tono +0 st, efecto cabina) — PLACEHOLDER | 2.11 |
-| `c5_57_armstrong_motor_ascenso` | Cap. 5 · 5.7 | ARMSTRONG: «Ese es el del motor de ascenso.» | Generado (TTS Piper, voz es_ES-davefx-medium, tono +0 st, efecto cabina) — PLACEHOLDER | 2.57 |
-| `c6_61_collins_solo_vo` | Cap. 6 · 6.1 | COLLINS (VOZ EN OFF): «Ahora estoy solo, verdaderamente solo, y absolutamente aislado de cualquier vida conocida. Lo soy. Si se hiciera un r | Generado (TTS Piper, voz es_ES-sharvard-medium spk0, tono +0 st, efecto vo) — PLACEHOLDER | 14.91 |
-| `c6_obj_collins_libreta` | Cap. 6 · 6.1 Objeto: libreta de Collins | COLLINS (VOZ EN OFF): «Mi miedo secreto de los últimos seis meses ha sido dejarlos en la Luna y volver solo a la Tierra.» | Generado (TTS Piper, voz es_ES-sharvard-medium spk0, tono +0 st, efecto vo) — PLACEHOLDER | 6.02 |
-| `c6_61b_radio_buzz_vuelve` | No Canon · 6.1B | VOZ POR RADIO (SUEÑO): «Buzz… vuelve al módulo.» | Generado (TTS Piper, voz es_ES-davefx-medium, tono +0 st, efecto radio_distorsion) — PLACEHOLDER | 2.42 |
-| `c6_61b_armstrong_te_tengo` | No Canon · 6.1B Fase 2 | ARMSTRONG (SUEÑO): «Buzz. Te tengo. Salta.» | Generado (TTS Piper, voz es_ES-davefx-medium, tono +0 st, efecto casco) — PLACEHOLDER | 4.13 |
-| `c6_61c_aldrin_no_esta_en_plan` | No Canon · 6.1C | ALDRIN: «…Eso no está en el plan de vuelo.» | Generado (TTS Piper, voz es_MX-ald-medium, tono +0 st, efecto casco) — PLACEHOLDER | 2.57 |
-| `c6_61c_armstrong_que_ves` | No Canon · 6.1C | ARMSTRONG (POR RADIO, LEJOS): «Buzz, ¿qué ves?» | Generado (TTS Piper, voz es_ES-davefx-medium, tono +0 st, efecto radio) — PLACEHOLDER | 2.63 |
-| `c6_61c_aldrin_polvo_que_se_mueve` | No Canon · 6.1C | ALDRIN: «Polvo, Neil. Polvo que se mueve.» | Generado (TTS Piper, voz es_MX-ald-medium, tono +0 st, efecto casco) — PLACEHOLDER | 3.34 |
-| `c6_61c_armstrong_placas_hombros` | No Canon · 6.1C Fase 1 | ARMSTRONG: «Tiene placas en los hombros. Rómpelas. Yo lo distraigo.» | Generado (TTS Piper, voz es_ES-davefx-medium, tono +0 st, efecto radio) — PLACEHOLDER | 6.4 |
-| `c6_61c_aldrin_sonrie` | No Canon · 6.1C Fase 1 (flash) | ALDRIN: «¡Sonríe!» | Generado (TTS Piper, voz es_MX-ald-medium, tono +0 st, efecto casco) — PLACEHOLDER | 1.32 |
-| `c6_61c_bales_eco_es_go` | No Canon · 6.1C Fase 1 | VOZ DE BALES (ECO): «…Es GO. Es GO con esa alarma…» | Generado (TTS Piper, voz es_MX-ald-medium, tono +1.5 st, efecto eco_distorsion) — PLACEHOLDER | 3.68 |
-| `c6_61c_duke_eco_sesenta` | No Canon · 6.1C Fase 2 | VOZ DE DUKE (ECO): «Sesenta segundos…» | Generado (TTS Piper, voz es_MX-ald-medium, tono -1.5 st, efecto eco_distorsion) — PLACEHOLDER | 2.2 |
-| `c6_61c_armstrong_mira_sombras` | No Canon · 6.1C Fase 2 | ARMSTRONG: «Mira las sombras. El de verdad tiene sombra.» | Generado (TTS Piper, voz es_ES-davefx-medium, tono +0 st, efecto radio) — PLACEHOLDER | 4.75 |
-| `c6_61c_aldrin_lanzame` | No Canon · 6.1C Fase 2 | ALDRIN: «¡Neil, lánzame!» | Generado (TTS Piper, voz es_MX-ald-medium, tono +0 st, efecto casco) — PLACEHOLDER | 1.94 |
-| `c6_61c_duke_eco_treinta` | No Canon · 6.1C Fase 2 | VOZ DE DUKE (ECO): «Treinta segundos…» | Generado (TTS Piper, voz es_MX-ald-medium, tono -1.5 st, efecto eco_distorsion) — PLACEHOLDER | 1.74 |
-| `c6_61c_susurro_siempre_segundo` | No Canon · 6.1C Fase 3 | SUSURRO (VOZ DE ALDRIN): «Siempre serás el segundo… nunca volverás…» | Generado (TTS Piper, voz es_MX-ald-medium, tono +0 st, efecto susurro) — PLACEHOLDER | 3.13 |
-| `c6_61c_susurro_siempre_segundo_invertido` | No Canon · 6.1C Fase 3 | SUSURRO (VOZ DE ALDRIN) (INVERTIDA): «Siempre serás el segundo… nunca volverás…» | Generado (TTS Piper invertido) — PLACEHOLDER | 3.13 |
-| `c6_61c_armstrong_respiramos_juntos` | No Canon · 6.1C Fase 3 | ARMSTRONG: «No le hagas caso. Conéctate. Respiramos juntos.» | Generado (TTS Piper, voz es_ES-davefx-medium, tono +0 st, efecto radio) — PLACEHOLDER | 6.32 |
-| `c6_61c_aldrin_ya_se_arreglar` | No Canon · 6.1C | ALDRIN: «Ya sé cómo arreglar esto.» | Generado (TTS Piper, voz es_MX-ald-medium, tono +0 st, efecto casco) — PLACEHOLDER | 2.55 |
-| `c6_61c_aldrin_segundo_pero_juntos` | No Canon · 6.1C | ALDRIN: «Segundo… pero juntos.» | Generado (TTS Piper, voz es_MX-ald-medium, tono +0 st, efecto casco) — PLACEHOLDER | 2.13 |
-| `c6_61c_armstrong_tampoco_dormir` | Cap. 6 · 6.1C (despertar) | ARMSTRONG: «¿Tampoco puedes dormir?» | Generado (TTS Piper, voz es_ES-davefx-medium, tono +0 st, efecto cabina_noche) — PLACEHOLDER | 2.15 |
-| `c6_61c_aldrin_sone_polvo` | Cap. 6 · 6.1C (despertar) | ALDRIN: «Soñé que el polvo se levantaba y tenía forma. Que no nos dejaba volver.» | Generado (TTS Piper, voz es_MX-ald-medium, tono +0 st, efecto cabina_noche) — PLACEHOLDER | 5.59 |
-| `c6_61c_armstrong_duerme_buzz` | Cap. 6 · 6.1C (despertar) | ARMSTRONG: «Ya lo dejamos atrás una vez. Duerme, Buzz. Mañana volvemos a casa. Los tres.» | Generado (TTS Piper, voz es_ES-davefx-medium, tono +0 st, efecto cabina_noche) — PLACEHOLDER | 7.87 |
-| `c6_62_houston_nada_conductor` | Cap. 6 · 6.2 (opción incorrecta) | CAPCOM: «Negativo, Eagle. Nada conductor.» | Generado (TTS Piper, voz es_MX-ald-medium, tono -1.5 st, efecto radio) — PLACEHOLDER | 4.7 |
-| `c6_64_collins_ahi_estan` | Cap. 6 · 6.4 | COLLINS: «Ahí están. Ahí están los dos.» | Generado (TTS Piper, voz es_ES-sharvard-medium spk0, tono +0 st, efecto cabina) — PLACEHOLDER | 2.61 |
-| `c6_64_collins_vengan_aca` | Cap. 6 · 6.4 | COLLINS: «Vengan acá.» | Generado (TTS Piper, voz es_ES-sharvard-medium spk0, tono +0 st, efecto cabina) — PLACEHOLDER | 1.23 |
-| `c7_71b_aldrin_trajiste_mascota` | Cap. 7 · 7.1B | ALDRIN: «¿Trajiste una mascota? No está en el plan de vuelo, Mike.» | Generado (TTS Piper, voz es_MX-ald-medium, tono +0 st, efecto cabina) — PLACEHOLDER | 5.19 |
-| `c7_71b_collins_tripulante_no_oficial` | Cap. 7 · 7.1B | COLLINS: «Es una tripulante no oficial. Pasajera de honor. Se llama Laika.» | Generado (TTS Piper, voz es_ES-sharvard-medium spk0, tono +0 st, efecto cabina) — PLACEHOLDER | 4.75 |
-| `c7_71b_armstrong_primera_perra` | Cap. 7 · 7.1B | ARMSTRONG: «La primera perra en órbita.» | Generado (TTS Piper, voz es_ES-davefx-medium, tono +0 st, efecto cabina) — PLACEHOLDER | 2.34 |
-| `c7_71b_collins_sputnik2` | Cap. 7 · 7.1B | COLLINS: «Noviembre del cincuenta y siete. Sputnik 2. Una perrita callejera de Moscú. Antes de nosotros, antes de Gagarin, antes de todo… el | Generado (TTS Piper, voz es_ES-sharvard-medium spk0, tono +0 st, efecto cabina) — PLACEHOLDER | 10.73 |
-| `c7_71b_aldrin_y_no_volvio` | Cap. 7 · 7.1B | ALDRIN: «Y no volvió.» | Generado (TTS Piper, voz es_MX-ald-medium, tono +0 st, efecto cabina) — PLACEHOLDER | 1.52 |
-| `c7_71b_collins_por_eso_la_traje` | Cap. 7 · 7.1B | COLLINS: «No. Sabían que no volvería. Por eso la traje. Para que alguien de los que abrieron el camino haga el viaje completo, aunque sea de | Generado (TTS Piper, voz es_ES-sharvard-medium spk0, tono +0 st, efecto cabina) — PLACEHOLDER | 8.64 |
-| `c7_71b_armstrong_belka_strelka` | Cap. 7 · 7.1B (diálogo extra) | ARMSTRONG: «En 1960 los soviéticos mandaron a Belka y Strelka y volvieron vivas. Y una cachorra de Strelka, Pushinka, terminó en la Casa Bla | Generado (TTS Piper, voz es_ES-davefx-medium, tono +0 st, efecto cabina) — PLACEHOLDER | 12.38 |
-| `c7_71b_aldrin_diplomacia` | Cap. 7 · 7.1B | ALDRIN: «¿Una perra espacial soviética viviendo en la Casa Blanca? Eso sí que es diplomacia.» | Generado (TTS Piper, voz es_MX-ald-medium, tono +0 st, efecto cabina) — PLACEHOLDER | 6.9 |
-| `c7_71b_collins_parientes_famosos` | Cap. 7 · 7.1B | COLLINS: «¿Oíste? Tienes parientes famosos.» | Generado (TTS Piper, voz es_ES-sharvard-medium spk0, tono +0 st, efecto cabina) — PLACEHOLDER | 2.79 |
-| `c7_71b_aldrin_pelos_filtros` | Cap. 7 · 7.1B | ALDRIN: «Mike, si en Houston preguntan por qué hay pelos en los filtros…» | Generado (TTS Piper, voz es_MX-ald-medium, tono +0 st, efecto cabina) — PLACEHOLDER | 4.53 |
-| `c7_71b_collins_polvo_lunar` | Cap. 7 · 7.1B | COLLINS: «Diles que es polvo lunar. Nadie sabe de qué color es.» | Generado (TTS Piper, voz es_ES-sharvard-medium spk0, tono +0 st, efecto cabina) — PLACEHOLDER | 3.93 |
-| `c7_dec_aldrin_cabo_laika` | Cap. 7 · 7.1B Decisión | ALDRIN: «Bienvenida a bordo, cabo Laika.» | Generado (TTS Piper, voz es_MX-ald-medium, tono +0 st, efecto cabina) — PLACEHOLDER | 2.81 |
-| `c7_dec_collins_sargento` | Cap. 7 · 7.1B Decisión | COLLINS: «La asciendo a sargento si no ladra en la reentrada.» | Generado (TTS Piper, voz es_ES-sharvard-medium spk0, tono +0 st, efecto cabina) — PLACEHOLDER | 3.33 |
-| `c7_74_armstrong_ponganse_traje` | Cap. 7 · 7.4 | ARMSTRONG: «Póngase el traje, caballeros. Todavía no estamos en casa.» | Generado (TTS Piper, voz es_ES-davefx-medium, tono +0 st, efecto cabina) — PLACEHOLDER | 4.72 |
-| `c7_76_mark_trajiste_piedra` | Cap. 7 · 7.6 | MARK: «¿Trajiste una piedra?» | Generado (TTS Piper, voz es_MX-claude-high, tono +5.0 st, efecto telefono_lrl) — PLACEHOLDER | 2.03 |
-| `c7_76_armstrong_veintiun_kilos` | Cap. 7 · 7.6 | ARMSTRONG: «Trajimos veintiún kilos. Pero no son nuestras. Son de todos.» | Generado (TTS Piper, voz es_ES-davefx-medium, tono +0 st, efecto telefono_lrl) — PLACEHOLDER | 6.14 |
-| `c7_76_rick_te_escuche_aterrizar` | Cap. 7 · 7.6 (ruta A) | RICK: «Te escuché aterrizar.» | Generado (TTS Piper, voz es_AR-daniela-high, tono +2.5 st, efecto telefono_lrl) — PLACEHOLDER | 1.54 |
-| `c7_76_rick_nos_lo_tendrias` | Cap. 7 · 7.6 (ruta B) | RICK: «Nos lo tendrías que haber dicho, papá.» | Generado (TTS Piper, voz es_AR-daniela-high, tono +2.5 st, efecto telefono_lrl) — PLACEHOLDER | 2.39 |
-| `e_e1_collins_lo_logramos` | Epílogo · E.1 | COLLINS (VOZ EN OFF): «En todas partes la gente no decía «ustedes lo lograron». Decía «lo logramos». Eso era lo correcto.» | Generado (TTS Piper, voz es_ES-sharvard-medium spk0, tono +0 st, efecto vo) — PLACEHOLDER | 6.93 |
-| `e_e2_bales_me_quede_congelado` | Epílogo · E.2 (Bales no respondió) | BALES: «Me quedé congelado. Gene me cubrió.» | Generado (TTS Piper, voz es_MX-ald-medium, tono +1.5 st, efecto vo) — PLACEHOLDER | 3.28 |
-| `c6_dec_safire_discurso_desastre` | Cap. 6 · 6.3 «¿Y si…?» (desbloqueable) | NIXON (LECTURA DRAMATIZADA): «El destino ha querido que los hombres que fueron a la Luna a explorar en paz se queden en la Luna para descans | Generado (TTS Piper, voz es_ES-davefx-medium, tono -1.5 st, efecto tv_1969) — PLACEHOLDER | 6.39 |
-| `c4_41_collins_tomenselo_con_calma` | Cap. 4 · 4.1 Desacople | COLLINS: «Ustedes, tómenselo con calma allá en la superficie lunar.» | Generado (TTS Piper, voz es_ES-sharvard-medium spk0, tono +0 st, efecto radio) — PLACEHOLDER | 4.39 |
-| `c4_41_aldrin_okay_mike` | Cap. 4 · 4.1 Desacople | ALDRIN: «Okay, Mike.» | Generado (TTS Piper, voz es_MX-ald-medium, tono +0 st, efecto radio) — PLACEHOLDER | 2.8 |
-| `c4_42_collins_relevo_go_descenso` | Cap. 4 · 4.2/4.3 | COLLINS: «Eagle, aquí Columbia. Acaban de darles GO para el descenso propulsado.» | Generado (TTS Piper, voz es_ES-sharvard-medium spk0, tono +0 st, efecto radio) — PLACEHOLDER | 5.65 |
-| `c7_71_collins_vuelve_a_casa_a_todo_trapo` | Cap. 7 · 7.1 Tras TEI | COLLINS: «Eh, Houston, Apolo 11 vuelve a casa a todo trapo.» | Generado (TTS Piper, voz es_ES-sharvard-medium spk0, tono +0 st, efecto radio) — PLACEHOLDER | 3.93 |
-

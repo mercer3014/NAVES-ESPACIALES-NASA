@@ -7,7 +7,7 @@
   "counts": {
     "music": 19,
     "nasa_real": 49,
-    "sfx": 94,
+    "sfx": 95,
     "voz_en_clonada": 100
   },
   "files": [
@@ -430,6 +430,10 @@
     {
       "path": "sfx/c5_57_fin_capitulo_respiracion.wav",
       "bytes": 1440044
+    },
+    {
+      "path": "sfx/c5_57_polea_cajas_muestras.wav",
+      "bytes": 864044
     },
     {
       "path": "sfx/c5_casco_respiracion_loop.wav",
