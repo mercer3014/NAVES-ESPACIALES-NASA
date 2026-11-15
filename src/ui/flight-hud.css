@@ -382,3 +382,9 @@ html[data-touch] .expedition.mhud .ex-mapbox { bottom: calc(148px + var(--safe-b
     transition: none !important;
   }
 }
+
+/* Teléfono: las etiquetas de telemetría y las lámparas no bajan de ~10,5 px */
+@media (max-width: 560px) {
+  .mhud .tele .k, .tele .k { font-size: 10.5px; letter-spacing: .12em; }
+  .mhud .lampx { font-size: 10px; }
+}

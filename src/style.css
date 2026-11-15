@@ -228,7 +228,7 @@ body:not(.touch) .touch-only{display:none!important}
 
 /* Pancho */
 .pancho{position:absolute;left:12px;bottom:calc(12px + var(--safe-b));display:flex;align-items:flex-end;gap:8px;max-width:min(480px,calc(100vw - 24px));pointer-events:none;z-index:20;transition:transform .3s var(--ease),opacity .3s}
-.pancho.hidden{transform:translateY(130%);opacity:0}
+.pancho.hidden{transform:translateY(130%);opacity:0;visibility:hidden}
 .pancho svg{width:64px;height:72px;flex:none;filter:drop-shadow(0 6px 12px #000a)}
 .pancho .bubble{background:#f4ecd8;color:#1c1a14;border-radius:14px 14px 14px 4px;padding:10px 12px;font-family:Chakra;font-size:.85rem;line-height:1.35;box-shadow:0 8px 30px #000a;position:relative}
 .pancho .bubble b{font-family:Mono;font-size:.66rem;letter-spacing:.2em;color:#8a5a00;display:block}
@@ -334,7 +334,7 @@ body.touch .pancho.lift{bottom:calc(200px + var(--safe-b))}
 .cgroup.checklist{width:auto;max-height:none}
 .gauge{height:64px}.gauge svg{height:50px}.gauge .lab{bottom:0}
 .cgroup{background:linear-gradient(180deg,#2a2f38ee,#1b1f26ee)}
-@media (max-width:520px){.cpanel{gap:8px}.cgroup.checklist{position:sticky;top:0;z-index:2;max-height:132px;overflow:auto;padding:8px 12px}.checklist ol{font-size:.72rem;line-height:1.55}.cgroup{padding:10px}.cockpit{padding-bottom:calc(84px + var(--safe-b))}}
+@media (max-width:520px){.cpanel{gap:8px}.cgroup.checklist{position:sticky;top:0;z-index:2;max-height:150px;overflow:auto;padding:8px 12px}.checklist ol{font-size:.82rem;line-height:1.5}.cgroup{padding:10px}.cockpit{padding-bottom:calc(84px + var(--safe-b))}body[data-screen="phase-prep"] .cockpit{padding-top:calc(108px + var(--safe-t))}.cgroup h4{font-size:.8rem}.sw .lab{font-size:.78rem}.sw .st{font-size:.72rem}.gauge .lab{font-size:.72rem}}
 .starbtn{transform:translate(-50%,-50%);background:none;border:0;cursor:pointer;color:#cfe6ff;font-family:Mono;font-size:.7rem;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px}
 .starbtn i{width:30px;height:30px;border-radius:50%;border:1.5px dashed #cfe6ff88;display:block}
 .starbtn.tgt i{border-color:var(--amber);animation:pulse 1.2s infinite}
@@ -409,6 +409,9 @@ body.touch .pancho.lift{bottom:calc(200px + var(--safe-b))}
 .crewcard canvas{transition:box-shadow .2s}
 .crewcard.talking canvas{box-shadow:0 0 0 3px var(--go),0 0 18px rgba(61,220,132,.6);animation:rRing 1s infinite}
 @media (max-width:560px){.radio{top:auto;bottom:calc(8px + var(--safe-b));}.r-panel{top:auto;bottom:calc(56px + var(--safe-b))}.r-bubble{top:auto;bottom:calc(56px + var(--safe-b))}.r-lab small{max-width:120px}}
+/* En las fases táctiles el borde inferior es del joystick y el acelerador: la radio y «Saltar cuenta» suben a la columna central libre */
+@media (max-width:560px){body.touch[data-screen^="phase-"] .radio{bottom:calc(132px + var(--safe-b))}body.touch[data-screen^="phase-"] .r-panel,body.touch[data-screen^="phase-"] .r-bubble{bottom:calc(180px + var(--safe-b))}}
+body.touch .skipcd{bottom:calc(196px + var(--safe-b))!important}
 @media (min-width: 561px) { body.has-radio .screen.lobby { padding-top: 66px; } }
 
 /* ---------- Pulido de animaciones de UI/menú ---------- */
@@ -534,3 +537,10 @@ body[data-cursor="play"] .hud-screen :is(button,a,input,select,textarea,.sw,.sta
 .pause-card .phase-tag{color:var(--amber);margin-bottom:4px}
 .pause-actions{display:grid;gap:8px}
 @media (prefers-reduced-motion:reduce){.phase-stamp{animation:none!important;opacity:1}}
+
+/* Táctil: objetivos de toque cómodos y el rótulo de la intro no se sale de la pantalla */
+.foot a{display:inline-block;padding:10px 8px;margin:-10px -8px}
+body.touch input[type=range]{height:32px}
+.intro .sub{padding:0 16px;overflow-wrap:anywhere}
+/* El jefe No Canon es solo individual: la radio de cooperativo tapaba los botones táctiles */
+body[data-screen="boss"] .radio{display:none}
