@@ -1,0 +1,7023 @@
+{
+  "generatedAt": "sábado, 14 de noviembre de 2026, 5:19:35 p. m.",
+  "timeZone": "America/La_Paz",
+  "folder": "/workspace/apolo11/game/public/models",
+  "rules": null,
+  "count": 23,
+  "models": [
+    {
+      "file": "apollo-lunar-module.glb",
+      "mb": 1.0797,
+      "bytes": 1132148,
+      "tris": 46177,
+      "bbox": {
+        "min": [
+          -6.07153,
+          0,
+          -6.07153
+        ],
+        "max": [
+          6.07153,
+          6.51108,
+          4.67004
+        ],
+        "size": [
+          12.14306,
+          6.51108,
+          10.74157
+        ]
+      },
+      "materials": [
+        {
+          "name": "WhitePaint"
+        },
+        {
+          "name": "DarkMetal"
+        },
+        {
+          "name": "Aluminum"
+        },
+        {
+          "name": "AscentSkin"
+        },
+        {
+          "name": "AscentBlack"
+        },
+        {
+          "name": "SilverFoil"
+        },
+        {
+          "name": "AscentDark"
+        },
+        {
+          "name": "BlackPanel"
+        },
+        {
+          "name": "RCSBell"
+        },
+        {
+          "name": "Window"
+        },
+        {
+          "name": "BlackFoil"
+        },
+        {
+          "name": "EngineBell"
+        },
+        {
+          "name": "GoldFoil"
+        },
+        {
+          "name": "Flag"
+        },
+        {
+          "name": "MESAFoil"
+        }
+      ],
+      "textures": [
+        {
+          "name": "panel_normal",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "panel_alu_albedo",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "panel_orm",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "panel_black_albedo",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "panel_orm",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "foil_normal",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "foil_silver_albedo",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "foil_orm",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "panel_dark_albedo",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "foil_black_albedo",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "foil_gold_albedo",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "flag_us",
+          "mime": "image/webp",
+          "width": 380,
+          "height": 200
+        }
+      ],
+      "skins": [],
+      "bonesMax": 0,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [
+        {
+          "name": "legs-deploy",
+          "duration": 2.542
+        },
+        {
+          "name": "legs-stow",
+          "duration": 2.542
+        }
+      ],
+      "meshopt": true,
+      "nodes": [
+        "Antennas",
+        "AscentStage_Body",
+        "DockingTarget",
+        "RCS",
+        "Windows",
+        "AscentStage",
+        "DescentStage_Body",
+        "EngineBell",
+        "GoldFoil",
+        "LegMounts",
+        "leg-aft-geo",
+        "leg-aft-pad-geo",
+        "leg-aft-probe-geo",
+        "leg-aft-probe",
+        "leg-aft-pad",
+        "leg-aft",
+        "leg-aft-sec-a-geo",
+        "leg-aft-sec-a",
+        "leg-aft-sec-b-geo",
+        "leg-aft-sec-b",
+        "leg-aft-truss-a-geo",
+        "leg-aft-truss-a",
+        "leg-aft-truss-b-geo",
+        "leg-aft-truss-b",
+        "Ladder",
+        "leg-fwd-geo",
+        "leg-fwd-pad-geo",
+        "leg-fwd-pad",
+        "leg-fwd",
+        "leg-fwd-sec-a-geo",
+        "leg-fwd-sec-a",
+        "leg-fwd-sec-b-geo",
+        "leg-fwd-sec-b",
+        "leg-fwd-truss-a-geo",
+        "leg-fwd-truss-a",
+        "leg-fwd-truss-b-geo",
+        "leg-fwd-truss-b",
+        "leg-left-geo",
+        "leg-left-pad-geo",
+        "leg-left-probe-geo",
+        "leg-left-probe",
+        "leg-left-pad",
+        "leg-left",
+        "leg-left-sec-a-geo",
+        "leg-left-sec-a",
+        "leg-left-sec-b-geo",
+        "leg-left-sec-b",
+        "leg-left-truss-a-geo",
+        "leg-left-truss-a",
+        "leg-left-truss-b-geo",
+        "leg-left-truss-b",
+        "leg-right-geo",
+        "leg-right-pad-geo",
+        "leg-right-probe-geo",
+        "leg-right-probe",
+        "leg-right-pad",
+        "leg-right",
+        "leg-right-sec-a-geo",
+        "leg-right-sec-a",
+        "leg-right-sec-b-geo",
+        "leg-right-sec-b",
+        "leg-right-truss-a-geo",
+        "leg-right-truss-a",
+        "leg-right-truss-b-geo",
+        "leg-right-truss-b",
+        "Legs",
+        "Markings",
+        "MESA",
+        "PlumeDeflectors",
+        "Porch",
+        "DescentStage",
+        "LM_Eagle"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "EXT_texture_webp",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: Antennas"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: AscentStage_Body"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: DockingTarget"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: RCS"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: Windows"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: AscentStage"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: DescentStage_Body"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: EngineBell"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: GoldFoil"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: LegMounts"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: Ladder"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: Legs"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: Markings"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: MESA"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: PlumeDeflectors"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: Porch"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: DescentStage"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: LM_Eagle"
+        }
+      ],
+      "path": "/workspace/apolo11/game/public/models/apollo-lunar-module.glb"
+    },
+    {
+      "file": "astronaut_a7l.glb",
+      "mb": 1.7767,
+      "bytes": 1863044,
+      "tris": 105136,
+      "bbox": {
+        "min": [
+          -0.45207,
+          -1,
+          -0.39189
+        ],
+        "max": [
+          0.45207,
+          1,
+          0.39189
+        ],
+        "size": [
+          0.90414,
+          2,
+          0.78378
+        ]
+      },
+      "materials": [
+        {
+          "name": "Suit"
+        },
+        {
+          "name": "Gauntlet"
+        },
+        {
+          "name": "MetalBlue"
+        },
+        {
+          "name": "Glove"
+        },
+        {
+          "name": "Tip"
+        },
+        {
+          "name": "MetalRed"
+        },
+        {
+          "name": "Boot"
+        },
+        {
+          "name": "Sole"
+        },
+        {
+          "name": "Shell"
+        },
+        {
+          "name": "Visor"
+        },
+        {
+          "name": "Metal"
+        },
+        {
+          "name": "PLSS"
+        },
+        {
+          "name": "Dark"
+        },
+        {
+          "name": "RCU"
+        },
+        {
+          "name": "NameTag"
+        },
+        {
+          "name": "Hose"
+        },
+        {
+          "name": "FlagPatch"
+        },
+        {
+          "name": "MissionPatch"
+        }
+      ],
+      "textures": [],
+      "skins": [
+        {
+          "name": "Rig",
+          "bones": 17
+        }
+      ],
+      "bonesMax": 17,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [],
+      "meshopt": true,
+      "nodes": [
+        "head",
+        "neck",
+        "hand_L",
+        "forearm_L",
+        "upperarm_L",
+        "hand_R",
+        "forearm_R",
+        "upperarm_R",
+        "chest",
+        "spine",
+        "foot_L",
+        "shin_L",
+        "thigh_L",
+        "foot_R",
+        "shin_R",
+        "thigh_R",
+        "hips",
+        "Astronaut"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [
+        {
+          "code": "not-kebab-case",
+          "message": "Nombre de archivo no es kebab-case: astronaut_a7l.glb"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: Astronaut"
+        },
+        {
+          "code": "over-1.5mb",
+          "message": "1,777 MB supera el límite de 1.5 MB"
+        }
+      ],
+      "path": "/workspace/apolo11/game/public/models/astronaut_a7l.glb"
+    },
+    {
+      "file": "astronaut-a7l.glb",
+      "mb": 1.4397,
+      "bytes": 1509584,
+      "tris": 54700,
+      "bbox": {
+        "min": [
+          -0.61605,
+          -1,
+          -0.36283
+        ],
+        "max": [
+          0.61605,
+          1,
+          0.36283
+        ],
+        "size": [
+          1.23209,
+          2,
+          0.72567
+        ]
+      },
+      "materials": [
+        {
+          "name": "SuitPBR"
+        },
+        {
+          "name": "GoldVisor"
+        },
+        {
+          "name": "ClearVisor"
+        },
+        {
+          "name": "FlagPatch"
+        },
+        {
+          "name": "Overshoe"
+        },
+        {
+          "name": "Sole"
+        },
+        {
+          "name": "Strap"
+        },
+        {
+          "name": "Buckle"
+        },
+        {
+          "name": "CommanderStripes"
+        }
+      ],
+      "textures": [
+        {
+          "name": "astronaut_normal",
+          "mime": "image/webp",
+          "width": 2048,
+          "height": 2048
+        },
+        {
+          "name": "astronaut_orm",
+          "mime": "image/webp",
+          "width": 2048,
+          "height": 2048
+        },
+        {
+          "name": "astronaut_basecolor",
+          "mime": "image/webp",
+          "width": 2048,
+          "height": 2048
+        },
+        {
+          "name": "flag_patch_usa",
+          "mime": "image/webp",
+          "width": 768,
+          "height": 512
+        }
+      ],
+      "skins": [
+        {
+          "name": "Armature",
+          "bones": 34
+        },
+        {
+          "name": "Armature",
+          "bones": 34
+        },
+        {
+          "name": "Armature",
+          "bones": 34
+        }
+      ],
+      "bonesMax": 34,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [
+        {
+          "name": "bunny-hop",
+          "duration": 1.25
+        },
+        {
+          "name": "climb-ladder",
+          "duration": 2
+        },
+        {
+          "name": "fall-and-get-up",
+          "duration": 5
+        },
+        {
+          "name": "first-step",
+          "duration": 4
+        },
+        {
+          "name": "idle",
+          "duration": 4
+        },
+        {
+          "name": "kneel-pick-sample",
+          "duration": 4
+        },
+        {
+          "name": "low-g-jump",
+          "duration": 1.25
+        },
+        {
+          "name": "plant-flag",
+          "duration": 3
+        },
+        {
+          "name": "point",
+          "duration": 2
+        },
+        {
+          "name": "run",
+          "duration": 0.75
+        },
+        {
+          "name": "salute",
+          "duration": 2
+        },
+        {
+          "name": "walk",
+          "duration": 1.167
+        },
+        {
+          "name": "wave",
+          "duration": 2
+        }
+      ],
+      "meshopt": true,
+      "nodes": [
+        "LeftToeBase",
+        "LeftFoot",
+        "LeftLeg",
+        "LeftUpLeg",
+        "RightToeBase",
+        "RightFoot",
+        "RightLeg",
+        "RightUpLeg",
+        "LeftHandIndex2",
+        "LeftHandIndex1",
+        "LeftHandMiddle2",
+        "LeftHandMiddle1",
+        "LeftHandThumb2",
+        "LeftHandThumb1",
+        "hand-l",
+        "LeftHand",
+        "LeftForeArm",
+        "flag-patch",
+        "LeftArm",
+        "LeftShoulder",
+        "camera-head",
+        "Head",
+        "Neck",
+        "RightHandIndex2",
+        "RightHandIndex1",
+        "RightHandMiddle2",
+        "RightHandMiddle1",
+        "RightHandThumb2",
+        "RightHandThumb1",
+        "hand-r",
+        "RightHand",
+        "RightForeArm",
+        "RightArm",
+        "RightShoulder",
+        "Spine2",
+        "Spine1",
+        "Spine",
+        "Hips",
+        "Astronaut_LOD0",
+        "Astronaut_LOD1",
+        "CommanderStripes",
+        "Armature"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "EXT_texture_webp",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: Astronaut_LOD0"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: Astronaut_LOD1"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CommanderStripes"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: Armature"
+        }
+      ],
+      "path": "/workspace/apolo11/game/public/models/astronaut-a7l.glb"
+    },
+    {
+      "file": "astronaut.glb",
+      "mb": 0.0681,
+      "bytes": 71368,
+      "tris": 6271,
+      "bbox": {
+        "min": [
+          -34.45695,
+          -37.1314,
+          -13.79875
+        ],
+        "max": [
+          34.45708,
+          37.13129,
+          13.79904
+        ],
+        "size": [
+          68.91402,
+          74.26269,
+          27.59779
+        ]
+      },
+      "materials": [
+        {
+          "name": "astnt1_1"
+        },
+        {
+          "name": "astnt1_2"
+        }
+      ],
+      "textures": [
+        {
+          "name": "astnt1_1",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "astnt1_2",
+          "mime": "image/webp",
+          "width": 128,
+          "height": 128
+        }
+      ],
+      "skins": [],
+      "bonesMax": 0,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [],
+      "meshopt": true,
+      "nodes": [
+        "astronaut1"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "EXT_texture_webp",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [],
+      "path": "/workspace/apolo11/game/public/models/astronaut.glb"
+    },
+    {
+      "file": "boot-print.glb",
+      "mb": 0.0425,
+      "bytes": 44536,
+      "tris": 64,
+      "bbox": {
+        "min": [
+          -0.10002,
+          0.004,
+          -0.2
+        ],
+        "max": [
+          0.10002,
+          0.004,
+          0.2
+        ],
+        "size": [
+          0.20003,
+          0,
+          0.4
+        ]
+      },
+      "materials": [
+        {
+          "name": "BootPrint"
+        }
+      ],
+      "textures": [
+        {
+          "name": "bootprint_normal",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 256
+        },
+        {
+          "name": "bootprint_albedo",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 256
+        },
+        {
+          "name": "bootprint_orm",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 256
+        }
+      ],
+      "skins": [],
+      "bonesMax": 0,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [],
+      "meshopt": true,
+      "nodes": [
+        "boot-print"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "EXT_texture_webp",
+        "KHR_materials_specular",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [],
+      "path": "/workspace/apolo11/game/public/models/boot-print.glb"
+    },
+    {
+      "file": "cabin-panels.glb",
+      "mb": 0.9714,
+      "bytes": 1018560,
+      "tris": 37580,
+      "bbox": {
+        "min": [
+          -1.01965,
+          -0.79997,
+          -1.01996
+        ],
+        "max": [
+          1.01965,
+          0.84997,
+          0.47882
+        ],
+        "size": [
+          2.0393,
+          1.64995,
+          1.49878
+        ]
+      },
+      "materials": [
+        {
+          "name": "CabinWall"
+        },
+        {
+          "name": "ConsoleHousing"
+        },
+        {
+          "name": "PanelBezel"
+        },
+        {
+          "name": "WindowGlass"
+        },
+        {
+          "name": "Aluminium"
+        },
+        {
+          "name": "NeedleWhite"
+        },
+        {
+          "name": "BlackAnodized"
+        },
+        {
+          "name": "panel-ecs-plate"
+        },
+        {
+          "name": "Chrome"
+        },
+        {
+          "name": "Steel"
+        },
+        {
+          "name": "Dials"
+        },
+        {
+          "name": "GaugeGlass"
+        },
+        {
+          "name": "GuardRed"
+        },
+        {
+          "name": "panel-eps-plate"
+        },
+        {
+          "name": "Talkback"
+        },
+        {
+          "name": "DSKYDisplay"
+        },
+        {
+          "name": "DSKYKeys"
+        },
+        {
+          "name": "FDAIBall"
+        },
+        {
+          "name": "lamp-abort"
+        },
+        {
+          "name": "lamp-liftoff"
+        },
+        {
+          "name": "master-alarm"
+        },
+        {
+          "name": "TimerDisplay"
+        },
+        {
+          "name": "panel-gnc-plate"
+        },
+        {
+          "name": "FDAIReticle"
+        },
+        {
+          "name": "FDAINeedle"
+        },
+        {
+          "name": "DSKYHousing"
+        }
+      ],
+      "textures": [
+        {
+          "name": "paint_normal",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "paint_orm",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "alu_normal",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "alu_albedo",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "alu_orm",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "panel-ecs_albedo",
+          "mime": "image/webp",
+          "width": 2048,
+          "height": 1812
+        },
+        {
+          "name": "dials_albedo",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "panel-eps_albedo",
+          "mime": "image/webp",
+          "width": 2048,
+          "height": 1812
+        },
+        {
+          "name": "talkback_albedo",
+          "mime": "image/webp",
+          "width": 384,
+          "height": 128
+        },
+        {
+          "name": "dsky_face_emissive",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 512
+        },
+        {
+          "name": "dsky_face_albedo",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 512
+        },
+        {
+          "name": "dsky_keys_albedo",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "fdai_albedo",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 512
+        },
+        {
+          "name": "lamps_albedo",
+          "mime": "image/webp",
+          "width": 768,
+          "height": 128
+        },
+        {
+          "name": "timer_emissive",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 128
+        },
+        {
+          "name": "timer_albedo",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 128
+        },
+        {
+          "name": "panel-gnc_albedo",
+          "mime": "image/webp",
+          "width": 2048,
+          "height": 1980
+        }
+      ],
+      "skins": [],
+      "bonesMax": 0,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [
+        {
+          "name": "guard-04-open",
+          "duration": 0.458
+        },
+        {
+          "name": "guard-09-open",
+          "duration": 0.458
+        },
+        {
+          "name": "guard-12-open",
+          "duration": 0.458
+        },
+        {
+          "name": "guard-13-open",
+          "duration": 0.458
+        },
+        {
+          "name": "guard-15-open",
+          "duration": 0.458
+        }
+      ],
+      "meshopt": true,
+      "nodes": [
+        "cabin-shell",
+        "needle-cabin-press",
+        "needle-o2-flow",
+        "panel-ecs-body",
+        "switch-18",
+        "switch-19",
+        "switch-20",
+        "switch-21",
+        "switch-22",
+        "switch-23",
+        "switch-24",
+        "switch-25",
+        "switch-26",
+        "switch-27",
+        "panel-ecs",
+        "guard-04",
+        "guard-09",
+        "needle-volt-a",
+        "needle-volt-b",
+        "panel-eps-body",
+        "switch-01",
+        "switch-02",
+        "switch-03",
+        "switch-04",
+        "switch-05",
+        "switch-06",
+        "switch-07",
+        "switch-08",
+        "switch-09",
+        "switch-10",
+        "talkback-fc-1",
+        "talkback-fc-2",
+        "talkback-fc-3",
+        "panel-eps",
+        "dsky-display",
+        "dsky-key-0",
+        "dsky-key-1",
+        "dsky-key-2",
+        "dsky-key-3",
+        "dsky-key-4",
+        "dsky-key-5",
+        "dsky-key-6",
+        "dsky-key-7",
+        "dsky-key-8",
+        "dsky-key-9",
+        "dsky-key-clr",
+        "dsky-key-entr",
+        "dsky-key-keyrel",
+        "dsky-key-minus",
+        "dsky-key-noun",
+        "dsky-key-plus",
+        "dsky-key-pro",
+        "dsky-key-rset",
+        "dsky-key-verb",
+        "fdai-ball",
+        "guard-12",
+        "guard-13",
+        "guard-15",
+        "lamp-abort",
+        "lamp-liftoff",
+        "master-alarm",
+        "mission-timer-display",
+        "panel-gnc-body",
+        "switch-11",
+        "switch-12",
+        "switch-13",
+        "switch-14",
+        "switch-15",
+        "switch-16",
+        "switch-17",
+        "panel-gnc",
+        "CabinPanels",
+        "cabin-shell-geo",
+        "needle-cabin-press-geo",
+        "needle-o2-flow-geo",
+        "panel-ecs-body-geo",
+        "switch-18-geo",
+        "switch-19-geo",
+        "switch-20-geo",
+        "switch-21-geo",
+        "switch-22-geo",
+        "switch-23-geo",
+        "switch-24-geo",
+        "switch-25-geo",
+        "switch-26-geo",
+        "switch-27-geo",
+        "guard-04-geo",
+        "guard-09-geo",
+        "needle-volt-a-geo",
+        "needle-volt-b-geo",
+        "panel-eps-body-geo",
+        "switch-01-geo",
+        "switch-02-geo",
+        "switch-03-geo",
+        "switch-04-geo",
+        "switch-05-geo",
+        "switch-06-geo",
+        "switch-07-geo",
+        "switch-08-geo",
+        "switch-09-geo",
+        "switch-10-geo",
+        "talkback-fc-1-geo",
+        "talkback-fc-2-geo",
+        "talkback-fc-3-geo",
+        "dsky-display-geo",
+        "dsky-key-0-geo",
+        "dsky-key-1-geo",
+        "dsky-key-2-geo",
+        "dsky-key-3-geo",
+        "dsky-key-4-geo",
+        "dsky-key-5-geo",
+        "dsky-key-6-geo",
+        "dsky-key-7-geo",
+        "dsky-key-8-geo",
+        "dsky-key-9-geo",
+        "dsky-key-clr-geo",
+        "dsky-key-entr-geo",
+        "dsky-key-keyrel-geo",
+        "dsky-key-minus-geo",
+        "dsky-key-noun-geo",
+        "dsky-key-plus-geo",
+        "dsky-key-pro-geo",
+        "dsky-key-rset-geo",
+        "dsky-key-verb-geo",
+        "fdai-ball-geo",
+        "guard-12-geo",
+        "guard-13-geo",
+        "guard-15-geo",
+        "lamp-abort-geo",
+        "lamp-liftoff-geo",
+        "master-alarm-geo",
+        "mission-timer-display-geo",
+        "panel-gnc-body-geo",
+        "switch-11-geo",
+        "switch-12-geo",
+        "switch-13-geo",
+        "switch-14-geo",
+        "switch-15-geo",
+        "switch-16-geo",
+        "switch-17-geo"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "EXT_texture_webp",
+        "KHR_materials_emissive_strength",
+        "KHR_materials_specular",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CabinPanels"
+        }
+      ],
+      "path": "/workspace/apolo11/game/public/models/cabin-panels.glb"
+    },
+    {
+      "file": "cm-interior.glb",
+      "mb": 0.9292,
+      "bytes": 974292,
+      "tris": 52582,
+      "bbox": {
+        "min": [
+          -1.70996,
+          0.23994,
+          -1.71
+        ],
+        "max": [
+          1.70996,
+          2.99001,
+          1.73388
+        ],
+        "size": [
+          3.41991,
+          2.75007,
+          3.44388
+        ]
+      },
+      "materials": [
+        {
+          "name": "CMI-Mamparo"
+        },
+        {
+          "name": "CMI-Pared"
+        },
+        {
+          "name": "CMI-Metal-Oscuro"
+        },
+        {
+          "name": "CMI-Aluminio"
+        },
+        {
+          "name": "CMI-Bisel"
+        },
+        {
+          "name": "CMI-Acero"
+        },
+        {
+          "name": "CMI-Casillero"
+        },
+        {
+          "name": "CMI-Goma"
+        },
+        {
+          "name": "CMI-Paneles"
+        },
+        {
+          "name": "CMI-Panel-Canto"
+        },
+        {
+          "name": "CMI-Asiento-Tela"
+        },
+        {
+          "name": "CMI-Correa"
+        },
+        {
+          "name": "CMI-Luz"
+        },
+        {
+          "name": "CMI-Vidrio"
+        },
+        {
+          "name": "CMI-Guarda-Roja"
+        },
+        {
+          "name": "CMI-FDAI"
+        },
+        {
+          "name": "CMI-Indice"
+        },
+        {
+          "name": "CMI-Manguera"
+        }
+      ],
+      "textures": [
+        {
+          "name": "wall_normal",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "wall_albedo",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "wall_orm",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "atlas_emissive",
+          "mime": "image/webp",
+          "width": 2048,
+          "height": 1024
+        },
+        {
+          "name": "atlas_normal",
+          "mime": "image/webp",
+          "width": 2048,
+          "height": 1024
+        },
+        {
+          "name": "atlas_albedo",
+          "mime": "image/webp",
+          "width": 2048,
+          "height": 1024
+        },
+        {
+          "name": "couch_normal",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "couch_albedo",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "couch_orm",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "fdai_albedo",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 512
+        }
+      ],
+      "skins": [],
+      "bonesMax": 0,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [
+        {
+          "name": "hatch-open",
+          "duration": 3.042
+        },
+        {
+          "name": "guard-01-open",
+          "duration": 0.542
+        },
+        {
+          "name": "guard-02-open",
+          "duration": 0.542
+        },
+        {
+          "name": "guard-03-open",
+          "duration": 0.542
+        },
+        {
+          "name": "guard-04-open",
+          "duration": 0.542
+        },
+        {
+          "name": "guard-05-open",
+          "duration": 0.542
+        }
+      ],
+      "meshopt": true,
+      "nodes": [
+        "cabin-center",
+        "cabin-shell",
+        "cb-5",
+        "cb-8",
+        "couch-CDR",
+        "couch-CMP",
+        "couch-LMP",
+        "eye-CDR",
+        "eye-CMP",
+        "eye-LMP",
+        "flood-lights",
+        "forward-hatch",
+        "hatch-inner",
+        "hatch-inner-hinge",
+        "dsky-leb-keys",
+        "leb-122-switches",
+        "switch-17",
+        "switch-18",
+        "leb-122",
+        "light-flood-1",
+        "light-flood-2",
+        "light-flood-3",
+        "fdai-1-ball",
+        "guard-01",
+        "guard-02",
+        "guard-03",
+        "mdc-1-switches",
+        "switch-01",
+        "switch-02",
+        "switch-03",
+        "switch-04",
+        "switch-05",
+        "switch-06",
+        "switch-07",
+        "mdc-1",
+        "dsky-main-keys",
+        "fdai-2-ball",
+        "guard-04",
+        "mdc-2-switches",
+        "switch-08",
+        "switch-09",
+        "switch-10",
+        "mdc-2",
+        "guard-05",
+        "mdc-3-switches",
+        "switch-11",
+        "switch-12",
+        "switch-13",
+        "switch-14",
+        "switch-15",
+        "switch-16",
+        "mdc-3",
+        "mdc-structure",
+        "MDC",
+        "rhc-CDR",
+        "seat-CDR",
+        "seat-CMP",
+        "seat-LMP",
+        "suit-hoses",
+        "thc-CDR",
+        "wall-stringers",
+        "win-hatch",
+        "win-rdz-left",
+        "win-rdz-right",
+        "win-side-left",
+        "win-side-right",
+        "window-glass",
+        "CM_Interior",
+        "cabin-shell-geo",
+        "cb-5-geo",
+        "cb-8-geo",
+        "couch-CDR-geo",
+        "couch-CMP-geo",
+        "couch-LMP-geo",
+        "flood-lights-geo",
+        "forward-hatch-geo",
+        "hatch-inner-geo",
+        "dsky-leb-keys-geo",
+        "leb-122-switches-geo",
+        "switch-17-geo",
+        "switch-18-geo",
+        "leb-122-geo",
+        "fdai-1-ball-geo",
+        "guard-01-geo",
+        "guard-02-geo",
+        "guard-03-geo",
+        "mdc-1-switches-geo",
+        "switch-01-geo",
+        "switch-02-geo",
+        "switch-03-geo",
+        "switch-04-geo",
+        "switch-05-geo",
+        "switch-06-geo",
+        "switch-07-geo",
+        "mdc-1-geo",
+        "dsky-main-keys-geo",
+        "fdai-2-ball-geo",
+        "guard-04-geo",
+        "mdc-2-switches-geo",
+        "switch-08-geo",
+        "switch-09-geo",
+        "switch-10-geo",
+        "mdc-2-geo",
+        "guard-05-geo",
+        "mdc-3-switches-geo",
+        "switch-11-geo",
+        "switch-12-geo",
+        "switch-13-geo",
+        "switch-14-geo",
+        "switch-15-geo",
+        "switch-16-geo",
+        "mdc-3-geo",
+        "mdc-structure-geo",
+        "rhc-CDR-geo",
+        "suit-hoses-geo",
+        "thc-CDR-geo",
+        "wall-stringers-geo",
+        "window-glass-geo"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "EXT_texture_webp",
+        "KHR_materials_emissive_strength",
+        "KHR_materials_specular",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: couch-CDR"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: couch-CMP"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: couch-LMP"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: eye-CDR"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: eye-CMP"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: eye-LMP"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: MDC"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: rhc-CDR"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: seat-CDR"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: seat-CMP"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: seat-LMP"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: thc-CDR"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CM_Interior"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: couch-CDR-geo"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: couch-CMP-geo"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: couch-LMP-geo"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: rhc-CDR-geo"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: thc-CDR-geo"
+        }
+      ],
+      "path": "/workspace/apolo11/game/public/models/cm-interior.glb"
+    },
+    {
+      "file": "csm-columbia.glb",
+      "mb": 1.3089,
+      "bytes": 1372504,
+      "tris": 38326,
+      "bbox": {
+        "min": [
+          -1.97401,
+          -10.12732,
+          -2.39591
+        ],
+        "max": [
+          1.97401,
+          0.53499,
+          2.26202
+        ],
+        "size": [
+          3.94803,
+          10.66231,
+          4.65793
+        ]
+      },
+      "materials": [
+        {
+          "name": "Acero"
+        },
+        {
+          "name": "Metal-Oscuro"
+        },
+        {
+          "name": "CM-Mylar"
+        },
+        {
+          "name": "Marco-Ventana"
+        },
+        {
+          "name": "Vidrio"
+        },
+        {
+          "name": "CM-Quemado"
+        },
+        {
+          "name": "RCS-Tobera"
+        },
+        {
+          "name": "CM-Ablator"
+        },
+        {
+          "name": "Junta"
+        },
+        {
+          "name": "Pintura-Blanca"
+        },
+        {
+          "name": "SM-Aluminio"
+        },
+        {
+          "name": "SM-Radiador"
+        },
+        {
+          "name": "Lente"
+        },
+        {
+          "name": "Aluminio-Estructura"
+        },
+        {
+          "name": "Kapton-Oro"
+        },
+        {
+          "name": "SPS-Tobera"
+        },
+        {
+          "name": "SPS-Interior"
+        }
+      ],
+      "textures": [
+        {
+          "name": "mylar_normal",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "mylar_albedo",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "mylar_orm",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "ablator_normal",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "ablator_albedo",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "ablator_orm",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "paint_normal",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "paint_orm",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "alu_normal",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "alu_albedo",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "alu_orm",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "rad_normal",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "rad_albedo",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "rad_orm",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "sps_normal",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "sps_albedo",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "sps_orm",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        }
+      ],
+      "skins": [],
+      "bonesMax": 0,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [
+        {
+          "name": "probe-retract",
+          "duration": 2.042
+        },
+        {
+          "name": "hatch-open",
+          "duration": 3.042
+        },
+        {
+          "name": "hga-deploy",
+          "duration": 4.042
+        },
+        {
+          "name": "sps-gimbal-test",
+          "duration": 5.042
+        }
+      ],
+      "meshopt": true,
+      "nodes": [
+        "cg",
+        "probe-tip",
+        "CM-docking-probe",
+        "CM-hatch",
+        "CM-hatch-hinge",
+        "CM-RCS-pitch-down-1",
+        "CM-RCS-pitch-down-2",
+        "CM-RCS-pitch-down",
+        "CM-RCS-pitch-up-1",
+        "CM-RCS-pitch-up-2",
+        "CM-RCS-pitch-up",
+        "CM-RCS-roll-1-1",
+        "CM-RCS-roll-1-2",
+        "CM-RCS-roll-1",
+        "CM-RCS-roll-2-1",
+        "CM-RCS-roll-2-2",
+        "CM-RCS-roll-2",
+        "CM-RCS-yaw-left-1",
+        "CM-RCS-yaw-left-2",
+        "CM-RCS-yaw-left",
+        "CM-RCS-yaw-right-1",
+        "CM-RCS-yaw-right-2",
+        "CM-RCS-yaw-right",
+        "CM-shell",
+        "view-hatch",
+        "view-rendezvous-left",
+        "view-rendezvous-right",
+        "view-side-left",
+        "view-side-right",
+        "CM",
+        "SM-body",
+        "SM-HGA",
+        "SM-RCS-A-ccw",
+        "SM-RCS-A-cw",
+        "SM-RCS-A-down",
+        "SM-RCS-A-up",
+        "SM-RCS-A",
+        "SM-RCS-B-ccw",
+        "SM-RCS-B-cw",
+        "SM-RCS-B-down",
+        "SM-RCS-B-up",
+        "SM-RCS-B",
+        "SM-RCS-C-ccw",
+        "SM-RCS-C-cw",
+        "SM-RCS-C-down",
+        "SM-RCS-C-up",
+        "SM-RCS-C",
+        "SM-RCS-D-ccw",
+        "SM-RCS-D-cw",
+        "SM-RCS-D-down",
+        "SM-RCS-D-up",
+        "SM-RCS-D",
+        "sps-thrust-point",
+        "SM-SPS-bell",
+        "SM",
+        "CSM",
+        "CM-docking-probe-geo",
+        "CM-hatch-geo",
+        "CM-RCS-pitch-down-geo",
+        "CM-RCS-pitch-up-geo",
+        "CM-RCS-roll-1-geo",
+        "CM-RCS-roll-2-geo",
+        "CM-RCS-yaw-left-geo",
+        "CM-RCS-yaw-right-geo",
+        "CM-shell-geo",
+        "SM-body-geo",
+        "SM-HGA-geo",
+        "SM-RCS-A-geo",
+        "SM-RCS-B-geo",
+        "SM-RCS-C-geo",
+        "SM-RCS-D-geo",
+        "SM-SPS-bell-geo"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "EXT_texture_webp",
+        "KHR_materials_specular",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CM-docking-probe"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CM-hatch"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CM-hatch-hinge"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CM-RCS-pitch-down-1"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CM-RCS-pitch-down-2"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CM-RCS-pitch-down"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CM-RCS-pitch-up-1"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CM-RCS-pitch-up-2"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CM-RCS-pitch-up"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CM-RCS-roll-1-1"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CM-RCS-roll-1-2"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CM-RCS-roll-1"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CM-RCS-roll-2-1"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CM-RCS-roll-2-2"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CM-RCS-roll-2"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CM-RCS-yaw-left-1"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CM-RCS-yaw-left-2"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CM-RCS-yaw-left"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CM-RCS-yaw-right-1"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CM-RCS-yaw-right-2"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CM-RCS-yaw-right"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CM-shell"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CM"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SM-body"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SM-HGA"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SM-RCS-A-ccw"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SM-RCS-A-cw"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SM-RCS-A-down"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SM-RCS-A-up"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SM-RCS-A"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SM-RCS-B-ccw"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SM-RCS-B-cw"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SM-RCS-B-down"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SM-RCS-B-up"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SM-RCS-B"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SM-RCS-C-ccw"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SM-RCS-C-cw"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SM-RCS-C-down"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SM-RCS-C-up"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SM-RCS-C"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SM-RCS-D-ccw"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SM-RCS-D-cw"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SM-RCS-D-down"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SM-RCS-D-up"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SM-RCS-D"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SM-SPS-bell"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SM"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CSM"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CM-docking-probe-geo"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CM-hatch-geo"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CM-RCS-pitch-down-geo"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CM-RCS-pitch-up-geo"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CM-RCS-roll-1-geo"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CM-RCS-roll-2-geo"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CM-RCS-yaw-left-geo"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CM-RCS-yaw-right-geo"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CM-shell-geo"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SM-body-geo"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SM-HGA-geo"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SM-RCS-A-geo"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SM-RCS-B-geo"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SM-RCS-C-geo"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SM-RCS-D-geo"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SM-SPS-bell-geo"
+        }
+      ],
+      "path": "/workspace/apolo11/game/public/models/csm-columbia.glb"
+    },
+    {
+      "file": "easep-props.glb",
+      "mb": 1.1565,
+      "bytes": 1212640,
+      "tris": 20192,
+      "bbox": {
+        "min": [
+          -3.17993,
+          -0.15,
+          2.14419
+        ],
+        "max": [
+          15.63795,
+          2.0758,
+          9.2914
+        ],
+        "size": [
+          18.81788,
+          2.2258,
+          7.14721
+        ]
+      },
+      "materials": [
+        {
+          "name": "BootPrintDecal"
+        },
+        {
+          "name": "PlaqueSteel"
+        },
+        {
+          "name": "Steel"
+        },
+        {
+          "name": "Aluminium"
+        },
+        {
+          "name": "AluminiumDull"
+        },
+        {
+          "name": "CornerCubeSilica"
+        },
+        {
+          "name": "BlackAnodized"
+        },
+        {
+          "name": "ThermalWhite"
+        },
+        {
+          "name": "KaptonGold"
+        },
+        {
+          "name": "MylarSilver"
+        },
+        {
+          "name": "SolarCells"
+        },
+        {
+          "name": "MylarSkirt"
+        },
+        {
+          "name": "SWCFoil"
+        },
+        {
+          "name": "TeflonGrip"
+        },
+        {
+          "name": "BlackRubber"
+        }
+      ],
+      "textures": [
+        {
+          "name": "bootprints_normal",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 512
+        },
+        {
+          "name": "bootprints_albedo",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 512
+        },
+        {
+          "name": "bootprints_orm",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 512
+        },
+        {
+          "name": "plaque_normal",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 868
+        },
+        {
+          "name": "plaque_albedo",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 868
+        },
+        {
+          "name": "plaque_orm",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 868
+        },
+        {
+          "name": "alu_normal",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "alu_albedo",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "alu_orm",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "paint_normal",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "paint_orm",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "mylar_normal",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "mylar_albedo",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "mylar_orm",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "solar_normal",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 768
+        },
+        {
+          "name": "solar_albedo",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 768
+        },
+        {
+          "name": "solar_orm",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 768
+        }
+      ],
+      "skins": [],
+      "bonesMax": 0,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [
+        {
+          "name": "psep-deploy",
+          "duration": 2.25
+        },
+        {
+          "name": "swc-unroll",
+          "duration": 3.042
+        },
+        {
+          "name": "swc-rollup",
+          "duration": 3.042
+        },
+        {
+          "name": "tongs-grab",
+          "duration": 0.833
+        }
+      ],
+      "meshopt": true,
+      "nodes": [
+        "boot-print-a",
+        "boot-print-b",
+        "boot-print-c",
+        "boot-print-d",
+        "boot-trail-01",
+        "boot-trail-02",
+        "boot-trail-03",
+        "boot-trail-04",
+        "boot-trail-05",
+        "boot-trail-06",
+        "boot-trail-07",
+        "boot-trail-08",
+        "boot-trail-09",
+        "boot-trail-10",
+        "boot-trail-11",
+        "boot-trail-12",
+        "boot-trail-13",
+        "boot-trail-14",
+        "boot-trail-15",
+        "boot-trail-16",
+        "BootPrints",
+        "lm-plaque-attach",
+        "lm-plaque",
+        "lrrr-array",
+        "lrrr-base",
+        "lrrr-carry",
+        "LRRR",
+        "psep-body",
+        "psep-carry",
+        "psep-panel-l-outer",
+        "psep-panel-l",
+        "psep-panel-r-outer",
+        "psep-panel-r",
+        "psep-skirt",
+        "PSEP",
+        "swc-bar",
+        "swc-foil",
+        "swc-grip",
+        "swc-pole",
+        "swc-roller",
+        "SWC",
+        "drive-tube-grip",
+        "drive-tube",
+        "extension-handle-grip",
+        "extension-handle-socket",
+        "extension-handle",
+        "geo-hammer-grip",
+        "geo-hammer",
+        "tongs-grip",
+        "tongs-jaw-a",
+        "tongs-jaw-b",
+        "tongs",
+        "Tools",
+        "EASEP_Props",
+        "boot-print-a-geo",
+        "boot-print-b-geo",
+        "boot-print-c-geo",
+        "boot-print-d-geo",
+        "boot-trail-01-geo",
+        "boot-trail-02-geo",
+        "boot-trail-03-geo",
+        "boot-trail-04-geo",
+        "boot-trail-05-geo",
+        "boot-trail-06-geo",
+        "boot-trail-07-geo",
+        "boot-trail-08-geo",
+        "boot-trail-09-geo",
+        "boot-trail-10-geo",
+        "boot-trail-11-geo",
+        "boot-trail-12-geo",
+        "boot-trail-13-geo",
+        "boot-trail-14-geo",
+        "boot-trail-15-geo",
+        "boot-trail-16-geo",
+        "lm-plaque-geo",
+        "lrrr-array-geo",
+        "lrrr-base-geo",
+        "psep-body-geo",
+        "psep-panel-l-outer-geo",
+        "psep-panel-l-geo",
+        "psep-panel-r-outer-geo",
+        "psep-panel-r-geo",
+        "psep-skirt-geo",
+        "swc-bar-geo",
+        "swc-foil-geo",
+        "swc-pole-geo",
+        "swc-roller-geo",
+        "drive-tube-geo",
+        "extension-handle-geo",
+        "geo-hammer-geo",
+        "tongs-jaw-a-geo",
+        "tongs-jaw-b-geo",
+        "tongs-geo"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "EXT_texture_webp",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: BootPrints"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: LRRR"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: PSEP"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SWC"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: Tools"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: EASEP_Props"
+        }
+      ],
+      "path": "/workspace/apolo11/game/public/models/easep-props.glb"
+    },
+    {
+      "file": "flag-mast.glb",
+      "mb": 0.2688,
+      "bytes": 281856,
+      "tris": 4444,
+      "bbox": {
+        "min": [
+          -0.89802,
+          -0.2,
+          -0.0169
+        ],
+        "max": [
+          0.0475,
+          2.23,
+          0.0167
+        ],
+        "size": [
+          0.94552,
+          2.43,
+          0.0336
+        ]
+      },
+      "materials": [
+        {
+          "name": "Aluminium"
+        },
+        {
+          "name": "AluminiumDull"
+        },
+        {
+          "name": "Steel"
+        },
+        {
+          "name": "FlagCloth"
+        },
+        {
+          "name": "BlackAnodized"
+        }
+      ],
+      "textures": [
+        {
+          "name": "alu_normal",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "alu_albedo",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "alu_orm",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "cloth_normal",
+          "mime": "image/webp",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "name": "cloth_orm",
+          "mime": "image/webp",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "name": "paint_normal",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "paint_orm",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        }
+      ],
+      "skins": [],
+      "bonesMax": 0,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [
+        {
+          "name": "crossbar-unfold",
+          "duration": 0.833
+        },
+        {
+          "name": "crossbar-extend",
+          "duration": 1.25
+        }
+      ],
+      "meshopt": true,
+      "nodes": [
+        "collar",
+        "crossbar-inner",
+        "crossbar-outer",
+        "flag-cloth",
+        "crossbar",
+        "hit-point",
+        "latch",
+        "mast-pole",
+        "tip",
+        "FlagMast",
+        "collar-geo",
+        "crossbar-inner-geo",
+        "crossbar-outer-geo",
+        "flag-cloth-geo",
+        "latch-geo",
+        "mast-pole-geo"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "EXT_texture_webp",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: FlagMast"
+        }
+      ],
+      "path": "/workspace/apolo11/game/public/models/flag-mast.glb"
+    },
+    {
+      "file": "launch-tower.glb",
+      "mb": 0.5319,
+      "bytes": 557788,
+      "tris": 22708,
+      "bbox": {
+        "min": [
+          -32.1,
+          -7.63082,
+          -20.72182
+        ],
+        "max": [
+          17.47,
+          136.39968,
+          20.72182
+        ],
+        "size": [
+          49.57,
+          144.0305,
+          41.44364
+        ]
+      },
+      "materials": [
+        {
+          "name": "CraneYellow"
+        },
+        {
+          "name": "TowerRed"
+        },
+        {
+          "name": "DarkMetal"
+        },
+        {
+          "name": "PipeWhite"
+        },
+        {
+          "name": "Grating"
+        },
+        {
+          "name": "EquipGreen"
+        },
+        {
+          "name": "SteelGrey"
+        },
+        {
+          "name": "Hose"
+        },
+        {
+          "name": "WhiteRoom"
+        },
+        {
+          "name": "Soot"
+        }
+      ],
+      "textures": [
+        {
+          "name": "tower_red",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "equip_green",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "ml_grey",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        }
+      ],
+      "skins": [],
+      "bonesMax": 0,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [
+        {
+          "name": "swing-arms-retract",
+          "duration": 6.958
+        }
+      ],
+      "meshopt": true,
+      "nodes": [
+        "crane-hammerhead-mesh",
+        "crane-hammerhead",
+        "lut-structure",
+        "swing-arm-1-mesh",
+        "swing-arm-1",
+        "swing-arm-2-mesh",
+        "swing-arm-2",
+        "swing-arm-3-mesh",
+        "swing-arm-3",
+        "swing-arm-4-mesh",
+        "swing-arm-4",
+        "swing-arm-5-mesh",
+        "swing-arm-5",
+        "swing-arm-6-mesh",
+        "swing-arm-6",
+        "swing-arm-7-mesh",
+        "swing-arm-7",
+        "swing-arm-8-mesh",
+        "swing-arm-8",
+        "swing-arm-9-mesh",
+        "swing-arm-9",
+        "lut",
+        "ml-platform",
+        "mobile-launcher",
+        "LaunchTower"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "EXT_texture_webp",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: LaunchTower"
+        }
+      ],
+      "path": "/workspace/apolo11/game/public/models/launch-tower.glb"
+    },
+    {
+      "file": "lc39a-far.glb",
+      "mb": 0.326,
+      "bytes": 341868,
+      "tris": 2432,
+      "bbox": {
+        "min": [
+          -2841.20482,
+          -29.53822,
+          569.08081
+        ],
+        "max": [
+          4649.98582,
+          148.47822,
+          2420
+        ],
+        "size": [
+          7491.19064,
+          178.01645,
+          1850.91919
+        ]
+      },
+      "materials": [
+        {
+          "name": "Facade"
+        }
+      ],
+      "textures": [
+        {
+          "name": "facade_atlas",
+          "mime": "image/webp",
+          "width": 2048,
+          "height": 2048
+        }
+      ],
+      "skins": [],
+      "bonesMax": 0,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [],
+      "meshopt": true,
+      "nodes": [
+        "lcc",
+        "mss",
+        "pad-39b",
+        "utility-buildings",
+        "vab",
+        "LC39A_Far"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "EXT_texture_webp",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: LC39A_Far"
+        }
+      ],
+      "path": "/workspace/apolo11/game/public/models/lc39a-far.glb"
+    },
+    {
+      "file": "lc39a-pad.glb",
+      "mb": 1.0495,
+      "bytes": 1100512,
+      "tris": 9410,
+      "bbox": {
+        "min": [
+          -363.79999,
+          -27.33391,
+          -334.00991
+        ],
+        "max": [
+          331,
+          29.17802,
+          340.00991
+        ],
+        "size": [
+          694.79999,
+          56.51193,
+          674.01983
+        ]
+      },
+      "materials": [
+        {
+          "name": "Steel"
+        },
+        {
+          "name": "Lamp"
+        },
+        {
+          "name": "Galv"
+        },
+        {
+          "name": "Concrete"
+        },
+        {
+          "name": "Grass"
+        },
+        {
+          "name": "CrawlRock"
+        },
+        {
+          "name": "TankWhite"
+        }
+      ],
+      "textures": [
+        {
+          "name": "concrete_normal",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "concrete_albedo",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "ground_normal",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "foliage_albedo",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        }
+      ],
+      "skins": [],
+      "bonesMax": 0,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [],
+      "meshopt": true,
+      "nodes": [
+        "pad-deflectors",
+        "pad-lamps",
+        "pad-light-masts",
+        "pad-mound",
+        "pad-pipes",
+        "pad-sheds",
+        "pad-tanks",
+        "LC39A_Pad"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "EXT_texture_webp",
+        "KHR_materials_emissive_strength",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: LC39A_Pad"
+        }
+      ],
+      "path": "/workspace/apolo11/game/public/models/lc39a-pad.glb"
+    },
+    {
+      "file": "lc39a-terrain.glb",
+      "mb": 1.7087,
+      "bytes": 1791676,
+      "tris": 94118,
+      "bbox": {
+        "min": [
+          -16000,
+          -35.85401,
+          -16999.65916
+        ],
+        "max": [
+          16000,
+          -8.6011,
+          16732.19707
+        ],
+        "size": [
+          32000,
+          27.2529,
+          33731.85622
+        ]
+      },
+      "materials": [
+        {
+          "name": "Sea"
+        },
+        {
+          "name": "Surf"
+        },
+        {
+          "name": "TerrainFar"
+        },
+        {
+          "name": "TerrainNear"
+        },
+        {
+          "name": "TerrainOuter"
+        },
+        {
+          "name": "Foliage"
+        },
+        {
+          "name": "VegCards"
+        }
+      ],
+      "textures": [
+        {
+          "name": "water_normal",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "surf_foam",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 128
+        },
+        {
+          "name": "ground_normal",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "terrain_far_albedo",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 2048
+        },
+        {
+          "name": "terrain_near_albedo",
+          "mime": "image/webp",
+          "width": 2048,
+          "height": 2048
+        },
+        {
+          "name": "foliage_albedo",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "veg_cards",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        }
+      ],
+      "skins": [],
+      "bonesMax": 0,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [],
+      "meshopt": true,
+      "nodes": [
+        "sea",
+        "surf",
+        "terrain-far",
+        "terrain-near",
+        "terrain-outer",
+        "veg-hammocks",
+        "veg-palms",
+        "veg-scrub",
+        "LC39A_Terrain"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "EXT_texture_webp",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: LC39A_Terrain"
+        },
+        {
+          "code": "over-1.5mb",
+          "message": "1,709 MB supera el límite de 1.5 MB"
+        }
+      ],
+      "path": "/workspace/apolo11/game/public/models/lc39a-terrain.glb"
+    },
+    {
+      "file": "lm.glb",
+      "mb": 0.7043,
+      "bytes": 738464,
+      "tris": 86687,
+      "bbox": {
+        "min": [
+          -3.2145,
+          0.10263,
+          -3.21568
+        ],
+        "max": [
+          3.21289,
+          5.11542,
+          3.21093
+        ],
+        "size": [
+          6.42739,
+          5.01279,
+          6.42661
+        ]
+      },
+      "materials": [
+        {
+          "name": "blinn5SG.002"
+        },
+        {
+          "name": "blinn8SG.001"
+        },
+        {
+          "name": "blinn12SG.001"
+        },
+        {
+          "name": "PaletteMaterial001"
+        },
+        {
+          "name": "PaletteMaterial002"
+        },
+        {
+          "name": "PaletteMaterial003"
+        },
+        {
+          "name": "PaletteMaterial004"
+        }
+      ],
+      "textures": [
+        {
+          "name": "BOOSTER3",
+          "mime": "image/webp",
+          "width": 400,
+          "height": 400
+        },
+        {
+          "name": "TEXTUREA",
+          "mime": "image/webp",
+          "width": 900,
+          "height": 900
+        },
+        {
+          "name": "TEXTURE_",
+          "mime": "image/webp",
+          "width": 900,
+          "height": 900
+        },
+        {
+          "name": "PaletteBaseColor",
+          "mime": "image/webp",
+          "width": 64,
+          "height": 4
+        }
+      ],
+      "skins": [],
+      "bonesMax": 0,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [
+        {
+          "name": "lunarlandeAction",
+          "duration": 0
+        },
+        {
+          "name": "group13 10Action",
+          "duration": 0
+        },
+        {
+          "name": "group13 11Action",
+          "duration": 0
+        },
+        {
+          "name": "group13 12Action",
+          "duration": 0
+        },
+        {
+          "name": "group13 13Action",
+          "duration": 0
+        },
+        {
+          "name": "group13 14Action",
+          "duration": 0
+        },
+        {
+          "name": "group13 g1Action",
+          "duration": 0
+        },
+        {
+          "name": "group13 g2Action",
+          "duration": 0
+        },
+        {
+          "name": "group13 g3Action",
+          "duration": 0
+        },
+        {
+          "name": "group13 g4Action",
+          "duration": 0
+        },
+        {
+          "name": "group13 g5Action",
+          "duration": 0
+        },
+        {
+          "name": "group13 g6Action",
+          "duration": 0
+        },
+        {
+          "name": "group13 g7Action",
+          "duration": 0
+        },
+        {
+          "name": "group13 g8Action",
+          "duration": 0
+        },
+        {
+          "name": "group13 g9Action",
+          "duration": 0
+        },
+        {
+          "name": "group13 grAction",
+          "duration": 0
+        },
+        {
+          "name": "group13 p1Action",
+          "duration": 0
+        },
+        {
+          "name": "group13 p2Action",
+          "duration": 0
+        },
+        {
+          "name": "group13 pCAction",
+          "duration": 0
+        },
+        {
+          "name": "group31 10Action",
+          "duration": 0
+        },
+        {
+          "name": "group31 11Action",
+          "duration": 0
+        },
+        {
+          "name": "group31 12Action",
+          "duration": 0
+        },
+        {
+          "name": "group31 13Action",
+          "duration": 0
+        },
+        {
+          "name": "group31 14Action",
+          "duration": 0
+        },
+        {
+          "name": "group31 15Action",
+          "duration": 0
+        },
+        {
+          "name": "group31 16Action",
+          "duration": 0
+        },
+        {
+          "name": "group31 17Action",
+          "duration": 0
+        },
+        {
+          "name": "group31 18Action",
+          "duration": 0
+        },
+        {
+          "name": "group31 19Action",
+          "duration": 0
+        },
+        {
+          "name": "group31 20Action",
+          "duration": 0
+        },
+        {
+          "name": "group31 21Action",
+          "duration": 0
+        },
+        {
+          "name": "group31 22Action",
+          "duration": 0
+        },
+        {
+          "name": "group31 g1Action",
+          "duration": 0
+        },
+        {
+          "name": "group31 g2Action",
+          "duration": 0
+        },
+        {
+          "name": "group31 g3Action",
+          "duration": 0
+        },
+        {
+          "name": "group31 g4Action",
+          "duration": 0
+        },
+        {
+          "name": "group31 g5Action",
+          "duration": 0
+        },
+        {
+          "name": "group31 g6Action",
+          "duration": 0
+        },
+        {
+          "name": "group31 g7Action",
+          "duration": 0
+        },
+        {
+          "name": "group31 g8Action",
+          "duration": 0
+        },
+        {
+          "name": "group31 g9Action",
+          "duration": 0
+        },
+        {
+          "name": "group31 grAction",
+          "duration": 0
+        },
+        {
+          "name": "group32 grAction",
+          "duration": 0
+        },
+        {
+          "name": "group51 10Action",
+          "duration": 0
+        },
+        {
+          "name": "group51 11Action",
+          "duration": 0
+        },
+        {
+          "name": "group51 12Action",
+          "duration": 0
+        },
+        {
+          "name": "group51 13Action",
+          "duration": 0
+        },
+        {
+          "name": "group51 14Action",
+          "duration": 0
+        },
+        {
+          "name": "group51 15Action",
+          "duration": 0
+        },
+        {
+          "name": "group51 16Action",
+          "duration": 0
+        },
+        {
+          "name": "group51 17Action",
+          "duration": 0
+        },
+        {
+          "name": "group51 18Action",
+          "duration": 0
+        },
+        {
+          "name": "group51 19Action",
+          "duration": 0
+        },
+        {
+          "name": "group51 20Action",
+          "duration": 0
+        },
+        {
+          "name": "group51 21Action",
+          "duration": 0
+        },
+        {
+          "name": "group51 g1Action",
+          "duration": 0
+        },
+        {
+          "name": "group51 g2Action",
+          "duration": 0
+        },
+        {
+          "name": "group51 g3Action",
+          "duration": 0
+        },
+        {
+          "name": "group51 g4Action",
+          "duration": 0
+        },
+        {
+          "name": "group51 g5Action",
+          "duration": 0
+        },
+        {
+          "name": "group51 g6Action",
+          "duration": 0
+        },
+        {
+          "name": "group51 g7Action",
+          "duration": 0
+        },
+        {
+          "name": "group51 g8Action",
+          "duration": 0
+        },
+        {
+          "name": "group51 g9Action",
+          "duration": 0
+        },
+        {
+          "name": "group51 grAction",
+          "duration": 0
+        },
+        {
+          "name": "group51 p1Action",
+          "duration": 0
+        },
+        {
+          "name": "group51 poAction",
+          "duration": 0
+        },
+        {
+          "name": "group51 pSAction",
+          "duration": 0
+        },
+        {
+          "name": "group61 p1Action",
+          "duration": 0
+        },
+        {
+          "name": "group61 p2Action",
+          "duration": 0
+        },
+        {
+          "name": "group61 pSAction",
+          "duration": 0
+        },
+        {
+          "name": "group73 g1Action",
+          "duration": 0
+        },
+        {
+          "name": "group73 g2Action",
+          "duration": 0
+        },
+        {
+          "name": "group73 grAction",
+          "duration": 0
+        },
+        {
+          "name": "group73 p1Action",
+          "duration": 0
+        },
+        {
+          "name": "group73 p2Action",
+          "duration": 0
+        },
+        {
+          "name": "group73 p3Action",
+          "duration": 0
+        },
+        {
+          "name": "group73 pCAction",
+          "duration": 0
+        },
+        {
+          "name": "group74 g1Action",
+          "duration": 0
+        },
+        {
+          "name": "group74 g2Action",
+          "duration": 0
+        },
+        {
+          "name": "group74 grAction",
+          "duration": 0
+        },
+        {
+          "name": "group74 p1Action",
+          "duration": 0
+        },
+        {
+          "name": "group74 p2Action",
+          "duration": 0
+        },
+        {
+          "name": "group74 p3Action",
+          "duration": 0
+        },
+        {
+          "name": "group74 pCAction",
+          "duration": 0
+        },
+        {
+          "name": "group75 10Action",
+          "duration": 0
+        },
+        {
+          "name": "group75 11Action",
+          "duration": 0
+        },
+        {
+          "name": "group75 g1Action",
+          "duration": 0
+        },
+        {
+          "name": "group75 g2Action",
+          "duration": 0
+        },
+        {
+          "name": "group75 g3Action",
+          "duration": 0
+        },
+        {
+          "name": "group75 grAction",
+          "duration": 0
+        },
+        {
+          "name": "group75 p1Action",
+          "duration": 0
+        },
+        {
+          "name": "group75 p2Action",
+          "duration": 0
+        },
+        {
+          "name": "group75 p3Action",
+          "duration": 0
+        },
+        {
+          "name": "group75 p4Action",
+          "duration": 0
+        },
+        {
+          "name": "group75 p5Action",
+          "duration": 0
+        },
+        {
+          "name": "group75 p6Action",
+          "duration": 0
+        },
+        {
+          "name": "group75 p7Action",
+          "duration": 0
+        },
+        {
+          "name": "group75 p8Action",
+          "duration": 0
+        },
+        {
+          "name": "group75 p9Action",
+          "duration": 0
+        },
+        {
+          "name": "group75 pCAction",
+          "duration": 0
+        },
+        {
+          "name": "group75 pPAction",
+          "duration": 0
+        },
+        {
+          "name": "pCone6Action",
+          "duration": 0
+        },
+        {
+          "name": "pCone7Action",
+          "duration": 0
+        },
+        {
+          "name": "pCube2Action",
+          "duration": 0
+        },
+        {
+          "name": "pCube27Action",
+          "duration": 0
+        },
+        {
+          "name": "pCube28Action",
+          "duration": 0
+        },
+        {
+          "name": "pCube29Action",
+          "duration": 0
+        },
+        {
+          "name": "pCube3Action",
+          "duration": 0
+        },
+        {
+          "name": "pCylinde10Action",
+          "duration": 0
+        },
+        {
+          "name": "pCylinde11Action",
+          "duration": 0
+        },
+        {
+          "name": "pCylinder1Action",
+          "duration": 0
+        },
+        {
+          "name": "pCylinder2Action",
+          "duration": 0
+        },
+        {
+          "name": "pCylinder3Action",
+          "duration": 0
+        },
+        {
+          "name": "pCylinder4Action",
+          "duration": 0
+        },
+        {
+          "name": "pCylinder5Action",
+          "duration": 0
+        },
+        {
+          "name": "pCylinder6Action",
+          "duration": 0
+        },
+        {
+          "name": "pCylinder7Action",
+          "duration": 0
+        },
+        {
+          "name": "pCylinder8Action",
+          "duration": 0
+        },
+        {
+          "name": "pCylinder9Action",
+          "duration": 0
+        },
+        {
+          "name": "polySurfa1Action",
+          "duration": 0
+        },
+        {
+          "name": "polySurfa2Action",
+          "duration": 0
+        },
+        {
+          "name": "polySurfa3Action",
+          "duration": 0
+        },
+        {
+          "name": "polySurfa4Action",
+          "duration": 0
+        },
+        {
+          "name": "polySurfacAction",
+          "duration": 0
+        },
+        {
+          "name": "pPipe1Action",
+          "duration": 0
+        },
+        {
+          "name": "pPipe2Action",
+          "duration": 0
+        },
+        {
+          "name": "pPlane1Action",
+          "duration": 0
+        },
+        {
+          "name": "pPlane2Action",
+          "duration": 0
+        },
+        {
+          "name": "pSphere20Action",
+          "duration": 0
+        },
+        {
+          "name": "pSphere26Action",
+          "duration": 0
+        },
+        {
+          "name": "pSphere27Action",
+          "duration": 0
+        },
+        {
+          "name": "pSphere28Action",
+          "duration": 0
+        },
+        {
+          "name": "pSphere29Action",
+          "duration": 0
+        },
+        {
+          "name": "pSphere30Action",
+          "duration": 0
+        }
+      ],
+      "meshopt": true,
+      "nodes": [
+        "group13 10",
+        "group13 11",
+        "group13 12",
+        "group13 13",
+        "group13 14",
+        "group13 g1",
+        "group13 g2",
+        "group13 g3",
+        "group13 g4",
+        "group13 g5",
+        "group13 g6",
+        "group13 g7",
+        "group13 g8",
+        "group13 g9",
+        "group13 gr",
+        "group13 p1",
+        "group13 p2",
+        "group13 pC",
+        "group31 10",
+        "group31 11",
+        "group31 12",
+        "group31 13",
+        "group31 14",
+        "group31 15",
+        "group31 16",
+        "group31 17",
+        "group31 18",
+        "group31 19",
+        "group31 20",
+        "group31 21",
+        "group31 22",
+        "group31 g1",
+        "group31 g2",
+        "group31 g3",
+        "group31 g4",
+        "group31 g5",
+        "group31 g6",
+        "group31 g7",
+        "group31 g8",
+        "group31 g9",
+        "group31 gr",
+        "group32 gr",
+        "group51 10",
+        "group51 11",
+        "group51 12",
+        "group51 13",
+        "group51 14",
+        "group51 15",
+        "group51 16",
+        "group51 17",
+        "group51 18",
+        "group51 19",
+        "group51 20",
+        "group51 21",
+        "group51 g1",
+        "group51 g2",
+        "group51 g3",
+        "group51 g4",
+        "group51 g5",
+        "group51 g6",
+        "group51 g7",
+        "group51 g8",
+        "group51 g9",
+        "group51 gr",
+        "group51 p1",
+        "group51 po",
+        "group51 pS",
+        "group61 p1",
+        "group61 p2",
+        "group61 pS",
+        "group73 g1",
+        "group73 g2",
+        "group73 gr",
+        "group73 p1",
+        "group73 p2",
+        "group73 p3",
+        "group73 pC",
+        "group74 g1",
+        "group74 g2",
+        "group74 gr",
+        "group74 p1",
+        "group74 p2",
+        "group74 p3",
+        "group74 pC",
+        "group75 10",
+        "group75 11",
+        "group75 g1",
+        "group75 g2",
+        "group75 g3",
+        "group75 gr",
+        "group75 p1",
+        "group75 p2",
+        "group75 p3",
+        "group75 p4",
+        "group75 p5",
+        "group75 p6",
+        "group75 p7",
+        "group75 p8",
+        "group75 p9",
+        "group75 pC",
+        "group75 pP",
+        "pCone6",
+        "pCone7",
+        "pCube2",
+        "pCube27",
+        "pCube28",
+        "pCube29",
+        "pCube3",
+        "pCylinde10",
+        "pCylinde11",
+        "pCylinder1",
+        "pCylinder2",
+        "pCylinder3",
+        "pCylinder4",
+        "pCylinder5",
+        "pCylinder6",
+        "pCylinder7",
+        "pCylinder8",
+        "pCylinder9",
+        "polySurfa1",
+        "polySurfa2",
+        "polySurfa3",
+        "polySurfa4",
+        "polySurfac",
+        "pPipe1",
+        "pPipe2",
+        "pPlane1",
+        "pPlane2",
+        "pSphere20",
+        "pSphere26",
+        "pSphere27",
+        "pSphere28",
+        "pSphere29",
+        "pSphere30",
+        "lunarlande",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "EXT_texture_webp",
+        "KHR_materials_specular",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group13 10"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group13 11"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group13 12"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group13 13"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group13 14"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group13 g1"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group13 g2"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group13 g3"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group13 g4"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group13 g5"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group13 g6"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group13 g7"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group13 g8"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group13 g9"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group13 gr"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group13 p1"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group13 p2"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group13 pC"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group31 10"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group31 11"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group31 12"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group31 13"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group31 14"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group31 15"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group31 16"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group31 17"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group31 18"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group31 19"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group31 20"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group31 21"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group31 22"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group31 g1"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group31 g2"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group31 g3"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group31 g4"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group31 g5"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group31 g6"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group31 g7"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group31 g8"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group31 g9"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group31 gr"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group32 gr"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group51 10"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group51 11"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group51 12"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group51 13"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group51 14"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group51 15"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group51 16"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group51 17"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group51 18"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group51 19"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group51 20"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group51 21"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group51 g1"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group51 g2"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group51 g3"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group51 g4"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group51 g5"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group51 g6"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group51 g7"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group51 g8"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group51 g9"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group51 gr"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group51 p1"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group51 po"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group51 pS"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group61 p1"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group61 p2"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group61 pS"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group73 g1"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group73 g2"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group73 gr"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group73 p1"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group73 p2"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group73 p3"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group73 pC"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group74 g1"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group74 g2"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group74 gr"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group74 p1"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group74 p2"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group74 p3"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group74 pC"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group75 10"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group75 11"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group75 g1"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group75 g2"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group75 g3"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group75 gr"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group75 p1"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group75 p2"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group75 p3"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group75 p4"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group75 p5"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group75 p6"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group75 p7"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group75 p8"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group75 p9"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group75 pC"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group75 pP"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pCone6"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pCone7"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pCube2"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pCube27"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pCube28"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pCube29"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pCube3"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pCylinde10"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pCylinde11"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pCylinder1"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pCylinder2"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pCylinder3"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pCylinder4"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pCylinder5"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pCylinder6"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pCylinder7"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pCylinder8"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pCylinder9"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: polySurfa1"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: polySurfa2"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: polySurfa3"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: polySurfa4"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: polySurfac"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pPipe1"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pPipe2"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pPlane1"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pPlane2"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pSphere20"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pSphere26"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pSphere27"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pSphere28"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pSphere29"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pSphere30"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Hay nodos sin nombre"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: lunarlandeAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group13 10Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group13 11Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group13 12Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group13 13Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group13 14Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group13 g1Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group13 g2Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group13 g3Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group13 g4Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group13 g5Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group13 g6Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group13 g7Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group13 g8Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group13 g9Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group13 grAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group13 p1Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group13 p2Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group13 pCAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group31 10Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group31 11Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group31 12Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group31 13Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group31 14Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group31 15Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group31 16Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group31 17Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group31 18Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group31 19Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group31 20Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group31 21Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group31 22Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group31 g1Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group31 g2Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group31 g3Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group31 g4Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group31 g5Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group31 g6Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group31 g7Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group31 g8Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group31 g9Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group31 grAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group32 grAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group51 10Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group51 11Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group51 12Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group51 13Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group51 14Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group51 15Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group51 16Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group51 17Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group51 18Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group51 19Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group51 20Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group51 21Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group51 g1Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group51 g2Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group51 g3Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group51 g4Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group51 g5Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group51 g6Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group51 g7Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group51 g8Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group51 g9Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group51 grAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group51 p1Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group51 poAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group51 pSAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group61 p1Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group61 p2Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group61 pSAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group73 g1Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group73 g2Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group73 grAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group73 p1Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group73 p2Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group73 p3Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group73 pCAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group74 g1Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group74 g2Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group74 grAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group74 p1Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group74 p2Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group74 p3Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group74 pCAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group75 10Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group75 11Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group75 g1Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group75 g2Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group75 g3Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group75 grAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group75 p1Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group75 p2Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group75 p3Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group75 p4Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group75 p5Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group75 p6Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group75 p7Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group75 p8Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group75 p9Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group75 pCAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group75 pPAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pCone6Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pCone7Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pCube2Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pCube27Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pCube28Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pCube29Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pCube3Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pCylinde10Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pCylinde11Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pCylinder1Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pCylinder2Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pCylinder3Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pCylinder4Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pCylinder5Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pCylinder6Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pCylinder7Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pCylinder8Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pCylinder9Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: polySurfa1Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: polySurfa2Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: polySurfa3Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: polySurfa4Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: polySurfacAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pPipe1Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pPipe2Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pPlane1Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pPlane2Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pSphere20Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pSphere26Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pSphere27Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pSphere28Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pSphere29Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pSphere30Action"
+        }
+      ],
+      "path": "/workspace/apolo11/game/public/models/lm.glb"
+    },
+    {
+      "file": "moon-rocks.glb",
+      "mb": 1.388,
+      "bytes": 1455456,
+      "tris": 27900,
+      "bbox": {
+        "min": [
+          -3.83462,
+          -0.02878,
+          -0.84786
+        ],
+        "max": [
+          4.2225,
+          0.89266,
+          0.72189
+        ],
+        "size": [
+          8.05712,
+          0.92143,
+          1.56975
+        ]
+      },
+      "materials": [
+        {
+          "name": "MoonRock"
+        }
+      ],
+      "textures": [
+        {
+          "name": "rock_normal",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "rock_albedo",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "rock_orm",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        }
+      ],
+      "skins": [],
+      "bonesMax": 0,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [],
+      "meshopt": true,
+      "nodes": [
+        "rock-01",
+        "rock-02",
+        "rock-03",
+        "rock-04",
+        "rock-05",
+        "rock-06",
+        "rock-07",
+        "rock-08",
+        "rock-09",
+        "rock-10",
+        "sample-rock",
+        "moon-rocks"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "EXT_texture_webp",
+        "KHR_materials_specular",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [],
+      "path": "/workspace/apolo11/game/public/models/moon-rocks.glb"
+    },
+    {
+      "file": "moon-surface-tile.glb",
+      "mb": 1.0979,
+      "bytes": 1151256,
+      "tris": 41472,
+      "bbox": {
+        "min": [
+          -16,
+          -0.99929,
+          -16
+        ],
+        "max": [
+          16,
+          0.44607,
+          16
+        ],
+        "size": [
+          32,
+          1.44536,
+          32
+        ]
+      },
+      "materials": [
+        {
+          "name": "Regolith"
+        }
+      ],
+      "textures": [
+        {
+          "name": "regolith_normal",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "regolith_albedo",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "regolith_orm",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        }
+      ],
+      "skins": [],
+      "bonesMax": 0,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [],
+      "meshopt": true,
+      "nodes": [
+        "moon-surface-tile"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "EXT_texture_webp",
+        "KHR_materials_specular",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [],
+      "path": "/workspace/apolo11/game/public/models/moon-surface-tile.glb"
+    },
+    {
+      "file": "rover.glb",
+      "mb": 1.9055,
+      "bytes": 1998076,
+      "tris": 183037,
+      "bbox": {
+        "min": [
+          -1.3523,
+          0.00073,
+          -1.73632
+        ],
+        "max": [
+          1.35229,
+          1.84633,
+          1.37194
+        ],
+        "size": [
+          2.70458,
+          1.8456,
+          3.10826
+        ]
+      },
+      "materials": [
+        {
+          "name": "mars_2020_03"
+        },
+        {
+          "name": "mars_2020_01_n"
+        },
+        {
+          "name": "transparent"
+        },
+        {
+          "name": "mars_2020_02"
+        },
+        {
+          "name": "glass_trans"
+        },
+        {
+          "name": "mars_2020_06_brass"
+        },
+        {
+          "name": "mars_2020_05"
+        },
+        {
+          "name": "mars_2020_02_n"
+        },
+        {
+          "name": "blades"
+        },
+        {
+          "name": "mars_2020_01"
+        },
+        {
+          "name": "mars_2020_04"
+        },
+        {
+          "name": "mars_2020_04_aluminum_r"
+        },
+        {
+          "name": "hub"
+        },
+        {
+          "name": "mars_2020_05_gunmetal"
+        },
+        {
+          "name": "mars_2020_gunmetal_dark"
+        },
+        {
+          "name": "mars_2020_07"
+        },
+        {
+          "name": "mars_2020_06"
+        },
+        {
+          "name": "arm_graphics"
+        },
+        {
+          "name": "mars_2020_05_brass"
+        },
+        {
+          "name": "mars_2020_05_aluminum"
+        },
+        {
+          "name": "mars_2020_05_cooling_lines"
+        },
+        {
+          "name": "glass_2"
+        },
+        {
+          "name": "mars_2020_06_n"
+        },
+        {
+          "name": "sample_handling_door"
+        },
+        {
+          "name": "PaletteMaterial001"
+        },
+        {
+          "name": "PaletteMaterial002"
+        },
+        {
+          "name": "PaletteMaterial003"
+        },
+        {
+          "name": "PaletteMaterial004"
+        },
+        {
+          "name": "PaletteMaterial005"
+        },
+        {
+          "name": "PaletteMaterial006"
+        },
+        {
+          "name": "PaletteMaterial007"
+        },
+        {
+          "name": "PaletteMaterial008"
+        }
+      ],
+      "textures": [
+        {
+          "name": "mars_2020_03",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "mars_2020_01_n",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "mars_2020_01",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "mars_2020_02",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "glass",
+          "mime": "image/webp",
+          "width": 128,
+          "height": 128
+        },
+        {
+          "name": "mars_2020_06_n",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "mars_2020_06",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "mars_2020_05",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "mars_2020_02_n",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "blade",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 512
+        },
+        {
+          "name": "mars_2020_04",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "mars_2020_spring_n",
+          "mime": "image/webp",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "name": "mars_2020_hub_n",
+          "mime": "image/webp",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "name": "mars_2020_hub",
+          "mime": "image/webp",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "name": "mars_2020_05_n",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "foil_n.jpg",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "mars_2020_07",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "arm_graphics",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "mars_2020_05_r",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "sample_handling_door",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "PaletteBaseColor",
+          "mime": "image/webp",
+          "width": 128,
+          "height": 4
+        },
+        {
+          "name": "PaletteMetallicRoughness",
+          "mime": "image/webp",
+          "width": 128,
+          "height": 4
+        }
+      ],
+      "skins": [
+        {
+          "name": "Armature",
+          "bones": 15
+        }
+      ],
+      "bonesMax": 15,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [
+        {
+          "name": "CylinderAction",
+          "duration": 20.042
+        },
+        {
+          "name": "bottomAction",
+          "duration": 1.25
+        },
+        {
+          "name": "Empty.001Action.003",
+          "duration": 3.75
+        },
+        {
+          "name": "Action",
+          "duration": 20
+        },
+        {
+          "name": "topAction",
+          "duration": 20
+        },
+        {
+          "name": "Cylinder.002Action",
+          "duration": 20
+        },
+        {
+          "name": "ArmatureAction",
+          "duration": 15
+        },
+        {
+          "name": "haz_cov_front",
+          "duration": 0
+        },
+        {
+          "name": "e_covers_rear",
+          "duration": 1.25
+        },
+        {
+          "name": "haz_cov_rear_l",
+          "duration": 0
+        },
+        {
+          "name": "haz_cov_rear_r",
+          "duration": 0
+        },
+        {
+          "name": "arm.003Action",
+          "duration": 24.167
+        },
+        {
+          "name": "arm.002Action",
+          "duration": 24.167
+        },
+        {
+          "name": "armAction",
+          "duration": 24.167
+        },
+        {
+          "name": "arm.004Action",
+          "duration": 24.167
+        },
+        {
+          "name": "turret_objAction",
+          "duration": 22.917
+        },
+        {
+          "name": "turret_cam_cover_01",
+          "duration": 22.917
+        },
+        {
+          "name": "turret.001Action.001",
+          "duration": 22.917
+        },
+        {
+          "name": "hingeAction",
+          "duration": 16.875
+        },
+        {
+          "name": "Empty.002Action",
+          "duration": 1.25
+        },
+        {
+          "name": "Action",
+          "duration": 20
+        },
+        {
+          "name": "arm_01_pivotAction",
+          "duration": 2.5
+        },
+        {
+          "name": "arm_02_pivotAction",
+          "duration": 3.75
+        }
+      ],
+      "meshopt": true,
+      "nodes": [
+        "bottom.002",
+        "bottom.003",
+        "Cylinder.001",
+        "Empty.001",
+        "probe.001",
+        "lens",
+        "Mastcam_Z_cams",
+        "NavCams",
+        "head",
+        "Cylinder.002",
+        "top",
+        "bottom",
+        "Cylinder",
+        "Bone.014",
+        "Bone.013",
+        "Bone.012",
+        "Bone.011",
+        "Bone.010",
+        "Bone.009",
+        "Bone.008",
+        "Bone.007",
+        "Bone.006",
+        "Bone.005",
+        "Bone.004",
+        "Bone.003",
+        "Bone.002",
+        "Bone.001",
+        "Bone",
+        "bottom.001",
+        "Armature",
+        "Body",
+        "hazcams_front",
+        "hazcams_front_cover",
+        "Empty",
+        "hazcams_rear_cover_l",
+        "hazcams_rear_cover_r",
+        "Wheels_objs",
+        "suspension",
+        "arm.001",
+        "corring_drill",
+        "cover_02",
+        "cover_03",
+        "PIXL_cover_01",
+        "hinge",
+        "hinge_cover_01",
+        "PIXL",
+        "turret_obj",
+        "arm.004",
+        "arm",
+        "arm.002",
+        "arm.003",
+        "lab",
+        "rtg",
+        "Name_Chips",
+        "probe",
+        "Up_Look_Camera",
+        "arm_01",
+        "arm_01_pivot",
+        "arm_01_joint",
+        "arm_02",
+        "arm_02_pivot",
+        "arm_02_joint",
+        "Body_Parts",
+        "calibration_target",
+        "box",
+        "arm_cable_etc",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "EXT_texture_webp",
+        "KHR_materials_clearcoat",
+        "KHR_materials_ior",
+        "KHR_materials_specular",
+        "KHR_materials_transmission",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: bottom.002"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: bottom.003"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: Cylinder.001"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: Empty.001"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: probe.001"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: Mastcam_Z_cams"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: NavCams"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: Cylinder.002"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: Cylinder"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: bottom.001"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: Armature"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: Body"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: hazcams_front"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: hazcams_front_cover"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: Empty"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: hazcams_rear_cover_l"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: hazcams_rear_cover_r"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: Wheels_objs"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: arm.001"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: corring_drill"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: cover_02"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: cover_03"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: PIXL_cover_01"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: hinge_cover_01"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: PIXL"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: turret_obj"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: arm.004"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: arm.002"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: arm.003"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: Name_Chips"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: Up_Look_Camera"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: arm_01"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: arm_01_pivot"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: arm_01_joint"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: arm_02"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: arm_02_pivot"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: arm_02_joint"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: Body_Parts"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: calibration_target"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: arm_cable_etc"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Hay nodos sin nombre"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: CylinderAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: bottomAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: Empty.001Action.003"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: topAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: Cylinder.002Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: ArmatureAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: haz_cov_front"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: e_covers_rear"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: haz_cov_rear_l"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: haz_cov_rear_r"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: arm.003Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: arm.002Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: armAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: arm.004Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: turret_objAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: turret_cam_cover_01"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: turret.001Action.001"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: hingeAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: Empty.002Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: arm_01_pivotAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: arm_02_pivotAction"
+        },
+        {
+          "code": "over-1.5mb",
+          "message": "1,906 MB supera el límite de 1.5 MB"
+        }
+      ],
+      "path": "/workspace/apolo11/game/public/models/rover.glb"
+    },
+    {
+      "file": "s4b-sla.glb",
+      "mb": 1.3817,
+      "bytes": 1448768,
+      "tris": 38660,
+      "bbox": {
+        "min": [
+          -3.42124,
+          -20.65098,
+          -3.90197
+        ],
+        "max": [
+          3.42124,
+          8.515,
+          3.90197
+        ],
+        "size": [
+          6.84248,
+          29.16598,
+          7.80393
+        ]
+      },
+      "materials": [
+        {
+          "name": "S4B-Negro"
+        },
+        {
+          "name": "Aluminio-Estructura"
+        },
+        {
+          "name": "Metal-Oscuro"
+        },
+        {
+          "name": "Kapton-Oro"
+        },
+        {
+          "name": "Pintura-Blanca"
+        },
+        {
+          "name": "S4B-Blanco"
+        },
+        {
+          "name": "Junta"
+        },
+        {
+          "name": "RCS-Tobera"
+        },
+        {
+          "name": "S4B-Corrugado-Negro"
+        },
+        {
+          "name": "S4B-Corrugado-Blanco"
+        },
+        {
+          "name": "S4B-Aislante"
+        },
+        {
+          "name": "J2-Tubos"
+        },
+        {
+          "name": "J2-Interior"
+        },
+        {
+          "name": "Acero"
+        },
+        {
+          "name": "SLA-Corcho"
+        },
+        {
+          "name": "SLA-Interior"
+        },
+        {
+          "name": "SLA-Canto"
+        }
+      ],
+      "textures": [
+        {
+          "name": "paint_normal",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "paint_orm",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "alu_normal",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "alu_albedo",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "alu_orm",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "mylar_normal",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "corr_normal",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "tubes_normal",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "cork_normal",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "cork_albedo",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "cork_orm",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "honey_normal",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "honey_albedo",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "honey_orm",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        }
+      ],
+      "skins": [],
+      "bonesMax": 0,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [
+        {
+          "name": "sla-open",
+          "duration": 2.542
+        },
+        {
+          "name": "sla-open-wide",
+          "duration": 5.042
+        },
+        {
+          "name": "sla-jettison",
+          "duration": 10.042
+        }
+      ],
+      "meshopt": true,
+      "nodes": [
+        "IU",
+        "S4B-APS-1-pitch",
+        "S4B-APS-1-ullage",
+        "S4B-APS-1-yaw-roll-1",
+        "S4B-APS-1-yaw-roll-2",
+        "S4B-APS-1",
+        "S4B-APS-2-pitch",
+        "S4B-APS-2-ullage",
+        "S4B-APS-2-yaw-roll-1",
+        "S4B-APS-2-yaw-roll-2",
+        "S4B-APS-2",
+        "S4B-body",
+        "j2-thrust-point",
+        "S4B-J2",
+        "S4B-J2-actuators",
+        "S4B",
+        "csm-dock-launch",
+        "lm-docking-target",
+        "lm-stow",
+        "sla-fixed",
+        "sla-panel-1",
+        "sla-panel-2",
+        "sla-panel-3",
+        "sla-panel-4",
+        "SLA",
+        "S4B-SLA",
+        "IU-geo",
+        "S4B-APS-1-geo",
+        "S4B-APS-2-geo",
+        "S4B-body-geo",
+        "S4B-J2-geo",
+        "S4B-J2-actuators-geo",
+        "sla-fixed-geo",
+        "sla-panel-1-geo",
+        "sla-panel-2-geo",
+        "sla-panel-3-geo",
+        "sla-panel-4-geo"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "EXT_texture_webp",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: IU"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: S4B-APS-1-pitch"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: S4B-APS-1-ullage"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: S4B-APS-1-yaw-roll-1"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: S4B-APS-1-yaw-roll-2"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: S4B-APS-1"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: S4B-APS-2-pitch"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: S4B-APS-2-ullage"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: S4B-APS-2-yaw-roll-1"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: S4B-APS-2-yaw-roll-2"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: S4B-APS-2"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: S4B-body"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: S4B-J2"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: S4B-J2-actuators"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: S4B"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SLA"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: S4B-SLA"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: IU-geo"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: S4B-APS-1-geo"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: S4B-APS-2-geo"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: S4B-body-geo"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: S4B-J2-geo"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: S4B-J2-actuators-geo"
+        }
+      ],
+      "path": "/workspace/apolo11/game/public/models/s4b-sla.glb"
+    },
+    {
+      "file": "sample-box.glb",
+      "mb": 0.3378,
+      "bytes": 354236,
+      "tris": 8006,
+      "bbox": {
+        "min": [
+          -0.245,
+          -0.00148,
+          -0.15735
+        ],
+        "max": [
+          0.56377,
+          0.84,
+          0.19505
+        ],
+        "size": [
+          0.80877,
+          0.84148,
+          0.3524
+        ]
+      },
+      "materials": [
+        {
+          "name": "TeflonBag"
+        },
+        {
+          "name": "Aluminium"
+        },
+        {
+          "name": "BlackAnodized"
+        },
+        {
+          "name": "BlackRubber"
+        },
+        {
+          "name": "Steel"
+        },
+        {
+          "name": "SRCAluminium"
+        },
+        {
+          "name": "IndiumSeal"
+        },
+        {
+          "name": "YorkMeshLiner"
+        },
+        {
+          "name": "DataPlate"
+        }
+      ],
+      "textures": [
+        {
+          "name": "cloth_normal",
+          "mime": "image/webp",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "name": "cloth_orm",
+          "mime": "image/webp",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "name": "alu_normal",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "alu_albedo",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "alu_orm",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "paint_normal",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "paint_orm",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "labels_albedo",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 256
+        }
+      ],
+      "skins": [],
+      "bonesMax": 0,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [
+        {
+          "name": "lid-open",
+          "duration": 1.458
+        }
+      ],
+      "meshopt": true,
+      "nodes": [
+        "grip",
+        "sample-bag",
+        "sampler-handle",
+        "ContingencySampler",
+        "latch-l",
+        "latch-r",
+        "lid-shell",
+        "lid",
+        "sample-slot",
+        "src-body",
+        "SampleBox",
+        "sample-bag-geo",
+        "sampler-handle-geo",
+        "latch-l-geo",
+        "latch-r-geo",
+        "lid-shell-geo",
+        "src-body-geo"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "EXT_texture_webp",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: ContingencySampler"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SampleBox"
+        }
+      ],
+      "path": "/workspace/apolo11/game/public/models/sample-box.glb"
+    },
+    {
+      "file": "saturn_v.glb",
+      "mb": 0.2258,
+      "bytes": 236740,
+      "tris": 26171,
+      "bbox": {
+        "min": [
+          -1.01941,
+          -0.14089,
+          -0.2641
+        ],
+        "max": [
+          0.9949,
+          12.84592,
+          1.7502
+        ],
+        "size": [
+          2.0143,
+          12.98681,
+          2.0143
+        ]
+      },
+      "materials": [
+        {
+          "name": "blinn10SG"
+        },
+        {
+          "name": "blinn9SG"
+        },
+        {
+          "name": "blinn8SG"
+        },
+        {
+          "name": "blinn11SG"
+        },
+        {
+          "name": "PaletteMaterial001"
+        },
+        {
+          "name": "PaletteMaterial002"
+        },
+        {
+          "name": "PaletteMaterial003"
+        }
+      ],
+      "textures": [
+        {
+          "name": "SATURNVU",
+          "mime": "image/webp",
+          "width": 1000,
+          "height": 1000
+        },
+        {
+          "name": "SATURNVA",
+          "mime": "image/webp",
+          "width": 1000,
+          "height": 1000
+        },
+        {
+          "name": "SATURNVT",
+          "mime": "image/webp",
+          "width": 1000,
+          "height": 1000
+        },
+        {
+          "name": "SATURNVW",
+          "mime": "image/webp",
+          "width": 1000,
+          "height": 1000
+        },
+        {
+          "name": "PaletteBaseColor",
+          "mime": "image/webp",
+          "width": 64,
+          "height": 4
+        }
+      ],
+      "skins": [],
+      "bonesMax": 0,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [
+        {
+          "name": "saturnv_caAction",
+          "duration": 0
+        },
+        {
+          "name": "group1 groAction",
+          "duration": 0
+        },
+        {
+          "name": "group1 pCoAction",
+          "duration": 0
+        },
+        {
+          "name": "group10 pCAction",
+          "duration": 0
+        },
+        {
+          "name": "group11 pCAction",
+          "duration": 0
+        },
+        {
+          "name": "group3 groAction",
+          "duration": 0
+        },
+        {
+          "name": "group6 pCuAction",
+          "duration": 0
+        },
+        {
+          "name": "group7 pCuAction",
+          "duration": 0
+        },
+        {
+          "name": "group8 pCyAction",
+          "duration": 0
+        },
+        {
+          "name": "group9 pCyAction",
+          "duration": 0
+        },
+        {
+          "name": "pCone2 groAction",
+          "duration": 0
+        },
+        {
+          "name": "pCube1 gr1Action",
+          "duration": 0
+        },
+        {
+          "name": "pCube1 groAction",
+          "duration": 0
+        },
+        {
+          "name": "pCylinder1Action",
+          "duration": 0
+        },
+        {
+          "name": "pCylinder2Action",
+          "duration": 0
+        },
+        {
+          "name": "pCylinder3Action",
+          "duration": 0
+        },
+        {
+          "name": "pCylinder4Action",
+          "duration": 0
+        },
+        {
+          "name": "pCylinder5Action",
+          "duration": 0
+        },
+        {
+          "name": "polySurfa1Action",
+          "duration": 0
+        },
+        {
+          "name": "polySurfa2Action",
+          "duration": 0
+        },
+        {
+          "name": "polySurfa3Action",
+          "duration": 0
+        },
+        {
+          "name": "polySurfa4Action",
+          "duration": 0
+        },
+        {
+          "name": "polySurfacAction",
+          "duration": 0
+        }
+      ],
+      "meshopt": true,
+      "nodes": [
+        "group1 gro",
+        "group1 pCo",
+        "group10 pC",
+        "group11 pC",
+        "group3 gro",
+        "group6 pCu",
+        "group7 pCu",
+        "group8 pCy",
+        "group9 pCy",
+        "pCone2 gro",
+        "pCube1 gr1",
+        "pCube1 gro",
+        "pCylinder1",
+        "pCylinder2",
+        "pCylinder3",
+        "pCylinder4",
+        "pCylinder5",
+        "polySurfa1",
+        "polySurfa2",
+        "polySurfa3",
+        "polySurfa4",
+        "polySurfac",
+        "saturnv_ca",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)",
+        "(sin-nombre)"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "EXT_texture_webp",
+        "KHR_materials_specular",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [
+        {
+          "code": "not-kebab-case",
+          "message": "Nombre de archivo no es kebab-case: saturn_v.glb"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group1 gro"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group1 pCo"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group10 pC"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group11 pC"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group3 gro"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group6 pCu"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group7 pCu"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group8 pCy"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: group9 pCy"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pCone2 gro"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pCube1 gr1"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pCube1 gro"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pCylinder1"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pCylinder2"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pCylinder3"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pCylinder4"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: pCylinder5"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: polySurfa1"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: polySurfa2"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: polySurfa3"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: polySurfa4"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: polySurfac"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: saturnv_ca"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Hay nodos sin nombre"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: saturnv_caAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group1 groAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group1 pCoAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group10 pCAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group11 pCAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group3 groAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group6 pCuAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group7 pCuAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group8 pCyAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: group9 pCyAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pCone2 groAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pCube1 gr1Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pCube1 groAction"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pCylinder1Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pCylinder2Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pCylinder3Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pCylinder4Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: pCylinder5Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: polySurfa1Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: polySurfa2Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: polySurfa3Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: polySurfa4Action"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Clip no es kebab-case: polySurfacAction"
+        }
+      ],
+      "path": "/workspace/apolo11/game/public/models/saturn_v.glb"
+    },
+    {
+      "file": "saturn-v.glb",
+      "mb": 0.8513,
+      "bytes": 892664,
+      "tris": 53492,
+      "bbox": {
+        "min": [
+          -6.50538,
+          -0.00009,
+          -6.50538
+        ],
+        "max": [
+          6.50538,
+          110.6,
+          6.50538
+        ],
+        "size": [
+          13.01076,
+          110.60009,
+          13.01076
+        ]
+      },
+      "materials": [
+        {
+          "name": "PaintBlack"
+        },
+        {
+          "name": "DarkMetal"
+        },
+        {
+          "name": "SeamGap"
+        },
+        {
+          "name": "JointMetal"
+        },
+        {
+          "name": "EngineF1"
+        },
+        {
+          "name": "PaintWhite"
+        },
+        {
+          "name": "CorrWhite"
+        },
+        {
+          "name": "CorrBlack"
+        },
+        {
+          "name": "HeatShield"
+        },
+        {
+          "name": "DecalRed"
+        },
+        {
+          "name": "Flag"
+        },
+        {
+          "name": "EngineJ2"
+        },
+        {
+          "name": "Aluminum"
+        },
+        {
+          "name": "CMFoil"
+        },
+        {
+          "name": "Window"
+        }
+      ],
+      "textures": [
+        {
+          "name": "skin_normal",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "paint_black",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "bolt_normal",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "tube_normal",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "engine_dark",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "paint_white",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "corr_normal",
+          "mime": "image/webp",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "flag_us",
+          "mime": "image/webp",
+          "width": 380,
+          "height": 200
+        },
+        {
+          "name": "engine_steel",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        }
+      ],
+      "skins": [],
+      "bonesMax": 0,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [],
+      "meshopt": true,
+      "nodes": [
+        "iu-ring",
+        "IU",
+        "s1c-engines-f1",
+        "s1c-fairings-fins",
+        "s1c-skin",
+        "s1c-thrust-point",
+        "S1C",
+        "s2-aft-interstage-mesh",
+        "s2-aft-interstage",
+        "s2-engines-j2",
+        "s2-skin",
+        "s2-thrust-point",
+        "S2",
+        "s4b-engine-j2",
+        "s4b-skin",
+        "s4b-thrust-point",
+        "S4B",
+        "csm-sm-cm",
+        "CSM",
+        "les-tower-bpc",
+        "LES",
+        "sla-panels",
+        "SLA",
+        "Spacecraft",
+        "SaturnV"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "EXT_texture_webp",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: IU"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: S1C"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: S2"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: S4B"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: CSM"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: LES"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SLA"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: Spacecraft"
+        },
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: SaturnV"
+        }
+      ],
+      "path": "/workspace/apolo11/game/public/models/saturn-v.glb"
+    },
+    {
+      "file": "tv-camera.glb",
+      "mb": 0.3055,
+      "bytes": 320368,
+      "tris": 8150,
+      "bbox": {
+        "min": [
+          -0.43405,
+          -0.002,
+          -3.00029
+        ],
+        "max": [
+          0.73628,
+          1.181,
+          0.26199
+        ],
+        "size": [
+          1.17032,
+          1.183,
+          3.26228
+        ]
+      },
+      "materials": [
+        {
+          "name": "Cable"
+        },
+        {
+          "name": "BlackAnodized"
+        },
+        {
+          "name": "Aluminium"
+        },
+        {
+          "name": "CameraBody"
+        },
+        {
+          "name": "Steel"
+        },
+        {
+          "name": "Nameplate"
+        },
+        {
+          "name": "LensGlass"
+        },
+        {
+          "name": "AluminiumDull"
+        }
+      ],
+      "textures": [
+        {
+          "name": "paint_normal",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "paint_orm",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "alu_normal",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "alu_albedo",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "alu_orm",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "name": "labels_albedo",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 256
+        }
+      ],
+      "skins": [],
+      "bonesMax": 0,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [],
+      "meshopt": true,
+      "nodes": [
+        "cable",
+        "pan-head",
+        "camera-body",
+        "lens",
+        "lens-axis",
+        "tilt",
+        "pan",
+        "tripod",
+        "TVCamera",
+        "cable-geo",
+        "pan-head-geo",
+        "camera-body-geo",
+        "lens-geo",
+        "tripod-geo"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "EXT_texture_webp",
+        "KHR_materials_specular",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [
+        {
+          "code": "not-kebab-case",
+          "message": "Nodo no es kebab-case: TVCamera"
+        }
+      ],
+      "path": "/workspace/apolo11/game/public/models/tv-camera.glb"
+    }
+  ]
+}

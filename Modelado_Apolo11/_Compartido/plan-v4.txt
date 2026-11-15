@@ -1,0 +1,949 @@
+
+NASA Space Apps Challenge 2026 · Apolo 11: Un gran salto
+PLAN DE MODELADO v4 · Partiendo de lo que ya existe en «NASA OFICIAL»
+4 personas · 2 cuentas de Grok Bot compartidas (herramienta) · inicio: sábado 14 nov, 16:00 · cierre de modelos: domingo 15 nov, 12:00 · entrega: domingo 15 nov, 23:59 (hora de Bolivia, UTC−4)
+1. Resumen
+Revisé los 23 archivos .glb de public/models del juego web (Three.js + Vite, «Planta la bandera»), sus escenas (src/scenes) y la documentación. De los 44 modelos del guion, 14 ya están HECHOS, 10 se pueden REUSAR CON UN AJUSTE y 20 FALTAN (de esos, 8 son opcionales). Lo más caro ya existe: Saturn V, CSM, LM, SLA, interior del CM, plataforma 39A, terreno lunar, EASEP, bandera y el astronauta A7L con rig y 13 animaciones. Por eso el trabajo restante es sobre todo gente de la Tierra (NPCs y familia), escenarios de Houston y la casa, el monstruo No Canon, algunos props y la integración en el juego.
+Horas de personas (imprescindible + importante): v1 sin Grok 62.2 h → v3 con Grok 35.1 h → v4 reutilizando lo existente 31.5 h, contando ahora 4 h de integración en el código del juego. Cada persona queda entre 7.5 y 8.0 h. El cierre de modelos se adelanta al domingo a las 12:00.
+2. Inventario de lo que ya existe (public/models)
+Archivo
+Qué es
+MB
+Tris
+Mat.
+Text.
+Rig
+Clips
+Tamaño (m, X×Y×Z)
+Decisión
+apollo-lunar-module.glb
+LM Eagle (principal)
+1.13
+46.177
+15
+12
+—
+2
+12.1 × 6.5 × 10.7
+Usar
+astronaut-a7l.glb
+Astronauta A7L (principal, con rig)
+1.51
+54.700
+9
+4
+34 huesos
+13
+1.2 × 2.0 × 0.7
+Usar
+astronaut.glb
+Astronauta antiguo (sin rig, escala 70 m)
+0.07
+6.271
+2
+2
+—
+0
+68.9 × 74.3 × 27.6
+Duplicado: retirar
+astronaut_a7l.glb
+Astronauta A7L antiguo (rig de 17 huesos, sin clips)
+1.86
+105.136
+18
+0
+17 huesos
+0
+0.9 × 2.0 × 0.8
+Duplicado: retirar (tras confirmar que no lo usa ningún test)
+boot-print.glb
+Huella
+0.04
+64
+1
+3
+—
+0
+0.2 × 0.0 × 0.4
+Usar
+cabin-panels.glb
+Paneles de cabina (LM)
+1.02
+37.580
+26
+17
+—
+5
+2.0 × 1.6 × 1.5
+Usar
+cm-interior.glb
+Interior del CM
+0.97
+52.582
+18
+10
+—
+6
+3.4 × 2.8 × 3.4
+Usar
+csm-columbia.glb
+CSM Columbia
+1.37
+38.326
+17
+17
+—
+4
+4.0 × 10.7 × 4.7
+Usar
+easep-props.glb
+EASEP: PSEP, LRRR, placa, SWC, pinzas
+1.21
+20.192
+15
+17
+—
+4
+18.9 × 2.2 × 7.2
+Usar
+flag-mast.glb
+Bandera
+0.28
+4.444
+5
+7
+—
+2
+0.9 × 2.4 × 0.0
+Usar
+launch-tower.glb
+Torre de lanzamiento
+0.56
+22.708
+10
+3
+—
+1
+49.6 × 144.0 × 41.4
+Usar
+lc39a-far.glb
+Fondo LC-39A
+0.34
+2.432
+1
+1
+—
+0
+7491.2 × 178.0 × 1850.9
+Usar
+lc39a-pad.glb
+Plataforma 39A
+1.10
+9.410
+7
+4
+—
+0
+694.8 × 56.5 × 674.0
+Usar
+lc39a-terrain.glb
+Terreno KSC (mar, playa, vegetación)
+1.79
+94.118
+7
+7
+—
+0
+32000.0 × 27.2 × 33731.9
+Usar
+lm.glb
+LM antiguo (respaldo)
+0.74
+86.687
+7
+4
+—
+135
+6.4 × 5.0 × 6.4
+Respaldo: dejar, no usar
+moon-rocks.glb
+Rocas lunares
+1.46
+27.900
+1
+3
+—
+0
+8.1 × 0.9 × 1.6
+Usar
+moon-surface-tile.glb
+Terreno lunar (baldosa de 32 m)
+1.15
+41.472
+1
+3
+—
+0
+32.0 × 1.4 × 32.0
+Usar
+rover.glb
+Rover Mars 2020 (misión Marte)
+2.00
+183.037
+32
+22
+15 huesos
+23
+2.7 × 2.2 × 3.1
+Fuera de Apolo 11 (es el Perseverance 2020; los rovers lunares llegaron con Apolo 15). Solo para la misión Marte
+s4b-sla.glb
+S-IVB + SLA
+1.45
+38.660
+17
+14
+—
+3
+6.8 × 29.2 × 7.8
+Usar
+sample-box.glb
+Caja de muestras
+0.35
+8.006
+9
+8
+—
+1
+0.8 × 0.8 × 0.3
+Usar
+saturn-v.glb
+Saturn V (principal)
+0.89
+53.492
+15
+9
+—
+0
+13.0 × 110.6 × 13.0
+Usar
+saturn_v.glb
+Saturn V antiguo (respaldo)
+0.24
+26.171
+7
+5
+—
+23
+2.0 × 13.0 × 2.0
+Respaldo: dejar, no usar
+tv-camera.glb
+Cámara de TV
+0.32
+8.150
+8
+6
+—
+0
+1.2 × 1.2 × 3.3
+Usar
+Datos leídos directamente de los .glb (glTF Y-arriba, metros, compresión meshopt + cuantización, texturas WebP, generados con glTF-Transform). Los tris incluyen todos los LOD. Estilo actual: semirrealista ligero con materiales PBR y texturas pequeñas, no low-poly plano. DECISIÓN DE ESTILO: no se rehace nada de lo existente. Los modelos nuevos se hacen low-poly legibles pero con materiales PBR simples (color + rugosidad/metal y, como mucho, una textura WebP de 512 px) para que no desentonen al lado de los actuales.
+3. Los 44 modelos del guion frente a lo existente
+Modelo
+Prioridad
+Estado
+Archivo existente
+Persona
+Cómo
+Grok
+Horas
+Qué falta / nota
+PER_Traje_A7L
+Imprescindible
+Hecho
+astronaut-a7l.glb
+Persona 1
+—
+—
+0.25 h
+Solo verificar. Rig de 34 huesos, LOD0/LOD1 y 13 clips (incl. first-step, plant-flag, climb-ladder, kneel-pick-sample). NO modificar: npm test fija su hash.
+VEH_SaturnV
+Imprescindible
+Hecho
+saturn-v.glb (+ saturn_v.glb de respaldo)
+Persona 2 (dueño)
+—
+—
+—
+110,6 m reales. Origen común BASE_Y = 26,53 (salida de toberas F-1).
+VEH_CSM_Columbia
+Imprescindible
+Hecho
+csm-columbia.glb
+Persona 2 (dueño)
+—
+—
+—
+4 clips (probe-retract, hatch-open, hga-deploy, sps-gimbal-test) y nodos de contrato.
+VEH_LM_Eagle
+Imprescindible
+Hecho
+apollo-lunar-module.glb (+ lm.glb de respaldo)
+Persona 2 (dueño)
+—
+—
+—
+Clips legs-deploy/legs-stow. lm.glb trae 135 clips basura: solo respaldo.
+INT_CM_Columbia
+Importante
+Hecho
+cm-interior.glb
+Persona 2 (dueño)
+—
+—
+—
+hatch-open + 5 guardas.
+VEH_SLA
+Importante
+Hecho
+s4b-sla.glb
+Persona 2 (dueño)
+—
+—
+—
+sla-open / open-wide / jettison.
+ENV_Pad39A
+Imprescindible
+Hecho
+lc39a-pad.glb, launch-tower.glb, lc39a-terrain.glb, lc39a-far.glb
+Persona 3 (dueño)
+—
+—
+—
+Torre con swing-arms-retract.
+ENV_Cielo
+Imprescindible
+Hecho
+(código: space.js / moonsurface.js)
+Persona 4 (dueño)
+—
+—
+—
+Estrellas y Tierra generadas en código.
+PROP_Bandera
+Imprescindible
+Hecho
+flag-mast.glb
+Persona 4 (dueño)
+—
+—
+—
+crossbar-unfold / crossbar-extend.
+PROP_PSEP
+Imprescindible
+Hecho
+easep-props.glb
+Persona 4 (dueño)
+—
+—
+—
+psep-deploy. NO modificar: npm test fija su hash.
+PROP_LRRR
+Imprescindible
+Hecho
+easep-props.glb (CornerCubeSilica)
+Persona 4 (dueño)
+—
+—
+—
+Para el evento oculto basta un nodo «lrrr-level» (puede ir en un glb aparte).
+PROP_Placa_Huella
+Imprescindible
+Hecho
+easep-props.glb (lm-plaque) + boot-print.glb
+Persona 4 (dueño)
+—
+—
+—
+
+PROP_Muestras
+Importante
+Hecho
+sample-box.glb (+ SWC en easep-props)
+Persona 4 (dueño)
+—
+—
+—
+Falta solo la polea LEC (opcional, dentro de eva-tools.glb).
+PROP_CamaraTV
+Importante
+Hecho
+tv-camera.glb
+Persona 4 (dueño)
+—
+—
+—
+
+PER_Armstrong
+Imprescindible
+Reusar con ajuste
+astronaut-a7l.glb
+Persona 1
+A mano + referencias Grok
+—
+0.75 h
+Con traje ya existe (A7L). Falta la versión sin traje: cabeza y overol sobre la base civil.
+PER_Aldrin
+Imprescindible
+Reusar con ajuste
+astronaut-a7l.glb
+Persona 1
+A mano + referencias Grok
+—
+0.75 h
+Ídem (1,78 m).
+PER_Collins
+Imprescindible
+Reusar con ajuste
+astronaut-a7l.glb
+Persona 1
+A mano + referencias Grok
+—
+0.75 h
+Ídem (bigote).
+PER_Rig_Anim
+Imprescindible
+Reusar con ajuste
+astronaut-a7l.glb
+Persona 1
+A mano
+—
+1.75 h
+Astronauta: hecho. Civiles: rig Mixamo sin dedos + 6 clips (idle, walk, sit, talk, point, wave).
+PROP_Cabina
+Imprescindible
+Reusar con ajuste
+cabin-panels.glb (DSKY en panel) + ATRIX INT_DSKY
+Persona 1
+Grok (script) + revisión
+25 min
+0.75 h
+Faltan sextante, checklist, comida, rotulador, cinta (cabin-props.glb).
+INT_LM_Eagle
+Imprescindible
+Reusar con ajuste
+cabin-panels.glb
+Persona 2
+Grok base + pulido a mano
+30 min
+1.25 h
+Añadir el nodo «lm-breaker-broken» (disyuntor roto del puzle) y comprobar la escotilla.
+VEH_CM_Reentrada
+Importante
+Reusar con ajuste
+csm-columbia.glb (material CM-Quemado)
+Persona 2
+Grok (script) + revisión
+25 min
+1 h
+Faltan 3 paracaídas + collar de flotación (glb aparte: cm-recovery.glb).
+ENV_KSC_Exterior
+Importante
+Reusar con ajuste
+lc39a-terrain.glb (mar/playa/vegetación), lc39a-far.glb
+Persona 2
+Grok (script) + revisión
+30 min
+1 h
+Faltan público en la playa y furgoneta (base ATRIX KSC_Astrovan).
+ENV_Luna_Tranquilidad
+Imprescindible
+Reusar con ajuste
+moon-surface-tile.glb + moon-surface-height.json + moon-rocks.glb
+Persona 4
+Grok (script) + revisión
+30 min
+1 h
+Añadir Little West Crater (~33 m, ~60 m al este del LM) y el borde del West Crater en el mapa de alturas.
+PROP_Herramientas
+Imprescindible
+Reusar con ajuste
+easep-props.glb (tongs-grab)
+Persona 4
+Grok (script) + revisión
+25 min
+0.5 h
+Pinzas hechas; faltan martillo, tubos de muestras y Hasselblad (eva-tools.glb).
+PER_Base_Masculina
+Imprescindible
+Falta
+—
+Persona 1
+A mano + referencias Grok
+15 min
+2 h
+Cuerpo civil (camisa/overol) para Armstrong sin traje, NPCs y familia.
+PROP_Laika_Peluche
+Importante
+Falta
+—
+Persona 1
+A mano
+—
+0.5 h
+
+VEH_Hornet
+Opcional
+Falta
+—
+Persona 2
+Grok (script) + revisión
+30 min
+0.25 h
+Opcional.
+VEH_Helicoptero
+Opcional
+Falta
+—
+Persona 2
+Grok (script) + revisión
+25 min
+0.5 h
+Opcional.
+VEH_MQF
+Opcional
+Falta
+—
+Persona 2
+Grok (script) + revisión
+15 min
+0.25 h
+Opcional.
+VEH_Sputnik2
+Opcional
+Falta
+—
+Persona 2
+Grok (script) + revisión
+10 min
+0.1 h
+Opcional.
+PER_MOCR_NPC
+Imprescindible
+Falta
+—
+Persona 3
+A mano + referencias Grok
+15 min
+2 h
+Kranz, Bales, Duke, Garman como variantes de la base civil.
+PER_Familia
+Importante
+Falta
+—
+Persona 3
+A mano + referencias Grok
+10 min
+2 h
+Jan, Rick, Mark.
+PER_Extras
+Opcional
+Falta
+—
+Persona 3
+A mano
+—
+2 h
+Opcional.
+ENV_MOCR
+Imprescindible
+Falta
+— (base ATRIX 04_houston)
+Persona 3
+Grok base + pulido a mano
+40 min
+1.5 h
+Convertir los módulos ATRIX (consolas, sillas, pantallas) a glb con materiales del juego.
+ENV_Casa_Armstrong
+Imprescindible
+Falta
+— (base ATRIX 02_ksc_hub)
+Persona 3
+Grok base + pulido a mano
+40 min
+1.25 h
+Usar muebles ATRIX (sofá, teléfono, lámpara) + TV de tubo y squawk box nuevos.
+ENV_Oceano_LRL
+Importante
+Falta
+—
+Persona 3
+Grok (script) + revisión
+25 min
+0.75 h
+Pacífico + sala de cuarentena.
+PROP_Tierra
+Importante
+Falta
+— (ATRIX: teléfono, pizarra, maqueta Saturn V)
+Persona 3
+Grok (script) + revisión
+30 min
+0.5 h
+
+ENV_Hotel_1967
+Opcional
+Falta
+—
+Persona 3
+Grok (script) + revisión
+15 min
+0.25 h
+Opcional.
+ENV_Desfile_NY
+Opcional
+Falta
+—
+Persona 3
+Grok (script) + revisión
+20 min
+0.25 h
+Opcional.
+MON_Guardian
+Importante
+Falta
+—
+Persona 4
+Grok base + pulido a mano
+30 min
+4 h
+Bloqueo con Grok; forma, núcleo, rig (~20 huesos) y 3 clips a mano.
+PROP_Recuerdos
+Imprescindible
+Falta
+—
+Persona 4
+Grok base + pulido a mano
+20 min
+0.75 h
+Parche Apolo 1, medallas Gagarin/Komarov, disco, rama de olivo (memorial-kit.glb).
+PROP_Manguera_O2
+Imprescindible
+Falta
+—
+Persona 4
+Grok (script) + revisión
+10 min
+0.25 h
+No Canon.
+ENV_Guardian_Arena
+Importante
+Falta
+— (moon-rocks.glb sirve de base)
+Persona 4
+Grok (script) + revisión
+30 min
+0.5 h
+No Canon.
+FX_Meshes
+Opcional
+Falta
+— (fx.js ya genera efectos en código)
+Persona 4
+Grok (script) + revisión
+15 min
+0.1 h
+Opcional.
+4. Limpieza de duplicados y cosas a revisar
+astronaut.glb (sin rig, exportado en cm: mide ~70 m) y astronaut_a7l.glb (versión antigua, 105k tris, sin clips): retirar de public/models después de buscar con grep que ningún archivo de src/ o tests/ los cargue. El astronaut-a7l.glb actual los reemplaza.
+lm.glb y saturn_v.glb: el código los usa como respaldo (catch → model('lm') / model('saturn_v')). Dejarlos; no gastar tiempo en ellos.
+rover.glb: es el rover Perseverance (Mars 2020) de la misión Marte. No es de Apolo 11 ni del guion; no usarlo en escenas lunares.
+El juego actual incluye además la misión Horizon (agujero negro, ficción) y eventos de cielo con agujero negro y galaxia secreta en el lobby. El guion v4 quitó la ciencia ficción: decidir con el equipo si esas partes se ocultan en la versión de entrega (fuera del alcance del modelado).
+npm test (tests/assets.test.mjs) compara astronaut-a7l.glb y easep-props.glb con hashes fijados: NO reexportarlos. Lo nuevo va en archivos aparte.
+5. Reparto del trabajo restante
+Persona
+Cuenta Grok
+Hechos que custodia
+Ajustes
+Nuevos
+Imprescindible
+Importante
+Opcional
+Total impr.+imp.
+Grok trabaja
+Tema
+Persona 1
+A
+1
+5
+2
+7.00 h
+0.50 h
+0.00 h
+7.5 h
+0.7 h
+Personajes: cuerpo civil, Armstrong, Aldrin y Collins sin traje, rig y clips de civiles, props de cabina, Laika.
+Persona 2
+A
+5
+3
+4
+6.00 h
+2.00 h
+1.10 h
+8.0 h
+3.8 h
+Naves y juego: disyuntor del LM, cápsula de rescate, exterior del KSC, opcionales navales, validador, limpieza e INTEGRACIÓN en el código.
+Persona 3
+B
+1
+0
+9
+4.75 h
+3.25 h
+2.50 h
+8.0 h
+3.2 h
+Tierra: NPCs del Control de Misión, familia, sala MOCR, casa Armstrong, océano y LRL, props de la Tierra.
+Persona 4
+B
+7
+2
+5
+3.50 h
+4.50 h
+0.10 h
+8.0 h
+2.7 h
+Luna: cráteres reales en el terreno, herramientas que faltan, kit de recuerdos, montaje de la escena lunar, monstruo No Canon y arena.
+«Hechos que custodia» = modelos existentes de su tema que solo verifica y no toca.
+6. Cuentas de Grok Bot y turnos
+Cada persona abre su propio chat en su cuenta y pega una vez el PROMPT 0. Solo una tarea pesada por cuenta a la vez; fuera de su turno, cada uno revisa y trabaja a mano. Si alguien termina antes, avisa por el grupo.
+Cuenta
+Personas
+Turnos (hora de Bolivia)
+Cuenta A
+Persona 1 + Persona 2
+Sáb 16:00–16:40 P2 (validador) · 16:40–17:20 P1 (referencias + props de cabina) · 17:20–18:30 P2 (disyuntor LM + cápsula de rescate) · 18:30–19:00 P1 · 19:00–20:00 P2 (KSC exterior) · Dom 09:00–09:45 P2 (validación general) · 09:45–10:15 P1 · 10:15–12:00 P2 (opcionales) · 14:00–15:00 P2 (compresión final)
+Cuenta B
+Persona 3 + Persona 4
+Sáb 16:00–16:40 P3 (referencias NPC/familia) · 16:40–17:40 P4 (cráteres + herramientas) · 17:40–19:20 P3 (MOCR + casa) · 19:20–20:20 P4 (recuerdos + manguera) · 20:20–21:20 P3 (océano/LRL + props) · 21:20–22:20 P4 (bloqueo del monstruo + arena) · Dom 09:00–10:00 P3 · 10:00–11:00 P4
+7. Paso a paso de cada persona
+🤖 = tu turno de Grok (prompt de la sección 8). ✋ = a mano.
+Persona 1 — Personajes: cuerpo civil, Armstrong, Aldrin y Collins sin traje, rig y clips de civiles, props de cabina, Laika.
+Cuándo
+Qué hacer
+Sáb 16:00–16:40
+✋ Abrir astronaut-a7l.glb en Blender (o en https://gltf-viewer.donmccurdy.com): revisar los 13 clips y escalas. Empezar el bloqueo del cuerpo civil (1,80 m).
+Sáb 16:40–17:20
+🤖 Cuenta A: PROMPT 0 + P1-1 (láminas de Armstrong, Aldrin y Collins sin traje + cabin-props.glb).
+Sáb 17:20–19:30
+✋ Cuerpo civil base, 3–4k tris, 1 material PBR simple. Exportar civil-base.glb a la carpeta compartida → 19:30: PUNTO DE CONTROL 1 (la P3 lo usa).
+Sáb 19:30–22:00
+✋ Cabezas, pelo y overoles de vuelo de Armstrong, Aldrin (1,78 m) y Collins (bigote) → armstrong-civil.glb, aldrin-civil.glb, collins-civil.glb.
+Sáb 22:00–23:00
+✋ Revisar el resultado de cabin-props de Grok y ajustar el rotulador y el DSKY.
+Dom 09:00–09:45
+✋ Corregir lo que marque la validación.
+Dom 09:45–10:15
+🤖 Cuenta A: P1-2 (validar y comprimir tus glb).
+Dom 10:15–11:30
+✋ Rig Mixamo SIN DEDOS para los civiles + clips idle, walk, sit, talk, point, wave (los mismos huesos para los 3 astronautas y los NPCs de la P3).
+Dom 11:30–12:00
+✋ Peluche de Laika (laika-plush.glb, sin rig). 12:00 CIERRE DE MODELOS.
+Dom 12:00–17:00
+Apoyo a la P2: personajes en las escenas (lobby, cabina, cuarentena) y poses para el trailer.
+Persona 2 — Naves y juego: disyuntor del LM, cápsula de rescate, exterior del KSC, opcionales navales, validador, limpieza e INTEGRACIÓN en el código.
+Cuándo
+Qué hacer
+Sáb 16:00–16:40
+🤖 Cuenta A: PROMPT 0 + P2-1 (validador glb para public/models). Crear en Drive Nasa/Modelado_Apolo11 (sección 10) y compartirla como editor con el equipo.
+Sáb 16:40–17:20
+✋ Limpieza: grep de astronaut.glb y astronaut_a7l.glb en src/ y tests/; retirarlos si nadie los usa. Hacer una rama git «modelos-v4».
+Sáb 17:20–18:30
+🤖 Cuenta A: P2-2 (nodo lm-breaker-broken en cabin-panels → cabin-breaker.glb aparte; cm-recovery.glb con paracaídas y collar).
+Sáb 18:30–19:00
+✋ Revisar las entregas en el visor; ajustar a mano la posición del disyuntor.
+Sáb 19:00–20:00
+🤖 Cuenta A: P2-3 (ksc-crowd.glb: público + furgoneta, con origen en BASE_Y).
+Sáb 20:00–23:00
+✋ Preparar en el código los puntos de carga de los modelos nuevos: lobby/cabina (personajes), escena de rescate (cm-recovery), MOCR y casa (nuevas escenas o cinemáticas). Un model() por glb.
+Dom 09:00–09:45
+🤖 Cuenta A: P2-4 (validar todo lo nuevo + informe por persona).
+Dom 10:15–12:00
+🤖 Cuenta A: P2-5 (opcionales: Hornet, helicóptero, MQF, Sputnik 2) solo si lo imprescindible está aprobado. ✋ Mientras tanto, integración.
+Dom 12:00–17:00
+✋ INTEGRACIÓN: copiar los glb finales a public/models, cargarlos en las escenas, npm test + npm run build, probar en el navegador. 14:00–15:00 🤖 compresión final.
+Dom 17:00–21:00
+Pruebas del juego, arreglos, capturas para el trailer.
+Persona 3 — Tierra: NPCs del Control de Misión, familia, sala MOCR, casa Armstrong, océano y LRL, props de la Tierra.
+Cuándo
+Qué hacer
+Sáb 16:00–16:40
+🤖 Cuenta B: PROMPT 0 + P3-1 (láminas de Kranz, Bales, Duke, Garman, Jan, Rick, Mark).
+Sáb 16:40–17:40
+✋ Ropa y accesorios sobre un maniquí temporal (camisas, corbatas, chaleco de Kranz, lentes, auriculares, vestido de Jan, ropa de niños).
+Sáb 17:40–19:20
+🤖 Cuenta B: P3-2 (mocr-room.glb y armstrong-house.glb a partir de los módulos ATRIX). ✋ Revisar y decorar.
+Sáb 19:30–20:20
+✋ Con civil-base.glb de la P1: NPCs del Control de Misión.
+Sáb 20:20–21:20
+🤖 Cuenta B: P3-3 (pacific-recovery.glb, lrl-room.glb, earth-props.glb).
+Sáb 21:20–23:00
+✋ Terminar NPCs (kranz.glb, bales.glb, duke.glb, garman.glb) y decorar MOCR y casa.
+Dom 09:00–10:00
+🤖 Cuenta B: P3-4 (opcionales: hotel y desfile) + validar tus glb.
+Dom 10:00–11:30
+✋ Familia: jan.glb (1,65 m), rick.glb (1,50 m), mark.glb (1,15 m).
+Dom 11:30–12:00
+✋ Correcciones. Opcional: extras. 12:00 CIERRE.
+Dom 12:00–17:00
+Apoyo a la integración: NPCs en el MOCR y la casa, cinemáticas del prólogo y del cap. 1.
+Persona 4 — Luna: cráteres reales en el terreno, herramientas que faltan, kit de recuerdos, montaje de la escena lunar, monstruo No Canon y arena.
+Cuándo
+Qué hacer
+Sáb 16:00–16:40
+✋ Leer moonsurface.js y easep.js: cómo se carga el terreno (moon-surface-height.json) y dónde se colocan los props. Reunir las fotos AS11-40 y el mapa de la caminata (Apollo Lunar Surface Journal).
+Sáb 16:40–17:40
+🤖 Cuenta B: PROMPT 0 + P4-1 (cráteres Little West/West en el mapa de alturas + eva-tools.glb).
+Sáb 17:40–19:20
+✋ Boceto y bloqueo a mano de la silueta del monstruo (15 m, 4 apoyos).
+Sáb 19:20–20:20
+🤖 Cuenta B: P4-2 (memorial-kit.glb + o2-hose.glb).
+Sáb 20:20–21:20
+✋ Montaje lunar con la P2: posiciones reales de LM, bandera, PSEP, LRRR y cámara de TV en el código.
+Sáb 21:20–22:20
+🤖 Cuenta B: P4-3 (bloqueo del monstruo + boss-arena.glb).
+Sáb 22:20–23:30
+✋ Monstruo: forma y núcleo DSKY «1202».
+Dom 09:00–10:00
+✋ Monstruo: placas de basalto y jirones Kapton.
+Dom 10:00–11:00
+🤖 Cuenta B: P4-4 (validar y comprimir la Luna). ✋ Rig del monstruo (~20 huesos).
+Dom 11:00–12:00
+✋ 3 clips del monstruo (idle, sweep, slam). 12:00 CIERRE.
+Dom 12:00–17:00
+Apoyo a la integración: arena del jefe y monstruo en el juego, efectos.
+8. Prompts listos para pegar
+Cambiar <P#>, <ENLACE_CARPETA> y, si hace falta, adjuntar el archivo .glb existente que se pide modificar (descargado del repo).
+📋 PROMPT 0 — Contexto (cada persona, una vez en su chat)  (copiar y pegar en el chat del Grok Bot)
+Soy la <P#> del equipo del juego web "Apolo 11: Un gran salto" (NASA Space Apps 2026, entrega dom 15/11 23:59, hora de Bolivia). El juego es Three.js + Vite y carga modelos .glb desde public/models con model('nombre') / modelAnim('nombre'). Fiel al Apolo 11 real, sin ciencia ficción (salvo lo marcado No Canon).
+Estilo de los modelos NUEVOS: low-poly legible con materiales PBR simples (color + rugosidad/metal; como mucho 1 textura WebP de 512 px), para combinar con los modelos existentes (semirrealistas ligeros).
+Herramientas: Blender 4.x headless con bpy (instálalo de blender.org si no está) y glTF-Transform CLI (npm i -g @gltf-transform/cli).
+REGLAS:
+1) Metros reales. glTF Y-arriba: en Blender modela con Z arriba y exporta glTF con "+Y Up" (por defecto). Frente del modelo hacia -Y en Blender (que pasa a +Z en glTF).
+2) Origen en la base del objeto. Modelos del área de lanzamiento: origen común en la cubierta del Mobile Launcher (BASE_Y = 26,53 m sobre el terreno).
+3) Aplicar transformaciones; normales bien; sin caras internas.
+4) Archivo en kebab-case, sin tildes: p. ej. mocr-room.glb. Nodos que el código busca, en kebab-case (p. ej. lm-breaker-broken). Clips en kebab-case (idle, walk, hatch-open).
+5) Presupuesto: personaje 3–5k tris; monstruo 6–8k; props 100–1.000; salas 8–15k; cada glb ≤ 1,5 MB después de comprimir.
+6) Rig solo en personajes y monstruo: ≤ 60 huesos (ideal 20–34), máx. 4 pesos por vértice, normalizados; animaciones horneadas.
+7) Exporta .glb y luego comprime igual que el proyecto: gltf-transform optimize entrada.glb salida.glb --compress meshopt --texture-compress webp (no uses Draco: el juego usa meshopt).
+8) Entrega: el .glb final + el .blend + una captura PNG de 1024 px + una línea con tris, tamaño (m), MB, huesos y clips. Sube todo a <ENLACE_CARPETA> en mi subcarpeta. Nunca sobrescribas: añade -v02, -v03 en el nombre del .blend (el .glb final mantiene su nombre).
+9) NO modifiques astronaut-a7l.glb ni easep-props.glb (los tests fijan su hash): lo nuevo va en archivos aparte.
+10) Si algo te lleva más de 20 min sin quedar bien, entrégalo como bloqueo y avísame.
+Responde "Listo" cuando lo entiendas.
+📋 PROMPT P1-1 · Persona 1 · Cuenta A · Sáb 16:40  (copiar y pegar en el chat del Grok Bot)
+Tarea: a) láminas de frente y perfil (fondo blanco, low-poly legible, proporciones realistas, sin chibi) de Neil Armstrong, Buzz Aldrin y Michael Collins en 1969 con overol de vuelo de la NASA, basadas en fotos públicas de la NASA. b) cabin-props.glb con nodos separados: sextant, checklist, food-bag-1..4, felt-tip-pen (rotulador, origen en la punta), tape-roll. Usa como guía de medidas el DSKY de cabin-panels.glb (te lo adjunto). 100–600 tris por objeto.
+📋 PROMPT P1-2 · Persona 1 · Cuenta A · Dom 09:45  (copiar y pegar en el chat del Grok Bot)
+Tarea: valida mis glb (civil-base, armstrong-civil, aldrin-civil, collins-civil, cabin-props, laika-plush) con el validador del equipo (_Compartido/validar_glb.mjs): tris, tamaño en m, MB, huesos ≤ 60, pesos ≤ 4, nombres de clips. Comprime con meshopt los que falten y dame la lista de problemas.
+📋 PROMPT P2-1 · Persona 2 · Cuenta A · Sáb 16:00  (copiar y pegar en el chat del Grok Bot)
+Tarea: escribe _Compartido/validar_glb.mjs (Node, con @gltf-transform/core + extensions + meshoptimizer) que, para una carpeta de .glb, reporte en una tabla: tris, tamaño del bounding box en metros (respetando la cuantización y las transformaciones de nodos), MB, materiales, texturas y su resolución, huesos por skin, pesos por vértice > 4, clips, compresión meshopt sí/no, y avisos: nombre no kebab-case, > 1,5 MB, > 60 huesos, tamaño fuera de rango esperado (pásale un JSON opcional con rangos por archivo). Pruébalo sobre los 23 glb de public/models (te los adjunto) y súbelo con el informe de ejemplo.
+📋 PROMPT P2-2 · Persona 2 · Cuenta A · Sáb 17:20  (copiar y pegar en el chat del Grok Bot)
+Tarea: a) cabin-breaker.glb: panel de disyuntores del LM con un disyuntor separado como nodo "lm-breaker-broken" (pivote en su base) y "lm-breaker-panel", a la misma escala y orientación que cabin-panels.glb (adjunto) para colocarlo encima; 500–1.500 tris. b) cm-recovery.glb: 3 paracaídas principales (cúpulas de rayas rojas y blancas de unos 25 m Ø, nodos chute-1..3) unidos por cuerdas simples a un punto de anclaje, y collar de flotación naranja (nodo flotation-collar) que se coloca alrededor del CM de csm-columbia.glb (adjunto; base del CM de 3,9 m Ø). Clips: chutes-deploy, collar-inflate.
+📋 PROMPT P2-3 · Persona 2 · Cuenta A · Sáb 19:00  (copiar y pegar en el chat del Grok Bot)
+Tarea: ksc-crowd.glb: público en la playa como siluetas low-poly instanciables (3 variantes: crowd-a, crowd-b, crowd-c, 150–300 tris c/u) + furgoneta de los astronautas (astrovan, ~6 m, basada en ATRIX KSC_Astrovan_ClarkCortez, que adjunto) + 4 autos de 1969. Origen en el terreno; dame también las coordenadas sugeridas de la playa respecto a lc39a-terrain.glb (adjunto).
+📋 PROMPT P2-4 · Persona 2 · Cuenta A · Dom 09:00  (copiar y pegar en el chat del Grok Bot)
+Tarea: corre validar_glb.mjs sobre todo lo nuevo de la carpeta Modelado_Apolo11 (P1–P4) y genera _Integracion/informe-dom.txt agrupado por persona y por gravedad. Comprime con meshopt lo que no esté comprimido y súbelo junto al original.
+📋 PROMPT P2-5 · Persona 2 · Cuenta A · Dom 10:15 (opcional)  (copiar y pegar en el chat del Grok Bot)
+Tarea opcional: hornet.glb (USS Hornet de 267 m, silueta low-poly, 4–6k tris), sea-king.glb (helicóptero SH-3, 22 m, rotor como nodo rotor-main con clip rotor-spin), mqf.glb (tráiler plateado de 10,7 m con ventana trasera), sputnik-2.glb (~4 m).
+📋 PROMPT P3-1 · Persona 3 · Cuenta B · Sáb 16:00  (copiar y pegar en el chat del Grok Bot)
+Tarea: láminas de frente y perfil (fondo blanco, low-poly legible, proporciones realistas, ropa de 1969) basadas en fotos públicas: Gene Kranz (pelo al rape, chaleco blanco), Steve Bales (26 años, lentes), Charlie Duke, Jack Garman (24 años), Jan Armstrong, Rick (12 años) y Mark (6 años).
+📋 PROMPT P3-2 · Persona 3 · Cuenta B · Sáb 17:40  (copiar y pegar en el chat del Grok Bot)
+Tarea: a) mocr-room.glb: sala de Control de Misión de ~20x15 m con 4 filas escalonadas de consolas, partiendo de los módulos ATRIX que adjunto (MOCR_Console_Segment_3Bay, _1Bay, EndCap, Row_Riser_3m, Wall_Screens, Chair_Swivel, Headset). Rehaz los materiales a PBR simple, pantallas emisivas verdes y una pizarra con "TOUGH AND COMPETENT"; ≤ 15k tris, consola repetida por instancias. b) armstrong-house.glb: sala y cocina de un suburbio de Texas de 1969 (techo de 2,5 m) usando los muebles ATRIX adjuntos (CQ_Sofa, FUR_Rotary_Phone, FUR_Floor_Lamp, CQ_Dining_Table…) + TV de tubo y altavoz squawk box nuevos (nodos tv-set, squawk-box). ≤ 12k tris.
+📋 PROMPT P3-3 · Persona 3 · Cuenta B · Sáb 20:20  (copiar y pegar en el chat del Grok Bot)
+Tarea: a) pacific-recovery.glb: plano de océano de 200x200 m con olas low-poly (clip waves) y balsa de rescate; b) lrl-room.glb: sala de cuarentena con un vidrio grande (nodo quarantine-glass) y teléfono de pared; c) earth-props.glb con nodos: toy-saturn-v (0,4 m), mission-patch, signed-envelopes, framed-photo, notebook, alarm-sheet, chalkboard.
+📋 PROMPT P3-4 · Persona 3 · Cuenta B · Dom 09:00  (copiar y pegar en el chat del Grok Bot)
+Tarea: valida y comprime mis glb (mocr-room, armstrong-house, pacific-recovery, lrl-room, earth-props, kranz, bales, duke, garman) con _Compartido/validar_glb.mjs. Si sobra tiempo: hotel-room-1967.glb y parade-street.glb (calle de Nueva York con confeti, siluetas).
+📋 PROMPT P4-1 · Persona 4 · Cuenta B · Sáb 16:40  (copiar y pegar en el chat del Grok Bot)
+Tarea: a) Adjunto moon-surface-tile.glb y moon-surface-height.json. Analiza el formato del JSON y genera una versión moon-surface-height-a11.json que añada Little West Crater (~33 m Ø, ~4 m de profundidad, ~60 m al este del LM) y un borde elevado que sugiera el West Crater (~180 m Ø, ~400 m al oeste), sin romper el formato. Dame un script Python que haga el cambio. b) eva-tools.glb con nodos: geo-hammer (~0,4 m), core-tube-1/2, hasselblad (~0,2 m, origen en el agarre), lec-pulley (polea con cinta). 200–600 tris c/u, PBR simple.
+📋 PROMPT P4-2 · Persona 4 · Cuenta B · Sáb 19:20  (copiar y pegar en el chat del Grok Bot)
+Tarea: a) memorial-kit.glb con nodos: apollo1-patch (insignia del Apolo 1), medal-gagarin, medal-komarov, silicon-disc (3,8 cm Ø), olive-branch (dorada); escala real y textura WebP pequeña para el parche. b) o2-hose.glb: manguera de O2 de ~2 m con 6 huesos para doblarse (No Canon).
+📋 PROMPT P4-3 · Persona 4 · Cuenta B · Sáb 21:20  (copiar y pegar en el chat del Grok Bot)
+Tarea (No Canon): a) guardian-blockout.glb: bloqueo del «Guardián de Tranquilidad», coloso encorvado de 15 m sobre 4 apoyos, de regolito gris beige; 4 placas de basalto separadas (plate-shoulder-l/r, plate-knee-l/r); núcleo en el pecho con forma de DSKY (core-dsky, material emisivo verde con "1202"); depósito en la espalda (fuel-tank); jirones dorados en los brazos; cabeza sin rostro con cavidad. 4–6k tris, origen entre las patas. Adjunto mi boceto. b) boss-arena.glb: suelo de 60 m Ø, borde de cráter en 8 trozos (rim-1..8) y 5 rocas redondas (boulder-1..5), usando el estilo de moon-rocks.glb (adjunto).
+📋 PROMPT P4-4 · Persona 4 · Cuenta B · Dom 10:00  (copiar y pegar en el chat del Grok Bot)
+Tarea: valida y comprime eva-tools, memorial-kit, o2-hose, boss-arena y guardian (cuando lo suba) con _Compartido/validar_glb.mjs; comprueba ≤ 60 huesos, 4 pesos por vértice y clips idle, sweep, slam. Dame la lista de problemas.
+9. Rig y exportación web
+Modelo
+¿Rig?
+Estado
+Detalle
+Astronauta A7L (astronaut-a7l.glb)
+Sí
+HECHO
+34 huesos (3 skins), LOD0/LOD1, 13 clips: idle, walk, run, bunny-hop, low-g-jump, climb-ladder, first-step, plant-flag, kneel-pick-sample, point, salute, fall-and-get-up, entre otros. Usar tal cual para Armstrong y Aldrin en la superficie.
+Civiles: Armstrong, Aldrin y Collins sin traje, NPCs MOCR, familia
+Sí
+FALTA
+Un único esqueleto Mixamo SIN DEDOS (unos 25 huesos) compartido por todos → los clips sirven para todos. Clips: idle, walk, sit, talk, point, wave.
+Monstruo Guardián
+Sí
+FALTA
+~20 huesos (columna, 4 patas, cabeza; placas emparentadas). Clips: idle, sweep, slam.
+Manguera de O2
+Sí (6 huesos)
+FALTA
+O animarla en código como curva.
+Naves, cabinas, props, salas
+No
+—
+Animaciones por nodos, como las existentes (hatch-open, legs-deploy, sla-jettison, swing-arms-retract). Nombres de clip en kebab-case.
+Laika, recuerdos, props de la Tierra
+No
+—
+Estáticos.
+Formato: .glb binario, glTF Y-arriba, metros. Exportar desde Blender con «+Y Up», Apply Modifiers, animaciones horneadas (Bake/NLA) y skins con «Include → Deform bones only».
+Compresión como el proyecto: gltf-transform optimize … --compress meshopt (+ WebP). El juego ya registra MeshoptDecoder; Draco no hace falta.
+Límites: ≤ 60 huesos por skin, ≤ 4 pesos por vértice (normalizados), personaje 3–5k tris, cada glb ≤ 1,5 MB (los actuales pesan 0,04–2 MB), total de modelos nuevos ≤ 15 MB.
+Contratos con el código: el código busca nodos por nombre (csm-dock-launch, lm-docking-target, lm-stow, lm-plaque, leg-fwd). Los nuevos nodos que se usen en el juego deben tener los nombres de este plan.
+Antes de integrar: npm test y npm run build sin errores; abrir el juego y comprobar cada escena.
+10. Carpetas, integración y puntos de control
+Nasa/Modelado_Apolo11/
+   _Compartido/   validar_glb.mjs · este plan · referencias
+   P1_Personajes/  P2_Naves_Juego/  P3_Tierra/  P4_Luna/   (cada una: glb/ blend/ previews/)
+   _Integracion/  informes · lista de glb aprobados para copiar a public/models
+Solo la Persona 2 copia los glb aprobados a public/models del repo (rama modelos-v4) y toca el código de carga. Los demás entregan en Drive.
+Punto de control
+Hora
+Qué se comprueba
+Responsable
+PC0 · Validador
+Sáb 16:40
+validar_glb.mjs probado sobre los 23 glb existentes
+Persona 2
+PC1 · Base civil y bloqueos
+Sáb 19:30
+civil-base.glb listo; bloqueos de mocr-room, armstrong-house, cabin-breaker, eva-tools
+Persona 2
+PC2 · Validación
+Dom 09:00–09:45
+Informe general; cada uno corrige antes de las 11:30
+Persona 2
+PC3 · Cierre de modelos
+Dom 12:00
+No hay modelos nuevos; solo arreglos
+Todos
+PC4 · Juego integrado
+Dom 17:00
+npm test + build OK; todas las escenas cargan los glb nuevos
+Persona 2
+PC5 · Entrega
+Dom 22:00–23:30
+Build final, video y envío (margen hasta las 23:59)
+Equipo
+11. Plan de recorte
+Si falta tiempo con los civiles: Armstrong, Aldrin y Collins aparecen siempre con el A7L (ya hecho, con clips) y con el casco con visor levantado en primeros planos.
+NPCs del Control de Misión: 1 modelo base con 4 colores y accesorios; familia: solo Jan + 1 hijo.
+MOCR y casa: si a las 22:00 no están, usar los módulos ATRIX convertidos sin decorar.
+cm-recovery: si no está, cortar del CM en reentrada a la balsa con un fundido.
+Monstruo: bloqueo de Grok + núcleo emisivo; sin placas separables (las fases por color). Si no hay rig: animarlo por nodos (giro y escala) en el código.
+Opcionales navales, hotel y desfile: imágenes 2D o cortes a negro.
+Si una cuenta de Grok se cae: pasar a la otra en los huecos de turno; prioridad a lo de la P2 (integración) y de la P4.

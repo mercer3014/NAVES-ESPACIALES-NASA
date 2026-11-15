@@ -1,0 +1,16 @@
+{
+  "name": "apolo11-modelado-compartido",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Herramientas compartidas de validacion de glb para el modelado Apolo 11",
+  "scripts": {
+    "validar": "node validar_glb.mjs"
+  },
+  "dependencies": {
+    "@gltf-transform/core": "^4.2.1",
+    "@gltf-transform/extensions": "^4.2.1",
+    "@gltf-transform/functions": "^4.2.1",
+    "meshoptimizer": "^0.23.0"
+  }
+}

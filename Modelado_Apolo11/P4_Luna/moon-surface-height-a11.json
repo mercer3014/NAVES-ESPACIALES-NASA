@@ -1,0 +1,54 @@
+{
+ "size_m": 32.0,
+ "min_m": -1.0299,
+ "max_m": 0.4694,
+ "res": 1024,
+ "a11_craters": {
+  "note": "Crateres del Apolo 11 en coordenadas del juego (+x=oeste, +z=norte, metros, LM nominal x=PAD.x-6=244,z=0). El juego no lee este JSON: la P2 debe pegar js_const despues de const CR y js_loop despues del for de CR dentro de ground() (src/sim/lander.js).",
+  "formula": "q=dist/r; q<1: h+=D*(q*q-0.75); 1<=q<1.6: h+=D*0.25*cos(((q-1)/0.6)*PI/2)^2  (D = profundidad borde-fondo; continua en q=1)",
+  "lm_nominal": {
+   "x": 244.0,
+   "z": 0.0
+  },
+  "axes": {
+   "x": "+oeste",
+   "z": "+norte",
+   "y": "arriba"
+  },
+  "craters": [
+   {
+    "name": "little-west",
+    "x": 184.0,
+    "z": 0.0,
+    "r": 16.5,
+    "d": 4.0,
+    "x_expr": "PAD.x - 66",
+    "rim_height_m": 1.0,
+    "floor_m": -3.0,
+    "rim_outer_radius_m": 26.4,
+    "dist_from_lm_m": 60.0,
+    "bearing": "E"
+   },
+   {
+    "name": "west-crater",
+    "x": -156.0,
+    "z": 0.0,
+    "r": 90.0,
+    "d": 20.0,
+    "x_expr": "PAD.x - 406",
+    "rim_height_m": 5.0,
+    "floor_m": -15.0,
+    "rim_outer_radius_m": 144.0,
+    "dist_from_lm_m": 400.0,
+    "bearing": "E"
+   }
+  ],
+  "js_const": "// Apolo 11 (P4): Little West (33 m, 60 m al E del LM) y West Crater (180 m, ~400 m al E); en el juego +x = oeste. [cx, cz, r, prof. borde-fondo]\nconst CR_A11 = [[PAD.x - 66, 0, 16.5, 4], [PAD.x - 406, 0, 90, 20]];",
+  "js_loop": "for (const [cx, cz, r, d] of CR_A11) { const q = Math.hypot(x - cx, z - cz) / r; if (q < 1) h += d * (q * q - 0.75); else if (q < 1.6) h += d * 0.25 * Math.cos(((q - 1) / 0.6) * Math.PI / 2) ** 2; }",
+  "sources": [
+   "https://www.nasa.gov/history/alsj/a11/a11EastCraterRIP.html",
+   "https://apollojournals.org/alsj/a11/a11.landing.html",
+   "https://lroc.im-ldi.com/images/1115"
+  ]
+ }
+}

@@ -1,0 +1,421 @@
+{
+  "generatedAt": "sábado, 14 de noviembre de 2026, 7:45:15 p. m.",
+  "timeZone": "America/La_Paz",
+  "folder": "/workspace/apolo11/Modelado_Apolo11/P4_Luna/glb",
+  "rules": "reglas-p4 (Luna completo)",
+  "count": 5,
+  "models": [
+    {
+      "file": "boss-arena.glb",
+      "mb": 0.0914,
+      "bytes": 95884,
+      "tris": 11928,
+      "bbox": {
+        "min": [
+          -41.49956,
+          -1.00049,
+          -41.49956
+        ],
+        "max": [
+          41.49956,
+          12.77753,
+          41.49956
+        ],
+        "size": [
+          82.99913,
+          13.77801,
+          82.99913
+        ]
+      },
+      "heightMeasured": 13.778,
+      "materials": [
+        {
+          "name": "regolito"
+        }
+      ],
+      "textures": [],
+      "skins": [],
+      "bonesMax": 0,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [],
+      "meshopt": true,
+      "nodes": [
+        "arena-floor",
+        "rim-1",
+        "rim-2",
+        "rim-3",
+        "rim-4",
+        "rim-5",
+        "rim-6",
+        "rim-7",
+        "rim-8",
+        "boulder-1",
+        "boulder-2",
+        "boulder-3",
+        "boulder-4",
+        "boulder-5",
+        "spawn-player",
+        "spawn-guardian"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [],
+      "path": "/workspace/apolo11/Modelado_Apolo11/P4_Luna/glb/boss-arena.glb"
+    },
+    {
+      "file": "eva-tools.glb",
+      "mb": 0.0266,
+      "bytes": 27868,
+      "tris": 1728,
+      "bbox": {
+        "min": [
+          -0.10999,
+          0,
+          -0.1075
+        ],
+        "max": [
+          1.12099,
+          0.6795,
+          0.1055
+        ],
+        "size": [
+          1.23098,
+          0.6795,
+          0.213
+        ]
+      },
+      "heightMeasured": 0.6795,
+      "materials": [
+        {
+          "name": "aluminio"
+        },
+        {
+          "name": "acero"
+        },
+        {
+          "name": "anodizado-azul"
+        },
+        {
+          "name": "anodizado-rojo"
+        },
+        {
+          "name": "grip-negro"
+        },
+        {
+          "name": "hasselblad-plata"
+        },
+        {
+          "name": "negro-mate"
+        },
+        {
+          "name": "lente"
+        },
+        {
+          "name": "cinta-beta"
+        }
+      ],
+      "textures": [],
+      "skins": [],
+      "bonesMax": 0,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [],
+      "meshopt": true,
+      "nodes": [
+        "core-tube-1-geo",
+        "core-tube-1",
+        "core-tube-2-geo",
+        "core-tube-2",
+        "geo-hammer-geo",
+        "geo-hammer",
+        "hasselblad-geo",
+        "hasselblad",
+        "lec-pulley-geo",
+        "lec-pulley",
+        "eva-tools"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [],
+      "path": "/workspace/apolo11/Modelado_Apolo11/P4_Luna/glb/eva-tools.glb"
+    },
+    {
+      "file": "guardian.glb",
+      "mb": 0.2851,
+      "bytes": 298960,
+      "tris": 5879,
+      "bbox": {
+        "min": [
+          -6.55285,
+          -1,
+          -4.28371
+        ],
+        "max": [
+          6.63541,
+          15.43785,
+          5.3036
+        ],
+        "size": [
+          13.18825,
+          16.43785,
+          9.58731
+        ]
+      },
+      "heightMeasured": 16.4379,
+      "materials": [
+        {
+          "name": "regolito-guardian"
+        },
+        {
+          "name": "cavidad"
+        },
+        {
+          "name": "core-dsky"
+        },
+        {
+          "name": "kapton"
+        },
+        {
+          "name": "basalto"
+        },
+        {
+          "name": "tanque"
+        },
+        {
+          "name": "tanque-banda"
+        }
+      ],
+      "textures": [
+        {
+          "name": "dsky-1202",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        }
+      ],
+      "skins": [
+        {
+          "name": "guardian",
+          "bones": 20
+        }
+      ],
+      "bonesMax": 20,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [
+        {
+          "name": "idle",
+          "duration": 3.5
+        },
+        {
+          "name": "slam",
+          "duration": 2.5
+        },
+        {
+          "name": "sweep",
+          "duration": 2.5
+        }
+      ],
+      "meshopt": true,
+      "nodes": [
+        "head",
+        "neck",
+        "core-dsky",
+        "core",
+        "hand-l",
+        "kapton-forearm-l-1",
+        "kapton-forearm-l-2",
+        "forearm-l",
+        "kapton-upper-l-1",
+        "kapton-upper-l-2",
+        "kapton-upper-l-3",
+        "plate-shoulder-l",
+        "upper-arm-l",
+        "hand-r",
+        "kapton-forearm-r-1",
+        "kapton-forearm-r-2",
+        "forearm-r",
+        "kapton-upper-r-1",
+        "kapton-upper-r-2",
+        "kapton-upper-r-3",
+        "plate-shoulder-r",
+        "upper-arm-r",
+        "spine-3",
+        "fuel-tank",
+        "spine-2",
+        "spine-1",
+        "foot-l",
+        "plate-knee-l",
+        "shin-l",
+        "thigh-l",
+        "foot-r",
+        "plate-knee-r",
+        "shin-r",
+        "thigh-r",
+        "hips",
+        "root",
+        "guardian-body",
+        "guardian"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "EXT_texture_webp",
+        "KHR_materials_emissive_strength",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [],
+      "path": "/workspace/apolo11/Modelado_Apolo11/P4_Luna/glb/guardian.glb"
+    },
+    {
+      "file": "memorial-kit.glb",
+      "mb": 0.0483,
+      "bytes": 50680,
+      "tris": 2012,
+      "bbox": {
+        "min": [
+          -0.05,
+          0,
+          -0.05
+        ],
+        "max": [
+          0.374,
+          0.00368,
+          0.05
+        ],
+        "size": [
+          0.424,
+          0.00368,
+          0.1
+        ]
+      },
+      "heightMeasured": 0.0037,
+      "materials": [
+        {
+          "name": "apollo1-patch"
+        },
+        {
+          "name": "tela-azul"
+        },
+        {
+          "name": "oro"
+        },
+        {
+          "name": "bronce"
+        },
+        {
+          "name": "silicio"
+        },
+        {
+          "name": "aluminio"
+        }
+      ],
+      "textures": [
+        {
+          "name": "apollo1-patch",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        }
+      ],
+      "skins": [],
+      "bonesMax": 0,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [],
+      "meshopt": true,
+      "nodes": [
+        "apollo1-patch-geo",
+        "apollo1-patch",
+        "medal-gagarin-geo",
+        "medal-gagarin",
+        "medal-komarov-geo",
+        "medal-komarov",
+        "olive-branch-geo",
+        "olive-branch",
+        "silicon-disc-geo",
+        "silicon-disc",
+        "memorial-kit"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "EXT_texture_webp",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [],
+      "path": "/workspace/apolo11/Modelado_Apolo11/P4_Luna/glb/memorial-kit.glb"
+    },
+    {
+      "file": "o2-hose.glb",
+      "mb": 0.0178,
+      "bytes": 18680,
+      "tris": 920,
+      "bbox": {
+        "min": [
+          -0.02332,
+          -0.02441,
+          -1
+        ],
+        "max": [
+          0.02332,
+          0.02441,
+          1
+        ],
+        "size": [
+          0.04663,
+          0.04883,
+          2
+        ]
+      },
+      "heightMeasured": 0.0488,
+      "materials": [
+        {
+          "name": "manguera"
+        },
+        {
+          "name": "conector-azul"
+        },
+        {
+          "name": "aluminio"
+        }
+      ],
+      "textures": [],
+      "skins": [
+        {
+          "name": "o2-hose",
+          "bones": 6
+        }
+      ],
+      "bonesMax": 6,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [
+        {
+          "name": "flex",
+          "duration": 2
+        }
+      ],
+      "meshopt": true,
+      "nodes": [
+        "hose-5",
+        "hose-4",
+        "hose-3",
+        "hose-2",
+        "hose-1",
+        "hose-0",
+        "o2-hose-geo",
+        "o2-hose"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [],
+      "path": "/workspace/apolo11/Modelado_Apolo11/P4_Luna/glb/o2-hose.glb"
+    }
+  ]
+}
