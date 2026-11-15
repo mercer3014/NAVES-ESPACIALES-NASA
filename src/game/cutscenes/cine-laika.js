@@ -2,7 +2,7 @@
 // y un inserto de la Bitácora con el Sputnik 2. Escena: src/scenes/cine-laika.js
 import { cine, shot, line } from './cine-rails.js';
 
-export const LAIKA = cine('laika', ['LA PERRITA', 'THE LITTLE DOG'], ['Columbia · camino a casa · dramatizado', 'Columbia · homeward bound · dramatized'], [
+export const LAIKA = cine('laika', ['LA PERRITA', 'THE LITTLE DOG'], ['NO CANON · Columbia · camino a casa', 'NOT CANON · Columbia · homeward bound'], [
   // 0–7 s: el perrito de tela flota; la Tierra detrás
   shot(7, [
     { t: 0, pos: [0.22, 0.1, 0.8], look: [0, -0.03, 0], fov: 36 },

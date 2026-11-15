@@ -1,0 +1,17 @@
+/* Tarjeta puente · plano: negro #0B0C0E, crema #F2EFE6, naranja #FF4F00; sin blur, sin degradados, esquinas 0-2 px */
+.bridge{position:fixed;inset:0;z-index:130;background:#0b0c0e;color:#f2efe6;display:grid;place-items:center;padding:24px 24px calc(48px + env(safe-area-inset-bottom,0px));cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.bridge-in{width:min(760px,100%);opacity:0;transform:translateY(6px);transition:opacity .35s ease,transform .35s ease}
+.bridge.on .bridge-in{opacity:1;transform:none}
+.bridge-when{font-family:'IBM Plex Mono',ui-monospace,Consolas,monospace;font-weight:500;font-size:clamp(20px,4.2vw,34px);letter-spacing:.08em;color:#f2efe6;margin:0 0 14px;padding-left:14px;border-left:3px solid #ff4f00}
+.bridge-text{font-family:'Barlow Semi Condensed','Jost',system-ui,sans-serif;font-weight:500;font-size:clamp(18px,3.1vw,26px);line-height:1.35;margin:0 0 20px;color:#f2efe6;max-width:34em}
+.bridge-quote{margin:0;padding:12px 14px;border:1px solid #3a3d42;border-radius:2px;display:grid;gap:6px;max-width:34em}
+.bridge-q{font-family:'Jost','Barlow Semi Condensed',system-ui,sans-serif;font-weight:600;font-size:clamp(17px,2.8vw,24px);line-height:1.3;color:#f2efe6}
+.bridge-orig{font-family:'IBM Plex Mono',ui-monospace,Consolas,monospace;font-size:clamp(11px,1.7vw,13px);color:#9a9890}
+.bridge-who{font-family:'IBM Plex Mono',ui-monospace,Consolas,monospace;font-style:normal;font-size:clamp(11px,1.7vw,13px);letter-spacing:.16em;color:#ff4f00}
+.bridge-hint{position:absolute;left:0;right:0;bottom:calc(18px + env(safe-area-inset-bottom,0px));text-align:center;font-family:'IBM Plex Mono',ui-monospace,Consolas,monospace;font-size:11px;letter-spacing:.14em;color:#6d6f73;opacity:0;transition:opacity .5s ease .8s}
+.bridge.on .bridge-hint{opacity:1}
+.bridge-bar{position:absolute;left:0;right:0;bottom:0;height:3px;background:#3a3d42}
+.bridge-bar i{display:block;height:100%;background:#ff4f00;transform-origin:left center;transform:scaleX(1);transition-property:transform;transition-timing-function:linear}
+@media (prefers-reduced-motion:reduce){.bridge-in{transition:none;transform:none}.bridge-hint{transition:none}}
+/* Rótulo No Canon sobre la escena (por encima de las barras de cine, z 72) */
+.nocanon-tag{position:fixed;z-index:73;top:calc(10px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);pointer-events:none;padding:4px 10px;border:1px solid #ffb000;border-radius:2px;background:#0b0c0e;color:#ffb000;font-family:'IBM Plex Mono',ui-monospace,Consolas,monospace;font-weight:500;font-size:11px;letter-spacing:.18em;white-space:nowrap}

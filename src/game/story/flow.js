@@ -15,11 +15,31 @@ const own = (load) => async (o) => { const m = await load(); return m.default(o)
 const earth = (id) => async (o) => { if (!o.ctx) show('<div class="screen"></div>', 'story-' + id); /* entre fases: quita el HUD anterior */ const m = await import('../cutscenes/cine-index.js'); return m.playCinematic(id, o); };
 // cap. 7 + epílogo; rickHeard depende de lo que Neil les dijo a sus hijos en el cap. 1
 const epi = (id) => async (o) => { if (!o.ctx) show('<div class="screen"></div>', 'story-' + id); const m = await import('../cutscenes/cine-play.js'); return m.playCine(id, { vars: { rickHeard: chose('c1-kids') !== 'downplay' }, ...o }); };
-// decisión sola entre escenas (sobre la última imagen)
-const decide = (id, then) => async () => { const opt = await ask(id); then?.(opt); return { id, opt }; };
+// decisión sola entre escenas: sobre fondo neutro (negro), nunca sobre el último mundo 3D (G2); quita también el HUD anterior
+const decide = (id, then) => async () => {
+  try { const m = await import('./bridge.js'); await m.neutralWorld(); show('<div class="screen"></div>', 'story-' + id); } catch (e) { console.warn('decisión: fondo neutro no disponible', e); }
+  const opt = await ask(id); then?.(opt); return { id, opt };
+};
+// tarjeta puente (fecha/hora + 1-2 líneas + cita de radio opcional); ver bridge.js
+const bridge = (id) => async (o) => { const m = await import('./bridge.js'); return m.playBridge(id, o); };
+// Sala de diseño «Tu Apolo 11» (WP5): devuelve el plan, que designRoom guarda en store 'missionPlan'
+const designScene = async (o) => { const b = await import('./bridge.js'); await b.neutralWorld(); if (!o?.ctx) show('<div class="screen"></div>', 'story-design'); const m = await import('../design/design-screen.js'); const plan = await m.designRoom({ mode: 'story' }); return { id: 'design', plan }; };
+// escena No Canon con rótulo permanente (misma convención que el jefe: «NO CANON · …»)
+const noCanon = (run_) => async (o) => { const m = await import('./bridge.js'); const off = m.noCanonTag(); try { return await run_(o); } finally { off(); } };
 
 // id → función async (opts) => resultado
 export const STORY = {
+  'bridge:intro': bridge('intro'),
+  'bridge:design': bridge('design'),
+  design: designScene,
+  'bridge:jul69': bridge('jul69'),
+  'bridge:launch-morning': bridge('launch-morning'),
+  'bridge:t-minus': bridge('t-minus'),
+  'bridge:tli': bridge('tli'),
+  'bridge:undock': bridge('undock'),
+  'bridge:hatch': bridge('hatch'),
+  'bridge:meanwhile': bridge('meanwhile'),
+  'bridge:report': bridge('report'),
   'hotel-prologue': earth('hotel-prologue'),
   'mocr-tough': earth('mocr-tough'),
   'house-farewell': earth('house-farewell'),
@@ -39,7 +59,7 @@ export const STORY = {
   liftoff: own(() => import('./liftoff.js')),
   reunion: own(() => import('./reunion.js')),
   tei: own(() => import('./tei.js')),
-  laika: epi('laika'),
+  laika: noCanon(epi('laika')), // escena inventada (no ocurrió en el Apolo 11): No Canon (G17)
   'laika-talk': decide('c7-laika', (o) => { if (o === 'belka') unlock('pushinka'); }),
   tv: own(() => import('./tv.js')),
   reentry: own(() => import('./reentry.js')),
@@ -52,6 +72,7 @@ export const STORY = {
 export const STORY_TITLES = {
   'hotel-prologue': ['Prólogo · Enero de 1967', 'Prologue · January 1967'],
   'mocr-tough': ['Prólogo · Duros y competentes', 'Prologue · Tough and competent'],
+  design: ['Prólogo · Sala de diseño: Tu Apolo 11', 'Prologue · Design room: Your Apollo 11'],
   'house-farewell': ['Cap. 1 · La despedida', 'Ch. 1 · The farewell'],
   ksc: ['Cap. 1 · Centro Espacial Kennedy', 'Ch. 1 · Kennedy Space Center'],
   beach: ['Cap. 1 · La playa de Cabo Kennedy', 'Ch. 1 · The Cape Kennedy beach'],
@@ -62,12 +83,12 @@ export const STORY_TITLES = {
   'mocr-landed': ['Cap. 4 · Base Tranquilidad', 'Ch. 4 · Tranquility Base'],
   'house-landed': ['Cap. 4 · En casa de los Armstrong', 'Ch. 4 · At the Armstrong home'],
   'collins-solo': ['Cap. 6 · El lado silencioso', 'Ch. 6 · The silent side'],
-  boss: ['Cap. 6 · Polvo y fuego (No Canon)', 'Ch. 6 · Dust and fire (Non-canon)'],
   breaker: ['Cap. 6 · El disyuntor', 'Ch. 6 · The circuit breaker'],
+  boss: ['Cap. 6 · Polvo y fuego (No Canon)', 'Ch. 6 · Dust and fire (Non-canon)'],
   liftoff: ['Cap. 6 · Despegue de la Luna', 'Ch. 6 · Lunar liftoff'],
   reunion: ['Cap. 6 · El reencuentro', 'Ch. 6 · The reunion'],
   tei: ['Cap. 7 · Rumbo a casa', 'Ch. 7 · Homeward bound'],
-  laika: ['Cap. 7 · La perrita', 'Ch. 7 · The little dog'],
+  laika: ['Cap. 7 · La perrita (No Canon)', 'Ch. 7 · The little dog (Non-canon)'],
   tv: ['Cap. 7 · La última transmisión', 'Ch. 7 · The last broadcast'],
   reentry: ['Cap. 7 · Reentrada', 'Ch. 7 · Reentry'],
   recovery: ['Cap. 7 · Volver a casa', 'Ch. 7 · Coming home'],
@@ -102,14 +123,16 @@ export const SCENE_CARDS = {
 };
 // momento → ids en orden del guion. La alarma 1202 (cap. 4.4) y el alunizaje (4.6–4.7) se lanzan desde descent.js;
 // la noche en Columbia (cap. 3.2) desde cruise.js, entre la alineación y la LOI.
+// Orden cronológico (G1): prólogo 1967 → sala de diseño → julio de 1969 (casa, KSC, playa) → mañana del 16 jul (Fase 1) → lanzamiento…
+// El disyuntor se descubre ANTES del sueño del Guardián (T9). Las tarjetas puente `bridge:*` van en los huecos entre escenas.
 export const SLOTS = {
-  'before:prep': ['hotel-prologue', 'mocr-tough'],
-  'before:launch': ['house-farewell', 'kids', 'ksc', 'beach'],
-  'before:cruise': [],
-  'before:descent': ['mocr-briefing'],
+  'before:prep': ['bridge:intro', 'hotel-prologue', 'mocr-tough', 'bridge:design', 'design', 'bridge:jul69', 'house-farewell', 'kids', 'ksc', 'beach', 'bridge:launch-morning'],
+  'before:launch': ['bridge:t-minus'],
+  'before:cruise': ['bridge:tli'],
+  'before:descent': ['bridge:undock', 'mocr-briefing'],
   'after:descent': [],
-  'before:eva': ['pre-eva'],
-  'after:eva': ['collins-solo', 'boss', 'breaker', 'liftoff', 'reunion', 'tei', 'laika', 'laika-talk', 'tv', 'reentry', 'recovery', 'lrl', 'parade', 'epilogue'],
+  'before:eva': ['pre-eva', 'bridge:hatch'],
+  'after:eva': ['bridge:meanwhile', 'collins-solo', 'breaker', 'boss', 'liftoff', 'reunion', 'tei', 'laika', 'laika-talk', 'tv', 'reentry', 'recovery', 'lrl', 'parade', 'epilogue', 'bridge:report'],
 };
 export const STORY_IDS = Object.keys(STORY);
 const params = new URLSearchParams(location.search);

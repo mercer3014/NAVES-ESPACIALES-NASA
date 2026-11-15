@@ -45,7 +45,9 @@ let paused = false; export const setPaused = (p) => (paused = p);
 function frame() {
   requestAnimationFrame(frame);
   timer.update(); const rawDt = timer.getDelta(); const dt = Math.min(rawDt, DT_MAX) * (DEBUG && stats.slow ? stats.slow : 1), t = timer.getElapsed(); // stats.slow: congelar casi el juego en QA
-  fpsAcc += rawDt; fpsN++; // FPS con dt real (sin recorte) para que adaptRes() vea los fotogramas lentos if (fpsAcc > 1) { stats.fps = fpsN / fpsAcc; fpsAcc = 0; fpsN = 0; adaptRes(stats.fps); stats.dpr = renderer.getPixelRatio(); }
+  // FPS con dt real (sin recorte) para que adaptRes() vea los fotogramas lentos
+  fpsAcc += rawDt; fpsN++;
+  if (fpsAcc > 1) { stats.fps = fpsN / fpsAcc; fpsAcc = 0; fpsN = 0; adaptRes(stats.fps); stats.dpr = renderer.getPixelRatio(); }
   if (!paused) for (const f of tickers) f(dt, t);
   if (world) { if (!paused) world.update?.(dt, t); if (!paused) afterWorldUpdate(world, t); if (world.render) world.render(dt); else renderer.render(world.scene, world.camera); }
   endFrame();
