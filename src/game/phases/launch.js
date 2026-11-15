@@ -8,12 +8,14 @@ import { isTouch, DEBUG, dbg, AUTO } from '../../core/store.js';
 import { launchPrompt, objectiveCardHtml } from '../../ui/flight-hud.js';
 import { paintPrompt } from '../../ui/flight-hud-mount.js';
 import { makePad, H, BASE_Y } from '../../scenes/pad.js';
+import { BEACH } from '../../scenes/ksc-crowd.js';
 import { trackFov, sideAxis, chaseStand, trackStand } from '../launch-camera.js';
 import { playCue } from '../cutscenes/play.js';
 extend({
   'l.tminus': ['T-', 'T-'], 'l.skip': ['Saltar cuenta', 'Skip countdown'], 'l.stress': ['ESTRÉS', 'STRESS'], 'l.thr': ['EMPUJE', 'THRUST'],
   'l.les': ['¡Expulsa la torre de escape!', 'Jettison the escape tower!'], 'l.waitcc': ['Esperando que Control de Misión separe…', 'Waiting for Mission Control to stage…'],
   'l.keys': ['A/D o ←/→ cabeceo · W/S empuje · ESPACIO separar · C cámara', 'A/D or ←/→ pitch · W/S thrust · SPACE stage · C camera'], 'l.corr': ['CORREDOR', 'CORRIDOR'],
+  'l.beach': ['Playa de Cabo Kennedy · 16 de julio de 1969', 'Cape Kennedy beach · July 16, 1969'], 'l.beachS': ['Cerca de un millón de personas miran desde las playas y carreteras', 'About a million people watch from the beaches and roads'],
   'l.ign': ['Secuencia de ignición', 'Ignition sequence'], 'l.iss': ['Inicio de la secuencia de ignición', 'Ignition sequence start'], 'l.throk': ['Todos los motores en marcha', 'All engines running'], 'l.hdr': ['Liberación de los anclajes', 'Hold-down release'], 'l.sep': ['Separación', 'Separation'], 'l.maxqok': ['Max-Q superado', 'Through Max-Q'],
 });
 const DUR = 72; // s de vuelo comprimido
@@ -53,7 +55,12 @@ export default async function launch(ctx) {
   const applyPadCam = () => { if (!padCam) return false; const o = padCam.l ? new THREE.Vector3() : W.rocket.position; cam.position.set(...padCam.p).add(o); cam.lookAt(new THREE.Vector3(...(padCam.l || [0, 50, 0])).add(o)); return true; };
   // planos: órbita lenta durante la cuenta; desde la ignición, cámara baja a 270 m con un leve acercamiento (el plano clásico de la película de 70 mm)
   const DY = BASE_Y - 7.62, LOWCAM = new THREE.Vector3(75, W.env ? BASE_Y + 8 : 8 + DY, 262), lowLook = new THREE.Vector3(0, 52 + DY, 0), orbP = new THREE.Vector3(); let shotA = 0, toLow = 0;
-  ctx.loop((dt) => { if (applyPadCam()) return; if (S.phase === 'count') { shotA += dt * 0.05; orbP.set(Math.sin(shotA + 0.9) * 290, 30 + DY, Math.cos(shotA + 0.9) * 290);
+  // cap. 2: primer plano de la cuenta desde la playa, detrás del público (ksc-crowd.glb), hasta T-12 o hasta saltar la cuenta
+  let beachShown = false; const BEACH_END = 4.5;
+  ctx.loop((dt) => { if (applyPadCam()) return; if (S.phase === 'count' && W.crowd && ct < BEACH_END && !skip) {
+    if (!beachShown) { beachShown = true; toast(t('l.beach') + ' · ' + t('l.beachS'), 'info'); } // toast: no tapa el número de la cuenta
+    cam.position.set(30, BASE_Y + BEACH.y + 2.6, BEACH.z - 13); cam.lookAt(-40, BASE_Y + 24, 0); return; }
+    if (S.phase === 'count') { shotA += dt * 0.05; orbP.set(Math.sin(shotA + 0.9) * 290, 30 + DY, Math.cos(shotA + 0.9) * 290);
     if (S.ign) toLow = Math.min(1, toLow + dt * 0.6); const e = toLow * toLow * (3 - 2 * toLow); const push = 1 - Math.max(0, ct - (LIFT - 8.9)) * 0.012;
     cam.position.lerpVectors(orbP, LOWCAM, e); if (e > 0) { const k = 1 - (1 - push) * e; cam.position.x *= k; cam.position.z *= k; }
     const look = new THREE.Vector3(0, 62 + DY, 0).lerp(lowLook, e);

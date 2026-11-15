@@ -26,7 +26,7 @@ const STATIONS = ['booster', 'retro', 'fido', 'guidance', 'eecom', 'surgeon', 'n
 
 export default async function prep(ctx) {
   // Cabina 3D del artista (cabin-panels.glb) como mundo de la fase; si no carga, vista orbital de la plataforma.
-  const cab = makeCabin(); ctx.world(cab); let cabOk = true;
+  const cab = makeCabin({ props: true }); ctx.world(cab); let cabOk = true;
   cab.ready.catch((e) => { console.warn('cabin-panels.glb no disponible', e); cabOk = false; const W = makePad(); ctx.world(W); const cam = W.camera; W.setThrust(0);
     let ang = 0.6; ctx.loop((dt) => { ang += dt * 0.03; cam.position.set(Math.sin(ang) * 230, BASE_Y + 32 + Math.sin(ang * 0.7) * 10, Math.cos(ang) * 230); cam.lookAt(0, BASE_Y + 52, 0); }); });
   if (DEBUG) window.__prepDbg = { cab };

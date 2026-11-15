@@ -17,6 +17,14 @@ addEventListener('pointerdown', unlock, { capture: true });
 addEventListener('keydown', unlock, { capture: true });
 
 async function boot() {
+  if (DEBUG && params.has('boss')) { const { runBoss } = await import('./game/boss/boss.js'); lobbyBg(); return runBoss({ startPhase: +params.get('boss') || 1, diff: params.get('diff') || undefined, skipIntro: params.has('skip'), onWin: () => location.assign('/'), onLose: () => location.assign('/') }); }
+  if (DEBUG && params.get('cine')) { // vista previa de cinemáticas: B (hotel/MOCR/casa, en bucle) o C (cap. 7 / epílogo; all = las cuatro)
+    const id = params.get('cine'); const b = await import('./game/cutscenes/cine-index.js');
+    if (b.CINE_IDS.includes(id)) return b.previewCinematic(id);
+    const c = await import('./game/cutscenes/cine-play.js'); const vars = { rickHeard: params.get('rick') !== 'told' };
+    return id === 'all' ? c.playCineSequence(c.EPILOGUE_ORDER, { vars }) : c.playCine(id, { vars });
+  }
+  if (DEBUG && params.get('story')) { const { playStory } = await import('./game/story/flow.js'); const id = params.get('story'); lobbyBg(); return playStory(id).then((r) => { window.__storyResult = r; }); }
   if (DEBUG && params.get('cue')) { const { previewCue } = await import('./game/cutscenes/preview.js'); return previewCue(params.get('cue')); }
   const urls = ['/tex/stars_2k.jpg', '/tex/earth_day_2k.jpg', '/tex/earth_night_2k.jpg', '/tex/earth_clouds_2k.jpg', '/tex/moon_2k.jpg', '/audio/sfx/click.mp3'];
   const total = urls.length + 1;

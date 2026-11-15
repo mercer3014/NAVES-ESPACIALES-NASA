@@ -143,8 +143,15 @@ async function runPhase(phase) {
   ctx.kill(); ctx.cc.dispose(); M.ctx = null;
   if (!M) return;
   if (M.practice) return practiceResult();
-  if (chained) return runPhase(PHASES[i + 1]);
+  if (chained) { await storyGap('after:' + phase); await storyGap('before:' + PHASES[i + 1]); if (!M) return; return runPhase(PHASES[i + 1]); }
+  await storyGap('after:' + phase); if (!M) return;
   debrief();
+}
+// Interludios del guion v4 (escenas narrativas entre fases): solo misión completa, solitario y piloto
+async function storyGap(slot) {
+  if (!M || M.mode !== 'solo' || M.role !== 'pilot' || M.practice) return;
+  const my = M; const { interlude } = await import('./story/flow.js');
+  await interlude(slot, { alive: () => M === my });
 }
 async function practiceResult() {
   setPhaseBed(null);
@@ -180,6 +187,7 @@ export async function startMission({ mode = 'solo', role = 'pilot', practice = n
   }
   if (role === 'capcom') { const { runCapcom } = await import('../ui/capcom.js'); return runCapcom(M); }
   if (resume) toast(t('net.resume'), 'info');
+  if (!resume && !practice) { await storyGap('before:prep'); if (!M) return; }
   runPhase(resume?.phase || practice || 'prep');
 }
 // el host recibió/envió {t:'start'}: cada uno arranca con su rol

@@ -4,6 +4,7 @@ import { THREE, model, modelAnim, fit, Q, renderer } from '../core/engine.js';
 import { twinkleStars, dotTex, earth, tickAll } from './space.js';
 import { makePuffs, makePlume, makeFlashes, makePost, puffTex } from './fx.js';
 import { skyVertexShader } from './sky-clip.js';
+import { loadKscCrowd } from './ksc-crowd.js';
 export const H = 110; // altura del Saturno V en m (unidades de escena)
 export const CUTS = [0.385, 0.615, 0.93]; // S-IC | S-II | S-IVB+naves | torre de escape (solo modelo antiguo)
 export const BASE_Y = 26.53; // cubierta del Mobile Launcher = salida de las toberas F-1 (origen común de saturn-v / launch-tower / lc39a-*.glb); terreno del LC-39A en y = 0
@@ -136,6 +137,9 @@ export function makePad() {
       if (o.material?.name === 'Sea') { envSea = o.material.normalMap; o.material.envMapIntensity = 1.6; }
       if (o.material?.name === 'Surf') { o.material.depthWrite = false; envSurf = o.material.map; } }); env.add(g); }
     procEnv.forEach((o) => (o.visible = false)); ground.add(env); api.env = env; return env;
+  }).then((env) => { // público de la playa + furgoneta (ksc-crowd.glb); si falla, la plataforma sigue igual
+    if (env) loadKscCrowd().then((c) => { env.add(c); api.crowd = c; }).catch((e) => console.warn('ksc-crowd.glb no disponible', e));
+    return env;
   }).catch((e) => { console.warn('entorno LC-39A no disponible: uso el procedural', e); return null; });
   // placeholders (se quitan cuando llegan los modelos del artista)
   const ml = new THREE.Mesh(new THREE.BoxGeometry(48, 7, 40), new THREE.MeshStandardMaterial({ color: 0x6d6f73, roughness: 0.8 })); ml.position.set(0, 3.5 + FB_DY, 0); ml.castShadow = ml.receiveShadow = true; ground.add(ml);
@@ -211,7 +215,7 @@ export function makePad() {
   const toWorld = (x, y, z, out = v3) => out.set(x, y, z).applyMatrix4(rocket.matrixWorld);
   let lastFrame = -1, shT = 0;
   const api = {
-    scene, camera, rocket, parts, ready, envReady, env: null, arms, skyU, plumes, post, smoke, steam, fire, flashes, trail, sunDir,
+    scene, camera, rocket, parts, ready, envReady, env: null, crowd: null, arms, skyU, plumes, post, smoke, steam, fire, flashes, trail, sunDir,
     thrust: 0, shake: 0, alt: 0, phase: 'count',
     // empuje global de la etapa activa (0..1); las toberas individuales se encienden con setEngines()
     setThrust(k) {

@@ -1,0 +1,45 @@
+.plb-cine-sub {
+  position: fixed;
+  left: 50%;
+  bottom: calc(max(58px, min(12vh, 120px)) + 18px);
+  transform: translateX(-50%);
+  z-index: 73;
+  max-width: min(860px, 88vw);
+  pointer-events: none;
+  text-align: center;
+  font-family: Chakra, sans-serif;
+  font-size: clamp(14px, 1.9vw, 21px);
+  line-height: 1.35;
+  color: #f4f7fb;
+  text-shadow: 0 1px 3px #000, 0 0 12px rgba(0, 0, 0, 0.8);
+  transition: opacity 0.25s;
+}
+.plb-cine-sub b {
+  display: block;
+  font-family: Orbitron, sans-serif;
+  font-size: 0.62em;
+  letter-spacing: 0.18em;
+  color: #c6a36a;
+  margin-bottom: 2px;
+}
+.plb-cine-cap {
+  position: fixed;
+  left: 22px;
+  top: calc(max(58px, min(12vh, 120px)) + 16px);
+  z-index: 73;
+  pointer-events: none;
+  font-family: Mono, monospace;
+  font-size: clamp(11px, 1.3vw, 15px);
+  letter-spacing: 0.08em;
+  color: #e9e2cf;
+  text-shadow: 0 1px 3px #000;
+  transition: opacity 0.4s;
+}
+.plb-cine-fade {
+  position: fixed;
+  inset: 0;
+  z-index: 71;
+  background: #000;
+  pointer-events: none;
+  opacity: 0;
+}

@@ -3,7 +3,11 @@ export const LM = { g: 1.62, dry: 6100, thrust: 45000, burn: 40, slew: 0.6, tilt
 export const BOULDERS = { x: 0, r: 95 };
 export const PAD = { x: 250, r: 24 };
 const padH = 1.6 * Math.sin(PAD.x * 0.013) + 0.7 * Math.sin(PAD.x * 0.041) + 0.35 * Math.sin(PAD.x * 0.11);
-const CR = [[-420, 40, 60, 9], [-180, -30, 34, 5], [140, 25, 22, 3], [380, -40, 70, 10], [600, 35, 45, 6], [-650, -60, 90, 12], [60, 60, 18, 3], [-60, -70, 26, 4]];
+// Cráteres reales del sitio de Apolo 11 (ALSJ / AS11-40): el LM se posó ~60 m al oeste de Little West (Ø33 m) y ~400 m al oeste
+// de West Crater (Ø180 m, el del campo de rocas que Armstrong sobrevoló). El LM vuela hacia +X (oeste): el este es −X.
+// Se miden desde el punto de alunizaje por defecto (PAD.x − 6).
+export const A11_CRATERS = { littleWest: [PAD.x - 6 - 60, 0, 16.5, 4], west: [PAD.x - 6 - 400, 0, 90, 16] };
+const CR = [[-420, 40, 60, 9], [-180, -30, 34, 5], [140, 25, 22, 3], [380, -40, 70, 10], [600, 35, 45, 6], [-650, -60, 90, 12], [60, 60, 18, 3], [-60, -70, 26, 4], A11_CRATERS.littleWest, A11_CRATERS.west];
 export function ground(x, z = 0) {
   let h = 1.6 * Math.sin(x * 0.013) * Math.cos(z * 0.011) + 0.7 * Math.sin(x * 0.041 + z * 0.03) + 0.35 * Math.sin(x * 0.11 - z * 0.07);
   for (const [cx, cz, r, d] of CR) { const q = Math.hypot(x - cx, z - cz) / r; if (q < 1) h -= d * (1 - q * q); else if (q < 1.6) h += d * 0.25 * Math.cos(((q - 1) / 0.6) * Math.PI / 2) ** 2; }

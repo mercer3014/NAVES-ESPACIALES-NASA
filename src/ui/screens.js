@@ -251,7 +251,7 @@ export function settingsScreen() {
   $$('.comms button', el).forEach((b) => (b.onclick = ui(() => { store.set('comms', b.dataset.c); store.set('tts', b.dataset.c !== 'off'); $$('.comms button', el).forEach((x) => x.classList.toggle('on', x === b)); })));
   $$('.q button', el).forEach((b) => (b.onclick = ui(() => { setQualityPref(b.dataset.q); $$('.q button', el).forEach((x) => x.classList.toggle('on', x === b)); })));
   $$('.diff button', el).forEach((b) => (b.onclick = ui(() => { store.set('difficulty', b.dataset.d); $$('.diff button', el).forEach((x) => x.classList.toggle('on', x === b)); })));
-  const A = store.get('achievements'); $('.ach', el).innerHTML = ['first', 'nofault', 'soft', 'fuel', 'noassist', 'earthrise', 'sock', 'golf', 'wrinkle', 'galaxy', 'cardboard', 'coop', 'mission1'].map((k) => `<span class="chip" style="${A[k] ? 'border-color:var(--amber)' : 'opacity:.4'}">${t('ach.' + k)}</span>`).join('');
+  const A = store.get('achievements'); $('.ach', el).innerHTML = ['first', 'nofault', 'soft', 'fuel', 'noassist', 'earthrise', 'sock', 'golf', 'wrinkle', 'galaxy', 'cardboard', 'coop', 'mission1', 'memorial'].map((k) => `<span class="chip" style="${A[k] ? 'border-color:var(--amber)' : 'opacity:.4'}">${t('ach.' + k)}</span>`).join('');
   $('.back', el).onclick = ui(startScreen);
 }
 
@@ -284,7 +284,12 @@ export function missionsScreen() {
       <button class="mbtn" data-exp="horizon"><span class="led"></span><span><span data-i="m3"></span><small data-i="ex.horizon"></small></span></button>
     </div>
     <h3 class="phase-tag" style="margin-top:18px" data-i="prac.title"></h3><p style="margin:.2em 0 .6em;font-size:.85rem" data-i="prac.d"></p>
-    <div class="prac">${phases.map((p, i) => `<button class="btn" data-p="${p}">${i + 1}. <span data-i="ph.${p}"></span></button>`).join('')}</div></div></div>`, 'missions');
+    <div class="prac">${phases.map((p, i) => `<button class="btn" data-p="${p}">${i + 1}. <span data-i="ph.${p}"></span></button>`).join('')}</div>
+    <h3 class="phase-tag" style="margin-top:18px" data-i="story.title"></h3><p style="margin:.2em 0 .6em;font-size:.85rem" data-i="story.d"></p>
+    <div class="prac story-list"></div></div></div>`, 'missions');
+  import('../game/story/flow.js').then(({ STORY_TITLES, playStory }) => { const box = $('.story-list', el); if (!box?.isConnected) return;
+    box.innerHTML = Object.entries(STORY_TITLES).map(([id, tt]) => `<button class="btn" data-story="${id}">${tt[lang() === 'es' ? 0 : 1]}</button>`).join('');
+    $$('[data-story]', box).forEach((b) => (b.onclick = ui(async () => { music(null, { fade: 600 }); await playStory(b.dataset.story); missionsScreen(); }))); hovers(box); });
   $('.back', el).onclick = ui(startScreen);
   $('[data-a=m1]', el).onclick = ui(() => briefingScreen({ mode: 'solo' }));
   $$('[data-exp]',el).forEach(b=>b.onclick=ui(async()=>{const m=await import('../game/expeditions/index.js');m.expeditionBriefing(b.dataset.exp);}));

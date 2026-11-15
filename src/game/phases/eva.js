@@ -1,7 +1,7 @@
 // FASE 5 · EVA: escalera (9 peldaños), primer paso, caminata en baja gravedad, muestra, bandera (3 golpes + barra), saludo y foto
 import { THREE, renderer } from '../../core/engine.js';
 import { t, extend } from '../../core/i18n.js';
-import { $, h, clamp, damp, achieve } from '../../core/util.js';
+import { $, h, clamp, damp, achieve, toast } from '../../core/util.js';
 import { sfx, music, voice } from '../../core/audio.js';
 import { axis, pressed, down, bindBtn, bdown, bpressed, makeStick } from '../../core/input.js';
 import { attachLook } from '../../core/look.js';
@@ -18,6 +18,7 @@ import { model, modelAnim } from '../../core/engine.js';
 import { ground, PAD } from '../../sim/lander.js';
 import { dotTex } from '../../scenes/space.js';
 import { playCue } from '../cutscenes/play.js';
+import { addEvaProps } from '../../scenes/eva-props.js';
 extend({
   'e.ladder': ['Baja la escalera', 'Climb down the ladder'], 'e.ladderK': ['Mantén S / ↓ / Espacio para bajar', 'Hold S / ↓ / Space to climb down'], 'e.ladderT': ['Mantén ↓ para bajar', 'Hold ↓ to climb down'],
   'e.rung': ['Peldaño {n} / 9', 'Rung {n} / 9'], 'e.step': ['Da el primer paso', 'Take the first step'], 'e.stepK': ['Pulsa E', 'Press E'], 'e.stepT': ['Toca PASO', 'Tap STEP'],
@@ -36,6 +37,10 @@ extend({
   'e.science': ['Ciencia opcional', 'Optional science'],
   'e.PSEP': ['Desplegar el sismómetro', 'Deploy the seismometer'], 'e.SWC': ['Extender la lámina solar', 'Unroll the solar wind foil'], 'e.LRRR': ['Verificar el reflector láser', 'Check the laser reflector'],
   'e.scienceDone': ['Instrumento listo', 'Instrument ready'], 'e.scienceHint': ['F · {task}', 'F · {task}'],
+  'e.mem': ['Recuerdo {n}/{m}: {name}', 'Memento {n}/{m}: {name}'], 'e.memDone': ['Vinimos en paz', 'We came in peace'],
+  'e.memDoneS': ['Los recuerdos siguen en la Luna: honran a los caídos de ambos lados de la carrera espacial', 'The mementos are still on the Moon: they honour the fallen on both sides of the space race'],
+  'e.mem.apollo1-patch': ['Parche del Apolo 1', 'Apollo 1 patch'], 'e.mem.medal-gagarin': ['Medalla de Gagarin', 'Gagarin medal'], 'e.mem.medal-komarov': ['Medalla de Komarov', 'Komarov medal'],
+  'e.mem.silicon-disc': ['Disco de silicio (73 países)', 'Silicon disc (73 nations)'], 'e.mem.olive-branch': ['Rama de olivo dorada', 'Golden olive branch'],
   'e.depth': ['Profundidad {d} cm', 'Depth {d} cm'], 'e.crooked': ['Quedó torcida… ¡pero es tuya!', 'It\'s crooked… but it\'s yours!'],
 });
 
@@ -88,6 +93,11 @@ export default async function eva(ctx) {
   if (eagle) W.body.rotation.y = 0;
   const science = await makeEASEP(W, lx, ground, ast).catch(e => { console.warn('EASEP unavailable; primary EVA remains playable', e); return null; });
   if (science) { ctx.loop(dt => science.update(dt)); ctx.onCleanup(() => science.dispose()); }
+  // herramientas (eva-tools.glb) y evento oculto «Lo que dejamos atrás» (memorial-kit.glb); nunca bloquean la fase
+  const evaProps = await addEvaProps(W, lx, ground, { seed: ctx.seed + 5, skip: science ? ['geo-hammer'] : [],
+    onFound: (n, k, m) => { sfx('ok', { vol: 0.4 }); toast(t('e.mem', { n: k, m, name: t('e.mem.' + n) }), 'info'); ctx.cc.log('e.mem.' + n, null, 'ok'); },
+    onComplete: () => { sfx('powerup'); achieve('memorial'); ctx.banner(t('e.memDone'), t('e.memDoneS'), 4200, 'good'); } }).catch((e) => { console.warn('props EVA no disponibles', e); return null; });
+  if (evaProps) ctx.onCleanup(() => evaProps.dispose());
   const top = eagle ? new THREE.Vector3(lx, ly + 3.3, 2.47) : new THREE.Vector3(lx, ly + 2.9, 2.35), bot = eagle ? new THREE.Vector3(lx, ly + 1.09, 3.98) : new THREE.Vector3(lx, ly + 0.75, 3.55);
   const ladDir = bot.clone().sub(top); const ladLen = ladDir.length(); ladDir.normalize();
   for (const sx of [-0.28, 0.28]) { const r = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, ladLen), alu); r.position.copy(top).add(bot).multiplyScalar(0.5); r.position.x += sx; r.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), ladDir.clone().negate()); r.castShadow = true; lad.add(r); }
@@ -170,6 +180,7 @@ export default async function eva(ctx) {
   setFlag(1);
   // ---------- jugador ----------
   const P = { x: lx, z: eagle ? 2.35 : 2.2, y: ly + (eagle ? 3.38 : 3), vy: 0, yaw: Math.PI, speed: 0, vx: 0, vz: 0, air: false, act: null, actK: 0, mode: 'ladder' };
+  if (evaProps) ctx.loop((dt) => evaProps.update(dt, P));
   let camYaw = 0.35, camPitch = 0.32, camDist = 5.2; const camP = new THREE.Vector3(lx + 2, ly + 4, 10), look = new THREE.Vector3();
   // arrastrar para girar
   const pointerLook = attachLook({ onDelta: (dx, dy) => { if (viewMode !== 'follow') return; camYaw -= dx * 0.0022; camPitch = clamp(camPitch + dy * 0.0016, 0.05, 1.1); } });
@@ -233,7 +244,7 @@ export default async function eva(ctx) {
     if (show) { sb.textContent = t('e.science') + ' · ' + (isTouch ? t('e.' + nearby.name) : t('e.scienceHint', { task: t('e.' + nearby.name) })); if (pressed('KeyF')) deployScience(); }
   });
   // ganchos de depuración para capturas (cámara y pose)
-  if (DEBUG) window.__evaDbg = { ast, science, W, ground, sampleP, site, cam: (y, p, d) => { camYaw = y; camPitch = p; camDist = d; }, fps, footprint, act: (a, k = 0.5) => { P.dbgAct = a; P.dbgK = k; }, P, M, st, flag, cloth, setFlag };
+  if (DEBUG) window.__evaDbg = { ast, science, evaProps, W, ground, sampleP, site, cam: (y, p, d) => { camYaw = y; camPitch = p; camDist = d; }, fps, footprint, act: (a, k = 0.5) => { P.dbgAct = a; P.dbgK = k; }, P, M, st, flag, cloth, setFlag };
   const sub = new URLSearchParams(location.search).get('sub');
   const LAD = { y: 0, z: 0 }; if (DEBUG) window.__evaDbg.LAD = LAD;
   // ---------- 1) escalera ----------

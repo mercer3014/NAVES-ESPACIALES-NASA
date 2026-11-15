@@ -10,6 +10,7 @@ import { makeMoonSurface } from '../../scenes/moonsurface.js';
 import { create, step, guide, agl, judge, hoverThr, brakingMargin, vsCue, LM, PAD, BOULDERS, ground } from '../../sim/lander.js';
 import { attachLook } from '../../core/look.js';
 import { playCue } from '../cutscenes/play.js';
+import { storyInPhase, playStory } from '../story/flow.js';
 extend({
   'd.p63': ['PROG 63 · Frenado', 'PROG 63 · Braking'], 'd.p64': ['PROG 64 · Aproximación', 'PROG 64 · Approach'], 'd.p66': ['PROG 66 · Manual', 'PROG 66 · Manual'],
   'd.watch': ['La computadora vuela. Observa la telemetría…', 'The computer is flying. Watch the telemetry…'], 'd.pressG': ['Pulsa G o GO', 'Press G or GO'],
@@ -170,6 +171,8 @@ export default async function descent(ctx) {
   // órbita lenta de la cámara sobre el LM posado
   let ang = 0; ctx.loop((dt) => { ang += dt * 0.25; const p = W.lm.position; cam.position.set(p.x + Math.sin(ang) * 26, p.y + 7, Math.cos(ang) * 26); cam.lookAt(p.x, p.y + 3, 0); });
   await ctx.wait(3.5);
+  // cap. 4.6–4.7: Houston respira y la familia Armstrong lo oye por la squawk box (solo alunizaje limpio)
+  if (st.result === 'good' && storyInPhase(ctx)) { for (const id of ['mocr-landed', 'house-landed']) { if (ctx.dead) break; const r = await playStory(id, { ctx }); if (r.skipped) break; } }
   let score = 0; if (st.result === 'good' || st.result === 'hard') {
     const q = clamp(1 - J.over * 0.6, 0, 1); const fuelS = clamp(s.fuel / s.fuel0 / 0.4, 0, 1); const padS = clamp(1 - J.pad / (PAD.r * 3), 0, 1);
     score = (st.result === 'good' ? 40 + q * 15 : 22) + fuelS * 15 + (st.alarmOk ? 15 : 5) + padS * 15 - st.crashes * 10; if (rodUsed) score *= 0.7; score = Math.round(clamp(score, 5, 100));
@@ -190,6 +193,8 @@ export default async function descent(ctx) {
     });
     offB(); st.alarmT = +(ctx.time - t0).toFixed(1); st.alarmOk = ans === 'go' && st.alarmT <= 5; box.style.display = 'none';
     if (ans === 'go') { sfx('ok'); ctx.banner('GO', st.alarmT <= 5 ? '' : '+5 s', 1200, 'good'); ctx.cc.log('pa.go', null, 'ok'); } else { sfx('error'); ctx.banner(t('d.abortNo'), '', 2400, 'warn'); }
+    // cap. 4.4: la reacción de Houston a tu respuesta (simulación congelada mientras dura)
+    if (storyInPhase(ctx)) { const pm = mode; mode = 'hold'; await playStory('mocr-1202', { ctx, answer: ans === 'go' ? (st.alarmT <= 5 ? 'go' : 'late') : 'abort' }); if (ctx.dead) return; mode = pm; }
     if (!st.alarmOk) await ctx.wait(3);
     frozen = false; tele.classList.remove('frozen'); el.classList.remove('frozen'); $('.l-prog', tele).classList.remove('on', 'red');
   }

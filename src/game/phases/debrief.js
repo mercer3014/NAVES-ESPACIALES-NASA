@@ -30,7 +30,7 @@ function statLine(ph, r) {
   if (ph === 'eva') return t('d.s.eva', { h: s.hits ?? 0, p: Math.round((s.photo || 0) * 100) });
   return '';
 }
-const ALL_ACH = ['first', 'mission1', 'soft', 'fuel', 'nofault', 'noassist', 'wrinkle', 'golf', 'sock', 'earthrise', 'galaxy', 'cardboard', 'coop'];
+const ALL_ACH = ['first', 'mission1', 'soft', 'fuel', 'nofault', 'noassist', 'wrinkle', 'golf', 'sock', 'earthrise', 'galaxy', 'cardboard', 'coop', 'memorial'];
 
 export default async function debrief(p, { retry, menu } = {}) {
   lobbyBg(); setPhaseBed('debrief'); music('victory', { vol: 0.5, loop: false });

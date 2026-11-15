@@ -49,6 +49,7 @@ const T = {
   'set.tts': ['Voz de Pancho (TTS)', 'Pancho voice (TTS)'], 'set.reload': ['Se guarda la preferencia. El render la aplica al arrancar.', 'Preference is saved. The renderer applies it at startup.'], 'set.ach': ['Logros', 'Achievements'],
   'cred.title': ['Créditos', 'Credits'],
   'prac.title': ['Práctica', 'Practice'], 'prac.d': ['Entrena cualquier fase por separado.', 'Train any phase on its own.'],
+  'story.title': ['Escenas del guion', 'Story scenes'], 'story.d': ['Las escenas narrativas entre fases (también aparecen en la misión completa en solitario).', 'The story scenes between phases (they also play in the full solo mission).'],
   'missions.title': ['Misiones', 'Missions'], 'm1': ['Misión 1 · Apolo 11', 'Mission 1 · Apollo 11'], 'm1.d': ['Lleva al Eagle a la Luna y planta tu bandera.', 'Fly Eagle to the Moon and plant your flag.'],
   'm2': ['Misión 2 · Cultivos en Marte', 'Mission 2 · Mars crops'], 'm3': ['Misión 3 · Agujero negro', 'Mission 3 · Black hole'], 'soon': ['Próximamente · no disponible en esta prueba', 'Coming soon · unavailable in this preview'],
   // fases
@@ -128,7 +129,7 @@ const T = {
   // achievements
   'ach.first': ['Primer paso', 'First step'], 'ach.nofault': ['Cabina impecable', 'Spotless cockpit'], 'ach.soft': ['Pluma lunar (< 1 m/s)', 'Feather touch (< 1 m/s)'],
   'ach.fuel': ['Con lo justo (< 5% combustible)', 'Running on fumes (< 5% fuel)'], 'ach.sock': ['Calcetín perdido', 'Lost sock'], 'ach.golf': ['Hoyo en uno', 'Hole in one'],
-  'ach.wrinkle': ['La arruga histórica', 'The historic wrinkle'], 'ach.galaxy': ['Galaxia secreta', 'Secret galaxy'], 'ach.cardboard': ['Modo cartón', 'Cardboard mode'],
+  'ach.wrinkle': ['La arruga histórica', 'The historic wrinkle'], 'ach.memorial': ['Vinimos en paz', 'We came in peace'], 'ach.galaxy': ['Galaxia secreta', 'Secret galaxy'], 'ach.cardboard': ['Modo cartón', 'Cardboard mode'],
   'ach.coop': ['Trabajo en equipo', 'Teamwork'], 'ach.earthrise': ['Salida de Tierra', 'Earthrise'], 'ach.noassist': ['Sin ayuda', 'No assist'], 'ach.mission1': ['Misión 1 completa', 'Mission 1 complete'],
   'egg.galaxy': ['Has encontrado la galaxia de Los Orinalejos', 'You found the Los Orinalejos galaxy'], 'egg.cardboard': ['Modo cartón activado', 'Cardboard mode on'],
   'rot.hint': ['Gira el teléfono para mejor experiencia', 'Rotate your phone for a better experience'],

@@ -1,11 +1,12 @@
 // Cabina del CM (Fase 1): cabin-panels.glb del artista. Origen = ojo del piloto; la cámara va en (0,0,0) mirando −Z.
 // Los nodos con nombre son pivotes (malla en '<nombre>-geo'); userData trae etiquetas, ángulos y acciones.
-import { THREE, modelAnim, Q, renderer } from '../core/engine.js';
+import { THREE, model, modelAnim, Q, renderer } from '../core/engine.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 const deg = THREE.MathUtils.degToRad;
 // interruptor del HTML → nodo del panel (según userData.action)
 export const SW_MAP = { fc1: 'switch-01', fc2: 'switch-02', fc3: 'switch-03', batA: 'switch-06', batB: 'switch-07', batC: 'switch-09', gnc: 'switch-11', abort: 'switch-12', o2: 'switch-18', sband: 'switch-23' };
-export function makeCabin() {
+// props: añade cabin-props.glb (checklist, sextante, bolsas de comida, rotulador, cinta) en la repisa derecha bajo el panel
+export function makeCabin({ props = false } = {}) {
   const scene = new THREE.Scene(); scene.background = new THREE.Color(0x05070b);
   const camera = new THREE.PerspectiveCamera(74, innerWidth / innerHeight, 0.02, 50);
   const pm = new THREE.PMREMGenerator(renderer); const env = pm.fromScene(new RoomEnvironment(), 0.04).texture; pm.dispose();
@@ -40,6 +41,7 @@ export function makeCabin() {
     o.traverse((c) => { if (c.isMesh && c.material?.name === 'WindowGlass') c.material = winMat; }); // ventanas: cielo por dirección de vista
     return o;
   });
+  if (props) ready.then(() => model('cabin-props')).then((p) => { p.position.set(0.5, -0.3, -0.42); p.rotation.y = -0.9; p.traverse((c) => { if (c.isMesh && c.material && 'envMapIntensity' in c.material) c.material.envMapIntensity = 0.45; }); scene.add(p); }).catch((e) => console.warn('cabin-props.glb no disponible', e));
   const swNode = (id) => N[SW_MAP[id] || id];
   function setSwitch(id, on) { const n = swNode(id); if (!n) return; if (on && n.userData.guard) openGuard(n.name); const a = n.userData.angles_deg; tgt[n.name] = deg(on ? a[0] : a[a.length - 1]);
     const fc = /^fc([123])$/.exec(id); if (fc) talkback(+fc[1], on ? 'green' : 'gray'); }
