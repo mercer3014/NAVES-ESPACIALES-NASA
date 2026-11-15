@@ -2,7 +2,7 @@
 // (Confianza, Moral, tarjeta de Bitácora) y devuelve el id elegido. La ruta histórica se marca con una línea dorada.
 // Opciones: { id, label, hint, historic, trust, morale, needTrust, card, echo }. 'timeout' = qué pasa si se acaba el tiempo.
 import { store, AUTO } from '../../core/store.js';
-import { record, run, unlock, setFlag } from './state.js';
+import { record, run, unlock, setFlag, flagOf } from './state.js'; // flagOf: la voz de Bales depende de la hoja de Garman
 import { a11sfx, stinger } from '../../audio/a11-score.js';
 import { clip, clips } from '../../audio/a11-cues.js';
 import './decisions.css';
@@ -101,7 +101,7 @@ export function ask(id, { timer } = {}) {
     function pick(o) {
       if (done) return; done = true; cancelAnimationFrame(tmr); removeEventListener('keydown', key, true);
       btns.forEach(([b, x]) => { b.disabled = true; b.classList.toggle('chosen', x === o); b.classList.toggle('gold', !!x.historic); });
-      apply(D, id, o, (performance.now() - t0) / 1000);
+      try { apply(D, id, o, (performance.now() - t0) / 1000); } catch (e) { console.error('decisión', id, e); } // un fallo de audio o bandera nunca congela la decisión
       const echo = el.querySelector('.dec-echo'); echo.textContent = tx(o.echo) || (o.historic ? (li ? 'Historical route.' : 'Ruta histórica.') : '');
       if (o.historic) echo.classList.add('gold');
       setTimeout(() => { el.classList.remove('on'); setTimeout(() => { el.remove(); open = null; resolve(o.id); }, 320); }, echo.textContent ? 1900 : 700);

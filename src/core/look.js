@@ -24,7 +24,7 @@ export function lookActive() { return sessions.size > 0; }
 function menuOpen() {
   if (document.body.dataset.paused || document.body.dataset.xpUi) return true; // xpUi: opciones de diálogo o ficha abiertas en exploración
   if (document.querySelector('.bit')) return true; // Bitácora abierta
-  if (document.querySelector('.overlay, .dialog')) return true;
+  if (document.querySelector('.overlay, .dialog, .dec-overlay')) return true; // .dec-overlay: decisiones del guion (1202 en el descenso)
   const radio = document.querySelector('.r-panel');
   return !!(radio && !radio.classList.contains('hidden'));
 }

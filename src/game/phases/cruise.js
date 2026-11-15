@@ -126,7 +126,29 @@ export default async function cruise(ctx) {
     ship.userData.burn(0); stopEngine(); shake = 0; box.style.display = 'none'; paintPrompt(el, null, '');
     const mid = (z0 + z1) / 2; const err = Math.abs(v - mid) / (w / 2); const score = clamp(1 - Math.max(0, err - 1) * 0.35, 0, 1);
     if (err <= 1) { sfx('ok'); ctx.banner(t('c.ok'), '', 1600); ctx.cc.log('c.ok', null, 'ok'); } else { sfx('error'); ctx.banner(t(v < mid ? 'c.short' : 'c.long'), '', 1800, 'warn'); ctx.cc.log(v < mid ? 'c.short' : 'c.long', null, 'warn'); }
-    return { v, score, err };
+    return { v, score, err, dir: v < mid ? 'short' : 'long' };
+  }
+  // Consecuencias de un encendido muy malo (más de una zona fuera): TLI → corrección de curso obligatoria; LOI larga → te estrellas
+  // en la Luna, LOI corta → pasas de largo por el retorno libre. Se repite el encendido (máx. 2); después corrige la computadora.
+  const BURN_FAIL = {
+    'tli-short': { t: ['¿Y si…? No llegas a la Luna', 'What if…? You fall short of the Moon'], x: ['Con poco empuje, la nave no alcanza la órbita de la Luna y su trayectoria la devuelve a la Tierra. Hace falta una corrección de curso. En el Apolo 11 solo se necesitó una pequeña corrección a mitad de camino, porque la TLI fue casi perfecta.', 'With too little thrust the ship never reaches the Moon’s orbit and its path bends back to Earth. A course correction is needed. Apollo 11 needed only one small midcourse correction, because its TLI was almost perfect.'] },
+    'tli-long': { t: ['¿Y si…? Demasiado rápido', 'What if…? Too fast'], x: ['Con demasiado empuje llegas a la Luna antes y más rápido de lo planeado, y la inserción en órbita lunar sería imposible. Hace falta una corrección de curso.', 'With too much thrust you reach the Moon early and too fast, and lunar orbit insertion would be impossible. A course correction is needed.'] },
+    'loi-long': { t: ['¿Y si…? Directo a la Luna', 'What if…? Straight into the Moon'], x: ['Frenaste de más detrás de la Luna: la órbita quedó tan baja que cruza la superficie. Columbia se habría estrellado sin que Houston pudiera verlo, porque detrás de la Luna no hay radio.', 'You braked too much behind the Moon: the orbit dropped so low it crosses the surface. Columbia would have crashed with Houston unable to see it, since there is no radio behind the Moon.'] },
+    'loi-short': { t: ['¿Y si…? Pasas de largo', 'What if…? You fly past'], x: ['Frenaste muy poco: la Luna no te captura y la trayectoria de retorno libre te devuelve a la Tierra. Real: el Apolo 11 iba en esa trayectoria a propósito, para volver a casa si el motor fallaba.', 'You braked too little: the Moon does not capture you and the free-return trajectory sends you back to Earth. Real: Apollo 11 flew that trajectory on purpose, to get home if the engine failed.'] },
+  };
+  async function burnChecked(kind, showZone) {
+    let r = await burn(kind, showZone), tries = 0;
+    while (!AUTO() && r.err > 2 && tries < 2 && !ctx.dead) {
+      const f = BURN_FAIL[kind + '-' + r.dir]; tries++;
+      if (kind === 'loi' && r.dir === 'long') { sfx('explosion', { vol: 0.5 }); shake = 1.2; setTimeout(() => (shake = 0), 600); }
+      ctx.cc.log(kind === 'loi' ? 'c.long' : 'c.short', null, 'bad');
+      await whatIf({ title: f.t, text: f.x, back: [kind === 'tli' ? 'Hacer la corrección de curso' : 'Repetir el encendido', kind === 'tli' ? 'Do the course correction' : 'Redo the burn'] });
+      if (ctx.dead) return r;
+      ctx.banner(kind === 'tli' ? (store.get('lang') === 'en' ? 'Course correction' : 'Corrección de curso') : 'LOI', '', 1600, 'warn');
+      const r2 = await burn(kind, true); r = { ...r2, score: Math.min(r2.score, 0.75), retried: tries }; // se aprueba, pero con penalización
+    }
+    if (r.err > 2 && tries >= 2) { r.score = Math.min(r.score, 0.4); ctx.banner(store.get('lang') === 'en' ? 'The computer corrects the burn' : 'La computadora corrige el encendido', '', 2200, 'warn'); }
+    return r;
   }
   const SUB = new URLSearchParams(location.search).get('sub'); // atajo de QA
   if (SUB !== 'photo') {
@@ -134,7 +156,7 @@ export default async function cruise(ctx) {
   ctx.banner(t('c.tli'), 'TLI', 1800); hint(coop && ctx.cc.remote() ? 'c.cczone' : 'c.hold'); ctx.say('pa.tli', { ms: 4000 }); ctx.cc.log('c.tli');
   await ctx.wait(1.2); await ctx.until(() => ship.userData.interior || ctx.time > 6); setView('cdr'); // TLI desde el asiento del CDR
   { const I = ship.userData.interior; if (I) { I.guard(4); [8, 9, 10].forEach((i) => I.sw(i, true)); } }
-  st.tli = await burn('tli', !(coop && ctx.cc.remote()));
+  st.tli = await burnChecked('tli', !(coop && ctx.cc.remote()));
   playCue('tli', { anchor: () => ship, ctx });
   await ctx.wait(1.4);
   // ---------- transposición, acople y extracción del LM (cinemática) ----------
@@ -213,7 +235,7 @@ export default async function cruise(ctx) {
   W.sun.visible = false; W.scene.children.filter((o) => o.isDirectionalLight).forEach((l) => (l.intensity = 0.25)); // lado oscuro
   ship.rotation.set(0, 0, ship.userData.docked ? -Math.PI / 2 : Math.PI / 2); hint('c.retro'); // acoplado: +Y local = tobera SPS
   await ctx.wait(2.4); los.innerHTML = ''; los.style.display = 'none';
-  st.loi = await burn('loi', true);
+  st.loi = await burnChecked('loi', true);
   clips(['c3_34_capcom_go_loi_en', 'c3_34_armstrong_estamos_en_orbita_en', 'c3_34_collins_yeso_viejo_en'], { radio: true });
   W.sun.visible = true; W.scene.children.filter((o) => o.isDirectionalLight).forEach((l) => (l.intensity = 3.2));
   sfx('ping'); ctx.banner(t('c.aos'), 'AOS', 1600); ctx.cc.log('c.aos', null, 'ok'); ctx.cc.snap({ stage: 'aos', los: false }, true);
