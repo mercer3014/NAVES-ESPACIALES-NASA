@@ -53,10 +53,25 @@ export function unlock(id, { quiet = false, note = null } = {}) {
   const o = owned(); if (o[id]) return false;
   o[id] = { t: Date.now(), ...(note ? { note } : {}) }; store.set('bitacora', o);
   emit('bitacora:new', id, card, { quiet });
+  awardBadges();
   return true;
 }
 export function bitacoraProgress(chapter = null) {
   const ids = Object.keys(CARDS).filter((id) => chapter == null || CARDS[id].ch === chapter);
   const o = owned(); const got = ids.filter((id) => o[id]).length;
   return { got, total: ids.length, pct: ids.length ? Math.round((got / ids.length) * 100) : 0 };
+}
+
+// Una insignia por capítulo cuando la bitácora de ese capítulo está al 100 %.
+export const badgesOf = () => store.get('insignias') || {};
+function awardBadges() {
+  const ownedBadges = badgesOf(); let fresh = false;
+  for (let ch = 0; ch < 10; ch++) {
+    const p = bitacoraProgress(ch);
+    if (p.total && p.got >= p.total && !ownedBadges[ch]) { ownedBadges[ch] = Date.now(); fresh = true; }
+  }
+  if (!fresh) return ownedBadges;
+  store.set('insignias', ownedBadges);
+  if (typeof window !== 'undefined') import('../../audio/a11-score.js').then((m) => m.stinger('mus_stinger_insignia_capitulo_100')).catch(() => {});
+  return ownedBadges;
 }

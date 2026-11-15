@@ -571,3 +571,46 @@ export const CARDS = {
     img: ['El USS Hornet recupera a Columbia en el Pacífico.', 'USS Hornet recovers Columbia in the Pacific.'],
     src: MR }),
 };
+
+// Los 8 eventos ocultos del guion. La pista se muestra en la Bitácora en cuanto un personaje la dice.
+export const HIDDEN_EVENTS = ['h-45s', 'h-dejamos', 'h-laser', 'h-hamilton', 'h-cartografo', 'h-ciegas', 'h-angulo', 'historiador'];
+const HINTS = {
+  'h-45s': ['Haise, en la Sala Blanca: «Dicen que Neil podría posar ese bicho con 20 segundos de combustible…».', 'Haise, in the White Room: “They say Neil could set that thing down with 20 seconds of fuel left….”'],
+  'h-hamilton': ['Wendt: «Si ves a Garman en Houston, pregúntale por su hojita».', 'Wendt: “If you see Garman in Houston, ask him about his little sheet.”'],
+  'h-dejamos': ['Aldrin, al pie de la escalerilla: en un bolsillo del traje viaja un paquete que no está en la lista de tareas.', 'Aldrin, at the foot of the ladder: a pocket of the suit carries a packet that is not on the task list.'],
+  'h-laser': ['Duke: el retrorreflector solo devuelve el láser si mira de frente a la Tierra.', 'Duke: the retroreflector only returns the laser if it faces Earth.'],
+  'h-cartografo': ['Collins, solo en Columbia: «Hay seis marcas en el terreno. Si las fotografío en una sola pasada…».', 'Collins, alone in Columbia: “There are six landmarks. If I photograph them in a single pass….”'],
+  'h-ciegas': ['CAPCOM, antes de la LOI: «Detrás de la Luna no os vemos. El encendido es vuestro».', 'CAPCOM, before LOI: “Behind the Moon we cannot see you. The burn is yours.”'],
+  'h-angulo': ['Collins, en la reentrada: «El corredor es de unos dos grados. Ni más empinado ni más plano».', 'Collins, during reentry: “The corridor is about two degrees. Not steeper, not shallower.”'],
+  'historiador': ['Kranz: unas 400.000 personas hicieron posible el Apolo. La bitácora completa es su título.', 'Kranz: some 400,000 people made Apollo possible. The completed log is their title.'],
+};
+for (const [id, hint] of Object.entries(HINTS)) CARDS[id].hint = hint;
+
+// «Por qué importa» en cada tarjeta de objeto.
+const WHY = {
+  'foto-karen': ['Porque Armstrong casi nunca hablaba de ella, y esa reserva explica su silencio en la misión.', 'Because Armstrong almost never spoke of her, and that reserve explains his silence on the mission.'],
+  'libreta-ed-white': ['Porque el incendio de 1964 une a Armstrong con Ed White antes del Apolo 1.', 'Because the 1964 fire links Armstrong to Ed White before Apollo 1.'],
+  'pizarra-kranz': ['Porque «duros y competentes» es la regla con la que Houston decide seguir en la 1202.', 'Because “tough and competent” is the rule Houston uses to press on through the 1202.'],
+  'saturn-v': ['Porque sin esa masa en órbita no hay módulo lunar que descienda.', 'Because without that mass in orbit there is no lunar module to descend.'],
+  'parche-mision': ['Porque el emblema, sin nombres, dice que el vuelo es de todas las personas que lo hicieron.', 'Because the emblem, with no names, says the flight belongs to everyone who built it.'],
+  'sobres-firmados': ['Porque eran el seguro de la familia si la tripulación no volvía.', 'Because they were the family’s insurance if the crew did not come back.'],
+  'traje-a7l': ['Porque desde que se cierra el traje se respira oxígeno puro, y el orden de las mangueras es lo que lo mantiene.', 'Because once the suit is closed you breathe pure oxygen, and the hose order is what keeps it that way.'],
+  'llave-de-la-luna': ['Porque la broma de Wendt es el último gesto humano antes de cerrar la escotilla.', 'Because Wendt’s joke is the last human gesture before the hatch closes.'],
+  'checklist-muslo': ['Porque en el traje no se puede desplegar una hoja: la lista va cosida al brazo.', 'Because you cannot unfold a sheet in the suit: the list is sewn to the sleeve.'],
+  'sextante': ['Porque detrás de la Luna la única referencia son las estrellas.', 'Because behind the Moon the only reference is the stars.'],
+  'agc-dsky': ['Porque esa computadora es la que prioriza y por eso la alarma 1202 no aborta el descenso.', 'Because that computer is what prioritizes, and that is why the 1202 alarm does not abort the descent.'],
+  'comida-espacial': ['Porque tres hombres viven días en una lata: el agua y la comida son parte del diseño, no un detalle.', 'Because three men live for days in a can: water and food are part of the design, not a detail.'],
+  'eagle-lm5': ['Porque cada kilo de este módulo es un kilo que no es combustible ni ciencia.', 'Because every kilogram of this module is a kilogram that is not fuel or science.'],
+  'hoja-garman': ['Porque sin esa hoja Bales no puede decir GO en tres segundos.', 'Because without that sheet Bales cannot call GO in three seconds.'],
+  'chaleco-kranz': ['Porque cerrar la puerta y ponerse el chaleco es la señal de que el descenso ya no se interrumpe.', 'Because closing the door and putting on the vest is the sign that the descent will not be interrupted.'],
+  'squawk-box': ['Porque la familia oye el descenso en directo, y lo que Neil les dijo en casa cambia cómo lo escuchan.', 'Because the family hears the descent live, and what Neil told them at home changes how they listen.'],
+  'placa': ['Porque el texto que Armstrong lee en la escalerilla es el mensaje que se queda en la Luna.', 'Because the words Armstrong reads on the ladder are the message that stays on the Moon.'],
+  'bandera': ['Porque el tratado impide reclamar la Luna: la bandera es un saludo, no una frontera.', 'Because the treaty forbids claiming the Moon: the flag is a greeting, not a border.'],
+  'hasselblad': ['Porque esas fotos son la prueba que vieron cientos de millones de personas.', 'Because those pictures are the proof hundreds of millions of people saw.'],
+  'paquete-recuerdos': ['Porque honra a quienes murieron en los dos lados de la carrera, y sigue en la superficie.', 'Because it honors those who died on both sides of the race, and it is still on the surface.'],
+  'libreta-collins': ['Porque en los 48 minutos sin radio Collins solo tiene esa libreta y la ventana.', 'Because in the 48 minutes without radio Collins has only that notebook and the window.'],
+  'rotulador-aldrin': ['Porque un objeto no conductor es la única forma de cerrar el disyuntor del motor de ascenso.', 'Because a non-conductive object is the only way to close the ascent-engine breaker.'],
+  'discurso-safire': ['Porque la NASA escribió qué diría el presidente si no volvían: el riesgo era real.', 'Because NASA wrote what the president would say if they did not come back: the risk was real.'],
+  'ventana-cuarentena': ['Porque las rocas podían traer algo desconocido, y la familia solo podía tocar el vidrio.', 'Because the rocks might have carried something unknown, and the family could only touch the glass.'],
+};
+for (const [id, why] of Object.entries(WHY)) CARDS[id].why = why;
