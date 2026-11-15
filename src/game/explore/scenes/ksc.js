@@ -47,7 +47,7 @@ export default {
   ],
   complete: (st) => st.done.has('talk:deke'),
   world: async () => {
-    const W = makePad(); W.setThrust(0);
+    const W = makePad({ lite: true }); W.setThrust(0);
     await Promise.race([Promise.all([W.ready, W.envReady]), new Promise((r) => setTimeout(r, 8000))]);
     W.camera.near = 0.08; W.camera.far = 60000; W.camera.updateProjectionMatrix();
     return {

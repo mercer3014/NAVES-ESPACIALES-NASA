@@ -12,11 +12,13 @@ import { ask } from './decisions.js';
 import { missionCard } from '../../ui/mission-card.js';
 
 const own = (load) => async (o) => { const m = await load(); return m.default(o); };
-// Escena explorable (RPG). Igual que own(): el motor y los datos de scenes/<id>.js. No cambia las cinemáticas.
+// Escena explorable (RPG). El mapa es estático: un import('../explore/scenes/' + id) no entra en el build
+// de producción y el navegador pide un .js que no existe. Ahí se quedaba colgado «Iniciar misión».
+const sceneLoaders = import.meta.glob('../explore/scenes/*.js');
 export const explore = (id) => async (o) => {
-  if (!/^[a-z0-9_-]+$/.test(String(id || ''))) return { id, done: false, skipped: false, flags: {}, error: 'id' };
-  const m = await import('../explore/run.js');
-  const d = await import('../explore/scenes/' + id + '.js');
+  const load = sceneLoaders['../explore/scenes/' + id + '.js'];
+  if (!load) return { id, done: false, skipped: false, flags: {}, error: 'id' };
+  const [m, d] = await Promise.all([import('../explore/run.js'), load()]);
   return m.runExplore(d.default, o);
 };
 // minijuegos del guion: tarjeta «Cómo jugar» (qué pasó / tu misión / controles) antes de empezar

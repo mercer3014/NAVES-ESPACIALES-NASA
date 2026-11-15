@@ -76,7 +76,7 @@ export default {
   ],
   complete: (st) => st.done.has('talk:fire') && (!talk || st.done.has('talk:neil')),
   world: async () => {
-    const W = makePad(); W.setThrust(0);
+    const W = makePad({ lite: true }); W.setThrust(0);
     await Promise.race([Promise.all([W.ready, W.envReady]), new Promise((r) => setTimeout(r, 8000))]);
     W.camera.near = 0.08; W.camera.far = 60000; W.camera.updateProjectionMatrix();
     const log = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.2, 2.4, 8), new THREE.MeshStandardMaterial({ color: 0x6e5a42, roughness: 0.95 }));

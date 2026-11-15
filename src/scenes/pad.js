@@ -33,7 +33,7 @@ function procMat(params, colorGLSL, extraUniforms = {}) {
   return m;
 }
 
-export function makePad() {
+export function makePad({ lite = false } = {}) {
   const scene = new THREE.Scene(); const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.5, 60000);
   scene.fog = new THREE.Fog(0xb9bcc4, 700, 12000);
   const sunDir = new THREE.Vector3(0.8, 0.26, -0.35).normalize();
@@ -67,7 +67,7 @@ export function makePad() {
   const stars = twinkleStars(Q.high ? 4000 : 1800, 20000); scene.add(stars); stars.visible = false;
   scene.add(new THREE.HemisphereLight(0xc4dcff, 0x4a4632, 1.15));
   const sunL = new THREE.DirectionalLight(0xfff0dc, 3.1); sunL.target.position.set(0, BASE_Y - 12, 0); sunL.position.copy(sunDir).multiplyScalar(400).add(sunL.target.position); scene.add(sunL, sunL.target);
-  if (Q.high) { renderer.shadowMap.enabled = true; sunL.castShadow = true; sunL.shadow.mapSize.set(2048, 2048); sunL.shadow.bias = -0.00035; sunL.shadow.normalBias = 0.04; Object.assign(sunL.shadow.camera, { left: -140, right: 140, top: 160, bottom: -60, far: 1200 }); }
+  if (Q.high && !lite) { renderer.shadowMap.enabled = true; sunL.castShadow = true; sunL.shadow.mapSize.set(2048, 2048); sunL.shadow.bias = -0.00035; sunL.shadow.normalBias = 0.04; Object.assign(sunL.shadow.camera, { left: -140, right: 140, top: 160, bottom: -60, far: 1200 }); }
   // ---------- entorno: matorral costero, playa, Atlántico, caminos, edificios lejanos, línea de árboles, nubes ----------
   const ground = new THREE.Group(); scene.add(ground); const landU = { uT: { value: 0 } };
   const landG = new THREE.PlaneGeometry(26000, 26000, 1, 1); landG.rotateX(-Math.PI / 2);
@@ -127,7 +127,7 @@ export function makePad() {
   // entorno LC-39A del artista (origen = cubierta del ML): sustituye todo el entorno procedural de arriba, que queda de respaldo
   const procEnv = [...ground.children]; procEnv.forEach((o) => (o.position.y += FB_DY));
   const lods = []; let envSea = null, envSurf = null; const SHADOW = /^pad-(mound|deflectors|tanks|light-masts)/, RECV = /^(pad-mound|terrain-near)/;
-  const envReady = Promise.all(['lc39a-terrain', 'lc39a-pad', 'lc39a-far'].map((n) => model(n))).then((gs) => {
+  const envReady = lite ? Promise.resolve(null) : Promise.all(['lc39a-terrain', 'lc39a-pad', 'lc39a-far'].map((n) => model(n))).then((gs) => {
     // las 3 raíces LC39A_* van con la misma transformación que el cohete y la torre; nunca se tocan los nodos de malla (cuantizados)
     const env = new THREE.Group(); env.name = 'lc39a'; env.position.y = BASE_Y;
     for (const g of gs) { g.traverse((o) => {
