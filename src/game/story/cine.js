@@ -4,6 +4,7 @@ import { THREE, setWorld, onTick, modelAnim } from '../../core/engine.js';
 import { store, dbg } from '../../core/store.js';
 import { show } from '../../ui/router.js';
 import { mountLetterbox } from '../cutscenes/letterbox.js';
+import { voiceLine, stopVoiceLine } from '../../audio/a11-voice.js';
 import './story.css';
 
 export const L = () => (store.get('lang') === 'en' ? 1 : 0);
@@ -30,7 +31,7 @@ export function runCine({ id, world, title, shots = [], lines = [], step, intera
   const cam = world.camera; setWorld(world);
   const el = show('<div class="screen story-screen" aria-live="polite"></div>', 'story-' + id);
   let done = false, skipped = false, T = 0, resolve; const finished = new Promise((r) => (resolve = r));
-  const finish = (sk) => { if (done) return; done = true; skipped = !!sk; off(); hide(); removeEventListener('keydown', key, true); resolve({ id, skipped }); };
+  const finish = (sk) => { if (done) return; done = true; skipped = !!sk; off(); hide(); stopVoiceLine(); removeEventListener('keydown', key, true); resolve({ id, skipped }); };
   const hide = mountLetterbox({ id, title: tx(title), sub: '', skipLabel: L() ? 'Skip · Esc' : 'Saltar · Esc', onSkip: () => finish(true) });
   const lb = document.querySelector(`.plb-letterbox[data-cue="${id}"]`); lb?.classList.add('story');
   const sub = lb?.querySelector('small'); const subtitle = (who, text) => { if (sub) sub.textContent = text ? (who ? who + ': ' : '') + text : ''; };
@@ -44,7 +45,7 @@ export function runCine({ id, world, title, shots = [], lines = [], step, intera
     for (const x of shots) { if (T < acc + x.d) { s = x; u = (T - acc) / x.d; break; } acc += x.d; }
     if (s) { const to = s.to || s; const k = smooth(Math.min(1, Math.max(0, u))); lerp3(s.pos, to.pos, k, P); lerp3(s.look, to.look || s.look, k, Q);
       cam.position.copy(P); cam.up.set(0, 1, 0); cam.lookAt(Q); const f = (s.fov ?? 45) + ((to.fov ?? s.fov ?? 45) - (s.fov ?? 45)) * k; if (Math.abs(cam.fov - f) > 0.01) { cam.fov = f; cam.updateProjectionMatrix(); } }
-    let n = -1; for (let i = 0; i < lines.length; i++) if (T >= lines[i].at) n = i; if (n !== li) { li = n; const ln = lines[n]; subtitle(ln && tx(ln.who), ln && tx(ln.text)); }
+    let n = -1; for (let i = 0; i < lines.length; i++) if (T >= lines[i].at) n = i; if (n !== li) { li = n; const ln = lines[n]; subtitle(ln && tx(ln.who), ln && tx(ln.text)); if (ln && Array.isArray(ln.text)) voiceLine(ln.text[1]); }
     try { step?.(dt, T); } catch (e) { console.error(e); }
     if (!hold && T >= Math.max(total, minHold, (lines.at(-1)?.at ?? 0) + 3.2)) finish(false);
   });

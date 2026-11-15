@@ -6,6 +6,7 @@
 import { getWorld, setWorld, onTick } from '../../core/engine.js';
 import { dbg, store } from '../../core/store.js';
 import { sfx } from '../../core/audio.js';
+import { voiceLine, stopVoiceLine } from '../../audio/a11-voice.js';
 import { mountLetterbox } from './letterbox.js';
 import { stopCue } from './play.js';
 
@@ -56,7 +57,7 @@ export async function runCinematic(def, opts = {}) {
   const self = {
     id,
     stop(skip = false) {
-      if (stopped) return; stopped = true; skipped = skip; off(); hide();
+      if (stopped) return; stopped = true; skipped = skip; off(); hide(); stopVoiceLine();
       if (getWorld() === world) setWorld(prev);
       try { w?.dispose?.(); } catch (e) { console.error(e); }
       delete document.body.dataset.cine; fade.classList.remove('off');
@@ -89,6 +90,7 @@ export async function runCinematic(def, opts = {}) {
     if (head) head.textContent = (ln.who ? ln.who[li] : '') + (ln.tag && TAG[ln.tag] ? TAG[ln.tag][li] : '');
     if (note) note.textContent = ln.tx ? ln.tx[li] : '';
     if (ln.sfx) sfx(ln.sfx, { vol: ln.vol ?? 0.5 });
+    if (ln.tx) voiceLine(ln.tx[1]);
   };
   const enter = (i) => { si = i; st = 0; fired = new Set(); const sh = shots[i]; try { sh.on?.(w, o); } catch (e) { console.error(e); } apply(); };
   // QA: salta a un plano y a un instante (solo se expone en ?debug como window.__cine)

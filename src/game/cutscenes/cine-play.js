@@ -4,6 +4,7 @@
 import { getWorld, setWorld, onTick } from '../../core/engine.js';
 import { store, dbg } from '../../core/store.js';
 import { music } from '../../core/audio.js';
+import { voiceLine, stopVoiceLine } from '../../audio/a11-voice.js';
 import { mountLetterbox } from './letterbox.js';
 import { createCinePlayback, stepCine, skipCine, sampleCine, lineAt } from './cine-rails.js';
 import './cine.css';
@@ -68,6 +69,7 @@ export async function playCine(id, opts = {}) {
     if (l !== lastLine) {
       lastLine = l;
       sub.innerHTML = '';
+      if (l) voiceLine(l.text[1]);
       if (l) { if (l.who) { const b = document.createElement('b'); b.textContent = l.who; sub.append(b); } sub.append(document.createTextNode(l.text[L])); }
     }
   };
@@ -76,7 +78,7 @@ export async function playCine(id, opts = {}) {
     seek(t) { const due = stepCine(def, pb, Math.max(0, t - pb.t)); due.forEach((a) => W.act?.(a, true)); W.update?.(0, 0); place(); }, // solo QA
     stop() {
       if (stopped) return; stopped = true;
-      off(); hide(); sub.remove(); cap.remove(); fade.remove();
+      off(); hide(); stopVoiceLine(); sub.remove(); cap.remove(); fade.remove();
       if (opts.restore !== false && prev && getWorld() === W) setWorld(prev);
       try { W.dispose?.(); } catch (e) { console.error(e); }
       if (current === self) current = null;

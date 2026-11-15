@@ -23,6 +23,7 @@ import { makeAstronaut } from '../../scenes/astronaut.js';
 import { makeBossArena, ARENA } from '../../scenes/boss-arena.js';
 import { mountLetterbox } from '../cutscenes/letterbox.js';
 import { mountBossHud, L } from './hud.js';
+import { voiceLine, stopVoiceLine } from '../../audio/a11-voice.js';
 
 const G = 1.62; // gravedad lunar
 const DIFFS = {
@@ -42,7 +43,7 @@ export async function runBoss(opts = {}) {
   const done = new Promise((r) => (resolveRun = r));
   const prevWorld = getWorld(); const prevScreen = document.body.dataset.screen;
   document.body.dataset.screen = 'boss';
-  const hud = mountBossHud(); cleanups.push(() => hud.dispose());
+  const hud = mountBossHud(); cleanups.push(() => hud.dispose(), stopVoiceLine);
   hud.gameplay(false); const loading = hud.overlay(`<div class="bd-k">${L('NO CANON · SUEÑO DE ALDRIN', 'NON-CANON · ALDRIN\'S DREAM')}</div><h2>${L('Polvo y fuego', 'Dust and fire')}</h2><p>${L('Cargando el sueño…', 'Loading the dream…')}</p>`);
 
   // ---------- mundo ----------
@@ -123,7 +124,7 @@ export async function runBoss(opts = {}) {
   const v1 = new THREE.Vector3(), v2 = new THREE.Vector3();
   const hdist = (x, z, a, b) => Math.hypot(x - a, z - b);
   const grounded = (lim = 0.6) => P.y - ground(P.x, P.z) < lim;
-  const say = (who, es, en, tag = '', ms) => hud.sub(who, L(es, en), tag, ms);
+  const say = (who, es, en, tag = '', ms) => { voiceLine(en); return hud.sub(who, L(es, en), tag, ms); };
   const later = (s, f) => hazards.push({ kind: 'timer', t: 0, dur: s, f });
   const nodePos = (e, n, out) => { const o = e.g.nodes[n]; return o ? o.getWorldPosition(out) : out.copy(e.g.root.position); };
   function hurt(amount, src, kind = '') {
