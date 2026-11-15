@@ -17,6 +17,7 @@ import { paintPrompt } from '../../ui/flight-hud-mount.js';
 import { makeMoonSurface } from '../../scenes/moonsurface.js';
 import { makeEASEP } from '../../scenes/easep.js';
 import { makeAstronaut } from '../../scenes/astronaut.js';
+import { createCompanion, stepCompanion } from '../explore/companion.js';
 import { renderFlag } from '../../ui/flag.js';
 import { model, modelAnim } from '../../core/engine.js';
 import { ground, PAD } from '../../sim/lander.js';
@@ -69,6 +70,10 @@ export default async function eva(ctx) {
   const lmYaw = Math.PI / 2; W.body.rotation.y = lmYaw; if (L0.res === 'hard') W.body.rotation.x = 0.06;
   W.scene.fog.density = 0.0009; music(storyInPhase(ctx) ? 'a11/music/mus_c5_magnifica_desolacion' : 'eva', { vol: 0.35 });
   const ast = await makeAstronaut(ctx.flag, ctx.name); W.scene.add(ast.root); ctx.onCleanup(() => ast.dispose?.()); W.focus(ast.root, 18);
+  const buzz = await makeAstronaut(null, 'Aldrin').catch(() => null);
+  const buzzBody = createCompanion({ at: [lx + 1.8, 0, 6.2], follow: 1.7 });
+  if (buzz) { buzz.root.visible = false; W.scene.add(buzz.root); ctx.onCleanup(() => buzz.dispose?.()); }
+  let saidDes = false; const printAt = { x: lx, z: 4.2, on: false }; let inspecting = false;
   const st = { step: false, sample: false, flag: false, depth: 0, lean: 0, bar: 0, photo: 0, golf: false, hits: [], t0: 0 };
   // ---------- HUD ----------
   const el = ctx.hud(`${objectiveCardHtml({ kicker: `${t('ph.n')} 05 · ${t('ph.eva')}`, titleHtml: `<div class="phase-title etitle">${t('e.ladder')}</div>`, bodyHtml: `<p class="mhud-note ph1"></p><div class="k">${t('e.o2')}</div><div class="fuelbar o2" style="height:4px;background:rgba(186,206,212,.18);margin:4px 0 8px;overflow:hidden"><i style="display:block;height:100%;width:100%;background:var(--mhud-go,#8fbf9b)"></i></div><div class="etasks">${['sample', 'flag', 'photo'].map((k) => `<div class="task t-${k}"><i class="mhud-tick box"></i><span>${t('e.t.' + k)}</span></div>`).join('')}</div>` })}
@@ -245,7 +250,18 @@ export default async function eva(ctx) {
   const _hr = new THREE.Vector3();
   ctx.loop((dt, tt) => {
     tEva += dt; $('.o2 i', el).style.width = clamp(100 - (tEva / O2) * 100, 0, 100) + '%';
-    if (P.mode === 'walk') {
+    if (buzz && st.step && P.mode !== 'ladder') {
+      buzz.root.visible = true;
+      stepCompanion(buzzBody, { x: P.x, z: P.z, yaw: P.yaw, speed: P.speed, floorY: ground(buzzBody.x, buzzBody.z) }, dt);
+      buzzBody.y = ground(buzzBody.x, buzzBody.z);
+      buzz.root.position.set(buzzBody.x, buzzBody.y, buzzBody.z); buzz.root.rotation.y = buzzBody.yaw;
+      buzz.pose(dt, { speed: buzzBody.speed });
+      if (!saidDes && Math.hypot(buzzBody.x - P.x, buzzBody.z - P.z) < 2.5) {
+        saidDes = true; clip('cap5_magnifica_desolacion');
+        ctx.banner('ALDRIN', store.get('lang') === 'en' ? 'Magnificent desolation.' : 'Magnífica desolación.', 3400);
+      }
+    }
+    if (P.mode === 'walk' && !inspecting) {
       let a = P.act === 'fall' || P.act === 'scoop' ? { x: 0, y: 0 } : axis(); if (AUTO() && autoTarget && P.act !== 'scoop' && P.act !== 'fall') { const dx = autoTarget.x - P.x, dz = autoTarget.z - P.z; const d = Math.hypot(dx, dz); const fw = new THREE.Vector2(-Math.sin(camYaw), -Math.cos(camYaw)), rt = new THREE.Vector2(Math.cos(camYaw), -Math.sin(camYaw)); a = d > 0.25 ? { x: clamp((dx * rt.x + dz * rt.y) / d, -1, 1), y: clamp((dx * fw.x + dz * fw.y) / d, -1, 1) } : { x: 0, y: 0 }; if (d < 1.2) { a.x *= d / 1.2; a.y *= d / 1.2; } }
       const mx = a.x * Math.cos(camYaw) - a.y * Math.sin(camYaw), mz = -a.x * Math.sin(camYaw) - a.y * Math.cos(camYaw); const mag = Math.min(1, Math.hypot(mx, mz));
       const vmax = 1.9; P.vx = damp(P.vx, mx * vmax, P.air ? 0.6 : 3, dt); P.vz = damp(P.vz, mz * vmax, P.air ? 0.6 : 3, dt); P.speed = Math.hypot(P.vx, P.vz);
@@ -255,6 +271,27 @@ export default async function eva(ctx) {
       if (!P.air && !P.act && (pressed('Space') || bpressed('jump'))) { P.vy = 2.5; P.air = true; P.jump = true; sfx('switch', { vol: 0.3, rate: 0.6 }); }
       if (P.air) { P.vy -= 1.62 * dt; P.y += P.vy * dt; if (P.y <= g) { P.y = g; P.air = false; P.jump = false; const big = P.vy < -1.5; if (big && P.speed > 1.5 && !AUTO() && !P.act && Math.random() < 0.3) { P.act = 'fall'; P.vx *= 0.2; P.vz *= 0.2; let k = 0; const off = ctx.loop((dt) => { k += dt; if (k > 5.2) { off(); if (P.act === 'fall') P.act = null; } }); } P.vy = 0; const px = Math.cos(P.yaw) * 0.09, pz = -Math.sin(P.yaw) * 0.09; if (big || P.speed < 0.9) { footprint(P.x + px, P.z + pz, P.yaw, big); footprint(P.x - px, P.z - pz, P.yaw, big); } else { const sd = stepSide ? 1 : -1; footprint(P.x + px * sd, P.z + pz * sd, P.yaw + sd * 0.05); } puff(P.x, P.z, big ? 30 : 10, big ? 2 : 1); sfx((stepSide ^= 1) ? 'step1' : 'step2', { vol: big ? 0.6 : 0.35 }); } }
       else P.y = g;
+      const spots = [
+        { id: 'plaque', x: lx, z: 2.15, ok: true, title: ['La placa de Eagle', 'Eagle’s plaque'], text: ['Fijada a la pata del Eagle. Armstrong la lee en voz alta antes de soltar la escalerilla.', 'Fixed to Eagle’s leg. Armstrong reads it aloud before he lets go of the ladder.'], why: ['Es el mensaje que se queda en la Luna: vinieron en paz, en nombre de toda la humanidad.', 'It is the message that stays on the Moon: they came in peace, for all mankind.'], audio: 'cap5_placa_lectura_armstrong' },
+        { id: 'print', x: printAt.x, z: printAt.z, ok: printAt.on, title: ['La huella', 'The bootprint'], text: ['El regolito guarda la suela. No hay viento ni agua que la borre.', 'The regolith keeps the sole. There is no wind or water to erase it.'], why: ['Armstrong lo describió como carbón en polvo. Una huella puede durar millones de años.', 'Armstrong described it as powdered charcoal. A print can last millions of years.'], audio: null },
+        { id: 'flag', x: flag.position.x, z: flag.position.z, ok: st.flag && flag.visible, title: ['La bandera y la llamada', 'The flag and the call'], text: ['La tela queda sujeta por una varilla: en la Luna no hay viento. Nixon llama desde el Despacho Oval.', 'A rod holds the cloth out: there is no wind on the Moon. Nixon calls from the Oval Office.'], why: ['El tratado impide reclamar la Luna. La bandera es un saludo, y la llamada la oye medio mundo.', 'The treaty forbids claiming the Moon. The flag is a greeting, and half the world hears the call.'], audio: 'cap5_nixon_llamada_completa' },
+      ];
+      let nearI = null, best = 1.15;
+      for (const s of spots) { if (!s.ok) continue; const d = Math.hypot(P.x - s.x, P.z - s.z); if (d < best) { best = d; nearI = s; } }
+      const sampleClose = !st.sample && Math.hypot(P.x - sampleP.x, P.z - sampleP.z) < 1.1;
+      if (nearI && !sampleClose && P.act !== 'scoop' && P.act !== 'hammer' && P.act !== 'hold' && (pressed('KeyE') || bpressed('act'))) {
+        inspecting = true; P.vx = P.vz = P.speed = 0; P.mode = 'inspect';
+        if (nearI.audio) clip(nearI.audio, { radio: true });
+        const box = document.createElement('div'); box.className = 'overlay'; box.style.zIndex = '40';
+        const li = store.get('lang') === 'en' ? 1 : 0;
+        box.innerHTML = `<div class="panel" style="max-width:460px"><h2></h2><p></p><p></p><button class="btn primary" type="button">${li ? 'Close' : 'Cerrar'}</button></div>`;
+        box.querySelector('h2').textContent = nearI.title[li];
+        box.querySelectorAll('p')[0].textContent = nearI.text[li];
+        box.querySelectorAll('p')[1].textContent = (li ? 'Why it matters. ' : 'Por qué importa. ') + nearI.why[li];
+        const shut = () => { box.remove(); inspecting = false; if (P.mode === 'inspect') P.mode = 'walk'; };
+        box.querySelector('button').onclick = shut;
+        el.append(box);
+      }
     }
     ast.root.position.set(P.x, P.y, P.z); ast.root.rotation.y = P.yaw; ast.pose(dt, { speed: P.mode === 'walk' ? P.speed : 0, air: P.air && P.mode === 'walk', jump: !!(P.jump && P.mode === 'walk'), act: P.dbgAct !== undefined ? P.dbgAct : P.act, k: P.dbgAct !== undefined ? P.dbgK : P.actK });
     science?.sample(P.act === 'scoop', P.actK);
@@ -338,9 +375,9 @@ export default async function eva(ctx) {
     await ctx.until(() => AUTO() || ACT());
     const fl = $('.flash', el); fl.style.transition = 'opacity .2s'; fl.style.opacity = 1; await ctx.wait(0.2); fl.style.transition = 'opacity 1.4s'; fl.style.opacity = 0;
     { const tz = padTop.z + 0.38; P.z = tz; P.y = ground(P.x, tz); P.act = 'step'; P.actK = 0; playCue('firststep', { anchor: () => ast.root, ctx }); await new Promise((res) => { let k = 0; const off = ctx.loop((dt) => { k = Math.min(1, k + dt / 4); P.actK = k; if (k >= 1) { off(); res(); } }); }); P.act = null; }
-    footprint(P.x - 0.1, P.z + 0.05, 0, true); puff(P.x, P.z, 18, 0.8); sfx('step1'); st.step = true; achieve('first'); if (storyInPhase(ctx)) { music(null, { fade: 150 }); setTimeout(() => !ctx.dead && music('a11/music/mus_c5_magnifica_desolacion', { vol: 0.3, fade: 4000 }), 20000); } // el guion pide silencio total en el primer paso ctx.cc.log('e.quote', null, 'ok');
+    footprint(P.x - 0.1, P.z + 0.05, 0, true); printAt.x = P.x - 0.1; printAt.z = P.z + 0.05; printAt.on = true; puff(P.x, P.z, 18, 0.8); sfx('step1'); st.step = true; achieve('first'); if (storyInPhase(ctx)) { music(null, { fade: 150 }); setTimeout(() => !ctx.dead && music('a11/music/mus_c5_magnifica_desolacion', { vol: 0.3, fade: 4000 }), 20000); } // el guion pide silencio total en el primer paso ctx.cc.log('e.quote', null, 'ok');
     const spoken = commsMode() !== 'off'; const qq = $('.quote', el);
-    if (spoken) { clips(['cap5_un_pequeno_paso', 'cap5_superficie_fina_polvorienta', 'cap5_magnifica_desolacion'], { radio: true }); qq.textContent = t('e.quote'); qq.style.display = ''; }
+    if (spoken) { clips(['cap5_un_pequeno_paso', 'cap5_superficie_fina_polvorienta'], { radio: true }); qq.textContent = t('e.quote'); qq.style.display = ''; }
     prompt('');
     await ctx.wait(AUTO() ? 1.5 : spoken ? 4 : 1.2); qq.style.display = 'none'; ctx.say('pa.eva', { ms: 2200 });
   } else { P.x = lx + 0.2; P.z = padTop.z + 1.3; P.y = ground(P.x, P.z); st.step = true; }
