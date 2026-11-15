@@ -1,0 +1,54 @@
+/* HUD de exploración. Plan de vuelo 1969: negro, crema, naranja, esquinas rectas. */
+#ui > .xp { position: absolute; inset: 0; pointer-events: none; font-family: var(--f-ui); color: var(--ink); }
+#ui > .xp button, #ui > .xp .xp-dialog, #ui > .xp .xp-inspect, #ui > .xp .tc-stick, #ui > .xp .tc-btn, #ui > .xp .xp-pause { pointer-events: auto; }
+
+.xp-title { position: absolute; top: calc(14px + var(--safe-t)); left: 16px; right: 16px; display: flex; flex-direction: column; gap: 2px; }
+.xp-title small { font-family: var(--f-mono); letter-spacing: .22em; color: var(--amber); font-size: .68rem; }
+.xp-title b { font-family: var(--f-title); font-weight: 700; letter-spacing: .08em; font-size: clamp(16px, 2vw, 22px); }
+
+.xp-obj { position: absolute; top: calc(78px + var(--safe-t)); left: 16px; margin: 0; padding: 8px 12px; list-style: none; width: min(340px, calc(100vw - 32px)); background: rgba(11, 12, 14, .88); border: 1px solid #3a3d42; display: grid; gap: 4px; }
+.xp-obj[hidden] { display: none; }
+.xp-obj li { font-size: .92rem; letter-spacing: .02em; padding-left: 14px; position: relative; }
+.xp-obj li::before { content: ""; position: absolute; left: 0; top: .45em; width: 7px; height: 7px; background: var(--orange); }
+.xp-obj li.done { color: var(--dim); text-decoration: line-through; text-decoration-color: var(--orange); }
+.xp-obj li.done::before { background: var(--dim); }
+.xp-obj li.hid { color: var(--dim); letter-spacing: .18em; }
+
+.xp-updated { position: absolute; top: calc(78px + var(--safe-t)); left: 16px; transform: translateY(-1.6em); font-family: var(--f-mono); font-size: .72rem; letter-spacing: .16em; text-transform: uppercase; color: var(--amber); }
+
+.xp-prompt { position: absolute; left: 50%; bottom: calc(28px + var(--safe-b)); transform: translateX(-50%); display: flex; align-items: center; gap: 10px; padding: 6px 12px 6px 6px; background: rgba(11, 12, 14, .92); border: 1px solid #3a3d42; max-width: calc(100vw - 28px); }
+.xp-prompt[hidden], .xp-bark[hidden] { display: none; }
+.xp-prompt kbd { font-family: var(--f-mono); font-size: .78rem; letter-spacing: .08em; color: var(--amber); border: 1px solid var(--amber); padding: 4px 8px; }
+.xp-prompt span { letter-spacing: .03em; }
+
+.xp-dialog { position: absolute; left: 50%; bottom: calc(22px + var(--safe-b)); transform: translateX(-50%); width: min(720px, calc(100vw - 28px)); background: #0b0c0e; border: 1px solid #3a3d42; padding: 14px 16px 12px; display: grid; gap: 8px; }
+.xp-dialog[hidden] { display: none; }
+.xp-who { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .18em; color: var(--orange); }
+.xp-line { margin: 0; min-height: 1.4em; font-size: 1.05rem; line-height: 1.35; }
+.xp-choices { display: grid; gap: 6px; }
+.xp-choice { text-align: left; background: transparent; border: 1px solid #3a3d42; color: var(--ink); padding: 8px 10px; cursor: pointer; font: inherit; }
+.xp-choice:hover, .xp-choice:focus { border-color: var(--orange); color: var(--amber); outline: none; }
+
+.xp-inspect { position: absolute; inset: 0; display: grid; align-items: end; justify-items: end; padding: calc(16px + var(--safe-t)) 16px calc(16px + var(--safe-b)); background: linear-gradient(90deg, transparent 30%, rgba(11, 12, 14, .55) 70%); }
+.xp-inspect[hidden] { display: none; }
+.xp-inspect-card { width: min(420px, calc(100vw - 32px)); background: #0b0c0e; border: 1px solid var(--orange); padding: 16px 16px 14px; display: grid; gap: 4px; pointer-events: auto; }
+.xp-inspect-card h3 { margin: 0 0 6px; font-family: var(--f-title); font-weight: 700; letter-spacing: .06em; font-size: 1.25rem; }
+.xp-inspect-card h4 { margin: 8px 0 0; font-family: var(--f-mono); font-size: .68rem; letter-spacing: .16em; text-transform: uppercase; color: var(--orange); }
+.xp-inspect-card p { margin: 0; line-height: 1.35; }
+.xp-src { color: var(--dim); font-size: .86rem; }
+.xp-src b { color: var(--amber); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; font-size: .68rem; }
+.xp-close { margin-top: 10px; justify-self: start; background: var(--orange); color: #0b0c0e; border: 0; padding: 8px 14px; font: inherit; font-weight: 700; letter-spacing: .08em; cursor: pointer; }
+
+.xp-bark { position: absolute; left: 50%; top: calc(42% ); transform: translateX(-50%); width: min(520px, calc(100vw - 32px)); text-align: center; color: var(--ink); text-shadow: 0 1px 6px #000; font-size: 1rem; }
+
+.xp-pause, .xp-skip { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(11, 12, 14, .72); }
+.xp-pause[hidden], .xp-skip[hidden] { display: none; }
+.xp-pause div, .xp-skip div { width: min(360px, calc(100vw - 32px)); background: #0b0c0e; border: 1px solid #3a3d42; padding: 18px; display: grid; gap: 10px; }
+.xp-pause b, .xp-skip b { font-family: var(--f-title); letter-spacing: .08em; }
+.xp-hold { height: 4px; background: #3a3d42; }
+.xp-hold i { display: block; height: 100%; width: 0; background: var(--orange); }
+.xp-pause button, .xp-skip button { background: transparent; border: 1px solid #3a3d42; color: var(--ink); padding: 8px 10px; font: inherit; cursor: pointer; text-align: left; }
+.xp-pause button.go { border-color: var(--orange); color: var(--amber); }
+
+html[data-touch] .xp-prompt { bottom: calc(150px + var(--safe-b)); }
+html[data-touch] .xp-dialog { bottom: calc(148px + var(--safe-b)); }

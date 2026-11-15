@@ -12,6 +12,13 @@ import { ask } from './decisions.js';
 import { missionCard } from '../../ui/mission-card.js';
 
 const own = (load) => async (o) => { const m = await load(); return m.default(o); };
+// Escena explorable (RPG). Igual que own(): el motor y los datos de scenes/<id>.js. No cambia las cinemáticas.
+export const explore = (id) => async (o) => {
+  if (!/^[a-z0-9_-]+$/.test(String(id || ''))) return { id, done: false, skipped: false, flags: {}, error: 'id' };
+  const m = await import('../explore/run.js');
+  const d = await import('../explore/scenes/' + id + '.js');
+  return m.runExplore(d.default, o);
+};
 // minijuegos del guion: tarjeta «Cómo jugar» (qué pasó / tu misión / controles) antes de empezar
 const withCard = (cardId, load) => async (o) => { await missionCard(cardId); const m = await load(); return m.default(o); };
 // cinemáticas de la Tierra: devuelven { id, played, skipped }

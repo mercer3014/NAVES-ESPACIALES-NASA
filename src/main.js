@@ -29,6 +29,7 @@ async function boot() {
     return id === 'all' ? c.playCineSequence(c.EPILOGUE_ORDER, { vars }) : c.playCine(id, { vars });
   }
   if (DEBUG && params.get('story')) { const { playStory } = await import('./game/story/flow.js'); const id = params.get('story'); lobbyBg(); return playStory(id).then((r) => { window.__storyResult = r; }); }
+  if (DEBUG && params.get('explore')) { const { explore } = await import('./game/story/flow.js'); return explore(params.get('explore'))({}).then((r) => { window.__exploreResult = r; }); }
   if (DEBUG && params.get('cue')) { const { previewCue } = await import('./game/cutscenes/preview.js'); return previewCue(params.get('cue')); }
   // Texturas del lobby por el mismo caché que usan las escenas (antes se pedían dos veces) y en la resolución que usará este equipo
   const texs = [[`/tex/stars_${Q.high ? '4k' : '2k'}.jpg`], [`/tex/earth_day_${Q.high ? '4k' : '2k'}.jpg`], ['/tex/earth_night_2k.jpg'], ['/tex/earth_clouds_2k.jpg', { srgb: false }], ['/tex/moon_2k.jpg']];
