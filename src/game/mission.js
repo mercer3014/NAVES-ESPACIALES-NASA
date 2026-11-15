@@ -119,7 +119,7 @@ function pauseMenu() {
   pauseEl.onclick = (e) => {
     const a = e.target.closest('[data-a]')?.dataset.a; if (!a) return; sfx('click');
     if (a === 'bitacora') { import('../ui/bitacora.js').then((m) => m.openBitacora()); return; }
-    if (a === 'howto') { openCard(M.phase, { force: true }); return; }
+    if (a === 'howto') { openCard(M.phase === 'prep' && M.practice ? 'prep-practice' : M.phase, { force: true }); return; }
     const phase = M.phase; closePause();
     if (a === 'resume' && lookActive()) requestLook();
     if (a === 'restart') { if (M.mode === 'coop') tx({ t: 'restart', ph: phase }); runPhase(phase, { skipCard: true }); }
@@ -145,7 +145,8 @@ async function runPhase(phase, { skipCard = false } = {}) {
   M.phase = phase; dbg('phase', phase); setPhaseBed(phase); if (M.mode === 'coop') tx({ t: 'phase', ph: phase, results: M.results });
   commsReset(); sfx('stage', { vol: 0.35 }); scanFx(); offerLook(phase);
   const mod = await loaders[phase](); const ctx = makeCtx(phase); M.ctx = ctx; const myCtx = ctx;
-  if (!skipCard) { await ctx.missionCard(phase); if (myCtx !== M?.ctx) return; offerLook(phase); } // mundo en pausa hasta «¡VAMOS!»
+  const cardId = phase === 'prep' && M.practice ? 'prep-practice' : phase;
+  if (!skipCard) { await ctx.missionCard(cardId); if (myCtx !== M?.ctx) return; offerLook(phase); } // mundo en pausa hasta «¡VAMOS!»
   let res;
   try { res = await mod.default(ctx); } catch (e) { console.error(e); res = { score: 0, stats: { error: String(e) } }; }
   if (myCtx !== M?.ctx) return; // reiniciada o abandonada

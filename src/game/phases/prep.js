@@ -27,6 +27,34 @@ for (const k of TASKS) extend({ ['prep2.h.' + k.id]: k.hint });
 const MAIN = TASKS.filter((k) => k.id !== 'hatch'), HATCH = TASKS.find((k) => k.id === 'hatch');
 
 export default async function prep(ctx) {
+  if (!ctx.practice) return storyPrep(ctx);
+  return practicePrep(ctx);
+}
+
+async function storyPrep(ctx) {
+  const t0 = ctx.time;
+  const { runExplore } = await import('../explore/run.js');
+  const { default: room } = await import('../explore/scenes/white-room.js');
+  const { playA11 } = await import('../../audio/a11-voice.js');
+  try { playA11('nasa_real/cap2_cuenta_regresiva_corta', { vol: 0.22 }); } catch { /* la cuenta es ambiente, no bloquea */ }
+  let res = { flags: {}, skipped: false, done: false };
+  try { res = await runExplore(room, { skipCard: true }); }
+  catch (e) { console.error('Sala Blanca', e); }
+  const mistakes = res.flags?.mistakes || 0;
+  const el = ctx.hud('<div class="pt-hud"></div>');
+  const ov = document.createElement('div'); ov.className = 'pt-poll';
+  ov.innerHTML = `<div class="pt-poll-in"><h2>${t('gonogo.title')}</h2><p>${t('prep.pollcc')}</p>${STATIONS.map((s, i) => `<div class="pt-st" data-st="${s}"><i></i><span>${t('st.' + s)}</span><em>${String(i + 1).padStart(2, '0')}</em></div>`).join('')}</div>`;
+  el.append(ov); const go = [];
+  for (const s of STATIONS) { await ctx.wait(0.43); $(`[data-st="${s}"]`, ov)?.classList.add('pt-go'); go.push(s); sfx('ok', { vol: 0.5, rate: 1 + go.length * 0.05 }); ctx.cc.snap({ tasks: go.slice(), poll: go.slice(), n: 7 }, true); }
+  await ctx.wait(0.5); ctx.banner(t('prep.allgo'), '', 2400); sfx('powerup'); ctx.say('pa.go', { ms: 2500 }); await ctx.wait(2.2); ov.remove();
+  const time = ctx.time - t0;
+  const score = Math.round(clamp(100 - mistakes * 8 - Math.max(0, time - 360) * 0.08, 10, 100));
+  if (mistakes === 0 && !res.skipped) achieve('nofault');
+  ctx.banner(t('prep.countdown'), '', 1500); await ctx.wait(1.2);
+  return { score, stats: { time: Math.round(time), mistakes, faults: mistakes ? 1 : 0 } };
+}
+
+async function practicePrep(ctx) {
   // mundo: plataforma de madrugada, cámara orbitando el Saturn V
   const W = makePad(); ctx.world(W); W.setThrust(0);
   W.scene.traverse((o) => { if (o.isLight) o.intensity *= 0.5; });

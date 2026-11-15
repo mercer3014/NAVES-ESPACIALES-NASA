@@ -37,12 +37,15 @@ export function revealNearby(st, player, spots, extra = 0.35) {
   return found;
 }
 
+// Los cumplidos salen de la lista para que quepan los siguientes (máximo 4).
 export function objectiveLines(st, lang = 0, max = 4) {
-  return st.items.slice(0, max).map((o) => ({
+  const open = st.items.filter((o) => !o.done);
+  const ranked = [...open.filter((o) => o.revealed), ...open.filter((o) => !o.revealed)];
+  return ranked.slice(0, max).map((o) => ({
     id: o.id,
     text: o.revealed ? tx(o.text, lang) : '???',
     hidden: !o.revealed,
-    done: !!o.done,
+    done: false,
   }));
 }
 

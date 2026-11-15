@@ -11,6 +11,7 @@ export function inspectPanel(spec = {}, lang = 0) {
     fact: tx(spec.fact, lang),
     src: tx(spec.src, lang),
     card: spec.card || null,
+    checks: (spec.checks || []).map((c) => tx(c, lang)),
   };
 }
 
@@ -31,13 +32,23 @@ export function mountInspect(root) {
       <h4 data-k="why"></h4><p data-v="why"></p>
       <h4 data-k="fact"></h4><p data-v="fact"></p>
       <p class="xp-src"><b data-k="src"></b> <span data-v="src"></span></p>
+      <ol class="xp-checks"></ol>
       <button type="button" class="xp-close"></button>
     </div>`;
   root.append(box);
-  let onClose = null;
+  let onClose = null, total = 0, marked = 0;
+  const list = () => [...box.querySelectorAll('.xp-checks li')];
   box.querySelector('.xp-close').onclick = () => onClose?.();
   return {
     get open() { return !box.hidden; },
+    hasChecks() { return total > 0; },
+    // Marca la siguiente casilla. Devuelve true cuando ya están todas (o no había ninguna).
+    mark() {
+      if (!total || marked >= total) return true;
+      list()[marked]?.classList.add('on');
+      marked += 1;
+      return marked >= total;
+    },
     show(panel, lang, close) {
       onClose = close; box.hidden = false; box.classList.add('overlay');
       box.querySelector('h3').textContent = panel.title;
@@ -47,8 +58,11 @@ export function mountInspect(root) {
       }
       box.querySelector('[data-k="src"]').textContent = LABELS.src[lang] || LABELS.src[0];
       box.querySelector('[data-v="src"]').textContent = panel.src;
-      box.querySelector('.xp-close').textContent = LABELS.close[lang] || LABELS.close[0];
+      const ol = box.querySelector('.xp-checks'); ol.innerHTML = '';
+      (panel.checks || []).forEach((c) => { const li = document.createElement('li'); li.textContent = c; ol.append(li); });
+      total = panel.checks?.length || 0; marked = 0;
+      box.querySelector('.xp-close').textContent = total ? (lang ? 'Mark with E' : 'Tachar con E') : (LABELS.close[lang] || LABELS.close[0]);
     },
-    hide() { box.hidden = true; box.classList.remove('overlay'); onClose = null; },
+    hide() { box.hidden = true; box.classList.remove('overlay'); onClose = null; total = 0; marked = 0; },
   };
 }

@@ -140,6 +140,18 @@ export const CARDS = {
       'Liquid oxygen (LOX) sits at −183 °C and liquid hydrogen (LH2) at −253 °C. They slowly boil off inside the rocket, so they are topped up until a few minutes before liftoff.'],
     img: ['Vapor blanco saliendo del Saturn V en la plataforma 39A.', 'White vapor venting from the Saturn V on Pad 39A.'],
     src: NH + ' · Saturn V Flight Manual' }),
+  'torre-lanzamiento': c(2, 'place', 'rare', ['El brazo de acceso 9', 'Access arm 9'], {
+    date: '16 jul 1969',
+    fact: ['El brazo de acceso 9 unía la torre de lanzamiento con la nave, a unos 98 m (320 pies) de altura. Por él caminó la tripulación hasta la Sala Blanca.',
+      'Access arm 9 linked the launch tower to the spacecraft, about 98 m (320 feet) up. The crew walked it to the White Room.'],
+    img: ['La pasarela del brazo 9 hacia la Sala Blanca del Apolo 11.', 'The arm 9 walkway toward the Apollo 11 White Room.'],
+    src: 'NASA, Apollo 11 Press Kit · ' + AFJ }),
+  'red-crew': c(2, 'person', 'rare', ['El red crew', 'The red crew'], {
+    date: '16 jul 1969 · madrugada',
+    fact: ['De madrugada se halló una fuga en la válvula de reposición de hidrógeno líquido. Un equipo subió a la torre, con el cohete ya cargado, y apretó los pernos. El LH2 está a −253 °C. La tripulación no reparaba: observaba y confirmaba.',
+      'Before dawn a leak was found in the liquid-hydrogen replenish valve. A crew climbed the tower, with the rocket already fueled, and tightened the bolts. LH2 sits at −253 °C. The astronauts did not repair it: they watched and confirmed.'],
+    img: ['Vapor en la torre de la plataforma 39A la mañana del lanzamiento.', 'Vapor on the Pad 39A tower on launch morning.'],
+    src: AFJ }),
   'llave-de-la-luna': c(2, 'object', 'epic', ['La llave de la Luna', 'The key to the Moon'], {
     date: '16 jul 1969',
     fact: ['Guenter Wendt, el jefe del equipo de la plataforma, que cerraba la escotilla a cada tripulación, le regaló a Armstrong una llave de espuma con forma de media luna: la «llave de la Luna». Era una broma de buena suerte, hecha con cariño.',

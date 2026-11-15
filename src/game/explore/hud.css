@@ -38,6 +38,15 @@
 .xp-src { color: var(--dim); font-size: .86rem; }
 .xp-src b { color: var(--amber); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; font-size: .68rem; }
 .xp-close { margin-top: 10px; justify-self: start; background: var(--orange); color: #0b0c0e; border: 0; padding: 8px 14px; font: inherit; font-weight: 700; letter-spacing: .08em; cursor: pointer; }
+.xp-checks { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 4px; }
+.xp-checks:empty { display: none; }
+.xp-checks li { padding-left: 18px; position: relative; }
+.xp-checks li::before { content: ""; position: absolute; left: 0; top: .35em; width: 10px; height: 10px; border: 1px solid var(--orange); }
+.xp-checks li.on { color: var(--dim); text-decoration: line-through; text-decoration-color: var(--orange); }
+.xp-checks li.on::before { background: var(--orange); }
+.xp-act { position: absolute; left: 50%; bottom: calc(78px + var(--safe-b)); transform: translateX(-50%); width: min(280px, 70vw); height: 4px; background: #3a3d42; }
+.xp-act[hidden] { display: none; }
+.xp-act i { display: block; height: 100%; width: 0; background: var(--orange); }
 
 .xp-bark { position: absolute; left: 50%; top: calc(42% ); transform: translateX(-50%); width: min(520px, calc(100vw - 32px)); text-align: center; color: var(--ink); text-shadow: 0 1px 6px #000; font-size: 1rem; }
 

@@ -18,7 +18,7 @@ export default {
   jump: true,
   camera: { mode: 'third', dist: 2.15, height: 1.55 },
   player: { model: 'armstrong-civil', spawn: [0, 0, 1.35], yaw: Math.PI, speed: 1.7 },
-  companion: null,
+  companion: { model: 'aldrin-civil', follow: 1.5, at: [0.45, 0, 2.9] },
   npcs: [{
     id: 'wendt', model: 'civil-base', at: [0, 0, -0.7], yaw: 0, clip: 'idle',
     name: ['GUENTER WENDT', 'GUENTER WENDT'], marker: '!', dialog: 'wendt-1', r: 1.55,

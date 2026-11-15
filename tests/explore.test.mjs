@@ -7,6 +7,7 @@ import { createDialog, advanceDialog, currentBeat, choiceEffects, skipPlan } fro
 import { inspectPanel } from '../src/game/explore/inspect.js';
 import { createObjectives, revealNearby, objectiveLines, completeObjective } from '../src/game/explore/objectives.js';
 import { createCompanion, stepCompanion } from '../src/game/explore/companion.js';
+import { stepHold, nextHose, markCheck, ready } from '../src/game/explore/actions.js';
 
 const DT = 1 / 60;
 const wall = { min: { x: 1, y: 0, z: -2 }, max: { x: 1.5, y: 3, z: 2 } };
@@ -106,8 +107,21 @@ assert.equal(objectiveLines(goals, 0)[1].text, '???', 'lejos sigue oculto');
 assert.deepEqual(revealNearby(goals, { x: 2.2, z: 0 }, [{ x: 2.4, z: 0, r: 1.2, reveals: ['obj:valve'] }]), ['obj:valve']);
 assert.match(objectiveLines(goals, 0)[1].text, /válvula/);
 assert.equal(completeObjective(goals, 'obj:valve'), true);
-assert.equal(objectiveLines(goals, 0)[1].done, true);
+assert.equal(objectiveLines(goals, 0).some((l) => l.id === 'obj:valve'), false, 'el cumplido deja sitio al siguiente');
+assert.equal(objectiveLines(goals, 0)[0].id, 'talk:wendt');
 assert.equal(completeObjective(goals, 'obj:valve'), false);
+
+const hold0 = stepHold(0, true, 1, 3);
+assert.equal(hold0.done, false);
+const hold1 = stepHold(hold0.p, true, 2, 3);
+assert.equal(hold1.done, true);
+assert.equal(stepHold(1, false, 1, 3).p < 1, true);
+assert.deepEqual(nextHose('', 'red'), { state: '', done: false, mistake: true });
+assert.equal(nextHose('', 'blue').state, 'blue');
+assert.equal(nextHose('blue', 'red').done, true);
+assert.equal(markCheck(2, 3).done, true);
+assert.equal(ready(new Set(['talk:tech']), 'talk:tech'), true);
+assert.equal(ready(new Set(), ['talk:tech', 'obj:valve']), false);
 
 const cam = createExploreCamera({ yaw: 0.4, pitch: 0.3, dist: 2.6 });
 assert.equal(lookExplore(cam, 30, 0), true);

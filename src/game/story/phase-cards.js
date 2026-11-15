@@ -4,7 +4,8 @@ import { unlock } from './state.js';
 export function phaseCards(phase, res = {}) {
   const s = res.stats || {};
   const give = (...ids) => ids.forEach((id) => unlock(id));
-  if (phase === 'prep') give('traje-a7l', 'propelente-criogenico', 'llave-de-la-luna', 'agc-dsky');
+  // Las de objeto de la Sala Blanca se ganan al inspeccionar. Aquí solo la de la cabina, tras el GO/NO-GO.
+  if (phase === 'prep') give('agc-dsky');
   if (phase === 'launch') give('despegue', 'orbita-estacionamiento', 'bruce-mccandless');
   if (phase === 'cruise') {
     give('tli', 'acoplamiento', 'modo-barbacoa', 'loi', 'eagle-lm5');

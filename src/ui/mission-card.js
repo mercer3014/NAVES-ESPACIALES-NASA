@@ -11,12 +11,19 @@ export const CARDS = {
     m: [[['CLIC'], ['Elige las cartas', 'Pick the cards']], [['ARRASTRAR'], ['Mueve el control deslizante', 'Drag the slider']]],
     t: [[['TOCA'], ['Elige las cartas', 'Pick the cards']], [['DESLIZA'], ['Mueve el control', 'Slide the control']]],
   },
-  prep: {
-    n: '01', title: ['Preparación', 'Preparation'],
+  'prep-practice': {
+    n: '01', title: ['Preparación · práctica', 'Preparation · practice'],
     what: ['16 jul 1969, madrugada: técnicos y tripulación preparan el Saturn V en la plataforma 39A.', 'July 16, 1969, before dawn: technicians and crew ready the Saturn V on Pad 39A.'],
     goal: ['Completa las 4 tareas antes de la cuenta atrás: arrastrar, mantener y girar con el puntero.', 'Finish the 4 tasks before the countdown: drag, hold and turn with the pointer.'],
     m: [[['ARRASTRAR'], ['Mueve piezas y cables a su sitio', 'Move parts and cables into place']], [['MANTENER'], ['Mantén pulsado hasta llenar', 'Hold down until it fills']], [['GIRAR'], ['Arrastra en círculo anillos y manivelas', 'Drag in a circle on rings and cranks']]],
     t: [[['ARRASTRA'], ['Lo mismo con el dedo', 'Same with your finger']], [['MANTÉN'], ['Deja el dedo pulsado', 'Keep your finger down']], [['GIRA'], ['Dibuja un círculo', 'Draw a circle']]],
+  },
+  prep: {
+    n: '01', title: ['Preparación', 'Preparation'],
+    what: ['16 jul 1969, madrugada: técnicos y tripulación preparan el Saturn V en la plataforma 39A.', 'July 16, 1969, before dawn: technicians and crew ready the Saturn V on Pad 39A.'],
+    goal: ['Camina la pasarela del brazo 9, habla, mira y confirma. Luego entra en Columbia.', 'Walk access arm 9, talk, look and confirm. Then climb into Columbia.'],
+    m: [[['W', 'A', 'S', 'D'], ['Caminar', 'Walk']], [['RATÓN'], ['Girar la cámara', 'Turn the camera']], [['E'], ['Hablar, mirar o mantener', 'Talk, look or hold']], [['1', '2'], ['Elegir respuesta', 'Choose a reply']]],
+    t: [[['PALANCA'], ['Caminar', 'Walk']], [['ARRASTRAR'], ['Mirar', 'Look']], [['ACCIÓN'], ['Hablar o mantener', 'Talk or hold']]],
   },
   launch: {
     n: '02', title: ['Lanzamiento', 'Launch'],

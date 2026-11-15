@@ -7,7 +7,7 @@ const src = fs.readFileSync(new URL('../src/game/mission.js', import.meta.url), 
 const phases = [...src.match(/export const PHASES = \[([^\]]+)\]/)[1].matchAll(/'([^']+)'/g)].map((m) => m[1]);
 assert.ok(phases.length >= 5, 'PHASES se leyó de mission.js');
 
-const need = ['design', ...phases, 'docking', 'reentry', 'breaker', 'liftoff', 'boss'];
+const need = ['design', ...phases, 'prep-practice', 'docking', 'reentry', 'breaker', 'liftoff', 'boss'];
 for (const id of need) assert.ok(CARDS[id], 'falta tarjeta: ' + id);
 assert.deepEqual(CARD_IDS.filter((i) => !need.includes(i)), [], 'tarjetas sin usar');
 

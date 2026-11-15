@@ -3,7 +3,7 @@
 import './hud.css';
 import { THREE, setWorld, onTick } from '../../core/engine.js';
 import { store, isTouch, dbg } from '../../core/store.js';
-import { axis, pressed, down, bindBtn, bpressed, makeStick } from '../../core/input.js';
+import { axis, pressed, down, bindBtn, bpressed, bdown, makeStick } from '../../core/input.js';
 import { attachLook } from '../../core/look.js';
 import { show } from '../../ui/router.js';
 import { sfx } from '../../core/audio.js';
@@ -16,7 +16,8 @@ import { createExploreCamera, lookExplore, stepExploreCamera, exploreCameraPose 
 import { pickInteractable, interactPrompt, setHalo, makeMarker } from './interact.js';
 import { createDialog, currentBeat, advanceDialog, mountDialog, applyEffects, skipPlan } from './dialog.js';
 import { inspectPanel, mountInspect } from './inspect.js';
-import { createObjectives, revealNearby, completeObjective, mountObjectives, activeTarget } from './objectives.js';
+import { createObjectives, revealNearby, completeObjective, revealObjective, mountObjectives, activeTarget } from './objectives.js';
+import { stepHold, ready } from './actions.js';
 import { createCompanion, stepCompanion, companionBark } from './companion.js';
 import { speakExplore, stopExploreVoice } from './voices.js';
 
@@ -74,6 +75,7 @@ export async function runExplore(def, opts = {}) {
   el.querySelector('.xp-title b').textContent = tx(def.title);
   const prompt = document.createElement('div'); prompt.className = 'xp-prompt'; prompt.hidden = true;
   prompt.innerHTML = '<kbd>E</kbd><span></span>'; el.append(prompt);
+  const actionBar = document.createElement('div'); actionBar.className = 'xp-act'; actionBar.hidden = true; actionBar.innerHTML = '<i></i>'; el.append(actionBar);
   const bark = document.createElement('div'); bark.className = 'xp-bark'; bark.hidden = true; el.append(bark);
   const dialogUi = mountDialog(el), inspectUi = mountInspect(el), objUi = mountObjectives(el);
   if (isTouch) {
@@ -105,7 +107,7 @@ export async function runExplore(def, opts = {}) {
   for (const o of def.objects || []) {
     const at = locate(o, world);
     const root = (o.node && (world.nodes?.[o.node] || world.scene.getObjectByName(o.node))) || null;
-    items.push({ ...o, ...at, kind: 'inspect', root, r: o.r ?? 1.2 });
+    items.push({ ...o, ...at, kind: o.kind || 'inspect', root, r: o.r ?? 1.2 });
   }
   let mate = null, mateBody = null, said = new Set();
   if (def.companion) {
@@ -117,7 +119,7 @@ export async function runExplore(def, opts = {}) {
   const arrow = new THREE.ArrowHelper(new THREE.Vector3(0, 0, -1), new THREE.Vector3(), 0.85, 0xff4f00);
   arrow.visible = false; world.scene.add(arrow);
 
-  let talk = null, focused = null, holding = null, paused = false, hold = 0, ended = false, leaveAt = 0, now = 0;
+  let talk = null, focused = null, holding = null, paused = false, hold = 0, holdP = 0, ended = false, leaveAt = 0, now = 0;
   const look = attachLook({ onDelta: (dx, dy) => { if (paused || holding || talk) return; lookExplore(cam, dx, dy); } });
   let drag = null;
   const onDown = (e) => { if (e.pointerType !== 'touch' || e.target.closest?.('button,.tc-stick,.tc-btn,.xp-dialog,.xp-inspect')) return; drag = { x: e.clientX, y: e.clientY, id: e.pointerId }; };
@@ -134,6 +136,8 @@ export async function runExplore(def, opts = {}) {
   function endTalk() {
     const id = talk?.npc?.id; dialogUi.hide(); stopExploreVoice(); cam.dialogWant = 0; talk = null;
     if (id) changed('talk:' + id);
+    const spec = (def.npcs || []).find((n) => n.id === id);
+    if (spec?.card) import('../story/state.js').then(({ unlock }) => unlock(spec.card));
   }
   function present() {
     const beat = currentBeat(talk.st);
@@ -152,11 +156,26 @@ export async function runExplore(def, opts = {}) {
     if (dialogUi.typing) { dialogUi.finish(); return; }
     advanceDialog(talk.st); if (talk.st.done) endTalk(); else present();
   }
-  function openInspect(item) { holding = item; inspectUi.show(inspectPanel(item.inspect, L), L, closeInspect); }
+  function openInspect(item) { holding = item; inspectUi.show(inspectPanel(item.inspect, L), L, () => advanceInspect()); }
+  function advanceInspect() {
+    if (!holding) return;
+    if (inspectUi.hasChecks() && !inspectUi.mark()) return;
+    closeInspect();
+  }
   function closeInspect() {
     const item = holding; holding = null; inspectUi.hide(); if (!item) return;
+    if (item.thenHold && !item._held) { item.kind = 'hold'; item.hold = item.thenHold; item.label = item.holdLabel || item.label; item._held = true; return; }
     if (item.inspect?.card) import('../story/state.js').then(({ unlock }) => unlock(item.inspect.card));
-    changed('obj:' + item.id);
+    if (item.objective) changed(item.objective); else changed('obj:' + item.id);
+  }
+  function grant(res) {
+    if (!res) return;
+    if (res.bark) { bark.hidden = false; bark.textContent = tx(res.bark); clearTimeout(bark._t); bark._t = setTimeout(() => { bark.hidden = true; }, 4200); }
+    if (res.mistake) flags.mistakes = (flags.mistakes || 0) + 1;
+    if (res.card) import('../story/state.js').then(({ unlock }) => unlock(res.card));
+    if (res.done) changed(res.done);
+    if (res.reveal) revealObjective(objs, res.reveal);
+    if (res.flag) flags[res.flag] = res.value ?? true;
   }
   function goalOf(id) { return items.find((i) => i.id === id || 'talk:' + i.id === id || 'obj:' + i.id === id); }
 
@@ -179,14 +198,16 @@ export async function runExplore(def, opts = {}) {
     const focus = talk?.npc || null;
     const poseCam = exploreCameraPose(cam, body, focus);
     let shot = poseCam;
-    if (holding) {
-      const p = holding; shot = { x: p.x + 1.25, y: (p.y || 0) + 1.65, z: p.z + 1.55, look: { x: p.x, y: (p.y || 0) + 0.85, z: p.z }, fov: 36 };
-    }
-    for (let n = 0; n < 4; n++) for (const c of world.colliders || []) {
-      const b = boxFootprint(c); if (!b) continue;
-      if (shot.x > b.minX && shot.x < b.maxX && shot.z > b.minZ && shot.z < b.maxZ) {
-        const dx = body.x - shot.x, dz = body.z - shot.z, len = Math.hypot(dx, dz) || 1;
-        shot = { ...shot, x: shot.x + dx / len * 0.35, z: shot.z + dz / len * 0.35 };
+    if (holding?.aim) {
+      shot = { x: holding.x + (holding.aimFrom?.[0] || 0), y: (holding.y || 0) + (holding.aimFrom?.[1] ?? 1.6), z: holding.z + (holding.aimFrom?.[2] || 0.4), look: { x: holding.aim[0], y: holding.aim[1], z: holding.aim[2] }, fov: holding.aimFov || 30 };
+    } else {
+      if (holding) { const p = holding; shot = { x: p.x + 1.25, y: (p.y || 0) + 1.65, z: p.z + 1.55, look: { x: p.x, y: (p.y || 0) + 0.85, z: p.z }, fov: 36 }; }
+      for (let n = 0; n < 4; n++) for (const c of world.colliders || []) {
+        const b = boxFootprint(c); if (!b) continue;
+        if (shot.x > b.minX && shot.x < b.maxX && shot.z > b.minZ && shot.z < b.maxZ) {
+          const dx = body.x - shot.x, dz = body.z - shot.z, len = Math.hypot(dx, dz) || 1;
+          shot = { ...shot, x: shot.x + dx / len * 0.35, z: shot.z + dz / len * 0.35 };
+        }
       }
     }
     world.camera.position.set(shot.x, shot.y, shot.z); world.camera.up.set(0, 1, 0); world.camera.lookAt(shot.look.x, shot.look.y, shot.look.z);
@@ -194,7 +215,8 @@ export async function runExplore(def, opts = {}) {
     const fwd = moveWish(0, 1, cam.orbit.yaw);
     const hit = lock ? null : pickInteractable({ ...body, lookYaw: Math.atan2(fwd.x, fwd.z) }, items);
     if (hit !== focused) { setHalo(focused?.root, false); setHalo(hit?.root, true); focused = hit; }
-    prompt.hidden = !hit; if (hit) prompt.querySelector('span').textContent = interactPrompt(hit, L).replace(/^E · /, '');
+    prompt.hidden = !hit;
+    if (hit) prompt.querySelector('span').textContent = (!ready(done, hit.requires) && hit.locked ? tx(hit.locked) : interactPrompt(hit, L)).replace(/^E · /, '');
     objUi.paint(objs, L, t);
     const cadet = store.get('difficulty') === 'cadet';
     const goal = cadet && !lock ? goalOf(activeTarget(objs)?.id) : null;
@@ -205,15 +227,30 @@ export async function runExplore(def, opts = {}) {
       else arrow.visible = false;
     }
     const useE = pressed('KeyE') || bpressed('act');
+    const holdKey = down('KeyE') || bdown('act');
     const ateEsc = !!(holding && pressed('Escape'));
-    if (holding && (useE || pressed('Enter') || ateEsc)) closeInspect();
-    else if (!lock && useE && focused) { if (focused.kind === 'talk') { talk = { npc: focused, st: createDialog(def.dialogs, focused.dialog) }; cam.dialogWant = 1; focused.actor?.play?.('talk'); present(); } else openInspect(focused); }
+    const canHold = !lock && focused?.kind === 'hold' && ready(done, focused.requires);
+    const held = stepHold(holdP, canHold && holdKey, dt, focused?.hold || 3);
+    holdP = held.done ? 0 : held.p;
+    actionBar.hidden = !held.show; if (held.show) actionBar.querySelector('i').style.width = Math.min(100, (holdP / (focused?.hold || 3)) * 100) + '%';
+    if (canHold && holdKey && focused.root) focused.root.rotation.y += dt;
+    if (held.done && focused) { focused.disabled = true; grant(def.onUse?.(focused, { done, flags, body }) || { done: focused.objective, card: focused.card }); }
+    if (holding && ateEsc) { if (inspectUi.hasChecks()) { holding = null; inspectUi.hide(); } else advanceInspect(); }
+    else if (holding && (useE || pressed('Enter'))) advanceInspect();
+    else if (!lock && useE && focused && focused.kind !== 'hold') {
+      if (!ready(done, focused.requires)) grant({ bark: focused.locked || (L ? ['Not yet.', 'Not yet.'] : ['Aún no.', 'Not yet.']) });
+      else if (focused.kind === 'talk') { talk = { npc: focused, st: createDialog(def.dialogs, focused.dialog) }; cam.dialogWant = 1; focused.actor?.play?.('talk'); present(); }
+      else if (focused.kind === 'use' || focused.kind === 'exit') grant(def.onUse?.(focused, { done, flags, body }));
+      else openInspect(focused);
+    }
     else if (talk && (useE || pressed('Space') || pressed('Enter'))) advanceLine();
+    const stepped = def.step?.({ dt, t, body, done, flags, focused });
+    if (stepped) grant(stepped);
     if (talk?.st && dialogUi.choosing) { const n = [null, 'Digit1', 'Digit2', 'Digit3'].findIndex((c) => c && pressed(c)); if (n > 0) { const c = currentBeat(talk.st)?.choice?.[n - 1]; if (c) pick(c.id); } }
     if (pressed('Tab')) objs.open = !objs.open;
     if (!ateEsc && down('Escape') && !talk && !holding) { hold += dt; skipEl.hidden = false; skipEl.querySelector('i').style.width = Math.min(100, hold * 100) + '%'; if (hold >= 1) skip(); }
     else { if (!ateEsc && hold > 0 && hold < 0.4) paused = !paused; hold = 0; skipEl.hidden = true; }
-    if (!leaveAt && def.complete?.({ done, flags, trust: storyRun.trust })) leaveAt = t + 8;
+    if (!leaveAt && def.complete?.({ done, flags, trust: storyRun.trust })) leaveAt = t + (def.exitDelay ?? 8);
     if (leaveAt && t >= leaveAt) finish(false);
   });
   const onKey = (e) => { if (e.code === 'Tab') e.preventDefault(); };
@@ -226,7 +263,7 @@ export async function runExplore(def, opts = {}) {
     el.remove(); resolve({ id: def.id, done: !skipped, skipped: !!skipped, flags });
   }
   function skip() { finish(true); }
-  const api = { body, cam, world, items, done, flags, objectives: objs, get trust() { return storyRun.trust; }, get prompt() { return prompt.hidden ? '' : 'E · ' + prompt.querySelector('span').textContent; } };
+  const api = { body, cam, world, items, done, flags, objectives: objs, get trust() { return storyRun.trust; }, get hold() { return holdP; }, get focusId() { return focused?.id || ''; }, get prompt() { return prompt.hidden ? '' : 'E · ' + prompt.querySelector('span').textContent; } };
   dbg('explore', api);
   return finished;
 }
