@@ -1,0 +1,1067 @@
+{
+  "pack": "apolo11",
+  "format": "wav",
+  "sample_rate_hz": 48000,
+  "bit_depth": 24,
+  "note": "Masters WAV 48 kHz / 24 bit. Esta entrega no incluye archivos .ogg.",
+  "counts": {
+    "music": 19,
+    "nasa_real": 49,
+    "sfx": 95,
+    "voz_en_clonada": 100
+  },
+  "files": [
+    {
+      "path": "music/mus_c1_familia_hogar.wav",
+      "bytes": 9568130
+    },
+    {
+      "path": "music/mus_c1_playa_fogata.wav",
+      "bytes": 11305148
+    },
+    {
+      "path": "music/mus_c2_cuenta_regresiva_tension.wav",
+      "bytes": 13395884
+    },
+    {
+      "path": "music/mus_c3_detras_luna_drone_loop.wav",
+      "bytes": 17856044
+    },
+    {
+      "path": "music/mus_c3_noche_nave_calma.wav",
+      "bytes": 12645056
+    },
+    {
+      "path": "music/mus_c4_alunizaje_alivio.wav",
+      "bytes": 7335968
+    },
+    {
+      "path": "music/mus_c4_descenso_tension_pulso_loop.wav",
+      "bytes": 12020912
+    },
+    {
+      "path": "music/mus_c5_magnifica_desolacion.wav",
+      "bytes": 12993644
+    },
+    {
+      "path": "music/mus_c6_soledad_collins.wav",
+      "bytes": 13512266
+    },
+    {
+      "path": "music/mus_c7_volver_a_casa.wav",
+      "bytes": 9316604
+    },
+    {
+      "path": "music/mus_epilogo_un_gran_salto_creditos.wav",
+      "bytes": 36749312
+    },
+    {
+      "path": "music/mus_nc_guardian_combate_loop.wav",
+      "bytes": 7899470
+    },
+    {
+      "path": "music/mus_prologo_apolo1_duelo.wav",
+      "bytes": 11593382
+    },
+    {
+      "path": "music/mus_stinger_decision_tomada.wav",
+      "bytes": 3180656
+    },
+    {
+      "path": "music/mus_stinger_final_y_si_alternativo.wav",
+      "bytes": 3195758
+    },
+    {
+      "path": "music/mus_stinger_insignia_capitulo_100.wav",
+      "bytes": 3674096
+    },
+    {
+      "path": "music/mus_stinger_ruta_historica_dorada.wav",
+      "bytes": 3174086
+    },
+    {
+      "path": "music/mus_tema_principal_completo.wav",
+      "bytes": 33747554
+    },
+    {
+      "path": "music/mus_tema_principal_piano_solo.wav",
+      "bytes": 10341398
+    },
+    {
+      "path": "nasa_real/cap1_kennedy_congreso_1961.wav",
+      "bytes": 1555244
+    },
+    {
+      "path": "nasa_real/cap2_cuenta_regresiva_corta.wav",
+      "bytes": 3340844
+    },
+    {
+      "path": "nasa_real/cap2_cuenta_regresiva_despegue.wav",
+      "bytes": 5011244
+    },
+    {
+      "path": "nasa_real/cap2_despegue_ringtone_nasa.wav",
+      "bytes": 3573596
+    },
+    {
+      "path": "nasa_real/cap2_go_para_orbita.wav",
+      "bytes": 676844
+    },
+    {
+      "path": "nasa_real/cap2_go_tli.wav",
+      "bytes": 1339244
+    },
+    {
+      "path": "nasa_real/cap3_go_loi_nos_vemos_otro_lado.wav",
+      "bytes": 5889644
+    },
+    {
+      "path": "nasa_real/cap3_perdida_senal_detras_luna.wav",
+      "bytes": 878444
+    },
+    {
+      "path": "nasa_real/cap4_30_segundos.wav",
+      "bytes": 316844
+    },
+    {
+      "path": "nasa_real/cap4_60_segundos.wav",
+      "bytes": 604844
+    },
+    {
+      "path": "nasa_real/cap4_alarma_1202_loop_flight.wav",
+      "bytes": 4910444
+    },
+    {
+      "path": "nasa_real/cap4_aldrin_polvo_40_pies.wav",
+      "bytes": 2404844
+    },
+    {
+      "path": "nasa_real/cap4_base_tranquilidad_completo.wav",
+      "bytes": 1512044
+    },
+    {
+      "path": "nasa_real/cap4_base_tranquilidad_eagle_aterrizado.wav",
+      "bytes": 475244
+    },
+    {
+      "path": "nasa_real/cap4_collins_todo_va_de_maravilla.wav",
+      "bytes": 446444
+    },
+    {
+      "path": "nasa_real/cap4_descenso_completo.wav",
+      "bytes": 35496044
+    },
+    {
+      "path": "nasa_real/cap4_duke_respuesta_tipos_azules.wav",
+      "bytes": 1065644
+    },
+    {
+      "path": "nasa_real/cap4_eagle_aterrizado_ringtone_nasa.wav",
+      "bytes": 2132892
+    },
+    {
+      "path": "nasa_real/cap4_eagle_tiene_alas.wav",
+      "bytes": 792044
+    },
+    {
+      "path": "nasa_real/cap4_go_nogo_aterrizaje_kranz.wav",
+      "bytes": 4118444
+    },
+    {
+      "path": "nasa_real/cap4_go_pdi.wav",
+      "bytes": 1022444
+    },
+    {
+      "path": "nasa_real/cap4_luz_de_contacto_apagado.wav",
+      "bytes": 979244
+    },
+    {
+      "path": "nasa_real/cap5_aldrin_mensaje_reflexion.wav",
+      "bytes": 3859244
+    },
+    {
+      "path": "nasa_real/cap5_armstrong_pie_escalera.wav",
+      "bytes": 3859244
+    },
+    {
+      "path": "nasa_real/cap5_armstrong_respuesta_nixon.wav",
+      "bytes": 3528044
+    },
+    {
+      "path": "nasa_real/cap5_bajando_del_lem.wav",
+      "bytes": 360044
+    },
+    {
+      "path": "nasa_real/cap5_magnifica_desolacion.wav",
+      "bytes": 1699244
+    },
+    {
+      "path": "nasa_real/cap5_nixon_hola_neil_buzz.wav",
+      "bytes": 907244
+    },
+    {
+      "path": "nasa_real/cap5_nixon_llamada_completa.wav",
+      "bytes": 18504044
+    },
+    {
+      "path": "nasa_real/cap5_nixon_momento_invaluable.wav",
+      "bytes": 3225644
+    },
+    {
+      "path": "nasa_real/cap5_paso_pequeno_ringtone_nasa.wav",
+      "bytes": 1869578
+    },
+    {
+      "path": "nasa_real/cap5_placa_lectura_armstrong.wav",
+      "bytes": 5832044
+    },
+    {
+      "path": "nasa_real/cap5_superficie_fina_polvorienta.wav",
+      "bytes": 2836844
+    },
+    {
+      "path": "nasa_real/cap5_un_pequeno_paso.wav",
+      "bytes": 1224044
+    },
+    {
+      "path": "nasa_real/cap6_despegue_lunar_bonito.wav",
+      "bytes": 619244
+    },
+    {
+      "path": "nasa_real/cap6_despegue_lunar_cuenta.wav",
+      "bytes": 1224044
+    },
+    {
+      "path": "nasa_real/cap7_estable_dos.wav",
+      "bytes": 878444
+    },
+    {
+      "path": "nasa_real/cap7_hornet_area_amerizaje.wav",
+      "bytes": 2318444
+    },
+    {
+      "path": "nasa_real/cap7_houston_volviendo_a_casa_lrl.wav",
+      "bytes": 1857644
+    },
+    {
+      "path": "nasa_real/cap7_nixon_hornet_desde_la_creacion.wav",
+      "bytes": 3355244
+    },
+    {
+      "path": "nasa_real/cap7_nixon_hornet_semana_mas_grande.wav",
+      "bytes": 6321644
+    },
+    {
+      "path": "nasa_real/cap7_ultima_tv_aldrin.wav",
+      "bytes": 5126444
+    },
+    {
+      "path": "nasa_real/cap7_ultima_tv_armstrong.wav",
+      "bytes": 2721644
+    },
+    {
+      "path": "nasa_real/cap7_ultima_tv_collins.wav",
+      "bytes": 19771244
+    },
+    {
+      "path": "nasa_real/epi_kennedy_rice_elegimos_ir_luna.wav",
+      "bytes": 3888044
+    },
+    {
+      "path": "nasa_real/epi_kennedy_y_despegue_montaje.wav",
+      "bytes": 2892740
+    },
+    {
+      "path": "nasa_real/parte1_sputnik_bip.wav",
+      "bytes": 632492
+    },
+    {
+      "path": "nasa_real/ui_quindar_hawaii.wav",
+      "bytes": 3490842
+    },
+    {
+      "path": "nasa_real/ui_quindar_houston.wav",
+      "bytes": 3517172
+    },
+    {
+      "path": "sfx/c1_11_amb_casa_tv_1969.wav",
+      "bytes": 5616044
+    },
+    {
+      "path": "sfx/c1_11_cohete_juguete_etapas.wav",
+      "bytes": 216044
+    },
+    {
+      "path": "sfx/c1_12_amb_ksc_exterior_florida.wav",
+      "bytes": 16992044
+    },
+    {
+      "path": "sfx/c1_13_amb_playa_olas_atardecer.wav",
+      "bytes": 16992044
+    },
+    {
+      "path": "sfx/c2_21_despertador.wav",
+      "bytes": 720044
+    },
+    {
+      "path": "sfx/c2_22_despegue_exterior_rumble_loop.wav",
+      "bytes": 16992044
+    },
+    {
+      "path": "sfx/c2_22_despegue_saturnv_cabina.wav",
+      "bytes": 11520044
+    },
+    {
+      "path": "sfx/c2_23_separacion_etapas.wav",
+      "bytes": 576044
+    },
+    {
+      "path": "sfx/c2_24_tli_motor_s4b_loop.wav",
+      "bytes": 4176044
+    },
+    {
+      "path": "sfx/c2_25_acople_captura_pestillos.wav",
+      "bytes": 360044
+    },
+    {
+      "path": "sfx/c2_25_rcs_propulsor_pulso.wav",
+      "bytes": 57644
+    },
+    {
+      "path": "sfx/c2_amb_cabina_columbia_ventiladores.wav",
+      "bytes": 16992044
+    },
+    {
+      "path": "sfx/c3_31_sextante_ajuste.wav",
+      "bytes": 172844
+    },
+    {
+      "path": "sfx/c3_32_amb_columbia_noche_atenuada.wav",
+      "bytes": 16992044
+    },
+    {
+      "path": "sfx/c3_34_radio_corte_los.wav",
+      "bytes": 432044
+    },
+    {
+      "path": "sfx/c3_34_radio_vuelve_aos.wav",
+      "bytes": 316844
+    },
+    {
+      "path": "sfx/c3_34_respiracion_tres_tripulantes.wav",
+      "bytes": 16992044
+    },
+    {
+      "path": "sfx/c3_34_sps_ignicion_golpe.wav",
+      "bytes": 216044
+    },
+    {
+      "path": "sfx/c3_34_sps_motor_encendido_loop.wav",
+      "bytes": 5616044
+    },
+    {
+      "path": "sfx/c4_41_desacople_eagle.wav",
+      "bytes": 360044
+    },
+    {
+      "path": "sfx/c4_42_puertas_mocr_cierre.wav",
+      "bytes": 360044
+    },
+    {
+      "path": "sfx/c4_43_motor_descenso_dps_loop.wav",
+      "bytes": 16992044
+    },
+    {
+      "path": "sfx/c4_44_alarma_programa_tono_casco.wav",
+      "bytes": 1152044
+    },
+    {
+      "path": "sfx/c4_46_contacto_apagado_motor.wav",
+      "bytes": 864044
+    },
+    {
+      "path": "sfx/c4_47_amb_squawk_box_casa.wav",
+      "bytes": 8496044
+    },
+    {
+      "path": "sfx/c4_amb_mocr_sala_control.wav",
+      "bytes": 16992044
+    },
+    {
+      "path": "sfx/c5_52_escotilla_despresurizar.wav",
+      "bytes": 576044
+    },
+    {
+      "path": "sfx/c5_52_traje_cierre_casco.wav",
+      "bytes": 172844
+    },
+    {
+      "path": "sfx/c5_52_traje_cierre_guantes.wav",
+      "bytes": 172844
+    },
+    {
+      "path": "sfx/c5_52_traje_cierre_mochila_plss.wav",
+      "bytes": 172844
+    },
+    {
+      "path": "sfx/c5_54_mastil_golpe_1.wav",
+      "bytes": 115244
+    },
+    {
+      "path": "sfx/c5_54_mastil_golpe_2.wav",
+      "bytes": 115244
+    },
+    {
+      "path": "sfx/c5_54_mastil_golpe_3.wav",
+      "bytes": 115244
+    },
+    {
+      "path": "sfx/c5_56_hasselblad_disparo.wav",
+      "bytes": 86444
+    },
+    {
+      "path": "sfx/c5_56_pinzas_muestra.wav",
+      "bytes": 100844
+    },
+    {
+      "path": "sfx/c5_57_disyuntor_roto_chasquido.wav",
+      "bytes": 216044
+    },
+    {
+      "path": "sfx/c5_57_fin_capitulo_respiracion.wav",
+      "bytes": 1440044
+    },
+    {
+      "path": "sfx/c5_57_polea_cajas_muestras.wav",
+      "bytes": 864044
+    },
+    {
+      "path": "sfx/c5_casco_respiracion_loop.wav",
+      "bytes": 8496044
+    },
+    {
+      "path": "sfx/c5_paso_bota_regolito_1.wav",
+      "bytes": 72044
+    },
+    {
+      "path": "sfx/c5_paso_bota_regolito_2.wav",
+      "bytes": 72044
+    },
+    {
+      "path": "sfx/c5_paso_bota_regolito_3.wav",
+      "bytes": 72044
+    },
+    {
+      "path": "sfx/c5_paso_bota_regolito_4.wav",
+      "bytes": 72044
+    },
+    {
+      "path": "sfx/c6_61_amb_columbia_solo_oscuro.wav",
+      "bytes": 16992044
+    },
+    {
+      "path": "sfx/c6_61b_amb_eagle_noche_bombas.wav",
+      "bytes": 16992044
+    },
+    {
+      "path": "sfx/c6_62_chispa_cortocircuito.wav",
+      "bytes": 216044
+    },
+    {
+      "path": "sfx/c6_62_rotulador_disyuntor_clic.wav",
+      "bytes": 172844
+    },
+    {
+      "path": "sfx/c6_63_despegue_lunar_ascenso.wav",
+      "bytes": 2160044
+    },
+    {
+      "path": "sfx/c7_73_amb_viento_descenso_loop.wav",
+      "bytes": 16992044
+    },
+    {
+      "path": "sfx/c7_73_paracaidas_apertura.wav",
+      "bytes": 3456044
+    },
+    {
+      "path": "sfx/c7_73_radio_apagon_plasma.wav",
+      "bytes": 1152044
+    },
+    {
+      "path": "sfx/c7_73_reentrada_plasma.wav",
+      "bytes": 11520044
+    },
+    {
+      "path": "sfx/c7_73_separacion_modulo_servicio.wav",
+      "bytes": 432044
+    },
+    {
+      "path": "sfx/c7_74_amb_oceano_pacifico_loop.wav",
+      "bytes": 16992044
+    },
+    {
+      "path": "sfx/c7_74_amerizaje_impacto.wav",
+      "bytes": 1008044
+    },
+    {
+      "path": "sfx/c7_74_escotilla_buzo.wav",
+      "bytes": 432044
+    },
+    {
+      "path": "sfx/c7_74_helicoptero_uss_hornet.wav",
+      "bytes": 5760044
+    },
+    {
+      "path": "sfx/c7_75_amb_cuarentena_mqf.wav",
+      "bytes": 8496044
+    },
+    {
+      "path": "sfx/c7_76_mano_en_vidrio.wav",
+      "bytes": 144044
+    },
+    {
+      "path": "sfx/e_e1_amb_desfile_nueva_york.wav",
+      "bytes": 11232044
+    },
+    {
+      "path": "sfx/e_e3_laser_retrorreflector.wav",
+      "bytes": 576044
+    },
+    {
+      "path": "sfx/nc_61b_aviso_circulo_rojo.wav",
+      "bytes": 172844
+    },
+    {
+      "path": "sfx/nc_61b_grieta_suelo_se_abre.wav",
+      "bytes": 864044
+    },
+    {
+      "path": "sfx/nc_61b_micrometeorito_impactos.wav",
+      "bytes": 576044
+    },
+    {
+      "path": "sfx/nc_61c_despertar_sobresalto.wav",
+      "bytes": 360044
+    },
+    {
+      "path": "sfx/nc_61c_disyuntor_clic_final.wav",
+      "bytes": 144044
+    },
+    {
+      "path": "sfx/nc_61c_guardian_se_forma.wav",
+      "bytes": 720044
+    },
+    {
+      "path": "sfx/nc_61c_guardian_vibracion_loop.wav",
+      "bytes": 1008044
+    },
+    {
+      "path": "sfx/nc_61c_ondas_calor_fase3_loop.wav",
+      "bytes": 720044
+    },
+    {
+      "path": "sfx/nc_61c_pitido_alarma_maestra_lluvia1202.wav",
+      "bytes": 345644
+    },
+    {
+      "path": "sfx/nc_61c_polvo_cae_como_nieve.wav",
+      "bytes": 1440044
+    },
+    {
+      "path": "sfx/nc_hab_esquiva_dash.wav",
+      "bytes": 86444
+    },
+    {
+      "path": "sfx/nc_hab_flash_hasselblad.wav",
+      "bytes": 216044
+    },
+    {
+      "path": "sfx/nc_hab_manguera_o2_recarga.wav",
+      "bytes": 432044
+    },
+    {
+      "path": "sfx/nc_hab_martillo_basalto.wav",
+      "bytes": 144044
+    },
+    {
+      "path": "sfx/p_01_amb_salon_casa_blanca.wav",
+      "bytes": 12672044
+    },
+    {
+      "path": "sfx/p_02_amb_trafico_noche_ventana.wav",
+      "bytes": 8496044
+    },
+    {
+      "path": "sfx/p_02_telefono_colgar.wav",
+      "bytes": 144044
+    },
+    {
+      "path": "sfx/p_02_telefono_descolgar.wav",
+      "bytes": 172844
+    },
+    {
+      "path": "sfx/p_02_telefono_hotel_timbre.wav",
+      "bytes": 2592044
+    },
+    {
+      "path": "sfx/p_03_tiza_pizarra.wav",
+      "bytes": 864044
+    },
+    {
+      "path": "sfx/ui_bitacora_abrir_pagina.wav",
+      "bytes": 72044
+    },
+    {
+      "path": "sfx/ui_bitacora_nueva_entrada_comun.wav",
+      "bytes": 360044
+    },
+    {
+      "path": "sfx/ui_bitacora_nueva_entrada_epica.wav",
+      "bytes": 360044
+    },
+    {
+      "path": "sfx/ui_bitacora_nueva_entrada_legendaria.wav",
+      "bytes": 360044
+    },
+    {
+      "path": "sfx/ui_bitacora_nueva_entrada_oculta.wav",
+      "bytes": 360044
+    },
+    {
+      "path": "sfx/ui_bitacora_nueva_entrada_rara.wav",
+      "bytes": 360044
+    },
+    {
+      "path": "sfx/ui_c4_44_temporizador_10s.wav",
+      "bytes": 1512044
+    },
+    {
+      "path": "sfx/ui_checklist_tachar_lapiz.wav",
+      "bytes": 187244
+    },
+    {
+      "path": "sfx/ui_dsky_tecla_1.wav",
+      "bytes": 36044
+    },
+    {
+      "path": "sfx/ui_dsky_tecla_2.wav",
+      "bytes": 36044
+    },
+    {
+      "path": "sfx/ui_dsky_tecla_3.wav",
+      "bytes": 36044
+    },
+    {
+      "path": "sfx/ui_interruptor_toggle_a.wav",
+      "bytes": 50444
+    },
+    {
+      "path": "sfx/ui_interruptor_toggle_b.wav",
+      "bytes": 50444
+    },
+    {
+      "path": "sfx/ui_interruptor_toggle_c.wav",
+      "bytes": 50444
+    },
+    {
+      "path": "voz_en_clonada/c1_11_armstrong_probabilidades_en.wav",
+      "bytes": 320588
+    },
+    {
+      "path": "voz_en_clonada/c1_11_armstrong_se_ve_la_tierra_en.wav",
+      "bytes": 1002572
+    },
+    {
+      "path": "voz_en_clonada/c1_11_jan_habla_con_los_ninos_en.wav",
+      "bytes": 882764
+    },
+    {
+      "path": "voz_en_clonada/c1_11_jan_no_te_costara_en.wav",
+      "bytes": 345164
+    },
+    {
+      "path": "voz_en_clonada/c1_11_rick_se_ve_nuestra_casa_en.wav",
+      "bytes": 335948
+    },
+    {
+      "path": "voz_en_clonada/c1_12_aldrin_precedente_gemini_en.wav",
+      "bytes": 1100876
+    },
+    {
+      "path": "voz_en_clonada/c1_12_slayton_esta_decidido_en.wav",
+      "bytes": 348236
+    },
+    {
+      "path": "voz_en_clonada/c1_12_slayton_neil_sale_primero_en.wav",
+      "bytes": 1024076
+    },
+    {
+      "path": "voz_en_clonada/c1_13_aldrin_que_consuelo_en.wav",
+      "bytes": 274508
+    },
+    {
+      "path": "voz_en_clonada/c1_13_armstrong_vamos_a_subir_en.wav",
+      "bytes": 182348
+    },
+    {
+      "path": "voz_en_clonada/c1_13_collins_entrevistas_en.wav",
+      "bytes": 1165388
+    },
+    {
+      "path": "voz_en_clonada/c1_13_collins_no_es_un_chiste_en.wav",
+      "bytes": 1036364
+    },
+    {
+      "path": "voz_en_clonada/c1_dec_armstrong_gracias_buzz_en.wav",
+      "bytes": 428108
+    },
+    {
+      "path": "voz_en_clonada/c1_dec_armstrong_restar_importancia_en.wav",
+      "bytes": 480332
+    },
+    {
+      "path": "voz_en_clonada/c1_dec_armstrong_verdad_en.wav",
+      "bytes": 369740
+    },
+    {
+      "path": "voz_en_clonada/c2_dec_aldrin_bonito_mike_en.wav",
+      "bytes": 179276
+    },
+    {
+      "path": "voz_en_clonada/c3_32_aldrin_marion_moon_en.wav",
+      "bytes": 701516
+    },
+    {
+      "path": "voz_en_clonada/c3_32_armstrong_duerman_en.wav",
+      "bytes": 418892
+    },
+    {
+      "path": "voz_en_clonada/c3_32_armstrong_karen_nueve_en.wav",
+      "bytes": 348236
+    },
+    {
+      "path": "voz_en_clonada/c3_32_collins_visita_familiar_en.wav",
+      "bytes": 498764
+    },
+    {
+      "path": "voz_en_clonada/c3_34_armstrong_estamos_en_orbita_en.wav",
+      "bytes": 479948
+    },
+    {
+      "path": "voz_en_clonada/c3_34_capcom_go_loi_en.wav",
+      "bytes": 949964
+    },
+    {
+      "path": "voz_en_clonada/c3_34_collins_yeso_viejo_en.wav",
+      "bytes": 394316
+    },
+    {
+      "path": "voz_en_clonada/c3_obj_collins_coctel_camarones_en.wav",
+      "bytes": 464972
+    },
+    {
+      "path": "voz_en_clonada/c4_41_aldrin_okay_mike_en.wav",
+      "bytes": 522956
+    },
+    {
+      "path": "voz_en_clonada/c4_41_collins_tomenselo_con_calma_en.wav",
+      "bytes": 925388
+    },
+    {
+      "path": "voz_en_clonada/c4_42_collins_relevo_go_descenso_en.wav",
+      "bytes": 750284
+    },
+    {
+      "path": "voz_en_clonada/c4_42_kranz_cerrar_puertas_en.wav",
+      "bytes": 1156172
+    },
+    {
+      "path": "voz_en_clonada/c4_43_armstrong_vamos_largos_en.wav",
+      "bytes": 446540
+    },
+    {
+      "path": "voz_en_clonada/c4_44_garman_es_go_en.wav",
+      "bytes": 458828
+    },
+    {
+      "path": "voz_en_clonada/c4_44_kranz_guiado_como_estamos_en.wav",
+      "bytes": 222284
+    },
+    {
+      "path": "voz_en_clonada/c4_47_jan_todavia_no_en.wav",
+      "bytes": 391244
+    },
+    {
+      "path": "voz_en_clonada/c4_47_rick_lo_hizo_en.wav",
+      "bytes": 357452
+    },
+    {
+      "path": "voz_en_clonada/c4_47_rick_papa_confiaba_en.wav",
+      "bytes": 444236
+    },
+    {
+      "path": "voz_en_clonada/c4_dec_bales_abortar_en.wav",
+      "bytes": 637004
+    },
+    {
+      "path": "voz_en_clonada/c4_dec_bales_seguimos_go_en.wav",
+      "bytes": 572492
+    },
+    {
+      "path": "voz_en_clonada/c4_dec_bales_seguimos_go_tembloroso_en.wav",
+      "bytes": 418892
+    },
+    {
+      "path": "voz_en_clonada/c4_dec_kranz_seguimos_en.wav",
+      "bytes": 323660
+    },
+    {
+      "path": "voz_en_clonada/c5_52_aldrin_un_poco_izquierda_en.wav",
+      "bytes": 382028
+    },
+    {
+      "path": "voz_en_clonada/c5_57_aldrin_mira_esto_en.wav",
+      "bytes": 354380
+    },
+    {
+      "path": "voz_en_clonada/c5_57_armstrong_motor_ascenso_en.wav",
+      "bytes": 345164
+    },
+    {
+      "path": "voz_en_clonada/c5_dec_aldrin_como_si_alguien_en.wav",
+      "bytes": 504908
+    },
+    {
+      "path": "voz_en_clonada/c5_dec_aldrin_lo_hiciste_bien_en.wav",
+      "bytes": 216140
+    },
+    {
+      "path": "voz_en_clonada/c5_dec_armstrong_gracias_anoche_en.wav",
+      "bytes": 415820
+    },
+    {
+      "path": "voz_en_clonada/c5_dec_armstrong_hazlo_tu_en.wav",
+      "bytes": 339020
+    },
+    {
+      "path": "voz_en_clonada/c5_dec_armstrong_lo_hicimos_en.wav",
+      "bytes": 157772
+    },
+    {
+      "path": "voz_en_clonada/c5_obj_armstrong_lee_placa_en.wav",
+      "bytes": 1595468
+    },
+    {
+      "path": "voz_en_clonada/c6_61_collins_solo_vo_en.wav",
+      "bytes": 1878092
+    },
+    {
+      "path": "voz_en_clonada/c6_61b_armstrong_te_tengo_en.wav",
+      "bytes": 391244
+    },
+    {
+      "path": "voz_en_clonada/c6_61b_radio_buzz_vuelve_en.wav",
+      "bytes": 271436
+    },
+    {
+      "path": "voz_en_clonada/c6_61c_aldrin_lanzame_en.wav",
+      "bytes": 179276
+    },
+    {
+      "path": "voz_en_clonada/c6_61c_aldrin_no_esta_en_plan_en.wav",
+      "bytes": 292940
+    },
+    {
+      "path": "voz_en_clonada/c6_61c_aldrin_polvo_que_se_mueve_en.wav",
+      "bytes": 314444
+    },
+    {
+      "path": "voz_en_clonada/c6_61c_aldrin_segundo_pero_juntos_en.wav",
+      "bytes": 421964
+    },
+    {
+      "path": "voz_en_clonada/c6_61c_aldrin_sone_polvo_en.wav",
+      "bytes": 928844
+    },
+    {
+      "path": "voz_en_clonada/c6_61c_aldrin_sonrie_en.wav",
+      "bytes": 274508
+    },
+    {
+      "path": "voz_en_clonada/c6_61c_aldrin_ya_se_arreglar_en.wav",
+      "bytes": 222284
+    },
+    {
+      "path": "voz_en_clonada/c6_61c_armstrong_duerme_buzz_en.wav",
+      "bytes": 1156172
+    },
+    {
+      "path": "voz_en_clonada/c6_61c_armstrong_mira_sombras_en.wav",
+      "bytes": 569036
+    },
+    {
+      "path": "voz_en_clonada/c6_61c_armstrong_placas_hombros_en.wav",
+      "bytes": 682700
+    },
+    {
+      "path": "voz_en_clonada/c6_61c_armstrong_que_ves_en.wav",
+      "bytes": 320204
+    },
+    {
+      "path": "voz_en_clonada/c6_61c_armstrong_respiramos_juntos_en.wav",
+      "bytes": 906956
+    },
+    {
+      "path": "voz_en_clonada/c6_61c_armstrong_tampoco_dormir_en.wav",
+      "bytes": 194636
+    },
+    {
+      "path": "voz_en_clonada/c6_61c_bales_eco_es_go_en.wav",
+      "bytes": 360524
+    },
+    {
+      "path": "voz_en_clonada/c6_61c_duke_eco_sesenta_en.wav",
+      "bytes": 203852
+    },
+    {
+      "path": "voz_en_clonada/c6_61c_duke_eco_treinta_en.wav",
+      "bytes": 154700
+    },
+    {
+      "path": "voz_en_clonada/c6_61c_susurro_siempre_segundo_en.wav",
+      "bytes": 464972
+    },
+    {
+      "path": "voz_en_clonada/c6_61c_susurro_siempre_segundo_en_invertido.wav",
+      "bytes": 464972
+    },
+    {
+      "path": "voz_en_clonada/c6_62_houston_nada_conductor_en.wav",
+      "bytes": 765644
+    },
+    {
+      "path": "voz_en_clonada/c6_64_collins_ahi_estan_en.wav",
+      "bytes": 428108
+    },
+    {
+      "path": "voz_en_clonada/c6_64_collins_vengan_aca_en.wav",
+      "bytes": 403532
+    },
+    {
+      "path": "voz_en_clonada/c6_dec_safire_discurso_desastre_en.wav",
+      "bytes": 1168460
+    },
+    {
+      "path": "voz_en_clonada/c6_obj_collins_libreta_en.wav",
+      "bytes": 895052
+    },
+    {
+      "path": "voz_en_clonada/c7_71_collins_vuelve_a_casa_a_todo_trapo_en.wav",
+      "bytes": 661196
+    },
+    {
+      "path": "voz_en_clonada/c7_71b_aldrin_diplomacia_en.wav",
+      "bytes": 627788
+    },
+    {
+      "path": "voz_en_clonada/c7_71b_aldrin_pelos_filtros_en.wav",
+      "bytes": 480332
+    },
+    {
+      "path": "voz_en_clonada/c7_71b_aldrin_trajiste_mascota_en.wav",
+      "bytes": 560204
+    },
+    {
+      "path": "voz_en_clonada/c7_71b_aldrin_y_no_volvio_en.wav",
+      "bytes": 339020
+    },
+    {
+      "path": "voz_en_clonada/c7_71b_armstrong_belka_strelka_en.wav",
+      "bytes": 1801292
+    },
+    {
+      "path": "voz_en_clonada/c7_71b_armstrong_primera_perra_en.wav",
+      "bytes": 292940
+    },
+    {
+      "path": "voz_en_clonada/c7_71b_collins_parientes_famosos_en.wav",
+      "bytes": 455756
+    },
+    {
+      "path": "voz_en_clonada/c7_71b_collins_polvo_lunar_en.wav",
+      "bytes": 449612
+    },
+    {
+      "path": "voz_en_clonada/c7_71b_collins_por_eso_la_traje_en.wav",
+      "bytes": 1082444
+    },
+    {
+      "path": "voz_en_clonada/c7_71b_collins_sputnik2_en.wav",
+      "bytes": 2028620
+    },
+    {
+      "path": "voz_en_clonada/c7_71b_collins_tripulante_no_oficial_en.wav",
+      "bytes": 587852
+    },
+    {
+      "path": "voz_en_clonada/c7_74_armstrong_ponganse_traje_en.wav",
+      "bytes": 618572
+    },
+    {
+      "path": "voz_en_clonada/c7_76_armstrong_veintiun_kilos_en.wav",
+      "bytes": 1008716
+    },
+    {
+      "path": "voz_en_clonada/c7_76_mark_trajiste_piedra_en.wav",
+      "bytes": 271436
+    },
+    {
+      "path": "voz_en_clonada/c7_76_rick_nos_lo_tendrias_en.wav",
+      "bytes": 234572
+    },
+    {
+      "path": "voz_en_clonada/c7_76_rick_te_escuche_aterrizar_en.wav",
+      "bytes": 222284
+    },
+    {
+      "path": "voz_en_clonada/c7_dec_aldrin_cabo_laika_en.wav",
+      "bytes": 302156
+    },
+    {
+      "path": "voz_en_clonada/c7_dec_collins_sargento_en.wav",
+      "bytes": 541772
+    },
+    {
+      "path": "voz_en_clonada/e_e1_collins_lo_logramos_en.wav",
+      "bytes": 812108
+    },
+    {
+      "path": "voz_en_clonada/e_e2_bales_me_quede_congelado_en.wav",
+      "bytes": 372812
+    },
+    {
+      "path": "voz_en_clonada/p_01_armstrong_cuando_estemos_listos_en.wav",
+      "bytes": 680012
+    },
+    {
+      "path": "voz_en_clonada/p_01_asistente_llamada_houston_en.wav",
+      "bytes": 358604
+    },
+    {
+      "path": "voz_en_clonada/p_01_diplomatico_soviéticos_en.wav",
+      "bytes": 487244
+    },
+    {
+      "path": "voz_en_clonada/p_02_voz_telefono_incendio_en.wav",
+      "bytes": 781388
+    },
+    {
+      "path": "voz_en_clonada/p_03_kranz_duros_y_competentes_en.wav",
+      "bytes": 1709132
+    },
+    {
+      "path": "voz_en_clonada/p_obj_armstrong_recuerdo_ed_white_en.wav",
+      "bytes": 999500
+    }
+  ]
+}
