@@ -1,6 +1,7 @@
 // QA: juega el despegue (práctica) en un Chrome sin interfaz con un piloto que sigue el corredor, baja el empuje en
 // Max-Q, hace el rolido y pulsa ESPACIO en la franja verde. Guarda capturas y el registro del vuelo.
-// Uso: CHROME_PATH=… node tools/play-launch.mjs [url] [salida] [modo]  · modo: good (por defecto) | idle (no toca nada)
+// Uso: CHROME_PATH=… node tools/play-launch.mjs [url] [salida] [modo]  · modo: good (por defecto) | full (sigue el corredor
+// pero nunca baja el empuje: así juega casi todo el mundo) | idle (no toca nada)
 import puppeteer from 'puppeteer-core';
 import { mkdirSync, writeFileSync } from 'node:fs';
 
@@ -18,18 +19,18 @@ await page.screenshot({ path: `${out}/a-card.jpg`, type: 'jpeg', quality: 60 });
 await page.keyboard.press('Enter'); await w(2500);
 await page.screenshot({ path: `${out}/b-count.jpg`, type: 'jpeg', quality: 60 });
 await page.evaluate(() => document.querySelector('.skipcd')?.click());
-if (mode === 'good') await page.evaluate(() => {
+if (mode === 'good' || mode === 'full') await page.evaluate((full) => {
   const kd = (c) => dispatchEvent(new KeyboardEvent('keydown', { code: c })), ku = (c) => dispatchEvent(new KeyboardEvent('keyup', { code: c }));
   const target = (s) => (s < 5 ? 90 : s > 72 ? 12 : 90 - (78 * Math.pow((s - 5) / 67, 0.8)));
   window.__pilot = setInterval(() => {
     const S = window.__launchS; if (!S) return; if (S.phase !== 'fly') { ['KeyA', 'KeyD', 'KeyS', 'KeyW', 'KeyQ', 'KeyE'].forEach(ku); return; }
     const err = S.pitch - target(S.s); if (err > 1.5) { kd('KeyD'); ku('KeyA'); } else if (err < -1.5) { kd('KeyA'); ku('KeyD'); } else { ku('KeyA'); ku('KeyD'); }
-    if (S.stress > 0.05 || ((S.q || 0) > 95 && S.s < 24)) { kd('KeyS'); ku('KeyW'); } else { ku('KeyS'); kd('KeyW'); }
+    if (!full && (S.stress > 0.05 || ((S.q || 0) > 95 && S.s < 24))) { kd('KeyS'); ku('KeyW'); } else { ku('KeyS'); kd('KeyW'); }
     const rv = document.querySelector('.lroll-v'); if (rv) { const h = parseFloat(rv.textContent); if (h > 74) { kd('KeyQ'); ku('KeyE'); } else if (h < 70) { kd('KeyE'); ku('KeyQ'); } else { ku('KeyQ'); ku('KeyE'); } } else { ku('KeyQ'); ku('KeyE'); }
     const n = document.querySelector('.lsep-ndl'), z = document.querySelector('.lsep-zone');
     if (n && z && !window.__pressed) { const nl = parseFloat(n.style.left), zl = parseFloat(z.style.left), zw = parseFloat(z.style.width); if (nl > zl + zw * 0.3 && nl < zl + zw * 0.7) { window.__pressed = 1; kd('Space'); setTimeout(() => { ku('Space'); window.__pressed = 0; }, 120); } }
   }, 25);
-});
+}, mode === 'full');
 const log = []; let shot = 0;
 for (let i = 0; i < 300; i++) {
   await w(1000);

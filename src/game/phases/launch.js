@@ -22,7 +22,7 @@ extend({
   'l.beach': ['Playa de Cabo Kennedy · 16 de julio de 1969', 'Cape Kennedy beach · July 16, 1969'], 'l.beachS': ['Cerca de un millón de personas miran desde las playas y carreteras', 'About a million people watch from the beaches and roads'],
   'l.ign': ['Secuencia de ignición', 'Ignition sequence'],
   'l.offWarn': ['¡FUERA DE TRAYECTORIA! Vuelve al corredor (A/D)', 'OFF COURSE! Get back in the corridor (A/D)'],
-  'l.qWarn': ['¡ESTRUCTURA AL LÍMITE! Baja el empuje (S)', 'STRUCTURE AT LIMIT! Throttle down (S)'],
+  'l.qWarn': ['¡ESTRUCTURA AL LÍMITE! Vuelve al corredor (A/D) o baja el empuje (S)', 'STRUCTURE AT LIMIT! Back into the corridor (A/D) or throttle down (S)'],
   'l.sepGood': ['Separación armada: se soltará al apagarse la etapa', 'Separation armed: it will release at burnout'], 'l.sepBad': ['¡Fallo! Los pernos no cedieron: intenta otra vez', 'Miss! The bolts did not let go: try again'],
   'l.sepBar': ['SEPARACIÓN · pulsa ESPACIO en la zona verde', 'STAGING · press SPACE in the green zone'], 'l.sepBarT': ['SEPARACIÓN · toca SEPARAR en la zona verde', 'STAGING · tap STAGE in the green zone'],
   'l.sepNow': ['¡Separa YA!', 'Stage NOW!'], 'l.tries': ['Intentos', 'Tries'],
@@ -35,8 +35,8 @@ extend({
   'l.boom': ['MISIÓN PERDIDA', 'MISSION LOST'], 'l.retry': ['Reintentar despegue', 'Retry launch'], 'l.quit': ['Salir al menú', 'Quit to menu'],
   'l.f.range': ['El Saturn V se salió de su trayectoria y el oficial de seguridad del campo activó la destrucción.', 'The Saturn V left its trajectory and the Range Safety Officer triggered destruct.'],
   'l.f.rangeF': ['Real: cada Saturn V llevaba cargas de destrucción. Si se desviaba hacia zonas pobladas, el oficial de seguridad del campo (Range Safety) lo destruía.', 'Real: every Saturn V carried destruct charges. If it veered toward populated areas, the Range Safety Officer would destroy it.'],
-  'l.f.maxq': ['Pasaste Max-Q con todo el empuje: la presión del aire dobló la estructura y el cohete se partió.', 'You went through Max-Q at full thrust: air pressure buckled the structure and the rocket broke apart.'],
-  'l.f.maxqF': ['Real: Max-Q es el momento de máxima presión aerodinámica, poco más de un minuto después del despegue. El vuelo se planificaba para que la estructura la soportara.', 'Real: Max-Q is the moment of peak aerodynamic pressure, a little over a minute after liftoff. The flight was planned so the structure could take it.'],
+  'l.f.maxq': ['Te saliste de la trayectoria en plena Max-Q: el aire golpeó al cohete de lado y la estructura se partió.', 'You left the trajectory right at Max-Q: the air hit the rocket sideways and the structure broke apart.'],
+  'l.f.maxqF': ['Real: Max-Q, la máxima presión aerodinámica, llegó a los 83 s. El Saturn V la cruzaba con los motores a tope, pero siguiendo su trayectoria al milímetro: el peligro era recibir el aire de lado.', 'Real: Max-Q, peak aerodynamic pressure, came at 83 s. The Saturn V went through it at full power, but holding its trajectory precisely: the danger was taking the air sideways.'],
   'l.f.stage': ['La etapa vacía no se separó a tiempo y chocó con la siguiente al encenderse.', 'The spent stage did not separate in time and hit the next one as it lit.'],
   'l.f.stageF': ['Real: en cada separación, pequeños cohetes alejaban la etapa vacía y asentaban el combustible de la siguiente antes de encenderla.', 'Real: at each separation, small rockets pushed the spent stage away and settled the next stage’s fuel before ignition.'], 'l.iss': ['Inicio de la secuencia de ignición', 'Ignition sequence start'], 'l.throk': ['Todos los motores en marcha', 'All engines running'], 'l.hdr': ['Liberación de los anclajes', 'Hold-down release'], 'l.sep': ['Separación', 'Separation'], 'l.maxqok': ['Max-Q superado', 'Through Max-Q'],
 });
@@ -357,7 +357,10 @@ export default async function launch(ctx) {
     S.s += dt;
     // Max-Q: densidad × v² — ventana ~12–22 s
     const rho = Math.exp(-S.alt / 8500); const q = 0.5 * rho * (S.vel * S.vel) / 1000; S.q = q; S.maxQ = Math.max(S.maxQ, q);
-    const qLimit = 130 * D.tol; const over = q * (0.35 + S.thr * 0.65) - qLimit;
+    // Carga estructural = presión dinámica × ángulo de ataque (como en el Saturn V real, que no reducía sus F-1 por Max-Q):
+    // dentro del corredor se pasa Max-Q con todo el empuje; desviarse en plena Max-Q golpea el cohete de lado. Bajar el empuje sigue ayudando.
+    const aoa = 0.55 + 0.45 * Math.min(2, Math.abs(S.pitch - target(S.s)) / tol);
+    const qLimit = 130 * D.tol; const over = q * (0.35 + S.thr * 0.65) * aoa - qLimit;
     if (q > qLimit * 0.75 && !maxQsaid) { maxQsaid = true; ctx.banner(t('l.maxq'), '', 2200, 'warn'); sfx('computer', { vol: 0.5 }); ctx.cc.log('l.maxq', null, 'warn'); }
     S.stress = clamp(S.stress + (over > 0 ? (over / qLimit) * 0.3 : -0.03) * dt, 0, 1);
     if (maxQsaid && !S.maxqok && q < qLimit * 0.6 && S.s > 20) { S.maxqok = true; toast(t('l.maxqok'), 'info'); }

@@ -77,7 +77,7 @@ const T = {
   // launch
   'l.alt': ['ALT', 'ALT'], 'l.vel': ['VEL', 'VEL'], 'l.pitch': ['CABECEO', 'PITCH'], 'l.q': ['Q', 'Q'], 'l.stage': ['ETAPA', 'STAGE'],
   'l.hint': ['Mantén la nave dentro del corredor. Etapa cuando el tanque se vacíe.', 'Keep the ship inside the corridor. Stage when the tank is empty.'],
-  'l.maxq': ['¡MAX-Q! Baja el empuje', 'MAX-Q! Throttle down'], 'l.stageNow': ['¡SEPARA ETAPA!', 'STAGE NOW!'], 'l.orbit': ['¡Órbita alcanzada!', 'Orbit achieved!'],
+  'l.maxq': ['¡MAX-Q! Mantente en el corredor', 'MAX-Q! Stay in the corridor'], 'l.stageNow': ['¡SEPARA ETAPA!', 'STAGE NOW!'], 'l.orbit': ['¡Órbita alcanzada!', 'Orbit achieved!'],
   'l.liftoff': ['¡DESPEGUE!', 'LIFTOFF!'], 'l.clear': ['Torre despejada', 'Tower cleared'],
   // cruise
   'c.tli': ['Inyección translunar', 'Trans-lunar injection'], 'c.hold': ['Mantén presionado para encender. Suelta en la zona verde.', 'Hold to burn. Release in the green zone.'],
