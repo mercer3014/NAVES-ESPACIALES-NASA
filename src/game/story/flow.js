@@ -9,8 +9,11 @@ import { show } from '../../ui/router.js';
 import { score, stopAmbience } from '../../audio/a11-score.js';
 import { unlock, chose, record, run } from './state.js';
 import { ask } from './decisions.js';
+import { missionCard } from '../../ui/mission-card.js';
 
 const own = (load) => async (o) => { const m = await load(); return m.default(o); };
+// minijuegos del guion: tarjeta «Cómo jugar» (qué pasó / tu misión / controles) antes de empezar
+const withCard = (cardId, load) => async (o) => { await missionCard(cardId); const m = await load(); return m.default(o); };
 // cinemáticas de la Tierra: devuelven { id, played, skipped }
 const earth = (id) => async (o) => { if (!o.ctx) show('<div class="screen"></div>', 'story-' + id); /* entre fases: quita el HUD anterior */ const m = await import('../cutscenes/cine-index.js'); return m.playCinematic(id, o); };
 // cap. 7 + epílogo; rickHeard depende de lo que Neil les dijo a sus hijos en el cap. 1
@@ -54,15 +57,15 @@ export const STORY = {
   'house-landed': earth('house-landed'),
   'pre-eva': decide('c5-rest'),
   'collins-solo': own(() => import('./collins-solo.js')),
-  boss: own(() => import('../boss/story.js')), // No Canon, opcional: pregunta «Soñar / Saltar» antes
-  breaker: own(() => import('./breaker.js')),
-  liftoff: own(() => import('./liftoff.js')),
-  reunion: own(() => import('./reunion.js')),
+  boss: async (o) => { const m = await import('../boss/story.js'); return m.default({ ...o, briefing: () => missionCard('boss') }); }, // No Canon, opcional: pregunta «Soñar / Saltar» antes
+  breaker: withCard('breaker', () => import('./breaker.js')),
+  liftoff: withCard('liftoff', () => import('./liftoff.js')),
+  reunion: withCard('docking', () => import('./reunion.js')),
   tei: own(() => import('./tei.js')),
   laika: noCanon(epi('laika')), // escena inventada (no ocurrió en el Apolo 11): No Canon (G17)
   'laika-talk': decide('c7-laika', (o) => { if (o === 'belka') unlock('pushinka'); }),
   tv: own(() => import('./tv.js')),
-  reentry: own(() => import('./reentry.js')),
+  reentry: withCard('reentry', () => import('./reentry.js')),
   recovery: epi('recovery'),
   lrl: epi('lrl'),
   parade: epi('parade'),
