@@ -53,7 +53,7 @@ export const CINE_MOCR = {
   'mocr-1202': {
     id: 'mocr-1202', make: mocr('1969'),
     shots: (o) => [
-      { d: 3.6, on: (w) => w.alarm(true), cam: [{ t: 0, pos: [0.2, 1.75, 1.7], look: [1.3, 1.0, 3.4], fov: 40 }, { t: 1, pos: [0.3, 1.7, 1.85], look: [1.3, 1.0, 3.4], fov: 36 }],
+      { d: 3.6, on: (w) => w.alarm(true), cam: [{ t: 0, pos: [1.82, 1.86, 1.72], look: [0.95, 1.02, 3.6], fov: 40 }, { t: 1, pos: [1.76, 1.82, 1.86], look: [0.97, 1.04, 3.6], fov: 36 }], // sobre el hombro de Bales: su consola con la 1202
         lines: [L(0, ARM, ['Alarma de programa. Es una 1202.', 'Program alarm. It\'s a 1202.'], 'real', 'beep'), L(2, ALD, ['1202.', '1202.'], 'real', 'beep')] },
       { d: 3.4, cam: [{ t: 0, pos: [0, 3.3, -6.6], look: [0, 1.0, 3], fov: 44 }, { t: 1, pos: [0, 3.2, -6.2], look: [0, 1.0, 3], fov: 40 }],
         lines: [L(0, ARM, ['Danos una lectura sobre la alarma 1202.', 'Give us a reading on the 1202 program alarm.'], 'real', 'beep')] },
@@ -72,7 +72,7 @@ export const CINE_MOCR = {
     id: 'mocr-gonogo', make: mocr('1969'),
     shots: [
       { d: 4.2, on: act('kranz', 'talk'), cam: KRANZ_1969, lines: [L(0, K, ['Muy bien, todos los controladores: GO/NO GO para aterrizaje. ¿RETRO?', 'OK, all flight controllers: GO/NO GO for landing. RETRO?'], 'real')] },
-      { d: 4, cam: [{ t: 0, pos: [-4.6, 1.75, 5.0], look: [-3, 1.0, 2.6], fov: 38 }, { t: 1, pos: [4.6, 1.75, 5.0], look: [3, 1.0, 2.6], fov: 38 }],
+      { d: 4, cam: [{ t: 0, pos: [-4.2, 2.3, 5.6], look: [-2.6, 1.1, 1.6], fov: 42 }, { t: 1, pos: [4.2, 2.3, 5.6], look: [2.6, 1.1, 1.6], fov: 42 }],
         lines: [L(0, ['CONTROLADORES', 'CONTROLLERS'], ['¡GO!', 'GO!'], 'real', 'tick'), L(1.2, ['CONTROLADORES', 'CONTROLLERS'], ['¡GO! … ¡GO!', 'GO! … GO!'], 'real', 'tick'), L(2.4, ['CONTROLADORES', 'CONTROLLERS'], ['¡GO! … ¡GO! … ¡GO!', 'GO! … GO! … GO!'], 'real', 'tick')] },
       { d: 3, cam: KRANZ_1969, lines: [L(0, K, ['CAPCOM, tenemos GO para aterrizar.', 'CAPCOM, we\'re GO for landing.'], 'real')] },
       { d: 4.4, cam: DUKE_CAM, lines: [L(0, DUKE, ['Eagle, Houston. Tienen GO para aterrizar.', 'Eagle, Houston. You\'re GO for landing.'], 'real'), L(2.4, ALD, ['Entendido. GO para aterrizar. 3.000 pies.', 'Roger. Understand. GO for landing. 3000 feet.'], 'real')] },

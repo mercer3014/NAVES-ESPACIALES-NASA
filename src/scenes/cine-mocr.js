@@ -49,8 +49,15 @@ export function makeMocr({ era = '1969' } = {}) {
 
   // Luz de alarma ámbar en la consola de GUIDO (1202)
   const alarmL = new THREE.PointLight(0xffb030, 0, 3, 1.5); alarmL.position.set(1.26, 1.25, 3.3); scene.add(alarmL);
+  // Pantalla de la consola de GUIDO con «1202» ámbar (CanvasTexture, emisiva: no depende de la luz de la sala)
+  const cv = document.createElement('canvas'); cv.width = 256; cv.height = 160; const g = cv.getContext('2d');
+  g.fillStyle = '#0b0a06'; g.fillRect(0, 0, 256, 160); g.fillStyle = '#ffb030'; g.textAlign = 'center';
+  g.font = 'bold 22px monospace'; g.fillText('PROG ALARM', 128, 40); g.font = 'bold 76px monospace'; g.fillText('1202', 128, 122);
+  const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
+  const alarmScreen = new THREE.Mesh(new THREE.PlaneGeometry(0.38, 0.28), new THREE.MeshBasicMaterial({ map: tex, toneMapped: false }));
+  alarmScreen.position.set(0.96, 1.0465, 3.6255); alarmScreen.lookAt(0.96, 1.0465 - 0.21, 3.6255 - 0.98); alarmScreen.translateZ(0.004); /* pegada al CRT izquierdo de console-r1-05 (GUIDO, 0.42×0.32 m, cara hacia −Z, borde superior inclinado hacia el operador) */ alarmScreen.visible = false; alarmScreen.material.userData.cineOwn = true; scene.add(alarmScreen);
   let alarmOn = false, t = 0;
-  W.tick((dt) => { t += dt; alarmL.intensity = alarmOn ? (Math.sin(t * 10) > 0 ? 6 : 0.5) : 0; });
+  W.tick((dt) => { t += dt; const blink = Math.sin(t * 10) > 0; alarmL.intensity = alarmOn ? (blink ? 6 : 0.5) : 0; alarmScreen.visible = alarmOn; alarmScreen.material.color.setScalar(blink ? 1 : 0.45); }); // parpadea atenuándose, nunca desaparece
 
   return {
     ...W,

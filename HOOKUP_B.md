@@ -105,3 +105,10 @@ Sonidos usados (todos existen en `public/audio/sfx`): beep, ok, tick, door, ping
 - **4.4**: la decisión de Bales sigue siendo el panel 1202 del juego (GO/ABORT). La cinemática solo muestra la reacción de Houston según la respuesta. El aborto real a órbita («¿Y si…?») no está implementado: el juego ya muestra «Era GO».
 - Los personajes sentados no usan el clip `talk`, porque es de cuerpo entero y los pondría de pie. Hablan sentados sin gesto.
 - No hay audio de voz nuevo, solo subtítulos y efectos. `voice('eagle')` ya suena en descent.js al alunizar.
+
+## Notas de verificación (B)
+- Build: `vite build` con `index.html` y `cine-index.js` como entradas, en `/tmp/build-B`, sin errores. `tests/no-emoji` y `tests/cutscenes` pasan.
+- Capturas headless (swiftshader, en ES) en `/workspace/integracion-screens/B-<id>-<plano>.png`: una por plano, las 8 cinemáticas, 44 imágenes. En la consola no hubo errores.
+- La vista `?debug&cine=<id>` ya está en `src/main.js` (la cableó el lead), así que el paso 6 está hecho.
+- La iluminación de las escenas es baja a propósito. Con AgX, una luz más fuerte satura los colores de vértice de los personajes y los deja grises o blancos.
+- C tiene su propio reproductor (`cine-play.js` / `cine-rails.js`) para el cap. 7 y el epílogo. Los dos usan `letterbox.js` y no comparten estado. Si se quiere, se pueden unificar más adelante.
