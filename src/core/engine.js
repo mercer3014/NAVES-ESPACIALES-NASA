@@ -17,12 +17,22 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 export const Q = { high: !isMobile && store.get('quality') !== 'low', mobile: isMobile };
 if (store.get('quality') === 'high') Q.high = true;
 const maxDPR = Q.high ? 2 : 1.5;
+// Resolución dinámica (solo con calidad «auto»): si los fps se quedan bajos varios segundos se reduce la resolución
+// interna, y se recupera cuando sobra margen. Evita que un teléfono modesto se arrastre en las escenas pesadas.
+const AUTO_RES = (store.get('quality') || 'auto') === 'auto';
+let dprScale = 1, lowS = 0, highS = 0;
+function adaptRes(fps) {
+  if (!AUTO_RES || document.hidden) return;
+  if (fps < 45) { lowS++; highS = 0; } else if (fps > 57) { highS++; lowS = 0; } else { lowS = 0; highS = 0; }
+  if (lowS >= 3 && dprScale > 0.65) { dprScale = Math.max(0.65, dprScale - 0.15); lowS = 0; resize(); }
+  else if (highS >= 8 && dprScale < 1) { dprScale = Math.min(1, dprScale + 0.1); highS = 0; resize(); }
+}
 let world = null; // {scene, camera, update(dt,t)}
 export function setWorld(w) { world = w; resize(); }
 export function getWorld() { return world; }
 function resize() {
   const w = innerWidth, h = innerHeight;
-  renderer.setPixelRatio(Math.min(devicePixelRatio, maxDPR)); renderer.setSize(w, h, false);
+  renderer.setPixelRatio(Math.min(devicePixelRatio, maxDPR) * dprScale); renderer.setSize(w, h, false);
   if (world?.camera) { world.camera.aspect = w / h; world.camera.updateProjectionMatrix(); }
   world?.resize?.(w, h);
 }
@@ -35,7 +45,7 @@ let paused = false; export const setPaused = (p) => (paused = p);
 function frame() {
   requestAnimationFrame(frame);
   timer.update(); const dt = Math.min(timer.getDelta(), DT_MAX) * (DEBUG && stats.slow ? stats.slow : 1), t = timer.getElapsed(); // stats.slow: congelar casi el juego en QA
-  fpsAcc += dt; fpsN++; if (fpsAcc > 1) { stats.fps = fpsN / fpsAcc; fpsAcc = 0; fpsN = 0; }
+  fpsAcc += dt; fpsN++; if (fpsAcc > 1) { stats.fps = fpsN / fpsAcc; fpsAcc = 0; fpsN = 0; adaptRes(stats.fps); stats.dpr = renderer.getPixelRatio(); }
   if (!paused) for (const f of tickers) f(dt, t);
   if (world) { if (!paused) world.update?.(dt, t); if (!paused) afterWorldUpdate(world, t); if (world.render) world.render(dt); else renderer.render(world.scene, world.camera); }
   endFrame();
@@ -47,7 +57,8 @@ dbg('stats', stats);
 const texL = new THREE.TextureLoader(); const texCache = new Map();
 export function tex(url, { srgb = true, repeat = 0 } = {}) {
   if (texCache.has(url)) return texCache.get(url);
-  const t = texL.load(url); if (srgb) t.colorSpace = THREE.SRGBColorSpace;
+  let ok; const ready = new Promise((r) => (ok = r));
+  const t = texL.load(url, ok, undefined, ok); if (srgb) t.colorSpace = THREE.SRGBColorSpace; t.userData.ready = ready;
   t.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
   if (repeat) { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(repeat, repeat); }
   texCache.set(url, t); return t;

@@ -6,7 +6,7 @@ import { $ } from './core/util.js';
 import { unlock } from './core/audio.js';
 import { bootReadout } from './ui/presentation.js';
 import { sfxIfUnlocked } from './ui/ui-sfx.js';
-import './core/engine.js';
+import { tex, Q } from './core/engine.js';
 import { introScreen, introPlayed, startScreen, joinScreen, lobbyBg } from './ui/screens.js';
 import { shouldPlayIntro } from './ui/intro-policy.js';
 import './ui/radio.js';
@@ -26,8 +26,10 @@ async function boot() {
   }
   if (DEBUG && params.get('story')) { const { playStory } = await import('./game/story/flow.js'); const id = params.get('story'); lobbyBg(); return playStory(id).then((r) => { window.__storyResult = r; }); }
   if (DEBUG && params.get('cue')) { const { previewCue } = await import('./game/cutscenes/preview.js'); return previewCue(params.get('cue')); }
-  const urls = ['/tex/stars_2k.jpg', '/tex/earth_day_2k.jpg', '/tex/earth_night_2k.jpg', '/tex/earth_clouds_2k.jpg', '/tex/moon_2k.jpg', '/audio/sfx/click.mp3'];
-  const total = urls.length + 1;
+  // Texturas del lobby por el mismo caché que usan las escenas (antes se pedían dos veces) y en la resolución que usará este equipo
+  const texs = [[`/tex/stars_${Q.high ? '4k' : '2k'}.jpg`], [`/tex/earth_day_${Q.high ? '4k' : '2k'}.jpg`], ['/tex/earth_night_2k.jpg'], ['/tex/earth_clouds_2k.jpg', { srgb: false }], ['/tex/moon_2k.jpg']];
+  const urls = ['/audio/sfx/click.mp3'];
+  const total = urls.length + texs.length + 1;
   const el = show(`<div class="screen boot"><div class="boot-frame">
     <div class="boot-kicker">LOS ORINALEJOS</div>
     <div class="boot-word">${t('title.l1')}<br>${t('title.l2')}</div>
@@ -42,7 +44,7 @@ async function boot() {
     bar.style.width = r.pct + '%'; pct.textContent = r.pct + '%'; line.textContent = t(r.line); prog.setAttribute('aria-valuenow', String(r.pct));
   };
   const fonts = Promise.all(['700 1em Chakra', '400 1em Chakra', '900 1em Orbitron', '1em Mono', '1em Exo', '1em Audiowide'].map((f) => document.fonts.load(f).catch(() => {}))).then(tick);
-  await Promise.race([Promise.all([fonts, ...urls.map((u) => fetch(u).then((r) => r.blob()).catch(() => {}).then(tick))]), new Promise((r) => setTimeout(r, 12000))]);
+  await Promise.race([Promise.all([fonts, ...urls.map((u) => fetch(u).then((r) => r.blob()).catch(() => {}).then(tick)), ...texs.map(([u, o]) => tex(u, o).userData.ready.then(tick))]), new Promise((r) => setTimeout(r, 12000))]);
   const fin = bootReadout(total, total);
   bar.style.width = '100%'; pct.textContent = '100%'; line.textContent = t(fin.line); prog.setAttribute('aria-valuenow', '100');
   sfxIfUnlocked('computer', { vol: 0.28 });

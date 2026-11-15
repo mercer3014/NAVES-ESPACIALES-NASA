@@ -16,7 +16,7 @@ export function makeLobby() {
   const sun = glowSprite(0xfff1d0, 60); sun.position.copy(sunDir).multiplyScalar(500); scene.add(sun);
   // estrella secreta (7 clics)
   const secret = glowSprite(0xaee3ff, 4); secret.position.set(-30, 18, -60); scene.add(secret);
-  let lm = null; model('lm').then((o) => { lm = fit(o, 3.4, { axis: 'max', ground: false }); lm.position.set(9.2, -5.4, 2); scene.add(lm); }).catch(() => {});
+  let lm = null; if (!Q.mobile) model('lm').then((o) => { lm = fit(o, 3.4, { axis: 'max', ground: false }); lm.position.set(9.2, -5.4, 2); scene.add(lm); }).catch(() => {});
   // astronauta A7L flotando junto al LM, saludando con la bandera del jugador en el hombro (carga diferida)
   let ast = null, offFlag = null, disposed = false; const astT = setTimeout(() => import('./astronaut.js').then((m) => m.makeAstronaut(store.get('flag'))).then((a) => {
     if (disposed) { a.dispose?.(); return; } ast = a; a.root.position.set(12.4, -4.6, 10); a.root.rotation.set(0.15, -0.7, -0.08); scene.add(a.root); offFlag = on('flag', (f) => a.setFlag?.(f)); }).catch(() => {}), 900);
