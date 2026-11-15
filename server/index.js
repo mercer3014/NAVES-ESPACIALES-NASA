@@ -35,7 +35,7 @@ const server = http.createServer(async (req, res) => {
   res.setHeader('permissions-policy', 'microphone=(self), camera=(), geolocation=()');
   const wsHost = /^[a-zA-Z0-9.\-:\[\]]+$/.test(req.headers.host || '') ? req.headers.host : 'localhost';
   // Basis transcoder is Emscripten: the worker blob needs eval to bind the wasm module.
-  res.setHeader('content-security-policy', `default-src 'self'; script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self' blob: ws://${wsHost} wss://${wsHost}; font-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'`);
+  res.setHeader('content-security-policy', `default-src 'self'; script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' blob: ws://${wsHost} wss://${wsHost}; font-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'`);
   if (!['GET', 'HEAD'].includes(req.method)) { res.writeHead(405, { allow: 'GET, HEAD' }); return res.end(); }
   try {
     const url = new URL(req.url, 'http://x');
