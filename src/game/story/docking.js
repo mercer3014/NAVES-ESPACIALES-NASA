@@ -1,0 +1,88 @@
+// Minijuego de acople (Collins): traslación lateral + cierre con RCS limitado, mirando por el COAS (retícula).
+// Reutilizable: el llamador coloca la nave con apply(state) en cada fotograma. El estado está en metros en el marco
+// del acople: range (distancia a contacto), x/y (desalineación lateral), vr (velocidad de cierre, + = acercándose).
+// Contacto válido: cierre ≤ tolClose y desalineación ≤ tolLat; uno malo rebota y cuenta un intento.
+import { onTick } from '../../core/engine.js';
+import { store, isTouch, AUTO } from '../../core/store.js';
+import { down, makeStick, bindBtn, bdown, input } from '../../core/input.js';
+import { sfx } from '../../core/audio.js';
+import { a11sfx } from '../../audio/a11-score.js';
+import './docking.css';
+
+const L = () => (store.get('lang') === 'en' ? 1 : 0);
+const tx = (p) => (Array.isArray(p) ? p[L()] : p || '');
+
+// opts: { range0, tolClose, tolLat, maxAttempts, title, note, apply(state, dt), loop(fn) → off, wide }
+export function runDocking(opts = {}) {
+  const tolClose = opts.tolClose ?? 0.3, tolLat = opts.tolLat ?? 0.25, maxAttempts = opts.maxAttempts ?? 3;
+  const S = { range: opts.range0 ?? 14, x: opts.x0 ?? 0.9, y: opts.y0 ?? -0.6, vr: 0, vx: 0, vy: 0, rcs: 100, rcsUsed: 0, attempts: 0, secs: 0, pitch: 0, yaw: 0, closingAtContact: 0, contact: false };
+  const loop = opts.loop || onTick; const apply = opts.apply || (() => {});
+  const el = document.createElement('div'); el.className = 'dock';
+  el.innerHTML = `<div class="dock-top"><div class="dock-k"></div><div class="dock-note"></div></div>
+    <svg class="dock-coas" viewBox="-100 -100 200 200" aria-hidden="true"><circle r="70" class="ring"/><line x1="-90" y1="0" x2="-20" y2="0"/><line x1="20" y1="0" x2="90" y2="0"/><line x1="0" y1="-90" x2="0" y2="-20"/><line x1="0" y1="20" x2="0" y2="90"/><g class="tgt"><circle r="12"/><line x1="-26" y1="0" x2="26" y2="0"/><line x1="0" y1="-26" x2="0" y2="26"/></g></svg>
+    <div class="dock-tele"><div><span>${L() ? 'RANGE' : 'RANGO'}</span><b class="r"></b></div><div><span>${L() ? 'CLOSING' : 'CIERRE'}</span><b class="v"></b></div><div><span>${L() ? 'OFFSET' : 'DESALIN.'}</span><b class="o"></b></div><div><span>RCS</span><b class="f"></b><i class="fb"><i></i></i></div><div><span>${L() ? 'TRIES' : 'INTENTOS'}</span><b class="a"></b></div></div>
+    <div class="dock-hint"></div>${opts.skippable ? `<button type="button" class="dock-skip">${L() ? 'Skip · Esc' : 'Saltar · Esc'}</button>` : ''}
+    ${isTouch ? `<div class="dock-stick"><i></i></div><div class="dock-btns"><button type="button" class="dock-b fwd">${L() ? 'CLOSE IN' : 'ACERCAR'}</button><button type="button" class="dock-b brk">${L() ? 'BRAKE' : 'FRENAR'}</button></div>` : ''}`;
+  el.querySelector('.dock-k').textContent = tx(opts.title || ['ACOPLE · COLUMBIA → EAGLE', 'DOCKING · COLUMBIA → EAGLE']);
+  el.querySelector('.dock-note').textContent = tx(opts.note || '');
+  const hint = el.querySelector('.dock-hint');
+  hint.textContent = isTouch ? tx(['Stick: alinea la cruz · ACERCAR / FRENAR: velocidad de cierre ≤ ' + tolClose.toFixed(1) + ' m/s', 'Stick: align the cross · CLOSE IN / BRAKE: closing speed ≤ ' + tolClose.toFixed(1) + ' m/s'])
+    : tx(['WASD / flechas: alinear · R acercar · F frenar · cierre ≤ ' + tolClose.toFixed(1) + ' m/s', 'WASD / arrows: align · R close in · F brake · closing ≤ ' + tolClose.toFixed(1) + ' m/s']);
+  document.body.append(el);
+  if (isTouch) { makeStick(el.querySelector('.dock-stick')); bindBtn(el.querySelector('.fwd'), 'dock-fwd'); bindBtn(el.querySelector('.brk'), 'dock-brk'); }
+  const q = (s) => el.querySelector(s); const tgt = q('.tgt');
+  let pulseT = 0, msgT = 0, off = null;
+  const say = (m, cls = '') => { hint.textContent = tx(m); hint.className = 'dock-hint ' + cls; msgT = 2.4; };
+  opts.onCleanup?.(() => { off?.(); off = null; el.remove(); }); // la fase murió (salir, reiniciar)
+  return new Promise((resolve) => {
+    let ended = false;
+    const finish = (ok, skipped = false) => {
+      if (ended) return; ended = true; removeEventListener('keydown', esc, true);
+      off?.(); el.classList.add('out'); setTimeout(() => el.remove(), 400); input.stick.x = input.stick.y = 0;
+      resolve({ ok, skipped, attempts: S.attempts, rcsUsed: Math.round(S.rcsUsed), closing: +S.closingAtContact.toFixed(2), secs: Math.round(S.secs), lateral: +Math.hypot(S.x, S.y).toFixed(2) });
+    };
+    const esc = (e) => { if (opts.skippable && e.code === 'Escape' && !e.repeat) { e.preventDefault(); e.stopPropagation(); finish(true, true); } };
+    addEventListener('keydown', esc, true); const sk = el.querySelector('.dock-skip'); if (sk) sk.onclick = () => finish(true, true);
+    off = loop((dt) => {
+      if (!dt) return; S.secs += dt;
+      let ax = 0, ay = 0, ar = 0;
+      if (AUTO()) { ax = -S.x * 0.8 - S.vx; ay = -S.y * 0.8 - S.vy; ar = (S.range > 1.5 ? 0.25 : 0.12) - S.vr; ar = Math.max(-1, Math.min(1, ar * 4)); dt *= 4; }
+      else {
+        ax = (down('KeyD', 'ArrowRight') ? 1 : 0) - (down('KeyA', 'ArrowLeft') ? 1 : 0) + input.stick.x;
+        ay = (down('KeyW', 'ArrowUp') ? 1 : 0) - (down('KeyS', 'ArrowDown') ? 1 : 0) + input.stick.y;
+        ar = (down('KeyR', 'Space') || bdown('dock-fwd') ? 1 : 0) - (down('KeyF', 'ShiftLeft', 'ShiftRight') || bdown('dock-brk') ? 1 : 0);
+        ax = Math.max(-1, Math.min(1, ax)); ay = Math.max(-1, Math.min(1, ay));
+      }
+      const thrusting = S.rcs > 0 && (Math.abs(ax) > 0.15 || Math.abs(ay) > 0.15 || ar !== 0);
+      if (S.rcs <= 0) { ax = ay = ar = 0; }
+      S.vx += ax * 0.16 * dt; S.vy += ay * 0.16 * dt; S.vr += ar * 0.07 * dt;
+      // deriva leve (actitud mantenida por la computadora, pero no perfecta)
+      S.pitch += (Math.sin(S.secs * 0.7) * 0.02 - S.pitch * 0.5) * dt; S.yaw += (Math.cos(S.secs * 0.5) * 0.02 - S.yaw * 0.5) * dt;
+      S.vx += S.yaw * 0.01 * dt; S.vy += S.pitch * 0.01 * dt;
+      if (thrusting) { const use = (Math.min(1, Math.abs(ax)) + Math.min(1, Math.abs(ay)) + Math.abs(ar)) * 1.6 * dt; S.rcs = Math.max(0, S.rcs - use); S.rcsUsed += use;
+        pulseT -= dt; if (pulseT <= 0) { pulseT = 0.28; a11sfx('c2_25_rcs_propulsor_pulso', 0.35); } }
+      S.x += S.vx * dt; S.y += S.vy * dt; S.range -= S.vr * dt;
+      S.range = Math.min(S.range, (opts.range0 ?? 14) + 8);
+      if (S.range <= 0) {
+        const lat = Math.hypot(S.x, S.y); S.closingAtContact = S.vr;
+        if (S.vr <= tolClose && lat <= tolLat) {
+          S.range = 0; S.contact = true; apply(S, dt); a11sfx('c2_25_acople_captura_pestillos', 0.8); setTimeout(() => finish(true), 900); off?.(); off = null; return;
+        }
+        S.attempts++; sfx('clunk', { vol: 0.7 }); S.range = 1.4; S.vr = -0.12; S.vx *= -0.3; S.vy *= -0.3;
+        say(S.vr > tolClose || S.closingAtContact > tolClose ? ['Demasiado rápido: la sonda rebota.', 'Too fast: the probe bounces off.'] : ['Desalineado: la sonda no entra en el cono.', 'Misaligned: the probe misses the drogue.'], 'bad');
+        if (S.attempts >= maxAttempts) { off?.(); off = null; setTimeout(() => finish(false), 600); return; }
+      }
+      apply(S, dt);
+      // HUD
+      const k = 60 / Math.max(0.6, tolLat * 4); tgt.setAttribute('transform', `translate(${(S.x * k).toFixed(1)} ${(-S.y * k).toFixed(1)})`);
+      const latOk = Math.hypot(S.x, S.y) <= tolLat, vOk = S.vr <= tolClose && S.vr > 0;
+      tgt.classList.toggle('ok', latOk); q('.r').textContent = S.range.toFixed(1) + ' m';
+      const vb = q('.v'); vb.textContent = S.vr.toFixed(2) + ' m/s'; vb.className = 'v ' + (S.range < 4 ? (vOk ? 'ok' : S.vr > tolClose ? 'bad' : '') : '');
+      q('.o').textContent = Math.round(Math.hypot(S.x, S.y) * 100) + ' cm'; q('.o').className = 'o ' + (latOk ? 'ok' : '');
+      q('.f').textContent = Math.round(S.rcs) + '%'; q('.fb i').style.width = S.rcs + '%'; q('.a').textContent = `${S.attempts}/${maxAttempts}`;
+      if (msgT > 0) { msgT -= dt; if (msgT <= 0) { hint.className = 'dock-hint'; hint.textContent = isTouch ? tx(['Alinea la cruz y acércate despacio', 'Align the cross and close in slowly']) : tx(['WASD / flechas: alinear · R acercar · F frenar', 'WASD / arrows: align · R close in · F brake']); } }
+      else if (S.range < 3 && S.vr > tolClose) { hint.textContent = tx(['Frena: demasiado rápido para el contacto', 'Brake: too fast for contact']); hint.className = 'dock-hint warn'; }
+      else if (S.rcs <= 0) { hint.textContent = tx(['RCS agotado: deriva hasta el contacto', 'RCS empty: drifting to contact']); hint.className = 'dock-hint warn'; }
+    });
+  });
+}

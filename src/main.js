@@ -10,6 +10,7 @@ import { tex, Q } from './core/engine.js';
 import { introScreen, introPlayed, startScreen, joinScreen, lobbyBg } from './ui/screens.js';
 import { shouldPlayIntro } from './ui/intro-policy.js';
 import './ui/radio.js';
+import './ui/bitacora.js';
 import './scenes/skyevents.js';
 
 const params = new URLSearchParams(location.search);

@@ -79,9 +79,11 @@ export function startScreen() {
           <button class="mbtn" data-a="settings"><span class="idx">06</span><span data-i="menu.settings"></span></button>
           <button class="mbtn" data-a="credits"><span class="idx">07</span><span data-i="menu.credits"></span></button>
         </div>
+        <button class="mbtn bitbtn" data-a="bitacora"><span class="idx">08</span><span><span data-i="menu.bitacora"></span><small class="bitpct"></small></span></button>
       </div>
     </div>
     <div class="foot"><span data-i="foot.ver"></span><a href="#" data-a="intro" data-i="menu.intro"></a></div></div>`, 'start', () => { cancelAnimationFrame(raf); clearTimeout(idleT); });
+  import('../game/story/state.js').then(({ bitacoraProgress }) => { const p = bitacoraProgress(), b = $('.bitpct', el); if (b) b.textContent = `${p.got}/${p.total} · ${p.pct}%`; }).catch(() => {});
   const langEl = $('.lang', el); const paintLang = () => $$('span', langEl).forEach((s) => s.classList.toggle('on', s.dataset.l === lang()));
   paintLang(); langEl.onclick = ui(() => { setLang(lang() === 'es' ? 'en' : 'es'); paintLang(); scanFx(); restartLogo(); });
   function restartLogo() { $$('.logo text', el).forEach((n) => { n.style.animation = 'none'; void n.getBBox(); n.style.animation = ''; }); }
@@ -98,7 +100,7 @@ export function startScreen() {
 }
 const ACTIONS = {
   solo: () => briefingScreen({ mode: 'solo' }), create: () => createScreen(), join: () => joinScreen(), flag: () => flagStudio(() => startScreen()),
-  missions: () => missionsScreen(), settings: () => settingsScreen(), credits: () => creditsScreen(), intro: () => introScreen(() => startScreen()),
+  missions: () => missionsScreen(), settings: () => settingsScreen(), credits: () => creditsScreen(), bitacora: () => import('./bitacora.js').then((m) => m.openBitacora()), intro: () => introScreen(() => startScreen()),
 };
 
 // ---------------- BRIEFING (solo) ----------------

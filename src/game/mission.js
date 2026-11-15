@@ -105,11 +105,13 @@ function pauseMenu() {
   pauseEl = h(`<div class="screen pause-screen"><div class="panel dialog pause-card">
     <div class="phase-tag">${kicker}</div>
     <h2 data-i="pause">${t('pause')}</h2><div class="pause-actions">
-    <button class="btn go" data-a="resume">${t('resume')}</button><button class="btn" data-a="restart">${t('restartPhase')}</button><button class="btn" data-a="quit">${t('quit')}</button></div></div></div>`);
+    <button class="btn go" data-a="resume">${t('resume')}</button><button class="btn" data-a="bitacora">${t('menu.bitacora')}</button><button class="btn" data-a="restart">${t('restartPhase')}</button><button class="btn" data-a="quit">${t('quit')}</button></div></div></div>`);
   bindUiSfx(pauseEl);
   document.body.append(pauseEl);
   pauseEl.onclick = (e) => {
-    const a = e.target.closest('[data-a]')?.dataset.a; if (!a) return; sfx('click'); const phase = M.phase; closePause();
+    const a = e.target.closest('[data-a]')?.dataset.a; if (!a) return; sfx('click');
+    if (a === 'bitacora') { import('../ui/bitacora.js').then((m) => m.openBitacora()); return; }
+    const phase = M.phase; closePause();
     if (a === 'resume' && lookActive()) requestLook();
     if (a === 'restart') { if (M.mode === 'coop') tx({ t: 'restart', ph: phase }); runPhase(phase); }
     if (a === 'quit') quitMission();
@@ -138,6 +140,7 @@ async function runPhase(phase) {
   try { res = await mod.default(ctx); } catch (e) { console.error(e); res = { score: 0, stats: { error: String(e) } }; }
   if (myCtx !== M?.ctx) return; // reiniciada o abandonada
   M.results[phase] = res; store.set('best', { ...store.get('best'), [phase]: Math.max(res.score, store.get('best')[phase] || 0) });
+  if (!M.practice && M.mode === 'solo' && M.role === 'pilot') import('./story/phase-cards.js').then((m) => m.phaseCards(phase, res)).catch((e) => console.warn('bitácora', e));
   const i = PHASES.indexOf(phase); const chained = !M.practice && i >= 0 && i < PHASES.length - 1;
   if (chained) { ctx.banner(t('ph.done'), '', 2400); await sleep(2500); if (myCtx !== M?.ctx || !M) return; }
   ctx.kill(); ctx.cc.dispose(); M.ctx = null;
@@ -187,6 +190,7 @@ export async function startMission({ mode = 'solo', role = 'pilot', practice = n
   }
   if (role === 'capcom') { const { runCapcom } = await import('../ui/capcom.js'); return runCapcom(M); }
   if (resume) toast(t('net.resume'), 'info');
+  if (!resume && !practice && mode === 'solo' && role === 'pilot') { const { newRun } = await import('./story/state.js'); newRun(); }
   if (!resume && !practice) { await storyGap('before:prep'); if (!M) return; }
   runPhase(resume?.phase || practice || 'prep');
 }

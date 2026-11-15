@@ -4,13 +4,19 @@ import { t, extend } from '../../core/i18n.js';
 import { $, $$, h, toast, achieve, clamp, damp, lerp, fmt } from '../../core/util.js';
 import { sfx, music, engine, stopEngine, voice } from '../../core/audio.js';
 import { down, bindBtn, bdown } from '../../core/input.js';
-import { isTouch, shared, dbg, AUTO, AUTO1 } from '../../core/store.js';
+import { isTouch, shared, dbg, AUTO, AUTO1, store } from '../../core/store.js';
 import { burnPrompt, objectiveCardHtml } from '../../ui/flight-hud.js';
 import { paintPrompt } from '../../ui/flight-hud-mount.js';
 import { makeCruise } from '../../scenes/ship.js';
 import { playCue, cueActive } from '../cutscenes/play.js';
 import { bindOrbitControls } from '../orbit-view.js';
 import { createOrbitState, resolveOrbitPosition, stepOrbit } from '../orbit-camera.js';
+import { show } from '../../ui/router.js';
+import { storyInPhase, playStory } from '../story/flow.js';
+import { runDocking } from '../story/docking.js';
+import { record } from '../story/state.js';
+import { whatIf } from '../story/decisions.js';
+import { playA11 } from '../../audio/a11-voice.js';
 extend({
   'c.dv': ['Δv', 'Δv'], 'c.ok': ['¡Quemado perfecto!', 'Perfect burn!'], 'c.short': ['Un poco corto — corrección de curso', 'A bit short — course correction'], 'c.long': ['Te pasaste — corrección de curso', 'Overburn — course correction'],
   'c.cczone': ['Control de Misión ve la zona verde. ¡Escúchalo!', 'Mission Control sees the green zone. Listen!'], 'c.wrong': ['Esa no es', 'Not that one'],
@@ -119,9 +125,36 @@ export default async function cruise(ctx) {
   // ---------- transposición, acople y extracción del LM (cinemática) ----------
   if (ship.userData.transpose) {
     lockView(null); title('c.td'); hint('c.td0'); ctx.cc.log('c.td'); const co = camOff.clone(), cl = camLook.clone(); camOff.set(7, 6, 30); camLook.set(0, 0, 0); // lado del sol (+x+z)
-    await ship.userData.transpose(ctx, (s) => { if (s === 'contact') { sfx('clunk', { vol: 0.8 }); shake = 0.05; setTimeout(() => (shake = 0), 250); ctx.banner(t('c.tdc'), '', 1500); ctx.cc.log('c.tdc', null, 'ok'); return; }
+    // modo historia: la aproximación final la vuela el jugador (Collins). La secuencia de ship.js se congela al empezar
+    // la aproximación (etapa 2) y, tras el contacto del minijuego, salta al instante del acople (T≈17 s) y sigue sola.
+    const story = storyInPhase(ctx); let hold = false, jump = 0, dockP = null;
+    const tctx = story ? Object.assign(Object.create(ctx), { loop: (f) => ctx.loop((dt, tt) => { if (hold) return; const j = jump; jump = 0; f(dt + j, tt); }) }) : ctx;
+    await ship.userData.transpose(tctx, (s) => { if (s === 'contact') { sfx('clunk', { vol: 0.8 }); shake = 0.05; setTimeout(() => (shake = 0), 250); ctx.banner(t('c.tdc'), '', 1500); ctx.cc.log('c.tdc', null, 'ok'); return; }
+      if (s === 2 && story && !dockP) { hold = true; dockP = playerDock().catch((e) => console.error('acople', e)).then(() => { jump = 6.05; hold = false; }); }
       const k = ['c.td0', 'c.td1', 'c.td2', null, 'c.td4', 'c.td5'][s]; if (k) hint(k); if (s === 2) camOff.set(3, 3.5, 17); if (s === 4) camOff.set(6, 6, 27); if (s === 5) camOff.set(9, 3, 20); ctx.cc.snap({ stage: 'td', s }); });
     camOff.copy(co); camLook.copy(cl); await ctx.wait(0.6);
+  }
+  // Cap. 2.5: Collins vuela la aproximación final al cono de Eagle (minijuego) y la decisión del guion sale de cómo lo hizo
+  async function playerDock() {
+    let csm = ship.getObjectByName('CM'); while (csm && csm.parent !== ship) csm = csm.parent;
+    const s4 = ship.children.find((c) => c !== csm && c.getObjectByName?.('j2-thrust-point'));
+    if (!csm || !s4) return;
+    const yTgt = s4.getObjectByName('lm-docking-target')?.position.y ?? 5.72, y0 = csm.position.y, range0 = Math.max(6, y0 - yTgt);
+    if (ship.userData.interior) lockView('win'); else camOff.set(3, 3.5, 17);
+    title('c.td'); hint('c.td2');
+    const res = await runDocking({
+      loop: (f) => ctx.loop(f), onCleanup: (f) => ctx.onCleanup(f), range0, x0: 0.7, y0: -0.45,
+      title: ['ACOPLE · COLUMBIA → EAGLE (EN EL SLA)', 'DOCKING · COLUMBIA → EAGLE (IN THE SLA)'],
+      note: ['Eres Collins. Alinea la sonda con el cono de Eagle.', 'You are Collins. Line the probe up with Eagle’s drogue.'],
+      apply: (S) => csm.position.set(S.x, yTgt + Math.max(0, S.range), S.y),
+    });
+    lockView(null); camOff.set(3, 3.5, 17);
+    if (!res.ok) await whatIf({ title: ['¿Y si…? Collins falla el contacto', 'What if…? Collins misses the contact'],
+      text: ['Tres contactos fallidos. En la realidad no hubo drama: Collins había ensayado esta maniobra cientos de veces en el simulador y acopló a la primera, despacio y con poco combustible. La computadora completa ahora el acople.',
+        'Three failed contacts. In reality there was no drama: Collins had rehearsed this maneuver hundreds of times in the simulator and docked on the first try, slowly and with little fuel. The computer now completes the docking.'] });
+    const slow = res.ok && res.closing <= 0.2 && res.rcsUsed <= 45;
+    record('c2-docking', slow ? 'slow' : 'fast', { historic: slow, trust: slow ? 5 : 0, morale: slow ? 0 : -5 });
+    if (slow) setTimeout(() => { if (ctx.dead) return; playA11('voz_en_clonada/c2_dec_aldrin_bonito_mike_en'); ctx.banner('ALDRIN', store.get('lang') === 'en' ? '“Beautiful, Mike!”' : '«Bonito, Mike».', 2600, 'good'); }, 1600);
   }
   viewLock = false;
   // ---------- crucero (días) + alineación + calcetín ----------
@@ -155,6 +188,12 @@ export default async function cruise(ctx) {
     ctx.cc.snap({ stage: 'align', targets, got: [] }, true);
   });
   st.align = { time: ctx.time - tA, wrong: st.wrong }; layer.innerHTML = ''; sprites.forEach((s) => W.scene.remove(s)); ctx.banner(t('c.alignok'), '', 1500); ctx.cc.log('c.alignok', null, 'ok'); await ctx.wait(1); rollK = 1; lockView(null, false);
+  // Cap. 3.2: noche en Columbia (modo historia). El crucero se congela mientras dura y luego se recuperan mundo, HUD y música.
+  if (storyInPhase(ctx)) {
+    const cw = coastOn, sv = sock.visible; coastOn = false; sock.visible = false;
+    await playStory('night', { ctx }); if (ctx.dead) return { score: 0, stats: {} };
+    ctx.world(W); el.classList.remove('out'); show(el, 'phase-cruise'); coastOn = cw; sock.visible = sv && !st.sock; music('cruise', { vol: 0.45 });
+  }
   // esperar a llegar a la Luna
   title('c.coast'); hint('pa.tli'); await ctx.until(() => k >= 1); coastOn = false; days.style.display = 'none';
   // ---------- LOI tras la Luna: LOS ----------

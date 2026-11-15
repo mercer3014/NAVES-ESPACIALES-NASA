@@ -21,6 +21,16 @@ import { ground, PAD } from '../../sim/lander.js';
 import { dotTex } from '../../scenes/space.js';
 import { playCue } from '../cutscenes/play.js';
 import { addEvaProps } from '../../scenes/eva-props.js';
+import { setPaused } from '../../core/engine.js';
+import { storyInPhase } from '../story/flow.js';
+import { ask } from '../story/decisions.js';
+import { unlock } from '../story/state.js';
+import { a11sfx } from '../../audio/a11-score.js';
+// Bitácora: tarjeta por experimento del EASEP; la Tierra (moonsurface.js) está en (900, 1100, −2600)
+const SCIENCE_CARD = { PSEP: 'sismometro', SWC: 'lamina-solar', LRRR: 'retrorreflector' };
+const EARTH_XZ = [900, -2600];
+// decisión del guion en plena EVA: el mundo se congela mientras el jugador elige
+const askPaused = async (id) => { setPaused(true); try { return await ask(id); } finally { setPaused(false); } };
 extend({
   'e.ladder': ['Baja la escalera', 'Climb down the ladder'], 'e.ladderK': ['Mantén S / ↓ / Espacio para bajar', 'Hold S / ↓ / Space to climb down'], 'e.ladderT': ['Mantén ↓ para bajar', 'Hold ↓ to climb down'],
   'e.rung': ['Peldaño {n} / 9', 'Rung {n} / 9'], 'e.step': ['Da el primer paso', 'Take the first step'], 'e.stepK': ['Pulsa E', 'Press E'], 'e.stepT': ['Toca PASO', 'Tap STEP'],
@@ -52,7 +62,7 @@ export default async function eva(ctx) {
   const ground = await W.lunarPatch(lx, 0); const boot = await W.bootKit.catch(() => null), kit = await W.rocksReady; // superficie del artista (tile 32 m ×3×3) centrada en el LM
   const ly = ground(lx); W.setLM(lx, ly, 0, 0, false);
   const lmYaw = Math.PI / 2; W.body.rotation.y = lmYaw; if (L0.res === 'hard') W.body.rotation.x = 0.06;
-  W.scene.fog.density = 0.0009; music('eva', { vol: 0.35 });
+  W.scene.fog.density = 0.0009; music(storyInPhase(ctx) ? 'a11/music/mus_c5_magnifica_desolacion' : 'eva', { vol: 0.35 });
   const ast = await makeAstronaut(ctx.flag, ctx.name); W.scene.add(ast.root); ctx.onCleanup(() => ast.dispose?.()); W.focus(ast.root, 18);
   const st = { step: false, sample: false, flag: false, depth: 0, lean: 0, bar: 0, photo: 0, golf: false, hits: [], t0: 0 };
   // ---------- HUD ----------
@@ -97,8 +107,9 @@ export default async function eva(ctx) {
   if (science) { ctx.loop(dt => science.update(dt)); ctx.onCleanup(() => science.dispose()); }
   // herramientas (eva-tools.glb) y evento oculto «Lo que dejamos atrás» (memorial-kit.glb); nunca bloquean la fase
   const evaProps = await addEvaProps(W, lx, ground, { seed: ctx.seed + 5, skip: science ? ['geo-hammer'] : [],
-    onFound: (n, k, m) => { sfx('ok', { vol: 0.4 }); toast(t('e.mem', { n: k, m, name: t('e.mem.' + n) }), 'info'); ctx.cc.log('e.mem.' + n, null, 'ok'); },
-    onComplete: () => { sfx('powerup'); achieve('memorial'); ctx.banner(t('e.memDone'), t('e.memDoneS'), 4200, 'good'); } }).catch((e) => { console.warn('props EVA no disponibles', e); return null; });
+    onFound: (n, k, m) => { sfx('ok', { vol: 0.4 }); toast(t('e.mem', { n: k, m, name: t('e.mem.' + n) }), 'info'); ctx.cc.log('e.mem.' + n, null, 'ok');
+      if (n === 'apollo1-patch' && storyInPhase(ctx)) askPaused('c5-patch'); },
+    onComplete: () => { sfx('powerup'); achieve('memorial'); ctx.banner(t('e.memDone'), t('e.memDoneS'), 4200, 'good'); unlock('paquete-recuerdos'); unlock('h-dejamos'); } }).catch((e) => { console.warn('props EVA no disponibles', e); return null; });
   if (evaProps) ctx.onCleanup(() => evaProps.dispose());
   const top = eagle ? new THREE.Vector3(lx, ly + 3.3, 2.47) : new THREE.Vector3(lx, ly + 2.9, 2.35), bot = eagle ? new THREE.Vector3(lx, ly + 1.09, 3.98) : new THREE.Vector3(lx, ly + 0.75, 3.55);
   const ladDir = bot.clone().sub(top); const ladLen = ladDir.length(); ladDir.normalize();
@@ -274,8 +285,12 @@ export default async function eva(ctx) {
     if (!nearby || scienceBusy || P.mode !== 'walk' || P.act || !science.start(nearby)) return;
     const task = nearby; scienceBusy = true; sb.style.display = 'none'; P.mode = 'science'; P.vx = P.vz = P.speed = 0; P.air = false; P.y = ground(P.x, P.z);
     P.yaw = Math.atan2(task.p.x - P.x, task.p.z - P.z); P.act = 'point';
+    const earthYaw = Math.atan2(EARTH_XZ[0] - P.x, EARTH_XZ[1] - P.z), facing = Math.abs(Math.atan2(Math.sin(P.yaw - earthYaw), Math.cos(P.yaw - earthYaw)));
     await ctx.wait(task.duration); P.act = null; P.mode = 'walk'; scienceBusy = false;
     sfx('ok'); ctx.banner(t('e.scienceDone'), t('e.' + task.name), 1600, 'good'); ctx.cc.log('e.' + task.name, null, 'ok');
+    unlock(SCIENCE_CARD[task.name]);
+    // evento oculto «Un láser desde la Tierra»: el retrorreflector desplegado de frente a la Tierra (±25°)
+    if (task.name === 'LRRR' && facing < 0.44 && unlock('h-laser')) a11sfx('e_e3_laser_retrorreflector', 0.5);
   };
   sb.onclick = deployScience; ctx.onCleanup(() => { sb.onclick = null; });
   ctx.loop(() => {
@@ -309,7 +324,7 @@ export default async function eva(ctx) {
     await ctx.until(() => AUTO() || ACT());
     const fl = $('.flash', el); fl.style.transition = 'opacity .2s'; fl.style.opacity = 1; await ctx.wait(0.2); fl.style.transition = 'opacity 1.4s'; fl.style.opacity = 0;
     { const tz = padTop.z + 0.38; P.z = tz; P.y = ground(P.x, tz); P.act = 'step'; P.actK = 0; playCue('firststep', { anchor: () => ast.root, ctx }); await new Promise((res) => { let k = 0; const off = ctx.loop((dt) => { k = Math.min(1, k + dt / 4); P.actK = k; if (k >= 1) { off(); res(); } }); }); P.act = null; }
-    footprint(P.x - 0.1, P.z + 0.05, 0, true); puff(P.x, P.z, 18, 0.8); sfx('step1'); st.step = true; achieve('first'); ctx.cc.log('e.quote', null, 'ok');
+    footprint(P.x - 0.1, P.z + 0.05, 0, true); puff(P.x, P.z, 18, 0.8); sfx('step1'); st.step = true; achieve('first'); if (storyInPhase(ctx)) { music(null, { fade: 150 }); setTimeout(() => !ctx.dead && music('a11/music/mus_c5_magnifica_desolacion', { vol: 0.3, fade: 4000 }), 20000); } // el guion pide silencio total en el primer paso ctx.cc.log('e.quote', null, 'ok');
     const spoken = commsMode() !== 'off'; const qq = $('.quote', el);
     if (spoken) { voice('smallstep'); qq.textContent = t('e.quote'); qq.style.display = ''; }
     prompt('');
@@ -387,6 +402,9 @@ export default async function eva(ctx) {
   viewMode = 'outro'; if (isTouch) { $('.tc-stick', el).style.display = 'none'; $('.jumpbtn', el).style.display = 'none'; } actBtn.style.display = 'none'; P.act = 'salute'; title('e.done'); prompt(''); music('victory', { vol: 0.5 }); ctx.banner(t('e.done'), 'Tranquility Base · 20·VII·1969', 3200, 'good');
   let ang = 0; const c0 = new THREE.Vector3(spot.x, spot.y, spot.z); ctx.loop((dt) => { ang += dt * 0.22; cam.position.set(c0.x + Math.sin(ang) * 7, c0.y + 2.2, c0.z + Math.cos(ang) * 7); cam.lookAt(c0.x, c0.y + 1.2, c0.z); cam.fov = cam.aspect < 1 ? 68 : 50; cam.updateProjectionMatrix(); });
   await ctx.wait(AUTO() ? 2 : 2.4); P.act = 'wave'; await ctx.wait(AUTO() ? 0.2 : 2.6); golfLoop();
+  unlock('bandera');
+  // cap. 5.3: un momento a solas antes de volver al trabajo (la opción emotiva exige Confianza ≥ 70)
+  if (storyInPhase(ctx) && !ctx.dead) await askPaused('c5-moment');
   // puntaje
   const goodHits = st.hits.filter(Boolean).length; const timeS = clamp(1 - (tEva - st.t0 - 60) / (O2 - 60), 0, 1);
   const score = Math.round(clamp((st.step ? 10 : 0) + (st.sample ? 15 : 0) + goodHits * 7 + (Math.abs(st.lean) < 6 ? 6 : 2) + 3 + st.photo * 30 + timeS * 15, 0, 100));

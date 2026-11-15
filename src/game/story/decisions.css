@@ -1,0 +1,24 @@
+.dec-overlay{position:fixed;inset:0;z-index:120;display:grid;place-items:end center;padding:16px 16px calc(28px + var(--safe-b,0px));background:linear-gradient(#0007,#000e 60%);opacity:0;transition:opacity .3s}
+.dec-overlay.on{opacity:1}
+.dec-card{width:min(640px,100%);color:#eef2f8;font-family:Chakra,system-ui,sans-serif}
+.dec-k{font-family:Mono,monospace;font-size:11px;letter-spacing:.28em;color:#ffcf6a;margin-bottom:6px}
+.dec-q{margin:0 0 14px;font-size:clamp(18px,3.4vw,26px);line-height:1.25;font-weight:700;text-shadow:0 2px 12px #000}
+.dec-opts{display:grid;gap:8px}
+.dec-opt{all:unset;box-sizing:border-box;display:grid;grid-template-columns:28px 1fr;gap:2px 10px;align-items:center;padding:12px 14px;min-height:48px;border-radius:10px;background:#0b0f18e6;border:1px solid #ffffff22;cursor:pointer;transition:border-color .15s,background .15s,transform .1s}
+.dec-opt:hover:not(:disabled),.dec-opt:focus-visible{border-color:#ffcf6a;background:#151b28f0}
+.dec-opt:active:not(:disabled){transform:scale(.99)}
+.dec-n{grid-row:span 2;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font:700 12px Mono,monospace;background:#ffffff14;color:#cfd6e4}
+.dec-l{font-size:15px;font-weight:600}
+.dec-opt small{grid-column:2;color:#aab3c2;font-size:13px}
+.dec-opt em{grid-column:2;font-style:normal;font-size:12px;color:#ff9c7a}
+.dec-opt.locked{opacity:.45;cursor:not-allowed}
+.dec-opt.chosen{border-color:#eef2f8;background:#1b2232f5}
+.dec-opt.chosen.gold,.dec-opt.gold.chosen{border-color:#ffcf6a;box-shadow:0 0 0 1px #ffcf6a55,0 0 24px #ffcf6a33}
+.dec-opt:disabled:not(.chosen):not(.locked){opacity:.35}
+.dec-timer{height:4px;margin-top:12px;background:#ffffff18;border-radius:4px;overflow:hidden}
+.dec-timer i{display:block;height:100%;background:#ff5a3c;transform-origin:left}
+.dec-echo{min-height:22px;margin-top:12px;font-size:14px;color:#cfd6e4;font-style:italic}
+.dec-echo.gold{color:#ffcf6a}
+.dec-overlay.whatif{place-items:center;background:#000d}
+.whatif .dec-card{filter:grayscale(.2)}
+.whatif-t{font-family:Exo,system-ui,sans-serif;font-size:16px;line-height:1.55;color:#d8dee8;margin:0 0 16px}

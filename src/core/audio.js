@@ -26,7 +26,7 @@ export function music(name, { loop = true, fade = 1500, vol: v = 0.5 } = {}) {
   const old = curMusic, oldId = curMusicId; curName = name;
   if (old && oldId != null) { old.fade(old.volume(oldId), 0, fade, oldId); setTimeout(() => old.stop(oldId), fade + 50); }
   if (!name) { curMusic = null; curMusicId = null; return; }
-  if (!M[name]) M[name] = new Howl({ src: [`/audio/music/${name}.mp3`], loop, html5: false, preload: true });
+  if (!M[name]) M[name] = new Howl({ src: [name.includes('/') ? `/audio/${name}.mp3` : `/audio/music/${name}.mp3`], loop, html5: false, preload: true });
   curMusic = M[name]; curMusic._base = v; curMusic.loop(loop);
   curMusicId = curMusic.play(); curMusic.volume(0, curMusicId); curMusic.fade(0, v * vol().music * duck, fade, curMusicId);
 }

@@ -5,6 +5,7 @@ import { $, $$, h, toast, achieve, clamp, damp, fmt } from '../../core/util.js';
 import { sfx, music, voice, engine, stopEngine, rumble, stopRumble } from '../../core/audio.js';
 import { axis, down, pressed, bindBtn, bdown, bpressed, makeStick, makeThrottle, input } from '../../core/input.js';
 import { isTouch, DEBUG, dbg, AUTO } from '../../core/store.js';
+import { storyInPhase } from '../story/flow.js';
 import { launchPrompt, objectiveCardHtml } from '../../ui/flight-hud.js';
 import { paintPrompt } from '../../ui/flight-hud-mount.js';
 import { makePad, H, BASE_Y } from '../../scenes/pad.js';
@@ -59,7 +60,7 @@ export default async function launch(ctx) {
     if (Math.abs(cam.fov - 50) > 0.4 || cam.near !== 0.4) { cam.fov = 50; cam.near = 0.4; cam.far = 60000; cam.updateProjectionMatrix(); }
   };
   const coop = ctx.cc.coop, D = ctx.diff, tol = 7 * D.tol;
-  music('tension', { vol: 0.4 });
+  music(storyInPhase(ctx) ? 'a11/music/mus_c2_cuenta_regresiva_tension' : 'tension', { vol: 0.4 });
   const el = ctx.hud(`${objectiveCardHtml({ kicker: `${t('ph.n')} 02 · ${t('ph.launch')}`, titleHtml: '<div class="phase-title">Saturn V</div>', bodyHtml: `<p class="mhud-note">${t('l.hint')}</p>` })}
     <aside class="mhud-rail"><div class="tele"><div class="tele-grid">
       <div><div class="k">${t('l.alt')}</div><div class="v v-alt">0 km</div></div><div><div class="k">${t('l.vel')}</div><div class="v v-vel">0 m/s</div></div>

@@ -1,62 +1,115 @@
-// Orden narrativo del guion v4 alrededor de las 5 fases jugables. Solo en la misión Apolo completa en solitario:
+// Orden narrativo del guion alrededor de las 5 fases jugables. Solo en la misión Apolo completa en solitario:
 // en práctica, cooperativo, reanudación o piloto automático de QA se saltan (las fases y su puntaje no cambian).
 // Cada interludio es saltable con Esc / Enter y nunca bloquea la misión; si una escena falla, se sigue con la siguiente.
-// Reúne tres reproductores: story/ (playa, disyuntor), cutscenes/cine-index.js (Tierra: hotel, MOCR, casa)
-// y cutscenes/cine-play.js (cap. 7 y epílogo: Laika, amerizaje, LRL, desfile).
+// Reproductores: story/ (escenas propias), cutscenes/cine-index.js (Tierra: hotel, MOCR, casa) y cutscenes/cine-play.js
+// (cap. 7 y epílogo). Cada escena aplica su banda sonora (audio/a11-score.js) y desbloquea sus tarjetas de la Bitácora.
 import { AUTO, dbg } from '../../core/store.js';
 import { stopCue } from '../cutscenes/play.js';
 import { show } from '../../ui/router.js';
+import { score, stopAmbience } from '../../audio/a11-score.js';
+import { unlock, chose, record, run } from './state.js';
+import { ask } from './decisions.js';
 
 const own = (load) => async (o) => { const m = await load(); return m.default(o); };
-// cinemáticas de la Tierra (trabajador B): devuelven { id, played, skipped }
+// cinemáticas de la Tierra: devuelven { id, played, skipped }
 const earth = (id) => async (o) => { if (!o.ctx) show('<div class="screen"></div>', 'story-' + id); /* entre fases: quita el HUD anterior */ const m = await import('../cutscenes/cine-index.js'); return m.playCinematic(id, o); };
-// cap. 7 + epílogo (trabajador C); rickHeard = ruta histórica del cap. 1 (Neil les dice la verdad)
-const epi = (id) => async (o) => { if (!o.ctx) show('<div class="screen"></div>', 'story-' + id); /* entre fases: quita el HUD anterior */ const m = await import('../cutscenes/cine-play.js'); return m.playCine(id, { vars: { rickHeard: true }, ...o }); };
+// cap. 7 + epílogo; rickHeard depende de lo que Neil les dijo a sus hijos en el cap. 1
+const epi = (id) => async (o) => { if (!o.ctx) show('<div class="screen"></div>', 'story-' + id); const m = await import('../cutscenes/cine-play.js'); return m.playCine(id, { vars: { rickHeard: chose('c1-kids') !== 'downplay' }, ...o }); };
+// decisión sola entre escenas (sobre la última imagen)
+const decide = (id, then) => async () => { const opt = await ask(id); then?.(opt); return { id, opt }; };
 
 // id → función async (opts) => resultado
 export const STORY = {
   'hotel-prologue': earth('hotel-prologue'),
   'mocr-tough': earth('mocr-tough'),
   'house-farewell': earth('house-farewell'),
+  kids: decide('c1-kids'),
+  ksc: own(() => import('./ksc.js')),
   beach: own(() => import('./beach.js')),
+  night: own(() => import('./night.js')),
   'mocr-briefing': earth('mocr-briefing'),
   'mocr-1202': earth('mocr-1202'),
   'mocr-gonogo': earth('mocr-gonogo'),
   'mocr-landed': earth('mocr-landed'),
   'house-landed': earth('house-landed'),
+  'pre-eva': decide('c5-rest'),
+  'collins-solo': own(() => import('./collins-solo.js')),
+  boss: own(() => import('../boss/story.js')), // No Canon, opcional: pregunta «Soñar / Saltar» antes
   breaker: own(() => import('./breaker.js')),
-  boss: own(() => import('../boss/story.js')), // No Canon, opcional: pregunta «Soñar / Saltar» antes (trabajador D)
+  liftoff: own(() => import('./liftoff.js')),
+  reunion: own(() => import('./reunion.js')),
+  tei: own(() => import('./tei.js')),
   laika: epi('laika'),
+  'laika-talk': decide('c7-laika', (o) => { if (o === 'belka') unlock('pushinka'); }),
+  tv: own(() => import('./tv.js')),
+  reentry: own(() => import('./reentry.js')),
   recovery: epi('recovery'),
   lrl: epi('lrl'),
   parade: epi('parade'),
+  epilogue: own(() => import('./epilogue.js')),
 };
-// títulos para el menú «Escenas del guion» (orden del guion)
+// títulos para el menú «Escenas del guion» (orden del guion); las decisiones sueltas no aparecen
 export const STORY_TITLES = {
   'hotel-prologue': ['Prólogo · Enero de 1967', 'Prologue · January 1967'],
   'mocr-tough': ['Prólogo · Duros y competentes', 'Prologue · Tough and competent'],
   'house-farewell': ['Cap. 1 · La despedida', 'Ch. 1 · The farewell'],
+  ksc: ['Cap. 1 · Centro Espacial Kennedy', 'Ch. 1 · Kennedy Space Center'],
   beach: ['Cap. 1 · La playa de Cabo Kennedy', 'Ch. 1 · The Cape Kennedy beach'],
+  night: ['Cap. 3 · Noche en Columbia', 'Ch. 3 · Night aboard Columbia'],
   'mocr-briefing': ['Cap. 4 · Cierren las puertas', 'Ch. 4 · Lock the doors'],
   'mocr-1202': ['Cap. 4 · Alarma 1202 en Houston', 'Ch. 4 · 1202 alarm in Houston'],
   'mocr-gonogo': ['Cap. 4 · GO / NO GO', 'Ch. 4 · GO / NO GO'],
   'mocr-landed': ['Cap. 4 · Base Tranquilidad', 'Ch. 4 · Tranquility Base'],
   'house-landed': ['Cap. 4 · En casa de los Armstrong', 'Ch. 4 · At the Armstrong home'],
-  breaker: ['Cap. 6 · El disyuntor', 'Ch. 6 · The circuit breaker'],
+  'collins-solo': ['Cap. 6 · El lado silencioso', 'Ch. 6 · The silent side'],
   boss: ['Cap. 6 · Polvo y fuego (No Canon)', 'Ch. 6 · Dust and fire (Non-canon)'],
+  breaker: ['Cap. 6 · El disyuntor', 'Ch. 6 · The circuit breaker'],
+  liftoff: ['Cap. 6 · Despegue de la Luna', 'Ch. 6 · Lunar liftoff'],
+  reunion: ['Cap. 6 · El reencuentro', 'Ch. 6 · The reunion'],
+  tei: ['Cap. 7 · Rumbo a casa', 'Ch. 7 · Homeward bound'],
   laika: ['Cap. 7 · La perrita', 'Ch. 7 · The little dog'],
+  tv: ['Cap. 7 · La última transmisión', 'Ch. 7 · The last broadcast'],
+  reentry: ['Cap. 7 · Reentrada', 'Ch. 7 · Reentry'],
   recovery: ['Cap. 7 · Volver a casa', 'Ch. 7 · Coming home'],
   lrl: ['Cap. 7 · Cuarentena', 'Ch. 7 · Quarantine'],
   parade: ['Epílogo · Un gran salto', 'Epilogue · One giant leap'],
+  epilogue: ['Epílogo · Lo que quedó', 'Epilogue · What remained'],
 };
-// momento → ids en orden del guion. La alarma 1202 (cap. 4.4) y el alunizaje (4.6–4.7) se lanzan desde descent.js.
+// tarjetas de «Momento» y objetos que se ganan al ver cada escena (aunque se salte)
+export const SCENE_CARDS = {
+  'hotel-prologue': ['tratado-1967', 'apolo-1', 'foto-karen', 'libreta-ed-white'],
+  'mocr-tough': ['duros-competentes', 'pizarra-kranz'],
+  'house-farewell': ['la-despedida', 'saturn-v'],
+  ksc: ['deke-slayton', 'primer-paso-quien'],
+  beach: ['parche-mision', 'sobres-firmados'],
+  'mocr-briefing': ['chaleco-kranz', 'hoja-garman'],
+  'mocr-1202': ['alarmas-1202'],
+  'mocr-gonogo': ['go-aterrizar'],
+  'mocr-landed': ['eagle-aterrizo'],
+  'house-landed': ['squawk-box'],
+  'collins-solo': ['ventana-trasera'],
+  breaker: ['motor-ascenso'],
+  liftoff: ['despegue-lunar'],
+  reunion: ['reencuentro'],
+  tei: ['tei'],
+  laika: ['laika'],
+  tv: ['ultima-transmision'],
+  reentry: ['escudo-termico'],
+  recovery: ['amerizaje'],
+  lrl: ['cuarentena', 'ventana-cuarentena'],
+  parade: ['desfile'],
+  epilogue: ['legado-lrrr', 'artemis'],
+};
+// momento → ids en orden del guion. La alarma 1202 (cap. 4.4) y el alunizaje (4.6–4.7) se lanzan desde descent.js;
+// la noche en Columbia (cap. 3.2) desde cruise.js, entre la alineación y la LOI.
 export const SLOTS = {
   'before:prep': ['hotel-prologue', 'mocr-tough'],
-  'before:launch': ['house-farewell', 'beach'],
+  'before:launch': ['house-farewell', 'kids', 'ksc', 'beach'],
   'before:cruise': [],
   'before:descent': ['mocr-briefing'],
   'after:descent': [],
-  'after:eva': ['breaker', 'boss', 'laika', 'recovery', 'lrl', 'parade'],
+  'before:eva': ['pre-eva'],
+  'after:eva': ['collins-solo', 'boss', 'breaker', 'liftoff', 'reunion', 'tei', 'laika', 'laika-talk', 'tv', 'reentry', 'recovery', 'lrl', 'parade', 'epilogue'],
 };
 export const STORY_IDS = Object.keys(STORY);
 const params = new URLSearchParams(location.search);
@@ -65,13 +118,19 @@ export const storyEnabled = () => !AUTO() && !params.has('nostory');
 export const storyInPhase = (ctx) => storyEnabled() && !ctx.practice && ctx.mode === 'solo' && ctx.role === 'pilot';
 
 export async function playStory(id, opts = {}) {
-  const run = STORY[id]; if (!run) return { id, played: false };
-  stopCue();
-  try { const r = await run(opts); dbg('storyDone', id); return { id, played: true, ...(r || {}) }; }
-  catch (e) { console.error('interludio ' + id, e); return { id, played: false, error: String(e) }; }
+  const run_ = STORY[id]; if (!run_) return { id, played: false };
+  stopCue(); score(id);
+  try {
+    const r = await run_(opts); dbg('storyDone', id);
+    for (const c of SCENE_CARDS[id] || []) unlock(c);
+    if (id === 'breaker' && !r?.skipped) record('c6-breaker', 'pen', { historic: true });
+    return { id, played: true, ...(r || {}) };
+  } catch (e) { console.error('interludio ' + id, e); return { id, played: false, error: String(e) }; }
+  finally { stopAmbience(); }
 }
 // alive(): false si la misión se abandonó a mitad de un interludio
 export async function interlude(slot, { alive = () => true } = {}) {
   if (!storyEnabled()) return;
   for (const id of SLOTS[slot] || []) { if (!alive()) return; await playStory(id); }
 }
+dbg('storyRun', run);

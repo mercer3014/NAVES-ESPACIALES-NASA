@@ -18,6 +18,15 @@ export function voiceLine(en, { vol = 1 } = {}) {
   h.play(); cur = h; curFile = file;
 }
 
+// Clip concreto del pack (p. ej. 'nasa_real/cap6_despegue_lunar_cuenta'); comparte canal con las líneas de voz.
+export function playA11(file, { vol = 1 } = {}) {
+  if (commsMode() === 'off') return null;
+  stopVoiceLine();
+  const h = new Howl({ src: [`/audio/a11/${file}.mp3`], html5: true, volume: vol * (store.get('vol')?.voice ?? 1) });
+  h.once('end', () => { if (cur === h) { h.unload(); cur = null; curFile = null; } });
+  h.play(); cur = h; curFile = file; return h;
+}
+
 export function stopVoiceLine() {
   if (!cur) return;
   const h = cur; cur = null; curFile = null;

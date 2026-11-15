@@ -11,9 +11,13 @@ import { create, step, guide, agl, judge, hoverThr, brakingMargin, vsCue, LM, PA
 import { attachLook } from '../../core/look.js';
 import { playCue } from '../cutscenes/play.js';
 import { storyInPhase, playStory } from '../story/flow.js';
+import { ask, quiz, whatIf } from '../story/decisions.js';
+import { flagOf, unlock } from '../story/state.js';
+import { a11sfx } from '../../audio/a11-score.js';
 import { bindOrbitControls } from '../orbit-view.js';
 import { createOrbitState, applyPointerDelta, resolveOrbitPosition, stepOrbit } from '../orbit-camera.js';
 extend({
+  'd.1202bales': ['Armstrong pide una lectura. En Houston, todas las miradas van a Guiado: Steve Bales, 26 años.', 'Armstrong asks for a reading. In Houston, every eye turns to Guidance: Steve Bales, age 26.'],
   'd.p63': ['PROG 63 · Frenado', 'PROG 63 · Braking'], 'd.p64': ['PROG 64 · Aproximación', 'PROG 64 · Approach'], 'd.p66': ['PROG 66 · Manual', 'PROG 66 · Manual'],
   'd.watch': ['La computadora vuela. Observa la telemetría…', 'The computer is flying. Watch the telemetry…'], 'd.pressG': ['Pulsa G o GO', 'Press G or GO'],
   'd.hard': ['Alunizaje duro', 'Hard landing'], 'd.hardD': ['Una pata se dobló, pero estáis a salvo.', 'A leg bent, but you are safe.'],
@@ -35,7 +39,8 @@ const fill = (s, o) => s.replace(/\{(\w+)\}/g, (_, k) => o[k]);
 
 export default async function descent(ctx) {
   const D = ctx.diff, coop = ctx.cc.coop; const W = makeMoonSurface({ seed: ctx.seed }); ctx.world(W); const cam = W.camera;
-  music('tension', { vol: 0.35 });
+  const tense = storyInPhase(ctx) ? 'a11/music/mus_c4_descenso_tension_pulso_loop' : 'tension';
+  music(tense, { vol: 0.35 });
   const el = ctx.hud(`${objectiveCardHtml({ kicker: `${t('ph.n')} 04 · ${t('ph.descent')}`, titleHtml: `<div class="phase-title prog">${t('d.p63')}</div>`, bodyHtml: `<p class="mhud-note hint">${t('d.watch')}</p>` })}
     <aside class="mhud-rail"><div class="tele dtele"><div class="tele-grid">
       <div><div class="k">${t('d.alt')}</div><div class="v alt">—</div></div><div><div class="k">${t('d.vs')}</div><div class="v vs">—</div></div>
@@ -171,7 +176,7 @@ export default async function descent(ctx) {
     $('.lpd', el).style.display = ''; $('.viewbtn', el).style.display = ''; if (isTouch) ['.tc-stick', '.tc-throttle', '.rodbtn'].forEach((q) => ($(q, el).style.display = ''));
     $('.l-cont', tele).classList.remove('on', 'blue'); W.contactL.intensity = 0;
   }
-  await handover(); music('tension', { vol: 0.5 });
+  await handover(); music(tense, { vol: 0.5 });
   // ---- 3) alunizaje / reintentos ----
   let J;
   for (;;) {
@@ -206,9 +211,30 @@ export default async function descent(ctx) {
   shared.landing = { x: s.x, res: st.result };
   return { score, stats: { result: st.result, vs: J ? +J.vs.toFixed(2) : null, hs: J ? +J.hs.toFixed(2) : null, fuel: Math.round(sec()), pad: J ? Math.round(J.pad) : null, alarm: st.alarmT, crashes: st.crashes, rod: rodUsed } };
 
+  // Cap. 4.4 en el modo historia: Armstrong informa y la decisión es de Houston. El jugador pasa a ser Steve Bales (10 s).
+  async function alarmAsBales(box) {
+    box.innerHTML = `<div class="panel alarmpanel" style="text-align:center;border-color:var(--red)"><div class="mono" style="color:var(--red);font-size:clamp(34px,8vw,64px);letter-spacing:.1em">1202</div><h3>${t('d.1202')}</h3><p>${t('d.1202bales')}</p></div>`;
+    ctx.cc.log('d.1202', null, 'bad'); a11sfx('c4_44_alarma_programa_tono_casco', 0.7);
+    const pm = mode; mode = 'hold'; await ctx.wait(2.4); box.style.display = 'none'; if (ctx.dead) return;
+    const opt = await ask('c4-1202'); if (ctx.dead) return;
+    st.alarmT = flagOf('bales-secs') ?? 10; st.alarmOk = opt === 'go' && st.alarmT <= 5;
+    if (opt === 'abort') await whatIf({ title: ['¿Y si…? Aborto a órbita', 'What if…? Abort to orbit'],
+      text: ['Eagle separa la etapa de descenso y vuelve con Collins. El mundo espera. En la historia real el primer alunizaje se habría retrasado: el Apolo 12 estaba previsto para noviembre de 1969. Pero Bales dijo GO.', 'Eagle stages and returns to Collins. The world waits. In real history the first landing would have slipped: Apollo 12 was planned for November 1969. But Bales said GO.'] });
+    if (ctx.dead) return;
+    await playStory('mocr-1202', { ctx, answer: opt === 'timeout' ? 'late' : 'go' }); if (ctx.dead) return;
+    if (opt === 'go' && st.alarmT < 3 && await quiz(['¿Por qué era seguro seguir con la alarma 1202?', 'Why was it safe to continue with the 1202 alarm?'], [
+      { id: 'a', label: ['La computadora se sobrecargaba, pero priorizaba las tareas críticas y se reiniciaba sin perder el guiado', 'The computer was overloaded, but it prioritized critical tasks and restarted without losing guidance'] },
+      { id: 'b', label: ['La alarma era un fallo del radar de aterrizaje que se arregló solo', 'The alarm was a landing radar fault that fixed itself'] },
+      { id: 'c', label: ['Houston podía pilotar el Eagle a distancia', 'Houston could fly Eagle remotely'] }], 'a')) unlock('h-hamilton');
+    if (ctx.dead) return;
+    sfx('ok'); ctx.banner('GO', '', 1200, 'good'); ctx.cc.log('pa.go', null, 'ok');
+    frozen = false; tele.classList.remove('frozen'); el.classList.remove('frozen'); $('.l-prog', tele).classList.remove('on', 'red'); mode = pm;
+  }
+
   async function alarm1202() {
     frozen = true; tele.classList.add('frozen'); el.classList.add('frozen'); $('.l-prog', tele).classList.add('on', 'red');
     const box = $('.alarm', el); box.style.display = ''; box.className = 'alarm overlay'; const remote = coop && ctx.cc.remote();
+    if (!remote && storyInPhase(ctx)) return alarmAsBales(box);
     box.innerHTML = `<div class="panel alarmpanel" style="text-align:center;border-color:var(--red)"><div class="mono" style="color:var(--red);font-size:clamp(34px,8vw,64px);letter-spacing:.1em" >1202</div><h3>${t('d.1202')}</h3><p>${t('d.1202d')}</p>
       ${remote ? `<p class="mono">${t('d.waitCapcom')}</p>` : `<div style="display:flex;gap:10px;justify-content:center"><button class="btn primary go">${t('d.go')}</button><button class="btn ab">${t('d.abort')}</button></div><p class="phase-tag" style="margin-top:8px">${t('d.pressG')}</p>`}<div class="atimer" style="height:4px;background:var(--red);margin-top:10px;transform-origin:left"></div></div>`;
     ctx.cc.log('d.1202', null, 'bad'); const t0 = ctx.time; let beepT = 0; const offB = ctx.loop((dt) => { beepT -= dt; if (beepT <= 0) { beepT = 0.7; sfx('beep', { rate: 1.3, vol: 0.5 }); } $('.atimer', box).style.transform = `scaleX(${clamp(1 - (ctx.time - t0) / 5, 0, 1)})`; });
