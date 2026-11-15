@@ -145,6 +145,13 @@ addEventListener('keydown', (e) => {
   if (lookActive()) requestLook();
 });
 
+// Reintentar la fase en curso (p. ej. tras explotar en el despegue). Igual que «Reiniciar fase» de la pausa.
+export function retryPhase() {
+  if (!M?.phase) return;
+  if (M.mode === 'coop') tx({ t: 'restart', ph: M.phase });
+  runPhase(M.phase, { skipCard: true });
+}
+
 export async function quitMission() {
   if (M) { M.ctx?.kill(); M.ctx?.cc.dispose(); M.offs.forEach((f) => f()); if (M.mode === 'coop') { tx({ t: 'quit' }); leaveRoom(); } }
   M = null; closePause(); setPhaseBed(null); music('title'); const s = await import('../ui/screens.js'); s.startScreen();

@@ -3,9 +3,10 @@ import { store } from '../../../core/store.js';
 
 const L = () => (store.get('lang') === 'en' ? 1 : 0);
 const TANKS = [
-  { name: 'S-IC · LOX', temp: '-183 °C', boil: 0.04, centre: 0.74 },
-  { name: 'S-II · LH₂', temp: '-253 °C', boil: 0.07, centre: 0.8 },
-  { name: 'S-IVB · LH₂', temp: '-253 °C', boil: 0.07, centre: 0.76 },
+  // boil: cuánto baja el nivel por segundo al hervir. Más lento que antes (0,04/0,07): daba tiempo justo para sostener los tres en verde.
+  { name: 'S-IC · LOX', temp: '-183 °C', boil: 0.022, centre: 0.74 },
+  { name: 'S-II · LH₂', temp: '-253 °C', boil: 0.038, centre: 0.8 },
+  { name: 'S-IVB · LH₂', temp: '-253 °C', boil: 0.038, centre: 0.76 },
 ];
 const HOLD = 2; // segundos con los tres en verde
 

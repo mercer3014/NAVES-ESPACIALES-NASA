@@ -77,12 +77,23 @@ export function runDocking(opts = {}) {
       const k = 60 / Math.max(0.6, tolLat * 4); tgt.setAttribute('transform', `translate(${(S.x * k).toFixed(1)} ${(-S.y * k).toFixed(1)})`);
       const latOk = Math.hypot(S.x, S.y) <= tolLat, vOk = S.vr <= tolClose && S.vr > 0;
       tgt.classList.toggle('ok', latOk); q('.r').textContent = S.range.toFixed(1) + ' m';
-      const vb = q('.v'); vb.textContent = S.vr.toFixed(2) + ' m/s'; vb.className = 'v ' + (S.range < 4 ? (vOk ? 'ok' : S.vr > tolClose ? 'bad' : '') : '');
+      const vb = q('.v'); vb.textContent = S.vr < -0.01 ? (L() ? 'away ' : 'aleja ') + (-S.vr).toFixed(2) : S.vr.toFixed(2) + ' m/s'; vb.className = 'v ' + (S.range < 4 ? (vOk ? 'ok' : S.vr > tolClose ? 'bad' : '') : '');
       q('.o').textContent = Math.round(Math.hypot(S.x, S.y) * 100) + ' cm'; q('.o').className = 'o ' + (latOk ? 'ok' : '');
       q('.f').textContent = Math.round(S.rcs) + '%'; q('.fb i').style.width = S.rcs + '%'; q('.a').textContent = `${S.attempts}/${maxAttempts}`;
-      if (msgT > 0) { msgT -= dt; if (msgT <= 0) { hint.className = 'dock-hint'; hint.textContent = isTouch ? tx(['Alinea la cruz y acércate despacio', 'Align the cross and close in slowly']) : tx(['WASD / flechas: alinear · R acercar · F frenar', 'WASD / arrows: align · R close in · F brake']); } }
-      else if (S.range < 3 && S.vr > tolClose) { hint.textContent = tx(['Frena: demasiado rápido para el contacto', 'Brake: too fast for contact']); hint.className = 'dock-hint warn'; }
-      else if (S.rcs <= 0) { hint.textContent = tx(['RCS agotado: deriva hasta el contacto', 'RCS empty: drifting to contact']); hint.className = 'dock-hint warn'; }
+      // Pista guiada: dice siempre el siguiente paso (alinear → acercar con R → frenar), no solo los controles.
+      // Antes, con la cruz en verde «no pasaba nada»: faltaba acercarse con R y nadie lo decía.
+      if (msgT > 0) { msgT -= dt; if (msgT <= 0) hint.className = 'dock-hint'; }
+      else {
+        const R = isTouch ? (L() ? 'CLOSE IN' : 'ACERCAR') : 'R', F = isTouch ? (L() ? 'BRAKE' : 'FRENAR') : 'F', MOVE = isTouch ? (L() ? 'the stick' : 'la palanca') : 'WASD';
+        let m, cls = '';
+        if (S.rcs <= 0) { m = ['RCS agotado: deriva hasta el contacto', 'RCS empty: drifting to contact']; cls = 'warn'; }
+        else if (S.range < 3 && S.vr > tolClose) { m = [`¡Demasiado rápido! Mantén ${F} para frenar`, `Too fast! Hold ${F} to brake`]; cls = 'warn'; }
+        else if (!latOk) { m = [`1 · Lleva la cruz al centro con ${MOVE} hasta que se ponga verde`, `1 · Bring the cross to the centre with ${MOVE} until it turns green`]; }
+        else if (S.vr <= 0.03) { m = [`2 · ¡Alineado! Mantén ${R} para acercarte a Eagle`, `2 · Aligned! Hold ${R} to close in on Eagle`]; cls = 'go'; }
+        else if (S.vr > tolClose * 0.8) { m = [`Suelta ${R}: vas rápido. Contacto con cierre ≤ ${tolClose.toFixed(1)} m/s`, `Let go of ${R}: you are fast. Contact at ≤ ${tolClose.toFixed(1)} m/s closing`]; cls = 'warn'; }
+        else { m = [`3 · Bien: te acercas despacio. Mantén la cruz en verde · ${S.range.toFixed(1)} m`, `3 · Good: closing slowly. Keep the cross green · ${S.range.toFixed(1)} m`]; cls = 'ok'; }
+        hint.textContent = tx(m); hint.className = 'dock-hint ' + cls;
+      }
     });
   });
 }

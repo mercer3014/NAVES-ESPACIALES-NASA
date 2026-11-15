@@ -20,7 +20,19 @@ extend({
   'l.les': ['¡Expulsa la torre de escape!', 'Jettison the escape tower!'], 'l.waitcc': ['Esperando que Control de Misión separe…', 'Waiting for Mission Control to stage…'],
   'l.keys': ['A/D o ←/→ cabeceo · W/S empuje · ESPACIO separar · C/V cámara', 'A/D or ←/→ pitch · W/S thrust · SPACE stage · C/V camera'], 'l.corr': ['CORREDOR', 'CORRIDOR'],
   'l.beach': ['Playa de Cabo Kennedy · 16 de julio de 1969', 'Cape Kennedy beach · July 16, 1969'], 'l.beachS': ['Cerca de un millón de personas miran desde las playas y carreteras', 'About a million people watch from the beaches and roads'],
-  'l.ign': ['Secuencia de ignición', 'Ignition sequence'], 'l.iss': ['Inicio de la secuencia de ignición', 'Ignition sequence start'], 'l.throk': ['Todos los motores en marcha', 'All engines running'], 'l.hdr': ['Liberación de los anclajes', 'Hold-down release'], 'l.sep': ['Separación', 'Separation'], 'l.maxqok': ['Max-Q superado', 'Through Max-Q'],
+  'l.ign': ['Secuencia de ignición', 'Ignition sequence'],
+  'l.offWarn': ['¡FUERA DE TRAYECTORIA! Vuelve al corredor (A/D)', 'OFF COURSE! Get back in the corridor (A/D)'],
+  'l.qWarn': ['¡ESTRUCTURA AL LÍMITE! Baja el empuje (S)', 'STRUCTURE AT LIMIT! Throttle down (S)'],
+  'l.sepGood': ['Separación limpia', 'Clean separation'], 'l.sepBad': ['Separación brusca: la estructura sufre', 'Rough separation: the structure takes a hit'],
+  'l.sepBar': ['SEPARACIÓN · pulsa ESPACIO en la zona verde', 'STAGING · press SPACE in the green zone'], 'l.sepBarT': ['SEPARACIÓN · toca SEPARAR en la zona verde', 'STAGING · tap STAGE in the green zone'],
+  'l.sepNow': ['¡Separa YA!', 'Stage NOW!'],
+  'l.boom': ['MISIÓN PERDIDA', 'MISSION LOST'], 'l.retry': ['Reintentar despegue', 'Retry launch'], 'l.quit': ['Salir al menú', 'Quit to menu'],
+  'l.f.range': ['El Saturn V se salió de su trayectoria y el oficial de seguridad del campo activó la destrucción.', 'The Saturn V left its trajectory and the Range Safety Officer triggered destruct.'],
+  'l.f.rangeF': ['Real: cada Saturn V llevaba cargas de destrucción. Si se desviaba hacia zonas pobladas, el oficial de seguridad del campo (Range Safety) lo destruía.', 'Real: every Saturn V carried destruct charges. If it veered toward populated areas, the Range Safety Officer would destroy it.'],
+  'l.f.maxq': ['Pasaste Max-Q con todo el empuje: la presión del aire dobló la estructura y el cohete se partió.', 'You went through Max-Q at full thrust: air pressure buckled the structure and the rocket broke apart.'],
+  'l.f.maxqF': ['Real: Max-Q es el momento de máxima presión aerodinámica, poco más de un minuto después del despegue. El vuelo se planificaba para que la estructura la soportara.', 'Real: Max-Q is the moment of peak aerodynamic pressure, a little over a minute after liftoff. The flight was planned so the structure could take it.'],
+  'l.f.stage': ['La etapa vacía no se separó a tiempo y chocó con la siguiente al encenderse.', 'The spent stage did not separate in time and hit the next one as it lit.'],
+  'l.f.stageF': ['Real: en cada separación, pequeños cohetes alejaban la etapa vacía y asentaban el combustible de la siguiente antes de encenderla.', 'Real: at each separation, small rockets pushed the spent stage away and settled the next stage’s fuel before ignition.'], 'l.iss': ['Inicio de la secuencia de ignición', 'Ignition sequence start'], 'l.throk': ['Todos los motores en marcha', 'All engines running'], 'l.hdr': ['Liberación de los anclajes', 'Hold-down release'], 'l.sep': ['Separación', 'Separation'], 'l.maxqok': ['Max-Q superado', 'Through Max-Q'],
 });
 const DUR = 72; // s de vuelo comprimido
 const STG = [ // fin de cada quema (t), aceleración base
@@ -145,11 +157,92 @@ export default async function launch(ctx) {
     if (coop && ctx.cc.remote()) {
       toast(t('l.waitcc'), 'info');
       await Promise.race([ctx.cc.ask('stage', { i }, async () => { await ctx.wait(0.8); return true; }, 12), ctx.until(() => waitingStage === null)]);
+    } else if (canFail) {
+      // Minijuego: la aguja va y viene; ESPACIO (o SEPARAR) dentro de la franja verde = separación limpia.
+      // Fuera de la franja = separación brusca (+estrés). Dos bruscas o no pulsar en 3 barridos = las etapas chocan.
+      const ok = await stageBar(i); if (ok === 'dead' || ctx.dead) return;
     } else {
       await ctx.until(() => waitingStage === null || (D.assist && S.s - t0 > 6));
     }
+    if (S.phase !== 'fly') return;
     S.stageDelay.push(S.s - t0); waitingStage = null; $('.alarmbox', el).innerHTML = ''; doStage(i);
     S.coast = 1.0; // segundo de inercia antes de la siguiente ignición
+  }
+  // ---------- separación con barra de tiempo ----------
+  function stageBar(i) {
+    return new Promise((res) => {
+      const box = $('.alarmbox', el); const w = clamp((D.assist ? 0.26 : 0.16) * D.tol, 0.1, 0.32), c = 0.25 + Math.random() * 0.5;
+      const period = D.assist ? 1.9 : 1.45; // s por barrido
+      box.innerHTML = `<div class="lsep"><div class="lsep-k">${t(isTouch ? 'l.sepBarT' : 'l.sepBar')} · ${STG[i].name}</div><div class="lsep-bar"><i class="lsep-zone" style="left:${((c - w / 2) * 100).toFixed(1)}%;width:${(w * 100).toFixed(1)}%"></i><b class="lsep-ndl"></b></div><div class="lsep-n"></div></div>`;
+      const ndl = $('.lsep-ndl', box), nTxt = $('.lsep-n', box); let tt = 0, misses = 0, done = false, cool = 0;
+      const off = ctx.loop((dt) => {
+        if (done) return; if (S.phase !== 'fly') { done = true; off?.(); res('dead'); return; }
+        tt += dt; cool = Math.max(0, cool - dt);
+        const u = (tt / period) % 2, p = u < 1 ? u : 2 - u; ndl.style.left = (p * 100).toFixed(2) + '%';
+        nTxt.textContent = 3 * period - tt < period * 1.2 ? t('l.sepNow') : '';
+        if (tt > 3 * period) { done = true; off?.(); fail('stage'); res('dead'); return; }
+        if (!cool && (pressed('Space') || bpressed('stage'))) {
+          if (Math.abs(p - c) <= w / 2) { done = true; off?.(); sfx('ok', { vol: 0.6 }); ctx.banner(t('l.sepGood'), STG[i].name, 1200); waitingStage = null; res(true); return; }
+          misses++; cool = 0.35; S.stress = clamp(S.stress + 0.35, 0, 1); W.shake = 3; sfx('error'); navigator.vibrate?.([40, 30, 40]);
+          ctx.banner(t('l.sepBad'), '', 1300, 'warn');
+          if (misses >= 2 || S.stress >= 1) { done = true; off?.(); fail(S.stress >= 1 ? 'maxq' : 'stage'); res('dead'); return; }
+          waitingStage = null; done = true; off?.(); res(true); // separó, pero mal
+        }
+      });
+    });
+  }
+  // ---------- fallo: explosión y «¿qué pasó?» ----------
+  const canFail = !AUTO() && !(coop && ctx.cc.remote?.());
+  function fail(cause) {
+    if (S.phase !== 'fly') return; S.phase = 'boom'; S.fail = cause;
+    paintPrompt(el, null, ''); $('.alarmbox', el).innerHTML = ''; W.setThrust(0); stopEngine(); stopRumble();
+    sfx('explosion', { vol: 0.9 }); setTimeout(() => sfx('explosion', { vol: 0.6, rate: 0.7 }), 250); sfx('boom', { vol: 0.8 }); navigator.vibrate?.([120, 60, 200]);
+    const R = W.rocket; R.updateMatrixWorld(); const up = new THREE.Vector3(0, 1, 0).applyQuaternion(R.quaternion); const at = R.position.clone().addScaledVector(up, 55);
+    R.visible = false;
+    const g = new THREE.Group(); g.position.copy(at); W.scene.add(g); ctx.onCleanup(() => { W.scene.remove(g); g.traverse((o) => { o.geometry?.dispose(); o.material?.dispose(); }); });
+    // Bola de fuego de partículas: sprites con un degradado radial que pasan de blanco a naranja, rojo y humo gris
+    const cv = document.createElement('canvas'); cv.width = cv.height = 64; const c2 = cv.getContext('2d'); const gr = c2.createRadialGradient(32, 32, 0, 32, 32, 32);
+    gr.addColorStop(0, '#ffffff'); gr.addColorStop(0.35, '#ffffffcc'); gr.addColorStop(1, '#ffffff00'); c2.fillStyle = gr; c2.fillRect(0, 0, 64, 64);
+    const puffTex = new THREE.CanvasTexture(cv); ctx.onCleanup(() => puffTex.dispose());
+    const HOT = [new THREE.Color(0xffd36a), new THREE.Color(0xffb347), new THREE.Color(0xff5a1a), new THREE.Color(0x8a2a12)], SMK = new THREE.Color(0x24201e);
+    const puffs = [];
+    for (let k = 0; k < 96; k++) {
+      const smoke = k >= 60; const m = new THREE.SpriteMaterial({ map: puffTex, color: smoke ? SMK : HOT[0], transparent: true, opacity: 0, depthWrite: false, toneMapped: false, fog: false }); // sin niebla: si no, el cielo la lava
+      const sp = new THREE.Sprite(m); const dir = new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.35, Math.random() - 0.5).normalize();
+      sp.userData = { v: dir.multiplyScalar((smoke ? 8 : 10) + Math.random() * (smoke ? 14 : 28)), delay: smoke ? 0.2 + Math.random() * 0.5 : Math.random() * 0.2, life: smoke ? 4.5 + Math.random() * 2 : 1.3 + Math.random() * 0.9, size: smoke ? 40 + Math.random() * 30 : 30 + Math.random() * 30, smoke, age: 0 };
+      sp.position.copy(dir).multiplyScalar(Math.random() * 6); g.add(sp); puffs.push(sp);
+    }
+    const flash = new THREE.PointLight(0xffaa55, 0, 900, 1.6); g.add(flash);
+    const bits = [];
+    for (let k = 0; k < 26; k++) {
+      const b = new THREE.Mesh(new THREE.BoxGeometry(2 + Math.random() * 4, 1 + Math.random() * 3, 2 + Math.random() * 5), new THREE.MeshBasicMaterial({ color: k % 3 ? 0xe8e4da : 0x222222 }));
+      b.userData.v = new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.3, Math.random() - 0.5).normalize().multiplyScalar(40 + Math.random() * 60);
+      b.userData.w = new THREE.Vector3(Math.random(), Math.random(), Math.random()).multiplyScalar(6); g.add(b); bits.push(b);
+    }
+    const camFrom = cam.position.clone(); let k = 0;
+    ctx.loop((dt) => {
+      k += dt; flash.intensity = Math.max(0, 40 * (1 - k * 1.4));
+      for (const sp of puffs) {
+        const u = sp.userData; if (k < u.delay) continue; u.age += dt; const a = u.age / u.life;
+        if (a >= 1) { sp.visible = false; continue; }
+        u.v.multiplyScalar(Math.exp(-dt * (u.smoke ? 0.8 : 2.2))); if (u.smoke) u.v.y += 3 * dt; sp.position.addScaledVector(u.v, dt);
+        sp.scale.setScalar(u.size * (0.4 + Math.sqrt(a) * (u.smoke ? 2.2 : 1.6)));
+        if (u.smoke) sp.material.opacity = Math.min(1, a * 6) * (1 - a) * 0.8;
+        else { const seg = Math.min(2.999, a * 3), i = Math.floor(seg); sp.material.color.copy(HOT[i]).lerp(HOT[i + 1], seg - i); sp.material.opacity = (1 - a * a) * 0.95; }
+      }
+      for (const b of bits) { b.userData.v.y -= 9.8 * dt; b.position.addScaledVector(b.userData.v, dt); b.rotation.x += b.userData.w.x * dt; b.rotation.y += b.userData.w.y * dt; }
+      W.shake = Math.max(0, 3 - k * 1.2); W.emit(dt, 0); W.update(dt, ctx.time);
+      const dist = Math.max(480, camFrom.distanceTo(at)); const dir = camFrom.clone().sub(at).normalize(); cam.position.copy(at).addScaledVector(dir, dist + k * 8); cam.lookAt(at);
+    });
+    ctx.cc.log('l.boom', null, 'bad');
+    setTimeout(() => {
+      if (ctx.dead) return;
+      const ov = h(`<div class="screen lboom"><div class="panel dialog lboom-card"><div class="phase-tag lboom-k">${t('l.boom')}</div><h2></h2><p class="lboom-fact"></p><div class="lboom-acts"><button class="btn go" data-a="retry">${t('l.retry')}</button><button class="btn" data-a="quit">${t('l.quit')}</button></div></div></div>`);
+      $('h2', ov).textContent = t('l.f.' + cause); $('.lboom-fact', ov).textContent = t('l.f.' + cause + 'F');
+      el.append(ov); document.exitPointerLock?.();
+      ov.onclick = (ev) => { const a = ev.target.closest('[data-a]')?.dataset.a; if (!a) return; sfx('click'); import('../mission.js').then((m) => (a === 'retry' ? m.retryPhase() : m.quitMission())); };
+      $('[data-a=retry]', ov).focus({ preventScroll: true });
+    }, 2600);
   }
   // ---------- director de cámara del ascenso: plano fijo en tierra hasta librar la torre, luego persecución cercana con cortes ----------
   // chase: costado del vehículo · track: teleobjetivo al costado (el plano de tierra atraviesa la Tierra) · onboard: primer plano lateral · tail: tres cuartos trasero
@@ -232,6 +325,16 @@ export default async function launch(ctx) {
     if (maxQsaid && !S.maxqok && q < qLimit * 0.6 && S.s > 20) { S.maxqok = true; toast(t('l.maxqok'), 'info'); }
     // corredor
     const err = S.pitch - tg; const inC = Math.abs(err) <= tol; S.samples++; if (inC) S.inCorr++;
+    // Consecuencias: fuera del corredor demasiado tiempo → Range Safety; estrés al 100 % (Max-Q con todo el empuje) → rotura
+    if (canFail && S.s > 4) {
+      const far = Math.abs(err) > tol * 2.2; S.off = far ? (S.off || 0) + dt : Math.max(0, (S.off || 0) - dt * 2);
+      if (far && !S.offWarned) { S.offWarned = true; ctx.banner(t('l.offWarn'), '', 2200, 'warn'); sfx('computer', { vol: 0.7 }); }
+      if (!far && S.off === 0) S.offWarned = false;
+      if (S.stress > 0.3 && !S.qWarned) { S.qWarned = true; ctx.banner(t('l.qWarn'), '', 2400, 'warn'); sfx('computer', { vol: 0.7 }); }
+      if (S.stress < 0.12) S.qWarned = false;
+      if (S.off > (D.assist ? 6 : 4)) return fail('range');
+      if (S.stress >= 1) return fail('maxq');
+    }
     // etapas
     if (!prompting && st && S.s >= st.end && waitingStage === null && S.stage < 2) { prompting = true; const i = S.stage; stagePrompt(i).then(() => { S.stage = i + 1; prompting = false; if (i === 0) setTimeout(() => !lesDone && !ctx.dead && (toast(t('l.les'), 'info'), sfx('beep')), 3000); }); }
     if (S.stage === 1 && !lesDone && S.s > STG[0].end + 9) { lesDone = true; doStage(3); } // auto si se olvida

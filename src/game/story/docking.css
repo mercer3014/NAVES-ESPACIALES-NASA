@@ -17,6 +17,9 @@
 .dock-tele .fb i{display:block;height:100%;background:#F2EFE6}
 .dock-hint{position:absolute;left:50%;bottom:calc(24px + var(--safe-b,0px));transform:translateX(-50%);width:min(560px,calc(100vw - 32px));text-align:center;font-size:15px;padding:8px 12px;border-radius:0;background:#0B0C0Ee6;border-left:3px solid #FF4F00}
 .dock-hint.bad{color:#FF4F00}.dock-hint.warn{color:#FFB000}
+.dock-hint.ok{color:#7CDB8A}
+.dock-hint.go{color:#0B0C0E;background:#FFB000;font-weight:700;animation:dockGo 1s ease-in-out infinite alternate}
+@keyframes dockGo{from{box-shadow:0 0 0 0 #FFB00066}to{box-shadow:0 0 0 8px #FFB00000}}
 .dock-stick{pointer-events:auto;position:absolute;left:calc(18px + env(safe-area-inset-left,0px));bottom:calc(18px + var(--safe-b,0px));width:clamp(120px,30vw,160px);aspect-ratio:1;border-radius:50%;background:rgba(11,12,14,.35);border:1.5px solid rgba(242,239,230,.5);touch-action:none}
 .dock-stick i{position:absolute;left:50%;top:50%;width:42%;aspect-ratio:1;border-radius:50%;background:#F2EFE6;transform:translate(-50%,-50%)}
 .dock-btns{pointer-events:auto;position:absolute;right:calc(14px + env(safe-area-inset-right,0px));bottom:calc(18px + var(--safe-b,0px));display:grid;gap:10px}

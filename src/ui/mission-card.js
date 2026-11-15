@@ -28,8 +28,8 @@ export const CARDS = {
   launch: {
     n: '02', title: ['Lanzamiento', 'Launch'],
     what: ['09:32. Casi 3.000 toneladas de cohete despegan del 39A.', '09:32. Almost 3,000 tons of rocket lift off from 39A.'],
-    goal: ['Mantén la flecha dentro del pasillo verde y separa cada etapa cuando su tanque se vacíe, hasta llegar a la órbita.', 'Keep the arrow inside the green corridor and drop each stage when its tank runs dry, all the way to orbit.'],
-    m: [[['A', 'D'], ['Cabeceo (también ← →)', 'Pitch (also ← →)']], [['W', 'S'], ['Empuje', 'Thrust']], [['ESPACIO'], ['Separar etapa', 'Separate stage']], [['C', 'V'], ['Cámara', 'Camera']]],
+    goal: ['Mantén la flecha en el pasillo verde, baja el empuje (S) en Max-Q y separa cada etapa con ESPACIO cuando la aguja esté en la franja verde. Si te sales del pasillo o fuerzas la estructura, el cohete explota.', 'Keep the arrow in the green corridor, throttle down (S) at Max-Q and stage with SPACE when the needle is in the green band. Leave the corridor or overstress the structure and the rocket explodes.'],
+    m: [[['A', 'D'], ['Cabeceo (también ← →)', 'Pitch (also ← →)']], [['W', 'S'], ['Empuje: baja en Max-Q', 'Thrust: lower it at Max-Q']], [['ESPACIO'], ['Separar en la franja verde', 'Stage in the green band']], [['C', 'V'], ['Cámara', 'Camera']]],
     t: [[['PALANCA'], ['Cabeceo (izquierda)', 'Pitch (left)']], [['ETAPA'], ['Separar etapa', 'Separate stage']]],
   },
   cruise: {
