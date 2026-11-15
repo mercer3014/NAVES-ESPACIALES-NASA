@@ -84,8 +84,18 @@ export async function runExplore(def, opts = {}) {
     el.querySelector('.jumpbtn').style.cssText = 'right:calc(124px + env(safe-area-inset-right,0px));bottom:calc(40px + var(--safe-b))';
     el.querySelector('.actbtn').style.cssText = 'right:calc(18px + env(safe-area-inset-right,0px));bottom:calc(30px + var(--safe-b))';
   }
-  const skipEl = document.createElement('div'); skipEl.className = 'xp-skip'; skipEl.hidden = true;
-  skipEl.innerHTML = `<div><b>${L ? 'Skip scene?' : '¿Saltar escena?'}</b><div class="xp-hold"><i></i></div></div>`; el.append(skipEl);
+  // Punto de mira en el centro: dice a dónde mira el jugador y se enciende sobre lo que se puede usar
+  const reticle = document.createElement('div'); reticle.className = 'xp-reticle'; if (isTouch) reticle.hidden = true; el.append(reticle);
+  // Pausa (Esc): mismo panel que la pausa de las fases. Lleva .dialog para que look.js suelte el ratón y muestre el cursor.
+  const pauseEl = document.createElement('div'); pauseEl.className = 'screen pause-screen xp-pausemenu'; pauseEl.hidden = true;
+  pauseEl.innerHTML = `<div class="panel dialog pause-card"><div class="phase-tag"></div><h2>${L ? 'Paused' : 'Pausa'}</h2><div class="pause-actions">
+    <button class="btn go" type="button" data-a="resume">${L ? 'Resume' : 'Continuar'}</button>
+    <button class="btn" type="button" data-a="bitacora">${L ? 'Logbook' : 'Bitácora'}</button>
+    <button class="btn" type="button" data-a="skip">${L ? 'Skip this scene' : 'Saltar esta escena'}</button>
+    <button class="btn" type="button" data-a="quit">${L ? 'Quit to menu' : 'Salir al menú'}</button></div></div>`;
+  pauseEl.querySelector('.phase-tag').textContent = tx(def.title);
+  el.append(pauseEl);
+  if (isTouch) { el.insertAdjacentHTML('beforeend', `<button class="tc-btn xp-pausebtn" type="button" aria-label="${L ? 'Pause' : 'Pausa'}">II</button>`); }
 
   const spawn = def.player?.spawn || [0, 0, 0];
   const body = createBody({ spawn, yaw: def.player?.yaw || 0, speed: def.player?.speed ?? 1.6, canJump: def.jump !== false });
@@ -105,7 +115,7 @@ export async function runExplore(def, opts = {}) {
     const marker = makeMarker(THREE, n.marker || '!'); use.root.add(marker);
     items.push({ ...n, ...at, kind: 'talk', root: use.root, actor: use, marker, r: n.r ?? 1.5, label: n.label });
     world.colliders = world.colliders || [];
-    world.colliders.push({ x: at.x, z: at.z, r: n.block ?? 0.42 });
+    world.colliders.push({ x: at.x, z: at.z, r: n.block ?? 0.3, npc: true });
   }
   for (const o of def.objects || []) {
     const at = locate(o, world);
@@ -188,15 +198,30 @@ export async function runExplore(def, opts = {}) {
   }
   function goalOf(id) { return items.find((i) => i.id === id || 'talk:' + i.id === id || 'obj:' + i.id === id); }
 
+  // Los NPC ocupan sitio, pero nunca bloquean el paso: si el jugador empuja contra uno y no avanza
+  // durante un instante, ese NPC se vuelve atravesable hasta que el jugador se aleja.
+  let stuck = 0; const aimV = new THREE.Vector3();
+  function unstickNpcs(a, dt) {
+    const npcs = (world.colliders || []).filter((c) => c.npc);
+    for (const c of npcs) if (c.off && Math.hypot(body.x - c.x, body.z - c.z) > c.r + body.radius + 0.35) { c.r = c.off; c.off = 0; }
+    const pushing = Math.hypot(a.x, a.y) > 0.3 && body.speed < 0.35 * body.moveSpeed;
+    const touching = npcs.find((c) => !c.off && Math.hypot(body.x - c.x, body.z - c.z) < c.r + body.radius + 0.06);
+    stuck = pushing && touching ? stuck + dt : 0;
+    if (stuck > 0.3 && touching) { touching.off = touching.r; touching.r = 0; stuck = 0; }
+  }
+
   let resolve = () => {};
   const finished = new Promise((r) => { resolve = r; });
   const off = onTick((dt, t) => {
     if (ended) return;
-    now = t; dialogUi.tick(dt);
+    now = t;
+    if (paused) return; // el mundo se queda quieto con el menú de pausa abierto
+    dialogUi.tick(dt);
     const lock = !!(talk || holding || paused || panel);
     const a = lock ? { x: 0, y: 0 } : axis();
     const lift = !lock && def.float ? ((down('KeyE') && !focused ? 0.7 : 0) - (down('KeyQ') ? 0.7 : 0)) : 0;
     stepBody(body, { ax: a.x, ay: a.y, camYaw: cam.orbit.yaw, jump: !lock && (pressed('Space') || bpressed('jump')), gravity: def.gravity ?? 9.81, floorY: world.floorY ?? 0, colliders: world.colliders, lift }, dt);
+    unstickNpcs(a, dt);
     pose(player, body, dt);
     for (const it of items) { if (it.actor) { it.actor.update(dt); if (it.marker) it.marker.position.y = 2.05 + Math.sin(t * 3 + it.x) * 0.04; } }
     if (mate && mateBody) { stepCompanion(mateBody, body, dt); pose(mate, { ...mateBody, air: false, jump: false }, dt); }
@@ -258,15 +283,53 @@ export async function runExplore(def, opts = {}) {
     if (stepped) grant(stepped);
     if (talk?.st && dialogUi.choosing) { const n = [null, 'Digit1', 'Digit2', 'Digit3'].findIndex((c) => c && pressed(c)); if (n > 0) { const c = currentBeat(talk.st)?.choice?.[n - 1]; if (c) pick(c.id); } }
     if (pressed('Tab')) objs.open = !objs.open;
-    if (!ateEsc && down('Escape') && !talk && !holding) { hold += dt; skipEl.hidden = false; skipEl.querySelector('i').style.width = Math.min(100, hold * 100) + '%'; if (hold >= 1) skip(); }
-    else { if (!ateEsc && hold > 0 && hold < 0.4) paused = !paused; hold = 0; skipEl.hidden = true; }
+    reticle.classList.toggle('on', !!hit); reticle.hidden = isTouch || lock;
+    if (!reticle.hidden && cam.mode === 'first') { reticle.style.left = '50%'; reticle.style.top = '50%'; }
+    else if (!reticle.hidden) {
+      // En tercera persona el centro de la pantalla cae sobre la espalda: el punto se dibuja 3 m por delante,
+      // a la altura del pecho, donde apunta la cámara (o sobre lo que se puede usar).
+      const aim = hit ? aimV.set(hit.x, (hit.y || 0) + 1.1, hit.z) : aimV.set(body.x + fwd.x * 3, body.y + 1.15, body.z + fwd.z * 3);
+      aim.project(world.camera);
+      if (aim.z < 1) { reticle.style.left = ((aim.x + 1) * 50).toFixed(2) + '%'; reticle.style.top = ((1 - aim.y) * 50).toFixed(2) + '%'; }
+    }
+    document.body.dataset.xpUi = (holding || dialogUi.choosing) ? '1' : '';
     if (!leaveAt && def.complete?.({ done, flags, trust: storyRun.trust })) leaveAt = t + (def.exitDelay ?? 8);
     if (leaveAt && t >= leaveAt) finish(false);
   });
-  const onKey = (e) => { if (e.code === 'Tab') e.preventDefault(); };
+  // Pausa: Esc la abre y la cierra. Si el navegador suelta el ratón por su cuenta (Esc con el puntero capturado,
+  // cambiar de ventana), también se abre, para que el cursor nunca quede escondido sin menú.
+  function setPause(on) {
+    if (ended || on === paused) return;
+    paused = on; pauseEl.hidden = !on;
+    if (on) { document.body.dataset.paused = '1'; document.exitPointerLock?.(); stopExploreVoice(); try { sfx('open', { vol: 0.5 }); } catch { /* sin audio */ } pauseEl.querySelector('.go')?.focus({ preventScroll: true }); }
+    else { delete document.body.dataset.paused; }
+  }
+  pauseEl.addEventListener('click', (e) => {
+    const a = e.target.closest('[data-a]')?.dataset.a; if (!a) return;
+    try { sfx('click'); } catch { /* sin audio */ }
+    if (a === 'resume') { setPause(false); import('../../core/look.js').then((m) => m.requestLook()); }
+    if (a === 'bitacora') import('../../ui/bitacora.js').then((m) => m.openBitacora());
+    if (a === 'skip') { setPause(false); skip(); }
+    if (a === 'quit') { setPause(false); import('../mission.js').then((m) => { m.quitMission(); finish(true); }); }
+  });
+  el.querySelector('.xp-pausebtn')?.addEventListener('click', () => setPause(true));
+  const onLockLost = () => {
+    if (ended || paused || document.pointerLockElement) return;
+    if (talk || holding || panel || document.body.dataset.xpUi || document.querySelector('.bit, .overlay, .dialog:not(.pause-card)')) return;
+    setPause(true);
+  };
+  document.addEventListener('pointerlockchange', onLockLost);
+  const onKey = (e) => {
+    if (e.code === 'Tab') e.preventDefault();
+    if (e.code !== 'Escape' || e.repeat || ended) return;
+    if (document.querySelector('.bit')) return; // la Bitácora se cierra sola con Esc
+    if (holding && !paused) return; // Esc cierra la ficha de inspección (lo maneja el bucle)
+    e.preventDefault(); setPause(!paused);
+  };
   addEventListener('keydown', onKey, true);
   async function finish(skipped) {
-    if (ended) return; ended = true; off(); look.dispose(); stopExploreVoice();
+    if (ended) return; setPause(false); ended = true; off(); look.dispose(); stopExploreVoice();
+    document.removeEventListener('pointerlockchange', onLockLost); delete document.body.dataset.xpUi;
     removeEventListener('pointerdown', onDown); removeEventListener('pointermove', onMove); removeEventListener('pointerup', onUp); removeEventListener('keydown', onKey, true);
     if (skipped) { const plan = skipPlan(def); const { record, unlock } = await import('../story/state.js'); for (const r of plan.records) record(r.id, r.opt, { historic: true }); for (const id of plan.moments) unlock(id, { quiet: true }); }
     try { world.dispose?.(); } catch { /* la escena ya se fue */ }

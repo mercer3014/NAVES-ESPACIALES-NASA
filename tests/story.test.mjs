@@ -29,7 +29,9 @@ assert.deepEqual(badSlot, [], 'escenas en SLOTS sin STORY');
 // la decisión de Laika después de la escena; los puentes ocupan los huecos del plan.
 const slotOf = Object.fromEntries([...slots.matchAll(/'(before|after):([a-z]+)': \[([^\]]*)\]/g)].map((m) => [m[1] + ':' + m[2], [...m[3].matchAll(/'([a-z0-9:-]+)'/g)].map((x) => x[1])]));
 assert.equal(new Set(slotIds).size, slotIds.length, 'ids repetidos en SLOTS');
-assert.deepEqual(slotOf['before:prep'], ['bridge:intro', 'hotel-prologue', 'mocr-tough', 'bridge:design', 'design', 'bridge:jul69', 'house-farewell', 'ksc', 'beach', 'bridge:launch-morning'], 'orden de before:prep');
+// Intro corta (pedido del equipo): sin escenas de charla antes de la Fase 1; las decisiones del cap. 1 quedan como elección rápida
+assert.deepEqual(slotOf['before:prep'], ['bridge:jul69', 'kids', 'firststep', 'bridge:launch-morning'], 'orden de before:prep');
+for (const id of ['hotel-prologue', 'mocr-tough', 'design', 'white-room', 'house-farewell', 'ksc', 'beach', 'laika', 'recovery', 'parade']) { assert.ok(!slotIds.includes(id), `${id} es un extra del menú, no va en la misión`); assert.ok(story.has(id), `${id} sigue en STORY para el menú`); }
 for (const id of ['house-farewell', 'kids', 'ksc', 'beach', 'design']) assert.ok(!slotOf['before:launch'].includes(id), `${id} debe ir antes de la Fase 1`);
 assert.deepEqual(slotOf['before:launch'], ['bridge:t-minus']);
 assert.deepEqual(slotOf['before:cruise'], ['bridge:tli']);
@@ -38,7 +40,6 @@ assert.deepEqual(slotOf['before:eva'], ['pre-eva', 'bridge:hatch']);
 const after = slotOf['after:eva']; const at = (id) => after.indexOf(id);
 assert.ok(at('breaker') > -1 && at('breaker') < at('boss'), 'el disyuntor va antes del jefe');
 assert.ok(at('collins-solo') < at('breaker') && at('boss') < at('liftoff'), 'collins → disyuntor → jefe → despegue');
-assert.ok(at('laika') > -1 && at('laika') < at('laika-talk'), 'Laika antes de su decisión');
 assert.equal(after[0], 'bridge:meanwhile'); assert.equal(after.at(-1), 'bridge:report'); assert.equal(after.at(-2), 'epilogue');
 
 // Tarjetas puente: las 10 del plan, con fecha y texto ES/EN, sin emojis y con registro STORY `bridge:<id>`
@@ -48,7 +49,7 @@ const body = bridgeSrc.split('export const BRIDGES = {')[1].split('\n};')[0];
 for (const id of bridgeIds) {
   assert.ok(new RegExp(`(^|\\n)  '?${id}'?: \\{ when: \\[`).test(body), `bridge ${id}: sin definición con fecha`);
   assert.ok(story.has('bridge:' + id), `bridge:${id} sin STORY`);
-  assert.ok(slotIds.includes('bridge:' + id), `bridge:${id} no está en SLOTS`);
+  if (id !== 'intro' && id !== 'design') assert.ok(slotIds.includes('bridge:' + id), `bridge:${id} no está en SLOTS`); // «intro» hablaba del hotel de 1967, que ya no abre la misión
 }
 assert.equal([...body.matchAll(/(^|\n)  '?[a-z0-9-]+'?: \{ when:/g)].length, bridgeIds.length, 'número de tarjetas puente');
 for (const m of body.matchAll(/(when|text|quote|who): \[('(?:[^'\\]|\\.)*'), ('(?:[^'\\]|\\.)*')\]/g)) assert.ok(m[2].length > 2 && m[3].length > 2, `bridge: par [es, en] vacío en ${m[1]}`);

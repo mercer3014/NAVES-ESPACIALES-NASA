@@ -6,6 +6,7 @@ import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.j
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { store, isMobile, dbg, DEBUG } from './store.js';
 import { endFrame } from './input.js';
+import { fixKnees } from './fix-knees.js';
 import { afterWorldUpdate } from '../audio/runtime.js';
 
 export const canvas = document.getElementById('gl');
@@ -67,7 +68,8 @@ export function tex(url, { srgb = true, repeat = 0 } = {}) {
 }
 const gltfL = new GLTFLoader(); gltfL.setMeshoptDecoder(MeshoptDecoder); const glbCache = new Map();
 const gltfCache = new Map();
-function loadGltf(name) { if (!gltfCache.has(name)) gltfCache.set(name, gltfL.loadAsync(`/models/${name}.glb`)); return gltfCache.get(name); }
+// fixKnees: algunos clips (caminar, correr, saltar, escalera) traen la rodilla doblada hacia adelante; se corrigen al cargar
+function loadGltf(name) { if (!gltfCache.has(name)) gltfCache.set(name, gltfL.loadAsync(`/models/${name}.glb`).then((g) => { if (g.animations?.length) { const f = fixKnees(g.scene, g.animations); if (f.length && DEBUG) console.info('rodillas corregidas', name, f.join(' ')); } return g; })); return gltfCache.get(name); }
 // Explicit retry of one failed asset; never discards unrelated cached artist models.
 export function invalidateModel(name) { gltfCache.delete(name); glbCache.delete(name); }
 export function model(name) {

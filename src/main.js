@@ -1,5 +1,5 @@
 import './style.css';
-import { DEBUG } from './core/store.js';
+import { DEBUG, store } from './core/store.js';
 import { t, lang } from './core/i18n.js';
 import { show } from './ui/router.js';
 import { $ } from './core/util.js';
@@ -80,7 +80,7 @@ async function boot() {
       crew: [{ name: getName(), flag: getFlag(), role: 'pilot' }, { name: 'Pancho', flag: null, role: 'capcom', bot: true }], mode: 'solo', diff: 'normal', date: Date.now() }, { menu: () => location.assign('/'), retry: () => location.assign('/?phase=prep') });
   }
   if (room) return joinScreen(room.replace(/\D/g, '').slice(0, 6));
-  if (shouldPlayIntro({ played: introPlayed(), nointro: params.has('nointro'), reconnect: !!room })) return introScreen(() => startScreen());
+  if (shouldPlayIntro({ played: introPlayed(), seen: !!store.get('introSeen'), nointro: params.has('nointro'), reconnect: !!room })) return introScreen(() => startScreen());
   startScreen();
 }
 boot();

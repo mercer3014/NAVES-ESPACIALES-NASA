@@ -12,7 +12,7 @@ export const CARDS = {
     t: [[['PALANCA'], ['Caminar', 'Walk']], [['ACCIÓN'], ['Hablar', 'Talk']]],
   },
   'prep-practice': {
-    n: '01', title: ['Preparación · práctica', 'Preparation · practice'],
+    n: '01', title: ['Preparación', 'Preparation'], // la misión y la práctica usan las mismas 4 tareas en la plataforma
     what: ['16 jul 1969, madrugada: técnicos y tripulación preparan el Saturn V en la plataforma 39A.', 'July 16, 1969, before dawn: technicians and crew ready the Saturn V on Pad 39A.'],
     goal: ['Completa las 4 tareas antes de la cuenta atrás: arrastrar, mantener y girar con el puntero.', 'Finish the 4 tasks before the countdown: drag, hold and turn with the pointer.'],
     m: [[['ARRASTRAR'], ['Mueve piezas y cables a su sitio', 'Move parts and cables into place']], [['MANTENER'], ['Mantén pulsado hasta llenar', 'Hold down until it fills']], [['GIRAR'], ['Arrastra en círculo anillos y manivelas', 'Drag in a circle on rings and cranks']]],

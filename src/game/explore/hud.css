@@ -69,3 +69,13 @@
 
 html[data-touch] .xp-prompt { bottom: calc(150px + var(--safe-b)); }
 html[data-touch] .xp-dialog { bottom: calc(148px + var(--safe-b)); }
+
+/* Pausa de exploración (Esc): reutiliza el panel de pausa de las fases */
+#ui > .xp .xp-pausemenu { pointer-events: auto; }
+.xp-pausemenu[hidden] { display: none; }
+.xp-pausebtn { position: absolute; top: calc(12px + var(--safe-t)); right: calc(12px + env(safe-area-inset-right, 0px)); width: 44px; height: 44px; font-weight: 700; letter-spacing: .06em; }
+
+/* Punto de mira: un punto crema en el centro; con algo usable delante se abre en un anillo naranja */
+.xp-reticle { position: absolute; left: 50%; top: 50%; width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 50%; background: #f2efe6; box-shadow: 0 0 0 1px rgba(11, 12, 14, .7); transition: width .15s, height .15s, margin .15s, background .15s; pointer-events: none; }
+.xp-reticle[hidden] { display: none; }
+.xp-reticle.on { width: 18px; height: 18px; margin: -9px 0 0 -9px; background: transparent; border: 2px solid var(--orange); box-shadow: 0 0 0 1px rgba(11, 12, 14, .6); box-sizing: border-box; }

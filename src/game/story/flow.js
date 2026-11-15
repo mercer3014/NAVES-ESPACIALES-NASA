@@ -7,7 +7,7 @@ import { AUTO, dbg } from '../../core/store.js';
 import { stopCue } from '../cutscenes/play.js';
 import { show } from '../../ui/router.js';
 import { score, stopAmbience } from '../../audio/a11-score.js';
-import { unlock, chose, record, run } from './state.js';
+import { unlock, chose, record, run, setFlag } from './state.js';
 import { ask } from './decisions.js';
 import { missionCard } from '../../ui/mission-card.js';
 
@@ -78,6 +78,8 @@ export const STORY = {
     return Object.assign({}, exp, { id: 'house-farewell', cine });
   },
   kids: decide('c1-kids'),
+  // KSC sin caminar: la decisión de Aldrin sobre el primer paso queda como elección rápida (el rumor llega a la noche en Columbia)
+  firststep: decide('c1-firststep', (o) => { if (o === 'complain') setFlag('rumor', true); }),
   ksc: explore('ksc'),
   beach: explore('beach'),
   night: explore('columbia'),
@@ -107,6 +109,7 @@ export const STORY = {
   reentry: withCard('reentry', () => import('./reentry.js')),
   recovery: epi('recovery'),
   lrl: explore('lrl'),
+  'white-room': explore('white-room'), // Fase 1 a pie (extra del menú)
   parade: epi('parade'),
   epilogue: own(() => import('./epilogue.js')),
 };
@@ -115,6 +118,7 @@ export const STORY_TITLES = {
   'hotel-prologue': ['Prólogo · Enero de 1967', 'Prologue · January 1967'],
   'mocr-tough': ['Prólogo · Duros y competentes', 'Prologue · Tough and competent'],
   design: ['Prólogo · Sala de diseño: Tu Apolo 11', 'Prologue · Design room: Your Apollo 11'],
+  'white-room': ['Cap. 2 · La Sala Blanca', 'Ch. 2 · The White Room'],
   'house-farewell': ['Cap. 1 · La despedida', 'Ch. 1 · The farewell'],
   ksc: ['Cap. 1 · Centro Espacial Kennedy', 'Ch. 1 · Kennedy Space Center'],
   beach: ['Cap. 1 · La playa de Cabo Kennedy', 'Ch. 1 · The Cape Kennedy beach'],
@@ -168,13 +172,18 @@ export const SCENE_CARDS = {
 // Orden cronológico (G1): prólogo 1967 → sala de diseño → julio de 1969 (casa, KSC, playa) → mañana del 16 jul (Fase 1) → lanzamiento…
 // El disyuntor se descubre ANTES del sueño del Guardián (T9). Las tarjetas puente `bridge:*` van en los huecos entre escenas.
 export const SLOTS = {
-  'before:prep': ['bridge:intro', 'hotel-prologue', 'mocr-tough', 'bridge:design', 'design', 'bridge:jul69', 'house-farewell', 'ksc', 'beach', 'bridge:launch-morning'],
+  // Intro corta: las escenas de charla (hotel 1967, discurso de Kranz, casa del lago, KSC y playa) salieron de la misión
+  // y siguen en «Escenas del guion». Sus dos decisiones se conservan como elección rápida para no perder consecuencias.
+  // Lo importante es el despegue: antes de la Fase 1 solo quedan las dos decisiones del cap. 1 (10 s cada una) y la tarjeta
+  // de la mañana del lanzamiento. La sala de diseño sigue en el menú y en el informe final («Rediseñar»); sin ella vale el plan de 1969.
+  'before:prep': ['bridge:jul69', 'kids', 'firststep', 'bridge:launch-morning'],
   'before:launch': ['bridge:t-minus'],
   'before:cruise': ['bridge:tli'],
   'before:descent': ['bridge:undock', 'mocr-briefing'],
   'after:descent': [],
   'before:eva': ['pre-eva', 'bridge:hatch'],
-  'after:eva': ['bridge:meanwhile', 'collins-solo', 'breaker', 'boss', 'liftoff', 'reunion', 'tei', 'laika', 'laika-talk', 'tv', 'reentry', 'recovery', 'lrl', 'parade', 'epilogue', 'bridge:report'],
+  // Laika (No Canon), el rescate y el desfile son cinemáticas de charla: quedan como extras en «Escenas del guion».
+  'after:eva': ['bridge:meanwhile', 'collins-solo', 'breaker', 'boss', 'liftoff', 'reunion', 'tei', 'tv', 'reentry', 'lrl', 'epilogue', 'bridge:report'],
 };
 export const STORY_IDS = Object.keys(STORY);
 const params = new URLSearchParams(location.search);

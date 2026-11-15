@@ -26,10 +26,12 @@ const LOCK = '<svg class="pt-lock" viewBox="0 0 16 16" fill="currentColor" aria-
 for (const k of TASKS) extend({ ['prep2.h.' + k.id]: k.hint });
 const MAIN = TASKS.filter((k) => k.id !== 'hatch'), HATCH = TASKS.find((k) => k.id === 'hatch');
 
+// La misión usa las 4 tareas en la plataforma (minijuegos con el Saturn V a la vista): llega rápido al despegue.
+// El recorrido a pie por la Sala Blanca (storyPrep) quedó como extra en «Escenas del guion» (flow.js · 'white-room').
 export default async function prep(ctx) {
-  if (!ctx.practice) return storyPrep(ctx);
   return practicePrep(ctx);
 }
+export { storyPrep };
 
 async function storyPrep(ctx) {
   const t0 = ctx.time;

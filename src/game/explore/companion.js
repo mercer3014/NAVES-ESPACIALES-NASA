@@ -10,7 +10,15 @@ export function stepCompanion(c, player, dt) {
   const step = Math.max(0, dt || 0);
   const dx = player.x - c.x, dz = player.z - c.z;
   const d = Math.hypot(dx, dz);
-  if (d > c.follow + 0.05 && d > 1e-4) {
+  if (d < 0.95 && step) {
+    // Si el jugador viene hacia él, se aparta de lado en vez de quedarse en medio del camino
+    const ux = d > 1e-4 ? -dx / d : 1, uz = d > 1e-4 ? -dz / d : 0;
+    const side = (player.vx || 0) * uz - (player.vz || 0) * ux >= 0 ? 1 : -1;
+    const ax = ux * 0.6 + uz * side * 0.8, az = uz * 0.6 - ux * side * 0.8, al = Math.hypot(ax, az) || 1;
+    const move = 1.6 * step;
+    c.x += (ax / al) * move; c.z += (az / al) * move;
+    c.speed = 1.6; c.yaw = Math.atan2(ax, az);
+  } else if (d > c.follow + 0.05 && d > 1e-4) {
     const move = Math.min(d - c.follow, Math.max(player.speed || 0, 1.15) * step);
     c.x += (dx / d) * move; c.z += (dz / d) * move;
     c.speed = step ? move / step : 0;

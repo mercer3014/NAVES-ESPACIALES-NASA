@@ -47,7 +47,7 @@ export function introScreen(done) {
   music(null, { fade: 400 });
   const volume = () => { v.volume = Math.max(0, Math.min(1, store.get('vol').voice)); }; volume();
   const offVol = on('store:vol', volume);
-  const finish = () => { if (finished) return; finished = true; playedThisDocument = true; cleanup(); done(); };
+  const finish = () => { if (finished) return; finished = true; playedThisDocument = true; store.set('introSeen', true); cleanup(); done(); };
   const blocked = () => { if (finished) return; snd.hidden = false; snd.textContent = t('intro.play'); };
   const failed = () => { if (finished || !(v.networkState === HTMLMediaElement.NETWORK_NO_SOURCE || v.error)) return; toast(t('intro.failed'), 'info'); finish(); };
   const play = () => v.play().catch((err) => { if (err?.name === 'NotAllowedError') blocked(); else failed(); });

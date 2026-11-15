@@ -3,8 +3,9 @@
 // Los efectos sueltos de a11/sfx se disparan por a11sfx() con el nombre armado en código.
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const root = new URL('..', import.meta.url).pathname;
+const root = fileURLToPath(new URL('..', import.meta.url)); // .pathname rompe en Windows (C:C:… y %20)
 const voices = [];
 for (const dir of ['public/audio/a11/nasa_real', 'public/audio/a11/voz_en_clonada', 'public/audio/voice']) {
   for (const name of readdirSync(join(root, dir))) {
