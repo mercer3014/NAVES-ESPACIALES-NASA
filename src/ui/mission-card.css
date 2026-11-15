@@ -1,0 +1,26 @@
+/* Tarjeta de misión: página del Plan de Vuelo. Papel #F2EFE6, tinta #0B0C0E, franja #FF4F00. Sin blur, sin degradados. */
+.mc-wrap{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;padding:calc(12px + env(safe-area-inset-top,0px)) 12px calc(12px + env(safe-area-inset-bottom,0px));background:rgba(11,12,14,.86);pointer-events:auto}
+.mc-card{position:relative;width:min(680px,100%);max-height:100%;display:flex;flex-direction:column;background:#F2EFE6;color:#0B0C0E;border-radius:2px;border:1px solid #3A3D42;font-family:"Barlow Semi Condensed",Chakra,system-ui,sans-serif;font-weight:500;overflow:hidden;text-align:left}
+.mc-bar{height:3px;background:#FF4F00;flex:none}
+.mc-head{flex:none;padding:12px 20px 8px;border-bottom:1px solid #0B0C0E33}
+.mc-doc{display:block;font:500 11px/1.2 "IBM Plex Mono",Mono,monospace;letter-spacing:.12em;color:#3A3D42;margin-bottom:4px}
+.mc-head h2{margin:0;font:700 clamp(22px,4.6vw,32px)/1.05 Jost,Orbitron,sans-serif;letter-spacing:.06em;text-transform:uppercase}
+.mc-body{flex:1 1 auto;min-height:0;overflow:auto;padding:6px 20px 4px}
+.mc-blk{padding:8px 0 8px;border-bottom:1px solid #0B0C0E14}.mc-blk:last-child{border-bottom:0}
+.mc-blk h3{margin:0 0 3px;font:600 12px/1.2 "IBM Plex Mono",Mono,monospace;letter-spacing:.14em;color:#FF4F00}
+.mc-blk p{margin:0;font-size:clamp(15px,2.6vw,18px);line-height:1.3}
+.mc-cols{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mc-col{border:1.5px solid #3A3D4040;border-radius:2px;padding:6px 10px 8px;opacity:.55}
+.mc-col.on{opacity:1;border-color:#0B0C0E;border-left:4px solid #FF4F00}
+.mc-col h4{margin:0 0 4px;font:600 11px/1.2 "IBM Plex Mono",Mono,monospace;letter-spacing:.1em;color:#3A3D42}
+.mc-col ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:5px}
+.mc-col li{display:flex;align-items:center;gap:8px;font-size:clamp(13px,2.2vw,15px);line-height:1.2}
+.mc-keys{flex:none;display:inline-flex;align-items:center;gap:2px}
+.mc-keys i{font-style:normal;color:#3A3D42;font-size:11px}
+.mc-card kbd{display:inline-block;min-width:24px;padding:2px 6px 3px;box-sizing:border-box;text-align:center;font:600 12px/1.1 "IBM Plex Mono",Mono,monospace;letter-spacing:.04em;color:#0B0C0E;background:#F2EFE6;border:1.5px solid #0B0C0E;border-bottom-width:3px;border-radius:2px}
+.mc-foot{flex:none;padding:10px 20px 14px;display:flex;justify-content:flex-end}
+.mc-go{min-height:52px;padding:.7em 2.2em;border:2px solid #FF4F00;border-radius:2px;background:#FF4F00;color:#0B0C0E;font:600 20px/1 "Barlow Semi Condensed",Chakra,system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+.mc-go:hover,.mc-go:focus-visible{background:#0B0C0E;color:#FF4F00;outline:none}
+.mc-go:active{transform:translateY(1px)}
+@media (max-width:560px){.mc-cols{grid-template-columns:1fr}.mc-head{padding:10px 14px 6px}.mc-body{padding:4px 14px}.mc-foot{padding:8px 14px 12px}.mc-go{width:100%}}
+@media (max-height:480px){.mc-head h2{font-size:20px}.mc-blk{padding:4px 0 2px}.mc-blk p{font-size:14px}.mc-col li{font-size:12px}.mc-go{min-height:44px;font-size:17px}}

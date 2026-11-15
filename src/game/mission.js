@@ -1,6 +1,6 @@
 // Orquestador de misión: fases en orden, puente CAPCOM (humano remoto o Pancho), pausa, puntaje
 import { show, syncCursor } from '../ui/router.js';
-import { t } from '../core/i18n.js';
+import { t, extend } from '../core/i18n.js';
 import { phaseStamp } from '../ui/presentation.js';
 import { bindUiSfx } from '../ui/ui-sfx.js';
 import { icon } from '../ui/flight-hud.js';
@@ -16,7 +16,15 @@ import { clearBtns, pressed } from '../core/input.js';
 import { pancho } from '../ui/pancho.js';
 import { net, tx, partner, peerOnline, leaveRoom } from '../net/room.js';
 import { getFlag, getName } from '../ui/screens.js';
+import { missionCard as showMissionCard, CARDS } from '../ui/mission-card.js';
+import { NASA_PLAN } from './design/plan.js';
 
+// Tarjeta «Cómo jugar» reutilizable por boss/story/cine: await missionCard('docking')
+export { showMissionCard as missionCard };
+// GANCHO Ajustes (WP4): store 'cardsMode' = 'always' (por defecto) | 'first' (solo la primera vez); 'cardsSeen' = { [id]: true }
+export const CARDS_MODE_KEY = 'cardsMode', CARDS_SEEN_KEY = 'cardsSeen';
+
+extend({ 'mc.howto': ['Cómo jugar', 'How to play'] });
 export const PHASES = ['prep', 'launch', 'cruise', 'descent', 'eva'];
 const loaders = { prep: () => import('./phases/prep.js'), launch: () => import('./phases/launch.js'), cruise: () => import('./phases/cruise.js'), descent: () => import('./phases/descent.js'), eva: () => import('./phases/eva.js') };
 const DIFF = { cadet: { fuel: 1.35, tol: 1.4, assist: true, time: 1.4 }, normal: { fuel: 1, tol: 1, assist: false, time: 1 }, veteran: { fuel: 0.85, tol: 0.8, assist: false, time: 0.8 } };
@@ -30,6 +38,7 @@ function makeCtx(phase) {
   const ctx = {
     phase, mode: M.mode, role: M.role, seed: M.seed + PHASES.indexOf(phase), rand: rng(M.seed + 7 * PHASES.indexOf(phase) + 1), diff: DIFF[M.diff] || DIFF.normal, diffName: M.diff,
     flag: getFlag(), name: getName(), crew: M.crew, practice: M.practice,
+    plan: store.get('missionPlan') || NASA_PLAN,
     get dead() { return dead; }, get time() { return gameT; },
     onCleanup: (f) => cleanups.push(f),
     world(w) { setWorld(w); },
@@ -40,7 +49,6 @@ function makeCtx(phase) {
       const el = show(`<div class="screen hud-screen" style="padding:0"><div class="hud mhud">${html}<div class="pausebox"><button class="icon-btn" data-pause aria-label="${t('pause')}">${icon('pause')}</button></div></div></div>`, 'phase-' + phase);
       bindUiSfx(el);
       installHudKeys();
-      showPhaseStamp(phase);
       $('[data-pause]', el).onclick = () => pauseMenu(); return el;
     },
     banner(text, sub = '', ms = 2200, cls = '') {
@@ -48,6 +56,7 @@ function makeCtx(phase) {
       const el = h(`<div class="banner pop ${cls}">${text}${sub ? `<small>${sub}</small>` : ''}</div>`); (document.querySelector('.hud') || document.body).append(el);
       if (ms) setTimeout(() => el.remove(), ms); return el;
     },
+    missionCard: (id, o) => openCard(id, o),
     cc: makeCC(phase, () => dead),
     say: (k, o) => { if (!dead) pancho.say(k, o); },
     kill() { dead = true; cleanups.splice(0).forEach((f) => { try { f(); } catch (e) { console.error(e); } }); waits.length = 0; clearBtns(); stopEngine(); stopRumble(); stopVoices(); pancho.hide(); },
@@ -90,13 +99,12 @@ function makeCC(phase, isDead) {
 
 // ---------- Pausa ----------
 let pauseEl = null;
-function showPhaseStamp(phase) {
-  document.querySelector('.phase-stamp')?.remove();
-  const info = phaseStamp(phase);
-  if (!info.key) return;
-  const el = h(`<div class="phase-stamp" aria-hidden="true"><span class="phase-stamp-k">${t('ph.n')} ${String(info.n).padStart(2, '0')}</span><b>${t(info.key)}</b></div>`);
-  document.body.append(el);
-  setTimeout(() => el.isConnected && el.remove(), 3200);
+// Tarjeta de misión con el mundo en pausa. force=true ignora el ajuste «solo la primera vez» (botón «Cómo jugar»).
+async function openCard(id, { force = false } = {}) {
+  if (!CARDS[id]) return;
+  if (!force && store.get(CARDS_MODE_KEY) === 'first') { const seen = store.get(CARDS_SEEN_KEY) || {}; if (seen[id]) return; store.set(CARDS_SEEN_KEY, { ...seen, [id]: true }); }
+  const wasPaused = !!pauseEl; if (!wasPaused) setPaused(true);
+  try { await showMissionCard(id); } finally { if (!wasPaused) setPaused(false); }
 }
 function pauseMenu() {
   if (pauseEl || !M) return; document.exitPointerLock?.(); const solo = M.mode === 'solo'; if (solo) setPaused(true); document.body.dataset.paused = '1'; syncCursor(); sfx('open', { vol: 0.5 });
@@ -105,15 +113,16 @@ function pauseMenu() {
   pauseEl = h(`<div class="screen pause-screen"><div class="panel dialog pause-card">
     <div class="phase-tag">${kicker}</div>
     <h2 data-i="pause">${t('pause')}</h2><div class="pause-actions">
-    <button class="btn go" data-a="resume">${t('resume')}</button><button class="btn" data-a="bitacora">${t('menu.bitacora')}</button><button class="btn" data-a="restart">${t('restartPhase')}</button><button class="btn" data-a="quit">${t('quit')}</button></div></div></div>`);
+    <button class="btn go" data-a="resume">${t('resume')}</button>${CARDS[M.phase] ? `<button class="btn" data-a="howto">${t('mc.howto')}</button>` : ''}<button class="btn" data-a="bitacora">${t('menu.bitacora')}</button><button class="btn" data-a="restart">${t('restartPhase')}</button><button class="btn" data-a="quit">${t('quit')}</button></div></div></div>`);
   bindUiSfx(pauseEl);
   document.body.append(pauseEl);
   pauseEl.onclick = (e) => {
     const a = e.target.closest('[data-a]')?.dataset.a; if (!a) return; sfx('click');
     if (a === 'bitacora') { import('../ui/bitacora.js').then((m) => m.openBitacora()); return; }
+    if (a === 'howto') { openCard(M.phase, { force: true }); return; }
     const phase = M.phase; closePause();
     if (a === 'resume' && lookActive()) requestLook();
-    if (a === 'restart') { if (M.mode === 'coop') tx({ t: 'restart', ph: phase }); runPhase(phase); }
+    if (a === 'restart') { if (M.mode === 'coop') tx({ t: 'restart', ph: phase }); runPhase(phase, { skipCard: true }); }
     if (a === 'quit') quitMission();
   };
 }
@@ -131,11 +140,12 @@ export async function quitMission() {
 }
 
 // ---------- Fases ----------
-async function runPhase(phase) {
+async function runPhase(phase, { skipCard = false } = {}) {
   if (M.ctx) { M.ctx.kill(); M.ctx.cc.dispose(); }
   M.phase = phase; dbg('phase', phase); setPhaseBed(phase); if (M.mode === 'coop') tx({ t: 'phase', ph: phase, results: M.results });
   commsReset(); sfx('stage', { vol: 0.35 }); scanFx(); offerLook(phase);
   const mod = await loaders[phase](); const ctx = makeCtx(phase); M.ctx = ctx; const myCtx = ctx;
+  if (!skipCard) { await ctx.missionCard(phase); if (myCtx !== M?.ctx) return; offerLook(phase); } // mundo en pausa hasta «¡VAMOS!»
   let res;
   try { res = await mod.default(ctx); } catch (e) { console.error(e); res = { score: 0, stats: { error: String(e) } }; }
   if (myCtx !== M?.ctx) return; // reiniciada o abandonada
