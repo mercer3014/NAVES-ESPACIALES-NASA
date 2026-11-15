@@ -29,7 +29,26 @@ export function music(name, { loop = true, fade = 1500, vol: v = 0.5 } = {}) {
   if (!M[name]) M[name] = new Howl({ src: [name.includes('/') ? `/audio/${name}.mp3` : `/audio/music/${name}.mp3`], loop, html5: true, preload: true }); // html5: streaming; evita decodificar el mp3 entero a PCM (40-60 MB por pista)
   curMusic = M[name]; curMusic._base = v; curMusic.loop(loop);
   curMusicId = curMusic.play(); curMusic.volume(0, curMusicId); curMusic.fade(0, v * vol().music * duck, fade, curMusicId);
+  watchBlocked(curMusic, curMusicId);
 }
+// El navegador rechaza la música pedida antes del primer gesto del jugador (p. ej. el menú al volver a entrar con la intro ya vista).
+// Howler no la reintenta sola y, como curName ya era esa pista, se quedaba muda toda la pantalla: se relanza en el primer clic, toque o tecla.
+let blockedId = null;
+function watchBlocked(h, id) { h.once('playerror', () => { if (curMusic === h && curMusicId === id) blockedId = id; }, id); }
+function retryBlocked() {
+  if (blockedId == null) return;
+  const h = curMusic, id = blockedId; blockedId = null;
+  if (!h || curMusicId !== id) return;
+  // Pista nueva desde cero (la cola interna de Howler queda atascada tras el rechazo y perdería el volumen); en el siguiente
+  // tick, cuando Howler ya desbloqueó su reserva de <audio> con este mismo gesto (necesario en iOS)
+  const name = curName, opts = { loop: h.loop(), vol: h._base, fade: 800 };
+  setTimeout(() => {
+    if (curMusic !== h || curMusicId !== id || curName !== name) return;
+    h.unload(); if (M[name] === h) delete M[name];
+    curMusic = null; curMusicId = null; curName = null; music(name, opts);
+  }, 0);
+}
+for (const ev of ['pointerup', 'click', 'keydown', 'touchend']) addEventListener(ev, retryBlocked, { capture: true, passive: true });
 export function setMusicVol() { if (curMusic && curMusicId != null) curMusic.volume(curMusic._base * vol().music * duck, curMusicId); }
 const MIN_VOICE = new Set(['countdown', 'eagle', 'smallstep']);
 export function voice(name, { vol: v = 1, onend } = {}) {
