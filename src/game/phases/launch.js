@@ -27,7 +27,8 @@ extend({
   'l.sepBar': ['SEPARACIÓN · pulsa ESPACIO en la zona verde', 'STAGING · press SPACE in the green zone'], 'l.sepBarT': ['SEPARACIÓN · toca SEPARAR en la zona verde', 'STAGING · tap STAGE in the green zone'],
   'l.sepNow': ['¡Separa YA!', 'Stage NOW!'], 'l.tries': ['Intentos', 'Tries'],
   'l.roll': ['PROGRAMA DE ROLIDO · gira hasta el rumbo 72° (Q / E) y sostenlo', 'ROLL PROGRAM · roll to heading 72° (Q / E) and hold it'],
-  'l.rollT': ['PROGRAMA DE ROLIDO · gira hasta 72° con ◀ ▶ y sostenlo', 'ROLL PROGRAM · roll to 72° with ◀ ▶ and hold it'],
+  'l.rollT': ['PROGRAMA DE ROLIDO · gira hasta 72° con IZQ / DER y sostenlo', 'ROLL PROGRAM · roll to 72° with L / R and hold it'],
+  'l.rollL': ['IZQ', 'L'], 'l.rollR': ['DER', 'R'],
   'l.rollOk': ['Programa de rolido completo', 'Roll program complete'], 'l.rollAuto': ['La computadora terminó el rolido por ti', 'The computer finished the roll for you'],
   'l.f.roll': ['El Saturn V nunca giró a su rumbo de vuelo y se desvió hacia la costa: el oficial de seguridad del campo lo destruyó.', 'The Saturn V never rolled to its flight heading and veered toward the coast: the Range Safety Officer destroyed it.'],
   'l.f.rollF': ['Real: a los pocos segundos de despegar, el Apolo 11 giró sobre su eje desde el rumbo de la plataforma (90°) al de vuelo, unos 72°.', 'Real: seconds after liftoff, Apollo 11 rolled from the pad heading (90°) to its flight heading, about 72°.'],
@@ -93,7 +94,7 @@ export default async function launch(ctx) {
       <circle r="4" fill="#e6eef1"/><text x="-50" y="16" fill="#93a4ab" font-size="10" font-family="Chakra,sans-serif" text-anchor="middle">${t('l.corr')}</text></svg></div>
     <div class="cdown" style="position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);text-align:center;pointer-events:none"><div class="phase-tag">${t('l.ign')}</div><div class="big" style="font-family:Chakra,sans-serif;font-weight:700;font-size:clamp(48px,12vw,96px)">T-10</div></div>
     <button class="btn skipcd" style="position:absolute;left:50%;bottom:calc(16px + var(--safe-b));transform:translateX(-50%)">${t('l.skip')}</button>
-    ${isTouch ? `<div class="tc-stick"><i></i></div><div class="tc-throttle"><div class="fill"></div><div class="lab">${t('l.thr')}</div></div><div class="tc-btn big amber stagebtn" style="right:calc(110px + env(safe-area-inset-right,0px));bottom:calc(30px + var(--safe-b));display:none">${t('l.stage')}</div><div class="tc-btn mid rollL" style="right:calc(200px + env(safe-area-inset-right,0px));bottom:calc(120px + var(--safe-b));display:none">◀</div><div class="tc-btn mid rollR" style="right:calc(110px + env(safe-area-inset-right,0px));bottom:calc(120px + var(--safe-b));display:none">▶</div>` : ''}
+    ${isTouch ? `<div class="tc-stick"><i></i></div><div class="tc-throttle"><div class="fill"></div><div class="lab">${t('l.thr')}</div></div><div class="tc-btn big amber stagebtn" style="right:calc(110px + env(safe-area-inset-right,0px));bottom:calc(30px + var(--safe-b));display:none">${t('l.stage')}</div><div class="tc-btn mid rollL" style="right:calc(200px + env(safe-area-inset-right,0px));bottom:calc(120px + var(--safe-b));display:none">${t('l.rollL')}</div><div class="tc-btn mid rollR" style="right:calc(110px + env(safe-area-inset-right,0px));bottom:calc(120px + var(--safe-b));display:none">${t('l.rollR')}</div>` : ''}
     <div class="alarmbox"></div>`);
   let thrTouch = null; let thrUI = null;
   if (isTouch) { makeStick($('.tc-stick', el)); thrUI = makeThrottle($('.tc-throttle', el), (v) => (thrTouch = v)); bindBtn($('.stagebtn', el), 'stage'); }
