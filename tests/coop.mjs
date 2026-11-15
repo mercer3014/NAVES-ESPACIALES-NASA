@@ -5,7 +5,7 @@ const [from = 'prep', secs = '600', stop = 'none', out = 'tests/out'] = process.
 const tag = from.slice(0, 2);
 const args = ['--no-sandbox', '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--autoplay-policy=no-user-gesture-required'];
 const mk = async (w, h, mob, name) => {
-  const b = await puppeteer.launch({ executablePath: '/usr/bin/google-chrome', headless: 'new', protocolTimeout: 180000, args });
+  const b = await puppeteer.launch({ executablePath: process.env.CHROME_PATH || '/usr/bin/google-chrome', headless: 'new', protocolTimeout: 180000, args });
   const p = await b.newPage(); p.__logs = [];
   p.on('console', (m) => m.type() !== 'log' || /err|warn/i.test(m.text()) ? p.__logs.push(`[${name} ${m.type()}] ${m.text()}`) : 0); p.on('close', () => console.log('PAGE CLOSED', name)); b.on('disconnected', () => console.log('BROWSER DISCONNECTED', name)); p.on('error', (e) => p.__logs.push(`[${name} CRASH] ${e.message}`)); p.on('pageerror', (e) => p.__logs.push(`[${name} pageerror] ${e.message}`));
   await p.setViewport({ width: w, height: h, deviceScaleFactor: Number(process.env.QA_DPR || 1), isMobile: mob, hasTouch: mob });

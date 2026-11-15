@@ -4,7 +4,7 @@
 import puppeteer from 'puppeteer-core'; import fs from 'fs';
 const [lang, w, hh, mob, out, maxMin = '60', path = '/?debug&nointro'] = process.argv.slice(2);
 fs.mkdirSync(out, { recursive: true }); const log = (...a) => { const s = a.join(' '); console.log(s); fs.appendFileSync(out + '/qa.log', s + '\n'); };
-const b = await puppeteer.launch({ executablePath: '/usr/bin/google-chrome', headless: 'new', protocolTimeout: 180000, args: ['--no-sandbox', '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--autoplay-policy=no-user-gesture-required'] });
+const b = await puppeteer.launch({ executablePath: process.env.CHROME_PATH || '/usr/bin/google-chrome', headless: 'new', protocolTimeout: 180000, args: ['--no-sandbox', '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--autoplay-policy=no-user-gesture-required'] });
 const p = await b.newPage(); let runtimeErrors = 0;
 p.on('pageerror', (e) => { runtimeErrors++; log('[pageerror]', e.message); }); p.on('console', (m) => { if (m.type() === 'error' && !/GPU stall|favicon|WebSocket|ERR_/.test(m.text())) { runtimeErrors++; log('[console.error]', m.text().slice(0, 300)); } });
 await p.setViewport({ width: +w, height: +hh, deviceScaleFactor: Number(process.env.QA_DPR || 1), isMobile: mob === '1', hasTouch: mob === '1' });

@@ -3,7 +3,7 @@ import puppeteer from 'puppeteer-core';
 import assert from 'node:assert/strict';
 const [lang = 'en', w = '1024', h = '640', mobile = '0', fallback = '0'] = process.argv.slice(2);
 const out = '../screenshots', tag = `${lang}_${w}x${h}${fallback === '1' ? '_fallback' : ''}`;
-const b = await puppeteer.launch({ executablePath: '/usr/bin/google-chrome', headless: 'new', protocolTimeout: 180000, args: ['--no-sandbox', '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--autoplay-policy=no-user-gesture-required'] });
+const b = await puppeteer.launch({ executablePath: process.env.CHROME_PATH || '/usr/bin/google-chrome', headless: 'new', protocolTimeout: 180000, args: ['--no-sandbox', '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--autoplay-policy=no-user-gesture-required'] });
 const p = await b.newPage(), errors = [], warnings = [];
 p.on('pageerror', e => errors.push(e.message)); p.on('console', m => { if (m.type() === 'error') errors.push(m.text()); if (m.type() === 'warn') warnings.push(m.text()); });
 try {

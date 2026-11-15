@@ -2,7 +2,7 @@
 import puppeteer from 'puppeteer-core';
 import assert from 'node:assert/strict';
 const [lang='es', w='844', h='390', mobile='1'] = process.argv.slice(2);
-const b=await puppeteer.launch({executablePath:'/usr/bin/google-chrome',headless:'new',protocolTimeout:120000,args:['--no-sandbox','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--autoplay-policy=no-user-gesture-required']});
+const b=await puppeteer.launch({executablePath:process.env.CHROME_PATH||'/usr/bin/google-chrome',headless:'new',protocolTimeout:120000,args:['--no-sandbox','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--autoplay-policy=no-user-gesture-required']});
 const p=await b.newPage(), errors=[];
 p.on('pageerror',e=>errors.push(e.message));
 const tag=`${lang}_${w}x${h}`;

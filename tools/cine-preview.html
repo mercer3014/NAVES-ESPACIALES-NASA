@@ -1,0 +1,13 @@
+<!doctype html>
+<!-- Vista de desarrollo de las cinemáticas del cap. 7 / epílogo (solo `npm run dev`): /tools/cine-preview.html?cine=recovery|lrl|parade|laika|all[&rick=told] -->
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cine preview</title>
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}#gl{position:fixed;inset:0;width:100%;height:100%}</style></head>
+<body><canvas id="gl"></canvas>
+<script type="module">
+import { setPaused } from '/src/core/engine.js';
+import { playCine, playCineSequence, EPILOGUE_ORDER } from '/src/game/cutscenes/cine-play.js';
+const q = new URLSearchParams(location.search), id = q.get('cine') || 'recovery', vars = { rickHeard: q.get('rick') !== 'told' };
+window.__setPaused = setPaused;
+const run = () => (id === 'all' ? playCineSequence(EPILOGUE_ORDER, { vars }) : playCine(id, { vars })).then((r) => { window.__cineDone = r; if (q.has('loop')) run(); });
+run();
+</script></body></html>

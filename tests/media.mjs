@@ -4,7 +4,7 @@ import puppeteer from 'puppeteer-core';
 import assert from 'node:assert/strict';
 const base=process.env.BASE_URL||'http://localhost:8787';
 const publicRun=!base.includes('localhost');
-const b=await puppeteer.launch({executablePath:'/usr/bin/google-chrome',headless:'new',protocolTimeout:120000,args:['--no-sandbox','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
+const b=await puppeteer.launch({executablePath:process.env.CHROME_PATH||'/usr/bin/google-chrome',headless:'new',protocolTimeout:120000,args:['--no-sandbox','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
 try {
 for (const [lang,w,h,mobile,blocked] of [['en',1024,640,false,false],['es',390,844,true,false],['en',844,390,true,false],['es',1024,640,false,true]]) {
  const p=await b.newPage(),errors=[];p.on('pageerror',e=>errors.push(e.message));

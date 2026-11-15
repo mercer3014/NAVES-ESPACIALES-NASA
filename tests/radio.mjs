@@ -5,7 +5,7 @@ const args = ['--no-sandbox', '--use-gl=angle', '--use-angle=swiftshader', '--en
   '--use-fake-device-for-media-stream', '--use-fake-ui-for-media-stream', '--allow-loopback-in-peer-connection', '--disable-features=WebRtcHideLocalIpsWithMdns'];
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const mk = async (w, h, mob, name) => {
-  const b = await puppeteer.launch({ executablePath: '/usr/bin/google-chrome', headless: 'new', protocolTimeout: 120000, args });
+  const b = await puppeteer.launch({ executablePath: process.env.CHROME_PATH || '/usr/bin/google-chrome', headless: 'new', protocolTimeout: 120000, args });
   const p = await b.newPage(); p.__logs = [];
   p.on('console', (m) => (m.type() === 'error' || m.type() === 'warning') && p.__logs.push(`[${name}] ${m.text()}`));
   p.on('response', (r) => r.status() === 404 && p.__logs.push(`[${name} 404] ${r.url()}`));

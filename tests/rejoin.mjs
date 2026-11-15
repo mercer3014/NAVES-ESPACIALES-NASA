@@ -1,7 +1,7 @@
 // Application-level two-client refresh/reconnect, not just transport relay.
 import puppeteer from 'puppeteer-core';import assert from 'node:assert/strict';
 const base=process.env.BASE_URL||'http://localhost:8789',bs=[];
-const mk=async(w,h,mobile)=>{const b=await puppeteer.launch({executablePath:'/usr/bin/google-chrome',headless:'new',protocolTimeout:90000,args:['--no-sandbox','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});bs.push(b);const p=await b.newPage();await p.setViewport({width:w,height:h,isMobile:mobile,hasTouch:mobile,deviceScaleFactor:.5});await p.evaluateOnNewDocument(()=>localStorage.setItem('plb.v1',JSON.stringify({introSeen:true,quality:'low',tts:false,lang:'en',name:'QA'})));return p;};
+const mk=async(w,h,mobile)=>{const b=await puppeteer.launch({executablePath:process.env.CHROME_PATH||'/usr/bin/google-chrome',headless:'new',protocolTimeout:90000,args:['--no-sandbox','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});bs.push(b);const p=await b.newPage();await p.setViewport({width:w,height:h,isMobile:mobile,hasTouch:mobile,deviceScaleFactor:.5});await p.evaluateOnNewDocument(()=>localStorage.setItem('plb.v1',JSON.stringify({introSeen:true,quality:'low',tts:false,lang:'en',name:'QA'})));return p;};
 const errors=[];
 try{const A=await mk(800,600,false),B=await mk(390,844,true);for(const p of[A,B])p.on('pageerror',e=>errors.push(e.message));
 await A.goto(base+'/?debug&nointro&from=eva&ts=6');await A.waitForSelector('[data-a=create]');await A.click('[data-a=create]');await A.waitForFunction(()=>/^\d{4}$/.test(document.querySelector('.bigcode')?.textContent||''));const code=await A.$eval('.bigcode',e=>e.textContent);
