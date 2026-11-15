@@ -64,6 +64,19 @@ export const CARDS = {
     img: ['Sala de Control de Misión 2 (MOCR 2), Houston, a finales de los años sesenta.', 'Mission Operations Control Room 2 (MOCR 2), Houston, late 1960s.'],
     src: 'Gene Kranz, Failure Is Not an Option (2000)' }),
 
+  'sala-de-diseno': c(0, 'moment', 'common', ['Diseñar con límites', 'Designing within limits'], {
+    date: '1967 – 1969',
+    fact: ['Cada kilo del módulo lunar era una negociación: un instrumento más pesado dejaba menos combustible o menos carga. Los experimentos del Apolo 11 (EASEP) viajaron plegados en una bodega del propio módulo lunar, así que su masa y su tamaño tuvieron que encajar en ella.',
+      'Every kilogram of the lunar module was a negotiation: a heavier instrument left less fuel or less cargo. Apollo 11’s experiments (EASEP) rode folded in a bay of the lunar module itself, so their mass and size had to fit it.'],
+    img: ['El Eagle en la sala de montaje, con la etapa de descenso a la vista.', 'Eagle in the assembly room, descent stage in view.'],
+    src: NH + ' · ' + ALSJ }),
+  'elegir-el-sitio': c(0, 'place', 'rare', ['Cómo se eligió el sitio', 'How the site was chosen'], {
+    date: '1967 – 1969',
+    fact: ['Un comité de la NASA comparó sitios candidatos en el ecuador lunar: terreno llano, una aproximación sin montañas y poco combustible para llegar. El Sitio 2, en el Mar de la Tranquilidad, fue el elegido; el Sitio 3, en Sinus Medii, quedó como respaldo.',
+      'A NASA committee compared candidate sites near the lunar equator: flat ground, an approach free of mountains and little fuel needed to reach it. Site 2, in the Sea of Tranquility, was chosen; Site 3, in Sinus Medii, stayed as a backup.'],
+    img: ['Mapa de los sitios candidatos del Apolo sobre fotos del Lunar Orbiter.', 'Map of the Apollo candidate sites over Lunar Orbiter photos.'],
+    src: NH + ' · ' + ALSJ }),
+
   // ---------- Cap. 1 ----------
   'la-despedida': c(1, 'moment', 'common', ['La despedida', 'The farewell'], {
     date: 'jul 1969',
@@ -115,6 +128,24 @@ export const CARDS = {
     src: 'Michael Collins, Carrying the Fire (1974)' }),
 
   // ---------- Cap. 2 ----------
+  'traje-a7l': c(2, 'object', 'rare', ['El traje A7L y sus mangueras', 'The A7L suit and its hoses'], {
+    date: '16 jul 1969 · mañana',
+    fact: ['Antes de cerrar la escotilla, cada astronauta conecta el traje a la nave con mangueras de oxígeno de conectores de color: el azul trae el oxígeno hacia el traje y el rojo lo saca. Así se comprueba que el traje respira bien antes de despegar.',
+      'Before the hatch closes, each astronaut hooks the suit to the spacecraft with color-coded oxygen hoses: blue brings oxygen into the suit and red carries it out. That is how the suit is checked before liftoff.'],
+    img: ['Armstrong, Collins y Aldrin conectados a sus mangueras en la cabina.', 'Armstrong, Collins and Aldrin hooked to their hoses in the cabin.'],
+    src: ALSJ }),
+  'propelente-criogenico': c(2, 'science', 'rare', ['Propelente criogénico', 'Cryogenic propellant'], {
+    date: '16 jul 1969',
+    fact: ['El oxígeno líquido (LOX) está a −183 °C y el hidrógeno líquido (LH2) a −253 °C. Hierven poco a poco dentro del cohete, así que se siguen reponiendo hasta pocos minutos antes del despegue.',
+      'Liquid oxygen (LOX) sits at −183 °C and liquid hydrogen (LH2) at −253 °C. They slowly boil off inside the rocket, so they are topped up until a few minutes before liftoff.'],
+    img: ['Vapor blanco saliendo del Saturn V en la plataforma 39A.', 'White vapor venting from the Saturn V on Pad 39A.'],
+    src: NH + ' · Saturn V Flight Manual' }),
+  'llave-de-la-luna': c(2, 'object', 'epic', ['La llave de la Luna', 'The key to the Moon'], {
+    date: '16 jul 1969',
+    fact: ['Guenter Wendt, el jefe del equipo de la plataforma, que cerraba la escotilla a cada tripulación, le regaló a Armstrong una llave de espuma con forma de media luna: la «llave de la Luna». Era una broma de buena suerte, hecha con cariño.',
+      'Guenter Wendt, the pad leader who closed the hatch on every crew, gave Armstrong a foam key shaped like a crescent moon: the “key to the Moon.” It was an affectionate good-luck joke.'],
+    img: ['Guenter Wendt cerrando la escotilla de un Apolo.', 'Guenter Wendt closing an Apollo hatch.'],
+    src: ALSJ + ' · NASA' }),
   'despegue': c(2, 'moment', 'common', ['Despegue del Apolo 11', 'Apollo 11 liftoff'], {
     date: '16 jul 1969 · 13:32:00 UTC',
     fact: ['A las 9:32 hora de Florida, los cinco motores F-1 levantaron el Saturn V de la plataforma 39A. Jack King, la voz del control de lanzamiento, contó: «…cero, todos los motores en marcha. Despegue». Cerca de un millón de personas lo vieron desde las playas y carreteras.',

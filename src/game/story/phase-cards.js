@@ -4,7 +4,7 @@ import { unlock } from './state.js';
 export function phaseCards(phase, res = {}) {
   const s = res.stats || {};
   const give = (...ids) => ids.forEach((id) => unlock(id));
-  if (phase === 'prep') give('checklist-muslo', 'agc-dsky');
+  if (phase === 'prep') give('traje-a7l', 'propelente-criogenico', 'llave-de-la-luna', 'agc-dsky');
   if (phase === 'launch') give('despegue', 'orbita-estacionamiento', 'bruce-mccandless');
   if (phase === 'cruise') {
     give('tli', 'acoplamiento', 'modo-barbacoa', 'loi', 'eagle-lm5');

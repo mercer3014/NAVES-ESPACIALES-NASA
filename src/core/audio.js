@@ -23,10 +23,10 @@ export function sfx(name, opts = {}) {
 export function preloadSfx() { for (const n of SFX) if (!S[n]) S[n] = new Howl({ src: [`/audio/sfx/${n}.mp3`], preload: true }); }
 export function music(name, { loop = true, fade = 1500, vol: v = 0.5 } = {}) {
   if (curName === name) return;
-  const old = curMusic, oldId = curMusicId; curName = name;
-  if (old && oldId != null) { old.fade(old.volume(oldId), 0, fade, oldId); setTimeout(() => old.stop(oldId), fade + 50); }
+  const old = curMusic, oldId = curMusicId, oldName = curName; curName = name;
+  if (old && oldId != null) { old.fade(old.volume(oldId), 0, fade, oldId); setTimeout(() => { old.stop(oldId); if (oldName && curName !== oldName && M[oldName] === old) { old.unload(); delete M[oldName]; } }, fade + 50); } // libera la pista anterior (no se queda decodificada en RAM)
   if (!name) { curMusic = null; curMusicId = null; return; }
-  if (!M[name]) M[name] = new Howl({ src: [name.includes('/') ? `/audio/${name}.mp3` : `/audio/music/${name}.mp3`], loop, html5: false, preload: true });
+  if (!M[name]) M[name] = new Howl({ src: [name.includes('/') ? `/audio/${name}.mp3` : `/audio/music/${name}.mp3`], loop, html5: true, preload: true }); // html5: streaming; evita decodificar el mp3 entero a PCM (40-60 MB por pista)
   curMusic = M[name]; curMusic._base = v; curMusic.loop(loop);
   curMusicId = curMusic.play(); curMusic.volume(0, curMusicId); curMusic.fade(0, v * vol().music * duck, fade, curMusicId);
 }

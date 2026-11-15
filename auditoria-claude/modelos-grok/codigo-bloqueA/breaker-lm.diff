@@ -1,0 +1,21 @@
+--- a/src/game/story/breaker.js
++++ b/src/game/story/breaker.js
+@@ -1,6 +1,6 @@
+ // Cap. 5.7 → 6.2 · «El disyuntor»: dentro del Eagle, el disyuntor de armado del motor de ascenso está roto (hecho real: lo
+ // golpeó una mochila). Puzle: cerrarlo sin tocarlo con los dedos ni con metal. Solución histórica: el rotulador de Aldrin.
+-// Mundo: cabina del artista (cabin-panels.glb, reutilizada como interior del LM según el plan) + cabin-breaker.glb + cabin-props.glb.
++// Mundo: interior propio del LM (lm-interior.glb: de pie, 2 ventanas triangulares, DSKY, panel 16) + cabin-breaker.glb + cabin-props.glb.
+ import { THREE, model } from '../../core/engine.js';
+ import { makeCabin } from '../../scenes/cabin.js';
+ import { sfx } from '../../core/audio.js';
+@@ -12,8 +12,8 @@
+ export const PROPS_AT = { pos: [0.5, -0.3, -0.42], yaw: -0.9 }; // repisa bajo el panel derecho, al alcance de Aldrin
+ 
+ export default async function breakerScene() {
+-  const cab = makeCabin(); const world = { scene: cab.scene, camera: cab.camera, update: (dt) => cab.update(dt), dispose: () => cab.dispose() };
+-  await cab.ready.catch((e) => console.warn('cabin-panels.glb no disponible', e));
++  const cab = makeCabin({ glb: 'lm-interior' }); const world = { scene: cab.scene, camera: cab.camera, update: (dt) => cab.update(dt), dispose: () => cab.dispose() };
++  await cab.ready.catch((e) => console.warn('lm-interior.glb no disponible', e));
+   const brk = await model('cabin-breaker').catch((e) => { console.warn('cabin-breaker.glb no disponible', e); return null; });
+   let broken = null, q0 = null; if (brk) { cab.scene.add(brk); broken = brk.getObjectByName('lm-breaker-broken'); q0 = broken?.quaternion.clone(); }
+   const props = await model('cabin-props').catch(() => null); let pen = null, pencil = null;

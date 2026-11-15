@@ -1,16 +1,18 @@
 /* Despegue lunar (botón único de encendido) y última transmisión (imagen de TV de 1969) */
 .ign-btn { position: fixed; left: 50%; bottom: calc(max(58px, min(12vh, 120px)) + 26px); transform: translateX(-50%); z-index: 73; pointer-events: auto;
-  width: 132px; height: 132px; border-radius: 50%; border: 2px solid #ffcf6a; background: radial-gradient(circle at 50% 40%, #6b1d12, #2a0a06 70%); color: #ffe7b0;
-  font: 700 14px/1.15 Chakra, system-ui, sans-serif; letter-spacing: .08em; text-align: center; cursor: pointer; box-shadow: 0 0 0 0 #ffcf6a88; animation: ignPulse 1.2s infinite; }
-.ign-btn small { display: block; margin-top: 6px; font: 600 11px Mono, monospace; letter-spacing: .14em; color: #ffcf6a; }
-.ign-btn:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+  width: 132px; height: 132px; border-radius: 50%; border: 2px solid #FF4F00; background: #0B0C0E; color: #F2EFE6;
+  font: 700 14px/1.15 var(--f-ui, Barlow, system-ui, sans-serif); letter-spacing: .08em; text-transform: uppercase; text-align: center; cursor: pointer; animation: ignPulse 1.2s steps(2) infinite; }
+.ign-btn small { display: block; margin-top: 6px; font: 500 11px var(--f-mono, monospace); letter-spacing: .14em; color: #FFB000; }
+.ign-btn:hover { background: #FF4F00; color: #0B0C0E; }
+.ign-btn:hover small { color: #0B0C0E; }
+.ign-btn:focus-visible { outline: 2px solid #F2EFE6; outline-offset: 4px; }
 .ign-btn:active { transform: translateX(-50%) scale(.96); }
-@keyframes ignPulse { 0% { box-shadow: 0 0 0 0 #ffcf6a88; } 70% { box-shadow: 0 0 0 22px #ffcf6a00; } 100% { box-shadow: 0 0 0 0 #ffcf6a00; } }
+@keyframes ignPulse { 50% { border-color: #FFB000; } }
 
 body.safire-bw #gl { filter: grayscale(1) contrast(1.15) brightness(.92); transition: filter .8s; }
 body.tv-bw #gl { filter: grayscale(1) contrast(1.35) brightness(1.08) blur(.6px); }
 .tvfx { position: fixed; inset: 0; z-index: 55; pointer-events: none;
   background: repeating-linear-gradient(0deg, #0000 0 2px, #0006 2px 3px), radial-gradient(ellipse at center, #0000 55%, #000c 100%); }
 .tvfx::after { content: ""; position: absolute; left: 0; right: 0; height: 18%; background: linear-gradient(#fff0, #ffffff12, #fff0); animation: tvRoll 6s linear infinite; }
-.tvfx b { position: absolute; top: calc(max(58px, min(12vh, 120px)) + 12px); left: 18px; font: 600 12px Mono, monospace; letter-spacing: .2em; color: #e8e8e8; text-shadow: 0 0 6px #000; }
+.tvfx b { position: absolute; top: calc(max(58px, min(12vh, 120px)) + 12px); left: 18px; font: 500 12px var(--f-mono, monospace); letter-spacing: .2em; color: #F2EFE6; text-shadow: 0 0 4px #000; }
 @keyframes tvRoll { from { top: -18%; } to { top: 100%; } }

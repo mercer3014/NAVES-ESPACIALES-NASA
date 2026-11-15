@@ -1,0 +1,86 @@
+--- a/src/game/story/night.js
++++ b/src/game/story/night.js
+@@ -1,7 +1,7 @@
+ // Cap. 3.2 · «Noche» en Columbia (18 de julio de 1969, luces atenuadas): Aldrin cuenta lo de Marion Moon y, si la
+ // Confianza lo permite, Neil nombra a Karen (decisión c3-night). La nave gira despacio («modo barbacoa»): la Tierra y la
+ // Luna se turnan en la ventana. Mundo: cm-interior.glb (cabina de 3,4 m; el panel principal ocupa y 1,0–1,9, z −0,2–0,65)
+-// y los civiles flotando en el hueco libre sobre las piernas de los asientos (z −1,3…−0,5, y 1,35–2,1), de costado.
++// y la tripulación (mono de vuelo, *-vuelo.glb) flotando en el hueco libre sobre las piernas de los asientos (z −1,3…−0,5, y 1,35–2,1), de costado.
+ import { THREE, modelAnim } from '../../core/engine.js';
+ import { dbg } from '../../core/store.js';
+ import { skySphere, twinkleStars, earth, moon, tickAll } from '../../scenes/space.js';
+@@ -60,7 +60,7 @@
+   return world;
+ }
+ 
+-// Astronauta civil flotando casi de pie en la bahía inferior (x, y = pies, z), con inclinación leve y vaivén.
++// Astronauta con mono de vuelo flotando casi de pie en la bahía inferior (x, y = pies, z), con inclinación leve y vaivén.
+ // a.head es la posición de mundo del hueso de la cabeza (se actualiza cada fotograma) para encuadrar primeros planos.
+ export async function floater(world, name, { x = 0, y = 0.95, z = -1, yaw = 0, tilt = 0, phase = 0 } = {}) {
+   const c = await character(name, 'idle', { at: [x, y, z], yaw }).catch((e) => { console.warn(name + '.glb no disponible', e); return null; });
+@@ -89,9 +89,9 @@
+     W = await makeColumbia({ light: 'night', spin: 0.06 });
+     const [buzz, mike, neil] = await Promise.all([
+       // Aldrin y Collins flotan acostados sobre el panel principal (el único hueco libre de la cabina); Neil, de pie junto a la ventana lateral
+-      floater(W, 'aldrin-civil', { x: -0.9, y: 2.12, z: 0.15, tilt: -Math.PI / 2, phase: 0.3 }),
+-      floater(W, 'collins-civil', { x: 0.9, y: 2.48, z: -0.15, tilt: Math.PI / 2, phase: 1.4 }),
+-      floater(W, 'armstrong-civil', { x: -0.72, y: 0.9, z: 1.0, yaw: -2.25, phase: 2.2 }),
++      floater(W, 'aldrin-vuelo', { x: -0.9, y: 2.12, z: 0.15, tilt: -Math.PI / 2, phase: 0.3 }),
++      floater(W, 'collins-vuelo', { x: 0.9, y: 2.48, z: -0.15, tilt: Math.PI / 2, phase: 1.4 }),
++      floater(W, 'armstrong-vuelo', { x: -0.72, y: 0.9, z: 1.0, yaw: -2.25, phase: 2.2 }),
+     ]);
+     // primer plano: los acostados miran a +Z (hacia la escotilla); a Neil se lo toma de perfil contra la ventana
+     const near = (a, side = 1) => (!a ? null : a === neil
+--- a/src/game/story/tv.js
++++ b/src/game/story/tv.js
+@@ -1,6 +1,6 @@
+ // Cap. 7.2 · «La última transmisión» (23 jul 1969): los tres frente a la cámara de TV dentro de Columbia, en blanco y negro.
+ // Fragmentos reales de NASA Day 8 Highlights (Collins, Aldrin, Armstrong), recortados a ~15–24 s cada uno; saltable.
+-// Mundo: cm-interior.glb + armstrong/aldrin/collins-civil flotando (clips idle/talk). Imagen de TV: filtro sobre #gl + barrido.
++// Mundo: cm-interior.glb + armstrong/aldrin/collins-vuelo (mono de vuelo) flotando (clips idle/talk). Imagen de TV: filtro sobre #gl + barrido.
+ import { THREE, model } from '../../core/engine.js';
+ import { playA11 } from '../../audio/a11-voice.js';
+ import { runCine, character, tx } from './cine.js';
+@@ -27,7 +27,7 @@
+   const SPOTS = { collins: [-0.5, -0.56, -0.18, 0.18], armstrong: [0.02, -0.5, -0.42, 0], aldrin: [0.52, -0.6, -0.22, -0.16] };
+   const crew = {};
+   await Promise.all(Object.entries(SPOTS).map(async ([k, [x, y, z, yaw]]) => {
+-    const c = await character(k + '-civil', 'idle', { at: [x, y, z], yaw }).catch((e) => { console.warn(k + '-civil.glb no disponible', e); return null; });
++    const c = await character(k + '-vuelo', 'idle', { at: [x, y, z], yaw }).catch((e) => { console.warn(k + '-vuelo.glb no disponible', e); return null; });
+     if (c) { crew[k] = { ...c, y0: y, ph: Math.random() * 6 }; scene.add(c.root); }
+   }));
+   const speak = (who) => { for (const [k, c] of Object.entries(crew)) c.play(k === who ? 'talk' : 'idle', { fade: 0.4 }); };
+--- a/src/game/story/collins-solo.js
++++ b/src/game/story/collins-solo.js
+@@ -32,7 +32,7 @@
+   let W = null; const cleanup = [];
+   try {
+     W = await makeColumbia({ light: 'dark', spin: 0, withEarth: false, withMoon: false });
+-    const mike = await floater(W, 'collins-civil', { x: 0.9, y: 2.3, z: 0.0, tilt: Math.PI / 2, phase: 0.8 });
++    const mike = await floater(W, 'collins-vuelo', { x: 0.9, y: 2.3, z: 0.0, tilt: Math.PI / 2, phase: 0.8 });
+     // Luna grande con brillo propio (la cabina sigue a oscuras) y sus marcas
+     const lunaMat = new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xd8d2c6, emissiveMap: tex('/tex/moon_2k.jpg'), emissiveIntensity: 0.85, roughness: 1 });
+     const luna = new THREE.Mesh(new THREE.SphereGeometry(R, 96, 64), lunaMat); luna.position.copy(CEN); W.scene.add(luna);
+--- a/src/game/story/reunion.js
++++ b/src/game/story/reunion.js
+@@ -1,6 +1,6 @@
+ // Cap. 6.4 · «El reencuentro» (21 jul 1969, 21:35 UTC, órbita lunar): Collins acopla Columbia con la etapa de ascenso de
+ // Eagle (minijuego docking.js) y, ya dentro, la escotilla se abre: polvo lunar, cajas de muestras y la decisión del abrazo.
+-// Mundos propios: órbita (csm-columbia + apollo-lunar-module sin la etapa de descenso) e interior (cm-interior + civiles).
++// Mundos propios: órbita (csm-columbia + apollo-lunar-module sin la etapa de descenso) e interior (cm-interior + tripulación con mono de vuelo, *-vuelo.glb).
+ import { THREE, model, modelAnim, setWorld } from '../../core/engine.js';
+ import { show } from '../../ui/router.js';
+ import { music } from '../../core/audio.js';
+@@ -80,9 +80,9 @@
+   // tres hombres flotando (gravedad cero): Collins espera; Armstrong y Aldrin bajan por el túnel
+   const load = (n, at, yaw) => character(n, 'idle', { at, yaw }).catch(() => null);
+   const [col, arm, ald] = await Promise.all([
+-    load('collins-civil', [c.x - 0.45, c.y - 1.05, c.z - 0.15], 0.5),
+-    load('armstrong-civil', [c.x + 0.05, top + 0.6, c.z], Math.PI),
+-    load('aldrin-civil', [c.x + 0.35, top + 1.9, c.z + 0.1], Math.PI + 0.3),
++    load('collins-vuelo', [c.x - 0.45, c.y - 1.05, c.z - 0.15], 0.5),
++    load('armstrong-vuelo', [c.x + 0.05, top + 0.6, c.z], Math.PI),
++    load('aldrin-vuelo', [c.x + 0.35, top + 1.9, c.z + 0.1], Math.PI + 0.3),
+   ]);
+   const crew = [col, arm, ald].filter(Boolean); crew.forEach((k) => scene.add(k.root));
+   const yArm = c.y - 0.85, yAld = c.y - 0.95; let hug = 0, saidThere = false;

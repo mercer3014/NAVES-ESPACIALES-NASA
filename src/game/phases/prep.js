@@ -1,152 +1,124 @@
-// FASE 1 · Preparación: panel de cabina, checklist, 3 fallas, DSKY, ronda GO/NO-GO
-import { THREE } from '../../core/engine.js';
+// FASE 1 · «La mañana del lanzamiento»: la plataforma 39A de madrugada, 4 tareas en cualquier orden,
+// la escotilla al final y la ronda GO/NO-GO automática. Cada tarea es un módulo (ver prep-tasks/index.js).
+import './prep-tasks.css';
 import { t, extend } from '../../core/i18n.js';
-import { $, $$, h, toast, achieve, clamp } from '../../core/util.js';
-import { sfx, music, voice } from '../../core/audio.js';
-import { on } from '../../core/store.js';
-import { makePad, H, BASE_Y } from '../../scenes/pad.js';
-import { makeCabin, SW_MAP } from '../../scenes/cabin.js';
-import { renderer } from '../../core/engine.js';
-import { DEBUG } from '../../core/store.js';
-import { objectiveCardHtml } from '../../ui/flight-hud.js';
+import { $, achieve, clamp } from '../../core/util.js';
+import { sfx, music } from '../../core/audio.js';
+import { store, dbg } from '../../core/store.js';
+import { makePad, BASE_Y } from '../../scenes/pad.js';
+import { TASKS } from './prep-tasks/index.js';
+
 extend({
-  'prep.alarm': ['ALARMA MAESTRA', 'MASTER ALARM'], 'prep.askcc': ['¡Pregunta a Control de Misión qué hacer!', 'Ask Mission Control what to do!'],
-  'prep.fixed': ['Falla resuelta', 'Fault cleared'], 'prep.wrong': ['Fuera de orden — sigue la lista', 'Out of order — follow the checklist'],
-  'prep.poll': ['Toca cada estación para pedir su GO', 'Tap each station to poll for GO'], 'prep.pollcc': ['Control de Misión está haciendo la ronda…', 'Mission Control is running the poll…'],
-  'prep.allgo': ['¡Todas las estaciones GO para lanzamiento!', 'All stations GO for launch!'], 'prep.purge': ['PURGA', 'PURGE'], 'prep.lamps': ['Lámparas', 'Lamps'],
-  'prep.fc': ['CC', 'FC'], 'prep.cabin': ['Presión cabina', 'Cabin press'], 'prep.bus': ['BUS', 'BUS'], 'prep.mode': ['Modo', 'Mode'],
+  'prep.alarm': ['ALARMA MAESTRA', 'MASTER ALARM'], 'prep.pollcc': ['Control de Misión está haciendo la ronda…', 'Mission Control is running the poll…'],
+  'prep.allgo': ['¡Todas las estaciones GO para lanzamiento!', 'All stations GO for launch!'], 'prep.fixed': ['Falla resuelta', 'Fault cleared'],
+  'prep2.title': ['La mañana del lanzamiento', 'Launch morning'], 'prep2.tasks': ['TAREAS', 'TASKS'], 'prep2.when': ['16 JUL 1969 · 04:15 · PLATAFORMA 39A', 'JUL 16 1969 · 04:15 · PAD 39A'],
+  'prep2.locked': ['Termina las 4 tareas para cerrar la escotilla', 'Finish the 4 tasks to close the hatch'], 'prep2.done': ['¡TAREA LISTA!', 'TASK DONE!'],
+  'prep2.fact': ['DATO REAL', 'REAL FACT'], 'prep2.close': ['Volver a la plataforma', 'Back to the pad'], 'prep2.n': ['TAREA', 'TASK'],
+  'prep2.start': ['Buenos días. Toca una tarea: puedes hacerlas en cualquier orden.', 'Good morning. Tap a task: do them in any order.'],
+  'prep2.hatchopen': ['¡Solo falta la escotilla!', 'Only the hatch is left!'],
+  'prep2.next': ['Toca «{task}».', 'Tap "{task}".'], 'prep2.pad': ['PANCHO', 'PANCHO'],
 });
-const GAUGE = (lab) => `<div class="gauge"><svg viewBox="0 0 84 50"><path d="M8 44 A34 34 0 0 1 76 44" fill="none" stroke="#333" stroke-width="7"/><path d="M8 44 A34 34 0 0 1 24 16" fill="none" stroke="#fc3d21" stroke-width="7"/><path d="M60 16 A34 34 0 0 1 76 44" fill="none" stroke="#3ddc84" stroke-width="7"/><line x1="42" y1="44" x2="42" y2="14" stroke="#fff" stroke-width="2.5" stroke-linecap="round" class="needle" style="transform-origin:42px 44px;transition:transform .5s cubic-bezier(.3,1.6,.5,1)"/><circle cx="42" cy="44" r="4" fill="#ddd"/></svg><div class="lab">${lab}</div></div>`;
-const SW = (id, lab, guard) => `<div class="sw" data-sw="${id}">${guard ? '<div class="guard"></div>' : ''}<div class="body"><i></i></div><div class="lab">${lab}</div><div class="st">OFF</div></div>`;
-const STEPS = [
-  { k: 'cl.bat', sw: ['batA', 'batB'] }, { k: 'cl.fc', sw: ['fc1', 'fc2', 'fc3'] }, { k: 'cl.o2', sw: ['o2'] }, { k: 'cl.gnc', sw: ['gnc'] },
-  { k: 'cl.abort', sw: ['abort'] }, { k: 'cl.sband', sw: ['sband'] }, { k: 'cl.dsky', dsky: true }, { k: 'cl.gonogo', poll: true },
-];
 const STATIONS = ['booster', 'retro', 'fido', 'guidance', 'eecom', 'surgeon', 'network'];
+const L = () => (store.get('lang') === 'en' ? 1 : 0);
+const tx = (pair) => pair[L()];
+const X_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="square" aria-hidden="true"><path d="M5 5 L19 19 M19 5 L5 19"/></svg>';
+const LOCK = '<svg class="pt-lock" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 7V5a4 4 0 0 1 8 0v2h1v8H3V7zm2 0h4V5a2 2 0 0 0-4 0z"/></svg>';
+for (const k of TASKS) extend({ ['prep2.h.' + k.id]: k.hint });
+const MAIN = TASKS.filter((k) => k.id !== 'hatch'), HATCH = TASKS.find((k) => k.id === 'hatch');
 
 export default async function prep(ctx) {
-  // Cabina 3D del artista (cabin-panels.glb) como mundo de la fase; si no carga, vista orbital de la plataforma.
-  const cab = makeCabin({ props: true }); ctx.world(cab); let cabOk = true;
-  cab.ready.catch((e) => { console.warn('cabin-panels.glb no disponible', e); cabOk = false; const W = makePad(); ctx.world(W); const cam = W.camera; W.setThrust(0);
-    let ang = 0.6; ctx.loop((dt) => { ang += dt * 0.03; cam.position.set(Math.sin(ang) * 230, BASE_Y + 32 + Math.sin(ang * 0.7) * 10, Math.cos(ang) * 230); cam.lookAt(0, BASE_Y + 52, 0); }); });
-  if (DEBUG) window.__prepDbg = { cab };
+  // mundo: plataforma de madrugada, cámara orbitando el Saturn V
+  const W = makePad(); ctx.world(W); W.setThrust(0);
+  W.scene.traverse((o) => { if (o.isLight) o.intensity *= 0.5; });
+  const cam = W.camera; let ang = 0.6;
+  ctx.loop((dt) => { ang += dt * 0.03; cam.position.set(Math.sin(ang) * 230, BASE_Y + 32 + Math.sin(ang * 0.7) * 10, Math.cos(ang) * 230); cam.lookAt(0, BASE_Y + 52, 0); });
   music('ambient', { vol: 0.45 });
-  const coop = ctx.cc.coop, hints = ctx.diffName !== 'veteran';
-  const el = ctx.hud(`${objectiveCardHtml({ kicker: `${t('ph.n')} 01 · ${t('ph.prep')}`, titleHtml: `<div class="phase-title">${t('prep.title')}</div>` })}
-    <div class="cockpit"><div class="cpanel">
-      <div class="cgroup checklist panel"><h3>${t('prep.cl')}</h3><ol>${STEPS.map((s, i) => `<li data-step="${i}">${t(s.k)}</li>`).join('')}</ol></div>
-      <div class="cgroup"><h4>${t('prep.power')}</h4><div class="sw-row">${SW('batA', 'BAT A')}${SW('batB', 'BAT B')}${SW('batC', 'BAT C')}</div><div class="sw-row" style="margin-top:8px">${GAUGE(t('prep.bus') + ' A')}${GAUGE(t('prep.bus') + ' B')}</div></div>
-      <div class="cgroup"><h4>${t('prep.fuel')}</h4><div class="sw-row">${SW('fc1', t('prep.fc') + ' 1')}${SW('fc2', t('prep.fc') + ' 2')}${SW('fc3', t('prep.fc') + ' 3')}</div><div class="sw-row" style="margin-top:8px;align-items:center">${GAUGE(t('prep.fc') + ' 2 PSI')}<button class="btn purge" style="padding:.6em 1em">${t('prep.purge')}</button></div></div>
-      <div class="cgroup"><h4>${t('prep.env')} · ${t('prep.comm')}</h4><div class="sw-row">${SW('o2', 'O₂ FAN')}${SW('sband', 'S-BAND')}</div><div class="sw-row" style="margin-top:8px;align-items:center">${GAUGE(t('prep.cabin'))}<div><div class="phase-tag" style="font-size:.55rem">${t('prep.lamps')}</div><div class="lamps" style="display:grid;grid-template-columns:repeat(3,16px);gap:5px;margin-top:4px">${[0, 1, 2, 3, 4, 5].map((i) => `<span class="led-ind" data-lamp="${i}"></span>`).join('')}</div></div></div></div>
-      <div class="cgroup"><h4>${t('prep.gnc')}</h4><div class="sw-row">${SW('gnc', 'PGNS')}${SW('abort', 'ABORT', true)}</div><div class="sw-row" style="margin-top:8px"><span class="barber" data-bp="1"></span><span class="barber" data-bp="2"></span><span class="barber" data-bp="3"></span></div></div>
-      <div class="cgroup"><h4>DSKY</h4><div class="dsky"><div class="lamps"><span>UPLINK</span><span>NO ATT</span><span>STBY</span><span>KEY REL</span><span>OPR ERR</span><span class="w">PROG</span><span>TEMP</span><span>GIMBAL</span></div>
-        <div class="disp"><small>PROG</small><span class="d-prog">00</span><small>VERB</small><span class="d-verb">--</span><small>NOUN</small><span class="d-noun">--</span></div>
-        <div class="keys">${['VERB', 'NOUN', '7', '8', '9', 'CLR', '0', '4', '5', '6', 'RSET', 'ENTR', '1', '2', '3'].map((k) => `<button data-k="${k}">${k}</button>`).join('')}</div></div></div>
-    </div></div>
-    <div class="alarmbox"></div>`);
-  const S = {}; $$('.sw', el).forEach((s) => (S[s.dataset.sw] = s));
-  const needles = $$('.needle', el); const NDL = ['needle-volt-a', 'needle-volt-b', null, 'needle-cabin-press']; const setG = (i, v) => { needles[i].style.transform = `rotate(${(clamp(v, 0, 1) - 0.5) * 160}deg)`; if (NDL[i]) cab.setNeedle(NDL[i], i === 3 ? v * 0.45 : v * 0.9); };
-  const gv = [0.05, 0.05, 0.05, 0.5]; gv.forEach((v, i) => setG(i, v));
-  let step = 0, mistakes = 0, faultsFixed = 0; const t0 = ctx.time; const faults = {}; let alarmOn = false;
-  const isOn = (id) => S[id].classList.contains('on');
-  const setSw = (id, v) => { cab.setSwitch(id, v); S[id].classList.toggle('on', v); $('.st', S[id]).textContent = v ? 'ON' : 'OFF'; };
-  const paint = () => {
-    $$('li[data-step]', el).forEach((li, i) => { li.className = i < step ? 'done' : i === step ? 'cur' : ''; });
-    $$('.sw', el).forEach((s) => s.classList.remove('hint'));
-    const st = STEPS[step]; if (hints && st?.sw) st.sw.forEach((id) => !isOn(id) && S[id].classList.add('hint'));
-    const li = $('li.cur', el); if (li) li.parentNode.parentNode.scrollTop = li.offsetTop - 40;
-    const tgt = st?.sw ? S[st.sw[0]] : st?.dsky ? $('.dsky', el) : null; if (tgt && innerWidth < 821) tgt.closest('.cgroup').scrollIntoView({ block: 'center', behavior: 'smooth' });
-    ctx.cc.snap({ step, n: STEPS.length, faults: Object.keys(faults).filter((k) => !faults[k].fixed), mistakes }, true);
-  };
-  const alarm = (on) => { alarmOn = on; cab.alarm(on); $('.alarmbox', el).innerHTML = on ? '<div class="alarm"></div>' : ''; };
-  const raise = (k) => {
-    if (faults[k]) return; faults[k] = { at: ctx.time, fixed: false }; alarm(true); sfx('error'); sfx('computer', { vol: 0.6 });
-    ctx.banner(t('prep.alarm'), coop && ctx.cc.remote() ? t('prep.askcc') : t('fault.' + k), 3200, '');
-    if (coop && ctx.cc.remote()) ctx.cc.log('fault.' + k, null, 'fault'); else ctx.say('fault.' + k, { ms: 7000 });
-    if (k === 'fc2') { gv[2] = 0.08; setG(2, 0.08); S.fc2.classList.add('flash'); cab.talkback(2, 'barber'); }
-    if (k === 'busb') { gv[1] = 0.18; setG(1, 0.18); }
-    if (k === 'lamp') { $$('[data-lamp]', el).forEach((l, i) => (l.className = 'led-ind ' + (i === 4 ? '' : 'g'))); }
-    paint(); const g = { fc2: S.fc2, busb: S.batC, lamp: $('[data-lamp="4"]', el) }[k]; if (innerWidth < 821) g.closest('.cgroup').scrollIntoView({ block: 'center', behavior: 'smooth' });
-  };
-  const fix = (k) => {
-    const f = faults[k]; if (!f || f.fixed) return; f.fixed = true; faultsFixed++; f.dt = ctx.time - f.at; sfx('ok'); toast(t('prep.fixed'), 'info'); ctx.cc.log('prep.fixed', null, 'ok');
-    if (!Object.values(faults).some((x) => !x.fixed)) alarm(false); S.fc2.classList.remove('flash'); paint();
-  };
-  // interruptores
-  $$('.sw', el).forEach((s) => s.addEventListener('click', () => {
-    const id = s.dataset.sw;
-    if (s.querySelector('.guard') && !s.classList.contains('guard-open')) { s.classList.add('guard-open'); cab.openGuard(id); sfx('open', { vol: 0.5 }); return; }
-    if (id === 'batC') { setSw(id, !isOn(id)); sfx('switch'); if (isOn(id) && faults.busb) { gv[1] = 0.78; setG(1, 0.78); fix('busb'); } return; }
-    const st = STEPS[step]; const belongs = st?.sw?.includes(id);
-    if (!belongs) { // fuera de orden: si es de un paso ya hecho y se apaga, o futuro → error
-      mistakes++; sfx('error'); s.classList.add('flash'); setTimeout(() => s.classList.remove('flash'), 1500); toast(t('prep.wrong'), 'info'); return;
+
+  const done = {}; let mistakes = 0, faults = 0, hints = 0, openI = null, ac = null, busy = false, lastProg = 0, finished = false;
+  const t0 = ctx.time;
+  const el = ctx.hud(`<div class="pt-hud"><div class="pt-night"></div>
+    <div class="pt-bar"><div class="pt-bar-h"><b>${t('prep2.tasks')}</b><span class="pt-n mono">0/${MAIN.length}</span></div>
+      <div class="pt-icons">${TASKS.map((k) => `<button type="button" class="pt-ic" data-id="${k.id}" aria-label="${tx(k.title)}"><span class="pt-ic-g">${k.icon}</span><span class="pt-ic-l">${tx(k.short)}</span></button>`).join('')}</div></div>
+    <div class="pt-hint" hidden></div>
+    <div class="pt-win" hidden role="dialog" aria-modal="true"><div class="pt-win-h"><span class="pt-win-n"></span><b></b><button type="button" class="pt-x" aria-label="${t('prep2.close')}">${X_ICON}</button></div>
+      <p class="pt-win-brief"></p><div class="pt-win-body"></div><div class="pt-win-hint"></div><div class="pt-win-fact"></div></div></div>`);
+  const btn = (id) => $(`.pt-ic[data-id="${id}"]`, el), win = $('.pt-win', el), body = $('.pt-win-body', el), padHint = $('.pt-hint', el), winHint = $('.pt-win-hint', el);
+  const nDone = () => MAIN.filter((k) => done[k.id]).length;
+  const hatchReady = () => nDone() === MAIN.length;
+
+  function paint() {
+    $('.pt-n', el).textContent = `${nDone()}/${MAIN.length}`;
+    for (const k of TASKS) {
+      const b = btn(k.id), isH = k.id === 'hatch', lock = isH && !hatchReady() && !done.hatch;
+      b.classList.toggle('pt-done', !!done[k.id]); 
+      b.disabled = lock; b.querySelector('.pt-lock')?.remove(); if (lock) b.insertAdjacentHTML('beforeend', LOCK);
+      b.title = lock ? t('prep2.locked') : tx(k.title);
     }
-    setSw(id, !isOn(id)); sfx('switch'); navigator.vibrate?.(10);
-    s.classList.toggle('hint', hints && !isOn(id));
-    if (id === 'batA' || id === 'batB') { const i = id === 'batA' ? 0 : 1; gv[i] = isOn(id) ? 0.78 : 0.05; setG(i, gv[i]); }
-    if (id.startsWith('fc')) { if (id === 'fc2') { gv[2] = isOn(id) ? 0.75 : 0.05; setG(2, gv[2]); } }
-    if (id === 'o2') { gv[3] = 0.72; setG(3, 0.72); }
-    if (id === 'gnc') $$('.barber', el).forEach((b, i) => setTimeout(() => { b.className = 'barber on'; setTimeout(() => (b.className = 'barber ok'), 700); }, i * 250));
-    if (st.sw.every(isOn)) advance();
-  }));
-  $('.purge', el).onclick = () => { cab.openGuard('switch-04'); cab.setSwitch('switch-04', true); setTimeout(() => cab.setSwitch('switch-04', false), 3000); sfx('thruster', { vol: 0.5 }); if (faults.fc2) { gv[2] = 0.75; setG(2, 0.75); fix('fc2'); cab.talkback(2, isOn('fc2') ? 'green' : 'gray'); } else { mistakes++; sfx('error'); } };
-  let lampTaps = 0; $('[data-lamp="4"]', el).onclick = () => { if (!faults.lamp || faults.lamp.fixed) return; sfx('tick'); if (++lampTaps >= 3) { $('[data-lamp="4"]', el).className = 'led-ind g'; fix('lamp'); } };
-  // DSKY: VERB 37 NOUN 01 ENTR
-  let dbuf = '', dmode = null, verb = '--', noun = '--';
-  const dpaint = () => { $('.d-verb', el).textContent = verb; $('.d-noun', el).textContent = noun; };
-  $$('.dsky .keys button', el).forEach((b) => b.addEventListener('click', () => {
-    const k = b.dataset.k; cab.press(/\d/.test(k) ? k : k.toLowerCase()); sfx('tick', { vol: 0.6 });
-    if (k === 'VERB' || k === 'NOUN') { dmode = k; dbuf = ''; if (k === 'VERB') verb = '__'; else noun = '__'; }
-    else if (/\d/.test(k) && dmode) { dbuf = (dbuf + k).slice(-2); if (dmode === 'VERB') verb = dbuf.padEnd(2, '_'); else noun = dbuf.padEnd(2, '_'); }
-    else if (k === 'CLR') { verb = noun = '--'; dmode = null; }
-    else if (k === 'ENTR') {
-      if (STEPS[step]?.dsky && verb === '37' && noun === '01') { $('.d-prog', el).textContent = '01'; sfx('ok'); advance(); }
-      else { mistakes++; sfx('error'); $$('.dsky .lamps span')[4].classList.add('on'); setTimeout(() => $$('.dsky .lamps span')[4]?.classList.remove('on'), 1600); }
-    } else if (k === 'RSET') $$('.dsky .lamps span', el).forEach((l) => l.classList.remove('on'));
-    dpaint();
-  }));
-  // clic/toque directo en la cabina 3D: el pivote tocado acciona el control HTML equivalente (misma lógica y orden)
-  { const REV = Object.fromEntries(Object.entries(SW_MAP).map(([a, b]) => [b, a])); const cv = renderer.domElement;
-    const onDown = (e) => { if (!cabOk) return; const n = cab.pick(e.clientX, e.clientY); if (!n) return;
-      if (n.startsWith('dsky-key-')) { const k = n.slice(9).toUpperCase(); const b = $(`.dsky .keys button[data-k="${k}"]`, el); b?.click(); return; }
-      const sw = n.startsWith('guard-') ? cab.N[n]?.userData.switch : n; if (sw === 'switch-04') { $('.purge', el).click(); return; } const id = REV[sw]; if (id && S[id]) S[id].click(); };
-    const onMove = (e) => cab.look(-(e.clientX / innerWidth - 0.5) * 0.35, -(e.clientY / innerHeight - 0.5) * 0.2);
-    cv.addEventListener('pointerdown', onDown); addEventListener('pointermove', onMove);
-    ctx.onCleanup(() => { cv.removeEventListener('pointerdown', onDown); removeEventListener('pointermove', onMove); cab.dispose(); }); }
-  ctx.say('pa.prep', { ms: 5000 }); ctx.cc.log('pa.prep');
-  // calendario de fallas: tras ciertos pasos
-  const plan = { 1: 'busb', 2: 'fc2', 6: 'lamp' };
-  let resolveDone; const done = new Promise((r) => (resolveDone = r));
-  function advance() {
-    step++; sfx('beep', { vol: 0.4 }); paint();
-    const fk = plan[step]; if (fk) setTimeout(() => !ctx.dead && raise(fk), 900 + ctx.rand() * 1200);
-    if (STEPS[step]?.poll) runPoll();
+    btn('hatch').classList.toggle('pt-next', hatchReady() && !done.hatch);
+    ctx.cc.snap({ tasks: Object.keys(done), cur: openI == null ? null : TASKS[openI].id, n: MAIN.length, mistakes }, true);
   }
-  // ronda GO/NO-GO
-  async function runPoll() {
-    if (Object.values(faults).some((f) => !f.fixed)) { await ctx.until(() => !Object.values(faults).some((f) => !f.fixed)); }
-    await ctx.wait(0.6);
-    const ov = h(`<div class="screen" style="position:absolute;inset:0;background:#03050caa;z-index:3"><div class="panel dialog" style="text-align:center;width:min(560px,100%)"><h2>${t('gonogo.title')}</h2><p class="pp">${coop && ctx.cc.remote() ? t('prep.pollcc') : t('prep.poll')}</p>
-      <div class="gonogo" style="margin:0 auto">${STATIONS.map((s) => `<div class="station" data-st="${s}"><span class="led-ind"></span>${t('st.' + s)}</div>`).join('')}</div></div></div>`);
-    $('.hud', el).append(ov); const go = new Set();
-    const setGo = (s) => { if (go.has(s)) return; go.add(s); const n = $(`[data-st="${s}"]`, ov); n.classList.add('go'); $('.led-ind', n).className = 'led-ind g'; sfx('ok', { vol: 0.5, rate: 1 + go.size * 0.05 }); ctx.cc.snap({ step, poll: [...go] }, true); };
-    if (coop && ctx.cc.remote()) {
-      const off = on('net:ev', (m) => m.k === 'poll' && setGo(m.v)); ctx.onCleanup(off);
-      await ctx.cc.ask('gonogo', { stations: STATIONS }, async () => { for (const s of STATIONS) { if (!go.has(s)) { await ctx.wait(0.4); setGo(s); } } return true; });
-      for (const s of STATIONS) setGo(s);
-    } else {
-      $$('.station', ov).forEach((n) => (n.onclick = () => { sfx('beep', { vol: 0.3 }); setTimeout(() => setGo(n.dataset.st), 250 + Math.random() * 350); }));
-      await ctx.until(() => go.size === STATIONS.length);
-    }
-    await ctx.wait(0.5); ctx.banner(t('prep.allgo'), '', 2400); sfx('powerup'); ctx.say('pa.go', { ms: 2500 }); step++; paint(); await ctx.wait(2.2); ov.remove(); resolveDone();
+  const showPad = (msg, ms = 6000) => { padHint.hidden = false; padHint.innerHTML = `<small>${t('prep2.pad')}</small>${msg}`; clearTimeout(showPad.tm); showPad.tm = setTimeout(() => (padHint.hidden = true), ms); };
+  ctx.onCleanup(() => clearTimeout(showPad.tm));
+  const progress = () => { lastProg = ctx.time; };
+
+  function closeTask() {
+    ac?.abort(); ac = null; openI = null; win.hidden = true; body.innerHTML = ''; winHint.textContent = ''; busy = false; if (done.hatch) finished = true; progress(); paint();
   }
-  paint(); dpaint();
-  // pistas del bot si el jugador se atasca con una falla
-  ctx.loop(() => { for (const [k, f] of Object.entries(faults)) if (!f.fixed && !f.nag && ctx.time - f.at > 12) { f.nag = true; ctx.say('fault.' + k, { ms: 6000 }); } });
-  await done;
-  const time = ctx.time - t0; const fixT = Object.values(faults).reduce((a, f) => a + (f.dt || 20), 0);
-  const score = Math.round(clamp(100 - mistakes * 6 - Math.max(0, time - 70) * 0.4 - Math.max(0, fixT - 15) * 0.8, 10, 100));
+  async function openTask(i) {
+    if (busy || finished) return; const k = TASKS[i]; if (done[k.id] || (k.id === 'hatch' && !hatchReady())) return;
+    busy = true; openI = i; progress(); sfx('open', { vol: 0.5 }); padHint.hidden = true;
+    $('.pt-win-n', win).textContent = `${t('prep2.n')} ${k.id === 'hatch' ? 5 : MAIN.indexOf(k) + 1}/5`; $('.pt-win-h b', win).textContent = tx(k.title);
+    $('.pt-win-brief', win).textContent = tx(k.brief); winHint.textContent = ''; $('.pt-win-fact', win).innerHTML = `<b>${t('prep2.fact')}</b>${tx(k.fact)}`;
+    body.innerHTML = ''; win.hidden = false; paint(); $('.pt-x', win).focus({ preventScroll: true });
+    const mine = (ac = new AbortController());
+    const opts = { tm: 0, diff: ctx.diff, diffName: ctx.diffName, signal: mine.signal, sfx: (n) => sfx(n), hint: (m) => { if (mine.signal.aborted) return; winHint.textContent = m; progress(); clearTimeout(opts.tm); opts.tm = setTimeout(() => { if (winHint.textContent === m) winHint.textContent = ''; }, 5000); }, share: (o) => ctx.cc.snap({ tasks: Object.keys(done), cur: k.id, n: MAIN.length, task: o }, true) };
+    let res;
+    try { const mod = await k.load(); if (mine.signal.aborted) return; res = await mod.default(body, opts); }
+    catch (e) { if (mine.signal.aborted) return; console.warn('Tarea ' + k.id + ' no disponible', e); res = { ok: true, time: 0, mistakes: 0, skipped: true }; }
+    if (mine.signal.aborted || ctx.dead) return;
+    mistakes += res.mistakes || 0;
+    if (!res.ok) return; // cerrada sin terminar: se puede repetir
+    done[k.id] = true; if (k.id === 'leak') faults++; sfx('powerup', { vol: 0.5 }); progress();
+    body.insertAdjacentHTML('beforeend', `<div class="pt-ok-card"><div><h3>${t('prep2.done')}</h3><p>${tx(k.fact)}</p></div></div>`);
+    ctx.cc.log('prep2.done', null, 'ok'); paint();
+    const card = $('.pt-ok-card', body); await Promise.race([ctx.wait(k.id === 'hatch' ? 1.6 : 2.6), new Promise((r) => card?.addEventListener('click', r, { once: true }))]);
+    if (mine.signal.aborted || ctx.dead) return;
+    closeTask();
+    if (k.id === 'hatch') finished = true;
+    else if (hatchReady()) { sfx('beep', { vol: 0.5 }); showPad(t('prep2.hatchopen'), 7000); }
+  }
+
+  const onClick = (e) => { const b = e.target.closest('.pt-ic'); if (b && !b.disabled) openTask(TASKS.findIndex((k) => k.id === b.dataset.id)); };
+  el.addEventListener('click', onClick); $('.pt-x', el).addEventListener('click', () => { sfx('click'); closeTask(); });
+  const onKey = (e) => { if (e.key === 'Escape' && openI !== null) closeTask(); };
+  addEventListener('keydown', onKey);
+  ctx.onCleanup(() => { removeEventListener('keydown', onKey); ac?.abort(); });
+  dbg('prepTasks', { open: openTask, done, TASKS, paint });
+
+  ctx.say('prep2.start', { ms: 5000 }); ctx.cc.log('prep2.start'); showPad(t('prep2.start'), 6500);
+  progress(); paint();
+  // Pancho da una pista si pasan 10 s sin progreso
+  ctx.loop(() => {
+    if (finished || ctx.time - lastProg < 10) return; progress(); hints++;
+    const k = openI == null ? null : TASKS[openI];
+    if (k) { winHint.textContent = tx(k.hint); ctx.say('prep2.h.' + k.id, { ms: 5000 }); }
+    else { const nx = hatchReady() ? HATCH : MAIN.find((m) => !done[m.id]); if (nx) { const m = t('prep2.next', { task: tx(nx.title) }); showPad(m, 6000); ctx.say('prep2.next', { vars: { task: tx(nx.title) }, ms: 4000 }); } }
+  });
+
+  await ctx.until(() => finished);
+  await runPoll();
+  const time = ctx.time - t0;
+  const score = Math.round(clamp(100 - mistakes * 5 - Math.max(0, time - 210) * 0.15, 10, 100));
   if (mistakes === 0) achieve('nofault');
   ctx.banner(t('prep.countdown'), '', 1500); await ctx.wait(1.2);
-  return { score, stats: { time: Math.round(time), mistakes, faults: faultsFixed } };
+  return { score, stats: { time: Math.round(time), mistakes, faults } };
+
+  // ronda GO/NO-GO automática: 7 luces en ~3 s, sin clics
+  async function runPoll() {
+    const ov = document.createElement('div'); ov.className = 'pt-poll';
+    ov.innerHTML = `<div class="pt-poll-in"><h2>${t('gonogo.title')}</h2><p>${t('prep.pollcc')}</p>${STATIONS.map((s, i) => `<div class="pt-st" data-st="${s}"><i></i><span>${t('st.' + s)}</span><em>${String(i + 1).padStart(2, '0')}</em></div>`).join('')}</div>`;
+    $('.pt-hud', el)?.append(ov); const go = [];
+    for (const s of STATIONS) { await ctx.wait(0.43); $(`[data-st="${s}"]`, ov)?.classList.add('pt-go'); go.push(s); sfx('ok', { vol: 0.5, rate: 1 + go.length * 0.05 }); ctx.cc.snap({ tasks: Object.keys(done), poll: go.slice(), n: MAIN.length }, true); }
+    await ctx.wait(0.5); ctx.banner(t('prep.allgo'), '', 2400); sfx('powerup'); ctx.say('pa.go', { ms: 2500 }); await ctx.wait(2.2); ov.remove();
+  }
 }

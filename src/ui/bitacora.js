@@ -13,17 +13,23 @@ const tx = (p) => (Array.isArray(p) ? p[L()] : p || '');
 const CAT = { moment: ['Momento', 'Moment'], object: ['Objeto', 'Object'], person: ['Persona', 'Person'], place: ['Lugar', 'Place'], science: ['Ciencia', 'Science'], decision: ['Decisión', 'Decision'] };
 const SFX = { common: 'comun', rare: 'rara', epic: 'epica', legendary: 'legendaria', hidden: 'oculta' };
 
-// ---- aviso al desbloquear ----
-let stack = null;
+// ---- aviso al desbloquear: UNA sola ficha abajo a la izquierda que agrupa las entradas nuevas ----
+// Colores de rareza del plan de vuelo (la paleta antigua de cards.js era azul y violeta pastel)
+const RC = { common: '#A8A59C', rare: '#FF4F00', epic: '#E0201B', legendary: '#FFB000', hidden: '#F2EFE6' };
+const RC_PAPER = { common: '#3A3D42', rare: '#FF4F00', epic: '#E0201B', legendary: '#FFB000', hidden: '#0B0C0E' };
+let stack = null, pend = 0, lastId = null, lastCard = null, hideT = null, goneT = null;
+function paintToast() {
+  if (!stack) return; const n = stack.firstChild; n.style.setProperty('--rc', RC[lastCard.rar] || '#FF4F00'); n.classList.remove('out');
+  n.querySelector('b').textContent = L() ? `+${pend} log ${pend === 1 ? 'entry' : 'entries'} · B` : `+${pend} ${pend === 1 ? 'entrada' : 'entradas'} en la Bitácora · B`;
+  n.querySelector('span').textContent = pend === 1 ? tx(lastCard.title) : '';
+}
+function hideToast() { if (!stack) return; const n = stack.firstChild; n.classList.add('out'); clearTimeout(goneT); goneT = setTimeout(() => { stack?.remove(); stack = null; pend = 0; }, 450); }
 on('bitacora:new', (id, card, { quiet } = {}) => {
   if (quiet) return;
   a11sfx('ui_bitacora_nueva_entrada_' + SFX[card.rar], 0.55);
-  if (!stack) { stack = document.createElement('div'); stack.className = 'bit-toasts'; document.body.append(stack); }
-  const r = RARITY[card.rar]; const n = document.createElement('div'); n.className = 'bit-toast'; n.style.setProperty('--rc', r.color);
-  n.innerHTML = `<b></b><span></span>`; n.querySelector('b').textContent = `${L() ? 'New log entry' : 'Nueva entrada en la Bitácora'} · ${tx(r.label)}`;
-  n.querySelector('span').textContent = tx(card.title) + (L() ? '  ·  [B] open' : '  ·  [B] abrir');
-  n.onclick = () => openBitacora(id); stack.append(n);
-  setTimeout(() => n.classList.add('out'), 4200); setTimeout(() => n.remove(), 4700);
+  clearTimeout(goneT); pend++; lastId = id; lastCard = card;
+  if (!stack) { stack = document.createElement('div'); stack.className = 'bit-toasts'; const n = document.createElement('div'); n.className = 'bit-toast'; n.innerHTML = '<b></b><span></span>'; n.onclick = () => { const f = lastId; hideToast(); openBitacora(f); }; stack.append(n); document.body.append(stack); }
+  paintToast(); clearTimeout(hideT); hideT = setTimeout(hideToast, 4800);
 });
 
 // ---- álbum ----
@@ -48,7 +54,7 @@ export function openBitacora(focus = null) {
     const head = document.createElement('div'); head.className = 'bit-chh'; head.textContent = tx(CHAPTERS[ch]); grid.append(head);
     ids.forEach((id) => {
       const c = CARDS[id], got = hasCard(id), r = RARITY[c.rar]; const b = document.createElement('button'); b.type = 'button';
-      b.className = 'bit-card' + (got ? '' : ' locked'); b.style.setProperty('--rc', r.color);
+      b.className = 'bit-card' + (got ? '' : ' locked'); b.style.setProperty('--rc', RC_PAPER[c.rar] || '#3A3D42');
       b.innerHTML = `<i></i><b></b><small></small>`; b.querySelector('b').textContent = got ? tx(c.title) : '???';
       b.querySelector('small').textContent = got ? `${tx(CAT[c.cat])} · ${tx(r.label)}` : tx(r.label);
       b.onclick = () => detail(id, b); grid.append(b); if (id === sel || (!sel && got && !det.dataset.id)) detail(id, b);
@@ -58,8 +64,8 @@ export function openBitacora(focus = null) {
   function detail(id, btn) {
     grid.querySelectorAll('.bit-card').forEach((x) => x.classList.toggle('sel', x === btn)); det.dataset.id = id;
     const c = CARDS[id], r = RARITY[c.rar];
-    if (!hasCard(id)) { det.innerHTML = `<div class="bit-k" style="color:${r.color}">${tx(r.label)}</div><h3>???</h3><p class="bit-empty">${c.rar === 'hidden' ? (L() ? 'A hidden event. Only hinted at by the characters.' : 'Un evento oculto. Solo lo insinúan los personajes.') : (L() ? 'Still undiscovered.' : 'Todavía sin descubrir.')}</p>`; return; }
-    det.innerHTML = `<div class="bit-k" style="color:${r.color}"></div><h3></h3><div class="bit-date"></div><p class="bit-fact"></p><p class="bit-img"></p><div class="bit-src"></div>`;
+    if (!hasCard(id)) { det.innerHTML = `<div class="bit-k">${tx(r.label)}</div><h3>???</h3><p class="bit-empty">${c.rar === 'hidden' ? (L() ? 'A hidden event. Only hinted at by the characters.' : 'Un evento oculto. Solo lo insinúan los personajes.') : (L() ? 'Still undiscovered.' : 'Todavía sin descubrir.')}</p>`; return; }
+    det.innerHTML = `<div class="bit-k"></div><h3></h3><div class="bit-date"></div><p class="bit-fact"></p><p class="bit-img"></p><div class="bit-src"></div>`;
     det.querySelector('.bit-k').textContent = `${tx(CAT[c.cat])} · ${tx(r.label)}`;
     det.querySelector('h3').textContent = tx(c.title);
     det.querySelector('.bit-date').textContent = c.date || '';

@@ -1,6 +1,6 @@
 // Pantallas de menú: intro, inicio, briefing, sala, unirse, bandera, ajustes, créditos, misiones/práctica
 import { show } from './router.js';
-import { t, lang, setLang, applyI18n } from '../core/i18n.js';
+import { t, lang, setLang, applyI18n, extend } from '../core/i18n.js';
 import { store, on, emit, isMobile, dbg, DEBUG } from '../core/store.js';
 import { sfx, music, voice, unlock, setMusicVol, preloadSfx } from '../core/audio.js';
 import { $, $$, h, toast, achieve, scanFx } from '../core/util.js';
@@ -14,6 +14,17 @@ import { makeLobby } from '../scenes/lobby.js';
 import '../game/expeditions/text.js';
 import '../game/expeditions/text-horizon.js';
 
+// Textos del plan de vuelo 1969 (marca «Apolo 11: Un gran salto»; sustituyen a «Planta la bandera»)
+extend({
+  'title.l1': ['APOLO 11', 'APOLLO 11'], 'title.l2': ['UN GRAN SALTO', 'ONE GIANT LEAP'],
+  'title.tag': ['Revive el viaje a la Luna. Solo o en equipo.', 'Relive the voyage to the Moon. Solo or together.'],
+  'brand.top': ['AS-506 · 16 JUL 1969', 'AS-506 · JUL 16 1969'], 'brand.foot': ['LOS ORINALEJOS · NASA SPACE APPS 2026', 'LOS ORINALEJOS · NASA SPACE APPS 2026'],
+  'menu.play': ['Jugar', 'Play'], 'menu.design': ['Diseñar misión', 'Design a mission'], 'menu.room': ['Sala (2 jug.)', 'Room (2 players)'], 'menu.bit': ['Bitácora', 'Log'],
+  'menu.mars': ['Marte', 'Mars'], 'menu.horizon': ['Horizonte', 'Horizon'], 'menu.extras': ['Extras', 'Extras'],
+  'm1.d': ['Revive la misión: cabina, lanzamiento, viaje, alunizaje y el primer paso.', 'Relive the mission: cabin, launch, voyage, landing and the first step.'],
+  'brief.title': ['Apolo 11: Un gran salto', 'Apollo 11: One giant leap'],
+  'set.cards': ['Tarjetas de misión', 'Mission cards'], 'set.cards.always': ['Siempre', 'Always'], 'set.cards.first': ['Solo la primera vez', 'First time only'],
+});
 let lobbyWorld = null;
 export function lobbyBg() { if (!lobbyWorld) { lobbyWorld = makeLobby(); lobbyWorld.onSecret = () => { sfx('powerup'); toast(t('egg.galaxy'), 'info'); achieve('galaxy'); }; } setWorld(lobbyWorld); return lobbyWorld; }
 export const getFlag = () => store.get('flag') || defaultFlag();
@@ -60,36 +71,27 @@ if (store.get('cardboard')) document.body.classList.add('cardboard');
 export function startScreen() {
   lobbyBg(); music('title', { vol: 0.55 }); preloadSfx();
   const el = show(`<div class="screen start">
-    <div class="top"><div class="brand-mini">LOS ORINALEJOS · ${t('ex.brand')}</div>
+    <div class="top"><div class="brand-mini" data-i="brand.top"></div>
       <div class="lang" role="button" aria-label="Idioma / Language"><span data-l="es">ES</span><span data-l="en">EN</span></div></div>
     <div class="center">
-      <div class="logo"><svg viewBox="0 0 640 200"><text class="l1" x="2" y="78" font-size="74" data-i="title.l1"></text><text class="l2" x="0" y="180" font-size="104" data-i="title.l2"></text></svg><canvas width="120" height="90"></canvas></div>
+      <div class="logo"><h1 data-i="title.l1"></h1><div class="l2" data-i="title.l2"></div><canvas width="120" height="90"></canvas></div>
       <div class="tagline" data-i="title.tag"></div>
       <div class="menu">
-        <button class="mbtn primary" data-a="solo"><span class="idx">01</span><span><span data-i="menu.solo"></span><small data-i="menu.solo.s"></small></span></button>
-        <div class="row2">
-          <button class="mbtn" data-a="create"><span class="idx">02</span><span><span data-i="menu.create"></span><small data-i="menu.create.s"></small></span></button>
-          <button class="mbtn" data-a="join"><span class="idx">03</span><span><span data-i="menu.join"></span><small data-i="menu.join.s"></small></span></button>
-        </div>
-        <div class="row2">
-          <button class="mbtn" data-a="flag"><span class="idx">04</span><span data-i="menu.flag"></span></button>
-          <button class="mbtn" data-a="missions"><span class="idx">05</span><span data-i="menu.missions"></span></button>
-        </div>
-        <div class="row2">
-          <button class="mbtn" data-a="settings"><span class="idx">06</span><span data-i="menu.settings"></span></button>
-          <button class="mbtn" data-a="credits"><span class="idx">07</span><span data-i="menu.credits"></span></button>
-        </div>
-        <button class="mbtn bitbtn" data-a="bitacora"><span class="idx">08</span><span><span data-i="menu.bitacora"></span><small class="bitpct"></small></span></button>
+        <button class="mbtn primary" data-a="solo"><span class="idx">01</span><span data-i="menu.play"></span></button>
+        <button class="mbtn" data-a="design"><span class="idx">02</span><span data-i="menu.design"></span></button>
+        <button class="mbtn" data-a="create"><span class="idx">03</span><span data-i="menu.room"></span></button>
+        <button class="mbtn bitbtn" data-a="bitacora"><span class="idx">04</span><span><span data-i="menu.bit"></span><small class="bitpct"></small></span></button>
+        <button class="mbtn" data-a="settings"><span class="idx">05</span><span data-i="menu.settings"></span></button>
       </div>
+      <div class="links"><a href="#" data-a="join" data-i="menu.join"></a><a href="#" data-a="missions" data-i="menu.missions"></a><a href="#" data-a="credits" data-i="menu.credits"></a><a href="#" data-a="mars" data-i="menu.mars"></a><a href="#" data-a="horizon" data-i="menu.horizon"></a><a href="#" data-a="intro" data-i="menu.intro"></a></div>
     </div>
-    <div class="foot"><span data-i="foot.ver"></span><a href="#" data-a="intro" data-i="menu.intro"></a></div></div>`, 'start', () => { cancelAnimationFrame(raf); clearTimeout(idleT); });
+    <div class="foot"><span data-i="brand.foot"></span><span>AS-506</span></div></div>`, 'start', () => { cancelAnimationFrame(raf); clearTimeout(idleT); });
   import('../game/story/state.js').then(({ bitacoraProgress }) => { const p = bitacoraProgress(), b = $('.bitpct', el); if (b) b.textContent = `${p.got}/${p.total} · ${p.pct}%`; }).catch(() => {});
   const langEl = $('.lang', el); const paintLang = () => $$('span', langEl).forEach((s) => s.classList.toggle('on', s.dataset.l === lang()));
-  paintLang(); langEl.onclick = ui(() => { setLang(lang() === 'es' ? 'en' : 'es'); paintLang(); scanFx(); restartLogo(); });
-  function restartLogo() { $$('.logo text', el).forEach((n) => { n.style.animation = 'none'; void n.getBBox(); n.style.animation = ''; }); }
+  paintLang(); langEl.onclick = ui(() => { setLang(lang() === 'es' ? 'en' : 'es'); paintLang(); scanFx(); });
   // bandera ondeando junto al logo
   const fc = $('.logo canvas', el), fx = fc.getContext('2d'), src = renderFlag(document.createElement('canvas'), getFlag(), 120, 80); let raf;
-  const wave = (ts) => { raf = requestAnimationFrame(wave); fx.clearRect(0, 0, 120, 90); fx.fillStyle = '#ccc'; fx.fillRect(0, 0, 3, 90);
+  const wave = (ts) => { raf = requestAnimationFrame(wave); fx.clearRect(0, 0, 120, 90); fx.fillStyle = '#F2EFE6'; fx.fillRect(0, 0, 3, 90);
     for (let i = 0; i < 60; i++) { const xx = i * 2, off = Math.sin(ts / 260 - i * 0.18) * (i / 60) * 5; fx.drawImage(src, xx, 0, 2, 80, 3 + xx, 4 + off, 2.2, 80 - (i / 60) * 4); } };
   raf = requestAnimationFrame(wave);
   hovers(el);
@@ -101,6 +103,8 @@ export function startScreen() {
 const ACTIONS = {
   solo: () => briefingScreen({ mode: 'solo' }), create: () => createScreen(), join: () => joinScreen(), flag: () => flagStudio(() => startScreen()),
   missions: () => missionsScreen(), settings: () => settingsScreen(), credits: () => creditsScreen(), bitacora: () => import('./bitacora.js').then((m) => m.openBitacora()), intro: () => introScreen(() => startScreen()),
+  design: () => import('../game/design/design-screen.js').then((m) => m.designRoom({ mode: 'free' })).catch(() => {}).then(() => startScreen()),
+  mars: () => import('../game/expeditions/index.js').then((m) => m.expeditionBriefing('mars')), horizon: () => import('../game/expeditions/index.js').then((m) => m.expeditionBriefing('horizon')),
 };
 
 // ---------------- BRIEFING (solo) ----------------
@@ -118,8 +122,8 @@ export function briefingScreen({ mode }) {
   lobbyBg();
   const diff = store.get('difficulty');
   const el = show(`<div class="screen"><button class="back" data-i="back"></button><div class="panel dialog">
-    <h2 data-i="m1"></h2><p data-i="m1.d"></p>${nameAndFlagBlock()}
-    <h3 class="chakra" style="font-size:.75rem;letter-spacing:.2em;color:var(--dim)" data-i="set.diff"></h3>
+    <h2 data-i="brief.title"></h2><p data-i="m1.d"></p>${nameAndFlagBlock()}
+    <h3 class="phase-tag" data-i="set.diff"></h3>
     <div class="seg diff">${['cadet', 'normal', 'veteran'].map((d) => `<button data-d="${d}" class="${d === diff ? 'on' : ''}" data-i="d.${d}"></button>`).join('')}</div><p class="diffhint" data-i="d.hint"></p>
     <div class="btns"><button class="btn go big-action" data-a="go" data-i="lobby.start"></button></div></div></div>`, 'briefing');
   wireNameFlag(el, () => briefingScreen({ mode }));
@@ -247,12 +251,14 @@ export function settingsScreen() {
     <h3 class="phase-tag" data-i="set.comms"></h3><div class="seg comms">${['min', 'normal', 'off'].map((c) => `<button data-c="${c}" class="${(store.get('comms') || 'min') === c ? 'on' : ''}" data-i="set.comms.${c}"></button>`).join('')}</div>
     <h3 class="phase-tag" data-i="set.quality"></h3><div class="seg q">${['auto', 'low', 'high'].map((q) => `<button data-q="${q}" class="${store.get('quality') === q ? 'on' : ''}" data-i="set.q.${q}"></button>`).join('')}</div><p style="font-size:.8rem" data-i="set.reload"></p>
     <h3 class="phase-tag" data-i="set.diff"></h3><div class="seg diff">${['cadet', 'normal', 'veteran'].map((d) => `<button data-d="${d}" class="${store.get('difficulty') === d ? 'on' : ''}" data-i="d.${d}"></button>`).join('')}</div>
+    <h3 class="phase-tag" data-i="set.cards"></h3><div class="seg cards">${[['1', 'always'], ['0', 'first']].map(([v, k]) => `<button data-v="${v}" class="${(store.get('cardsAlways') !== false) === (v === '1') ? 'on' : ''}" data-i="set.cards.${k}"></button>`).join('')}</div>
     <h3 class="phase-tag" style="margin-top:16px" data-i="set.ach"></h3><div class="ach" style="display:flex;flex-wrap:wrap;gap:6px"></div></div></div>`, 'settings');
   $$('input[type=range]', el).forEach((r) => (r.oninput = () => { const vv = store.get('vol'); vv[r.dataset.k] = +r.value; store.set('vol', vv); setMusicVol(); }));
   $$('input[type=range]', el).forEach((r) => (r.onchange = () => sfx('tick')));
   $$('.comms button', el).forEach((b) => (b.onclick = ui(() => { store.set('comms', b.dataset.c); store.set('tts', b.dataset.c !== 'off'); $$('.comms button', el).forEach((x) => x.classList.toggle('on', x === b)); })));
   $$('.q button', el).forEach((b) => (b.onclick = ui(() => { setQualityPref(b.dataset.q); $$('.q button', el).forEach((x) => x.classList.toggle('on', x === b)); })));
   $$('.diff button', el).forEach((b) => (b.onclick = ui(() => { store.set('difficulty', b.dataset.d); $$('.diff button', el).forEach((x) => x.classList.toggle('on', x === b)); })));
+  $$('.cards button', el).forEach((b) => (b.onclick = ui(() => { store.set('cardsAlways', b.dataset.v === '1'); $$('.cards button', el).forEach((x) => x.classList.toggle('on', x === b)); })));
   const A = store.get('achievements'); $('.ach', el).innerHTML = ['first', 'nofault', 'soft', 'fuel', 'noassist', 'earthrise', 'sock', 'golf', 'wrinkle', 'galaxy', 'cardboard', 'coop', 'mission1', 'memorial'].map((k) => `<span class="chip" style="${A[k] ? 'border-color:var(--amber)' : 'opacity:.4'}">${t('ach.' + k)}</span>`).join('');
   $('.back', el).onclick = ui(startScreen);
 }
@@ -268,7 +274,7 @@ export function creditsScreen() {
     <p><b style="color:var(--ink)">Solar System Scope</b> — Planet textures © Solar System Scope (solarsystemscope.com), CC BY 4.0.</p>
     <p><b style="color:var(--ink)">${es ? 'Música' : 'Music'}</b> — SRG774 (Dark Sci-Fi Audio Pack), TinyWorlds (Space Graveyard), cinameng / James Gargette (Persistence), Umplix (Floating in Space) — CC0 · OpenGameArt.</p>
     <p><b style="color:var(--ink)">${es ? 'Efectos de sonido' : 'Sound effects'}</b> — Kenney (kenney.nl), CC0.</p>
-    <p><b style="color:var(--ink)">${es ? 'Tipografías' : 'Fonts'}</b> — Orbitron, Chakra Petch, Share Tech Mono, Exo 2, Audiowide — SIL Open Font License 1.1.</p>
+    <p><b style="color:var(--ink)">${es ? 'Tipografías' : 'Fonts'}</b> — Jost, Barlow Semi Condensed, IBM Plex Mono — SIL Open Font License 1.1.</p>
     <p><b style="color:var(--ink)">${es ? 'Tecnología' : 'Tech'}</b> — three.js, Vite, Howler.js, ws, qrcode (MIT).</p>
     <p style="font-size:.8rem">${es ? 'Pancho y todos los personajes y easter eggs son originales.' : 'Pancho and all characters and easter eggs are original.'}</p>
     <p><a href="/licenses.txt" target="_blank" rel="noopener">${es ? 'Fuentes y licencias completas' : 'Full sources and licenses'}</a></p><p style="font-size:.8rem;font-style:italic">"We choose to go to the Moon…" — J. F. Kennedy, 1962</p></div></div>`, 'credits');
@@ -281,7 +287,7 @@ export function missionsScreen() {
   const phases = ['prep', 'launch', 'cruise', 'descent', 'eva'];
   const el = show(`<div class="screen"><button class="back" data-i="back"></button><div class="panel dialog" style="width:min(680px,100%)"><h2 data-i="missions.title"></h2>
     <div style="display:grid;gap:10px">
-      <button class="mbtn primary" data-a="m1"><span class="led"></span><span><span data-i="m1"></span><small data-i="m1.d"></small></span></button>
+      <button class="mbtn primary" data-a="m1"><span class="led"></span><span><span data-i="brief.title"></span><small data-i="m1.d"></small></span></button>
       <button class="mbtn" data-exp="mars"><span class="led"></span><span><span data-i="m2"></span><small data-i="ex.mars"></small></span></button>
       <button class="mbtn" data-exp="horizon"><span class="led"></span><span><span data-i="m3"></span><small data-i="ex.horizon"></small></span></button>
     </div>

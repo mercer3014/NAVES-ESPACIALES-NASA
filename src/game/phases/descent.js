@@ -4,7 +4,8 @@ import { t, extend } from '../../core/i18n.js';
 import { $, h, clamp, damp, toast, achieve, fmt } from '../../core/util.js';
 import { sfx, music, voice, engine, stopEngine } from '../../core/audio.js';
 import { axis, down, pressed, bindBtn, bdown, bpressed, makeStick, makeThrottle, input } from '../../core/input.js';
-import { isTouch, DEBUG, shared, AUTO } from '../../core/store.js';
+import { isTouch, DEBUG, shared, AUTO, store } from '../../core/store.js';
+import { activePlan, computePlan, isNasaPlan } from '../design/plan.js';
 import { objectiveCardHtml } from '../../ui/flight-hud.js';
 import { makeMoonSurface } from '../../scenes/moonsurface.js';
 import { create, step, guide, agl, judge, hoverThr, brakingMargin, vsCue, LM, PAD, BOULDERS, ground } from '../../sim/lander.js';
@@ -34,11 +35,16 @@ extend({
   'd.retry300': ['Reintentar desde 300 m', 'Retry from 300 m'],
   'd.abortNo': ['Era GO: la alarma no era grave.', 'It was GO: the alarm was harmless.'],
   'd.ffw': ['Acelerar', 'Speed up'],
+  'd.site.tranquility': ['Mar de la Tranquilidad', 'Sea of Tranquility'], 'd.site.sinus': ['Sinus Medii', 'Sinus Medii'], 'd.site.highlands': ['Tierras altas', 'Highlands'],
 });
 const fill = (s, o) => s.replace(/\{(\w+)\}/g, (_, k) => o[k]);
 
 export default async function descent(ctx) {
-  const D = ctx.diff, coop = ctx.cc.coop; const W = makeMoonSurface({ seed: ctx.seed }); ctx.world(W); const cam = W.camera;
+  const D = ctx.diff, coop = ctx.cc.coop;
+  // «Tu Apolo 11»: el lugar elegido ensancha el campo de rocas y estrecha la zona segura; BOULDERS/PAD son los del simulador y se restauran al salir
+  const PL = computePlan(activePlan(ctx, store)); const rock0 = BOULDERS.r, pad0 = PAD.r;
+  BOULDERS.r = PL.lander.boulderR; PAD.r = PL.lander.padR; ctx.onCleanup(() => { BOULDERS.r = rock0; PAD.r = pad0; });
+  const W = makeMoonSurface({ seed: ctx.seed }); ctx.world(W); const cam = W.camera;
   const tense = storyInPhase(ctx) ? 'a11/music/mus_c4_descenso_tension_pulso_loop' : 'tension';
   music(tense, { vol: 0.35 });
   const el = ctx.hud(`${objectiveCardHtml({ kicker: `${t('ph.n')} 04 · ${t('ph.descent')}`, titleHtml: `<div class="phase-title prog">${t('d.p63')}</div>`, bodyHtml: `<p class="mhud-note hint">${t('d.watch')}</p>` })}
@@ -61,7 +67,7 @@ export default async function descent(ctx) {
     <div class="alarm" style="display:none"></div>`);
   const hint = (k, v) => { $('.hint', el).textContent = v ?? t(k); }; const prog = (k) => { $('.prog', el).textContent = t(k); };
   const tele = $('.dtele', el); const V = (c) => $('.' + c, tele);
-  let s = create({ x: -520, y: 1250, vx: 26, vy: -26, fuel: 1400 }); const fuel0 = 1400 * (D.fuel || 1); let mode = 'auto', view = 'ext', rod = false, rodUsed = false, frozen = false, thrTarget = 0.3, thrTouch = null, ffw = 1, chaseYaw = 0.9, fuelWarn = false;
+  let s = create({ x: -520, y: 1250, vx: 26, vy: -26, fuel: 1400 }); const fuel0 = 1400 * (D.fuel || 1) * PL.fuelMult; let mode = 'auto', view = 'ext', rod = false, rodUsed = false, frozen = false, thrTarget = 0.3, thrTouch = null, ffw = 1, chaseYaw = 0.9, fuelWarn = false;
   const orbitState = createOrbitState({ yaw: chaseYaw, pitch: 0.25, distance: 36, minDistance: 11, maxDistance: 120, damp: 6 });
   const camRig = bindOrbitControls(orbitState, { pointer: false, touch: true, allow: () => !frozen });
   ctx.onCleanup(() => camRig.dispose());
@@ -161,7 +167,7 @@ export default async function descent(ctx) {
   const sub = new URLSearchParams(location.search).get('sub');
   if (sub === 'p66') { Object.assign(s, { x: -40, vx: 14, vy: -9 }); s.y = ground(s.x) + 299; st.alarmOk = true; st.alarmT = 0; }
   else {
-    ctx.banner(t('d.p63'), 'Eagle', 2000); ctx.cc.log('d.p63');
+    ctx.banner(t('d.p63'), isNasaPlan(PL.plan) ? 'Eagle' : 'Eagle · ' + t('d.site.' + PL.plan.site), 2000); ctx.cc.log('d.p63');
     await ctx.until(() => agl(s) < 1000); prog('d.p64'); ctx.cc.log('d.p64');
     await ctx.until(() => agl(s) < 780);
     await alarm1202();
@@ -209,7 +215,7 @@ export default async function descent(ctx) {
     score = (st.result === 'good' ? 40 + q * 15 : 22) + fuelS * 15 + (st.alarmOk ? 15 : 5) + padS * 15 - st.crashes * 10; if (rodUsed) score *= 0.7; score = Math.round(clamp(score, 5, 100));
   }
   shared.landing = { x: s.x, res: st.result };
-  return { score, stats: { result: st.result, vs: J ? +J.vs.toFixed(2) : null, hs: J ? +J.hs.toFixed(2) : null, fuel: Math.round(sec()), pad: J ? Math.round(J.pad) : null, alarm: st.alarmT, crashes: st.crashes, rod: rodUsed } };
+  return { score, stats: { site: PL.plan.site, rockR: PL.lander.boulderR, padR: PL.lander.padR, fuelMult: PL.fuelMult, result: st.result, vs: J ? +J.vs.toFixed(2) : null, hs: J ? +J.hs.toFixed(2) : null, fuel: Math.round(sec()), pad: J ? Math.round(J.pad) : null, alarm: st.alarmT, crashes: st.crashes, rod: rodUsed } };
 
   // Cap. 4.4 en el modo historia: Armstrong informa y la decisión es de Houston. El jugador pasa a ser Steve Bales (10 s).
   async function alarmAsBales(box) {

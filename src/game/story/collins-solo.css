@@ -1,4 +1,4 @@
-.cs-flash{position:fixed;inset:0;z-index:72;pointer-events:none;background:#fff;opacity:0}
+.cs-flash{position:fixed;inset:0;z-index:72;pointer-events:none;background:#F2EFE6;opacity:0}
 .cs-flash.on{animation:csFlash .35s ease-out}
 @keyframes csFlash{0%{opacity:.8}100%{opacity:0}}
-.cs-count{position:fixed;z-index:73;top:calc(64px + var(--safe-t,0px));left:50%;transform:translateX(-50%);padding:6px 12px;border-radius:16px;background:#05080ecc;border:1px solid #ffcf6a88;color:#ffcf6a;font:600 13px Mono,monospace;letter-spacing:.08em;pointer-events:none}
+.cs-count{position:fixed;z-index:73;top:calc(64px + var(--safe-t,0px));left:50%;transform:translateX(-50%);padding:6px 12px;border-radius:0;background:#0B0C0Ef2;border:1px solid #3A3D42;border-left:3px solid #FFB000;color:#FFB000;font:500 13px var(--f-mono,monospace);letter-spacing:.08em;pointer-events:none}

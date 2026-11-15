@@ -1,6 +1,6 @@
 // FASE 5 · EVA: escalera (9 peldaños), primer paso, caminata en baja gravedad, muestra, bandera (3 golpes + barra), saludo y foto
 import { THREE, renderer } from '../../core/engine.js';
-import { t, extend } from '../../core/i18n.js';
+import { t, extend, lang } from '../../core/i18n.js';
 import { $, h, clamp, damp, achieve, toast } from '../../core/util.js';
 import { sfx, music, voice } from '../../core/audio.js';
 import { axis, pressed, down, bindBtn, bdown, bpressed, makeStick } from '../../core/input.js';
@@ -9,7 +9,8 @@ import { bindOrbitControls } from '../orbit-view.js';
 import { createOrbitState, applyPointerDelta, resolveOrbitPosition, stepOrbit } from '../orbit-camera.js';
 import { ladderWantsDown } from '../ladder-input.js';
 import { commsMode } from '../../core/comms.js';
-import { isTouch, on, DEBUG, shared, dbg, AUTO } from '../../core/store.js';
+import { isTouch, on, DEBUG, shared, dbg, AUTO, store } from '../../core/store.js';
+import { activePlan, computePlan, INSTRUMENTS, SITES, EVA_TIMES } from '../design/plan.js';
 import { objectiveCardHtml } from '../../ui/flight-hud.js';
 import { paintPrompt } from '../../ui/flight-hud-mount.js';
 import { makeMoonSurface } from '../../scenes/moonsurface.js';
@@ -57,6 +58,7 @@ extend({
 });
 
 export default async function eva(ctx) {
+  const PL = computePlan(activePlan(ctx, store)); // «Tu Apolo 11»: instrumentos, lugar y duración de la caminata elegidos
   const D = ctx.diff, coop = ctx.cc.coop; const W = makeMoonSurface({ seed: ctx.seed + 3 }); ctx.world(W); const cam = W.camera;
   const L0 = shared.landing || { x: PAD.x - 6, res: 'good' }; const lx = L0.x;
   const ground = await W.lunarPatch(lx, 0); const boot = await W.bootKit.catch(() => null), kit = await W.rocksReady; // superficie del artista (tile 32 m ×3×3) centrada en el LM
@@ -104,7 +106,11 @@ export default async function eva(ctx) {
   const lmKind = await W.lmReady; const eagle = lmKind === 'eagle'; // el LM del artista trae su escalera real (frente +Z)
   if (eagle) W.body.rotation.y = 0;
   const science = await makeEASEP(W, lx, ground, ast).catch(e => { console.warn('EASEP unavailable; primary EVA remains playable', e); return null; });
-  if (science) { ctx.loop(dt => science.update(dt)); ctx.onCleanup(() => science.dispose()); }
+  if (science) { ctx.loop(dt => science.update(dt)); ctx.onCleanup(() => science.dispose());
+    // solo aparecen los instrumentos del plan (los demás quedan en la bodega del Eagle)
+    const keep = new Set(PL.tasks); for (const s of science.sites) if (!keep.has(s.name)) { s.done = true; s.o.visible = false; }
+    if (!PL.plan.payload.includes('tools')) { const tl = science.root.getObjectByName('Tools'); if (tl) tl.visible = false; } }
+  const sciDone = []; // instrumentos desplegados (para ciencia y para el informe)
   // herramientas (eva-tools.glb) y evento oculto «Lo que dejamos atrás» (memorial-kit.glb); nunca bloquean la fase
   const evaProps = await addEvaProps(W, lx, ground, { seed: ctx.seed + 5, skip: science ? ['geo-hammer'] : [],
     onFound: (n, k, m) => { sfx('ok', { vol: 0.4 }); toast(t('e.mem', { n: k, m, name: t('e.mem.' + n) }), 'info'); ctx.cc.log('e.mem.' + n, null, 'ok');
@@ -225,7 +231,7 @@ export default async function eva(ctx) {
     },
   });
   ctx.onCleanup(() => camRig.dispose());
-  const O2 = 420 * (D.time || 1); let tEva = 0;
+  const O2 = 420 * (D.time || 1) * PL.o2Mult; let tEva = 0;
   function collide() {
     const dx = P.x - lx, dz = P.z; const r = Math.hypot(dx, dz); if (r > 1e-4 && r < 2.3 && P.mode === 'walk') { P.x = lx + (dx / r) * 2.3; P.z = (dz / r) * 2.3; }
     const push = (x, z, m) => { const ddx = P.x - x, ddz = P.z - z, d = Math.hypot(ddx, ddz); if (d < m && d > 1e-3) { P.x = x + (ddx / d) * m; P.z = z + (ddz / d) * m; } };
@@ -288,7 +294,7 @@ export default async function eva(ctx) {
     const earthYaw = Math.atan2(EARTH_XZ[0] - P.x, EARTH_XZ[1] - P.z), facing = Math.abs(Math.atan2(Math.sin(P.yaw - earthYaw), Math.cos(P.yaw - earthYaw)));
     await ctx.wait(task.duration); P.act = null; P.mode = 'walk'; scienceBusy = false;
     sfx('ok'); ctx.banner(t('e.scienceDone'), t('e.' + task.name), 1600, 'good'); ctx.cc.log('e.' + task.name, null, 'ok');
-    unlock(SCIENCE_CARD[task.name]);
+    unlock(SCIENCE_CARD[task.name]); sciDone.push(task.name);
     // evento oculto «Un láser desde la Tierra»: el retrorreflector desplegado de frente a la Tierra (±25°)
     if (task.name === 'LRRR' && facing < 0.44 && unlock('h-laser')) a11sfx('e_e3_laser_retrorreflector', 0.5);
   };
@@ -344,11 +350,14 @@ export default async function eva(ctx) {
       if (d < 0.85) { prompt(t(isTouch ? 'e.holdT' : 'e.hold')); hb.style.display = ''; if (ACTD() || AUTO()) { if (!hold) { P.air = false; P.vy = 0; P.y = ground(P.x, P.z); } hold += dt; P.act = 'scoop'; P.yaw = Math.atan2(sampleP.x - P.x, sampleP.z - P.z); P.vx = P.vz = 0; P.actK = hold / 4; if (Math.random() < dt * 3) puff(sampleP.x, sampleP.z, 3, 0.4); } else { hold = Math.max(0, hold - dt); P.act = null; } $('.hold i', el).style.width = (hold / 4) * 100 + '%'; if (hold >= 4) { off(); res(); } }
       else { hb.style.display = 'none'; if (hold) hold = 0; P.act = null; prompt(t('e.t.sample'), t(isTouch ? 'e.walkT' : 'e.walkK')); }
     }); });
-    P.act = null; hb.style.display = 'none'; sampleRock.visible = false; st.sample = true; lidOpen?.(); tick('sample'); sfx('powerup'); ctx.banner(t('e.gotSample'), '', 1600, 'good'); ctx.cc.log('e.gotSample', null, 'ok');
+    P.act = null; hb.style.display = 'none'; sampleRock.visible = false; st.sample = true; lidOpen?.(); tick('sample'); sfx('powerup'); ctx.banner(t('e.gotSample'), SITES[PL.plan.site].sample[lang() === 'es' ? 0 : 1], 2600, 'good'); ctx.cc.log('e.gotSample', null, 'ok');
   } else { st.sample = true; tick('sample'); P.x = site.x - 1; P.z = site.z - 2; }
   // 3b bandera: elegir sitio
-  title('e.t.flag'); prompt(t('e.site')); autoTarget = new THREE.Vector3(site.x + 0.4, 0, site.z + 0.3);
-  for (const [x, z] of siteRocks) if (Math.hypot(autoTarget.x - x, autoTarget.z - z) < 0.9) { autoTarget.x += 1.2; }
+  title('e.t.flag'); prompt(t('e.site'));
+  // marcador sugerido (G10): el punto plantable con más holgura a las rocas (radio de exclusión ≥ 1,2 m) y cerca del centro de la zona
+  const sugg = pickFlagSpot(); const sMark2 = mark(0x3ddc84); sMark2.position.set(sugg.x, sugg.y + 0.05, sugg.z); sMark2.scale.setScalar(0.9); ctx.loop((dt, tt) => { sMark2.visible = !st.flag && P.mode === 'walk'; sMark2.material.opacity = 0.55 + Math.sin(tt * 5) * 0.3; });
+  if (DEBUG) window.__evaDbg.flagSpot = { ...sugg, valid: validSite(sugg.x, sugg.z), clearance: +clearance(sugg.x, sugg.z).toFixed(2) };
+  { const dx = sugg.x - sampleP.x, dz = sugg.z - sampleP.z, dl = Math.hypot(dx, dz) || 1; autoTarget = new THREE.Vector3(sugg.x - (dx / dl) * 0.8, 0, sugg.z - (dz / dl) * 0.8); }
   let spot = null; const golfLoop = ctx.loop(() => golfCheck());
   await new Promise((res) => { const off = ctx.loop(() => {
     if (P.mode !== 'walk') return;
@@ -406,11 +415,23 @@ export default async function eva(ctx) {
   // cap. 5.3: un momento a solas antes de volver al trabajo (la opción emotiva exige Confianza ≥ 70)
   if (storyInPhase(ctx) && !ctx.dead) await askPaused('c5-moment');
   // puntaje
-  const goodHits = st.hits.filter(Boolean).length; const timeS = clamp(1 - (tEva - st.t0 - 60) / (O2 - 60), 0, 1);
-  const score = Math.round(clamp((st.step ? 10 : 0) + (st.sample ? 15 : 0) + goodHits * 7 + (Math.abs(st.lean) < 6 ? 6 : 2) + 3 + st.photo * 30 + timeS * 15, 0, 100));
+  const sciEarned = sciDone.reduce((a, n) => a + (Object.values(INSTRUMENTS).find((i) => i.task === n)?.sci || 0), 0)
+    + (st.sample ? SITES[PL.plan.site].sci + PL.plan.payload.filter((id) => !INSTRUMENTS[id].task).reduce((a, id) => a + INSTRUMENTS[id].sci, 0) : 0) + EVA_TIMES[PL.plan.evaTime].sci;
+  const goodHits = st.hits.filter(Boolean).length; const timeS = clamp(1 - (tEva - st.t0 - 60) / (O2 / PL.o2Mult - 60), 0, 1); // con la EVA larga se sigue puntuando contra la reserva nominal
+  const score = Math.round(clamp((st.step ? 10 : 0) + (st.sample ? 15 : 0) + goodHits * 7 + (Math.abs(st.lean) < 6 ? 6 : 2) + 3 + st.photo * 30 + timeS * 15 + Math.min(20, sciEarned * 0.12), 0, 100));
   dbg('plbEva', { score, hits: goodHits, bar: +st.bar.toFixed(2), photo: +st.photo.toFixed(2) });
-  return { score, stats: { hits: goodHits, depth: Math.round(st.depth * 100), lean: Math.round(st.lean), bar: +st.bar.toFixed(2), photo: +st.photo.toFixed(2), golf: st.golf, time: Math.round(tEva) } };
+  return { score, stats: { sci: sciEarned, instruments: sciDone, o2Left: +clamp(1 - tEva / O2, 0, 1).toFixed(2), evaMin: PL.evaMin, rockKg: PL.rockKg, hits: goodHits, depth: Math.round(st.depth * 100), lean: Math.round(st.lean), bar: +st.bar.toFixed(2), photo: +st.photo.toFixed(2), golf: st.golf, time: Math.round(tEva) } };
 
+  function clearance(x, z) { let c = 99; for (const [rx, rz, s] of siteRocks) c = Math.min(c, Math.hypot(x - rx, z - rz) - s); for (const [rx, rz, s] of W.rockList) if (Math.abs(rx - x) < 6 && Math.abs(rz - z) < 6) c = Math.min(c, Math.hypot(x - rx, z - rz) - s); return c; }
+  function pickFlagSpot() {
+    let best = null, bs = -1e9;
+    for (let a = -siteR + 0.5; a <= siteR - 0.5; a += 0.3) for (let b = -siteR + 0.5; b <= siteR - 0.5; b += 0.3) {
+      const x = site.x + a, z = site.z + b, d = Math.hypot(a, b); if (d > siteR - 0.5 || validSite(x, z) !== 'ok') continue;
+      const sc = Math.min(clearance(x, z), 1.6) * 2 - d * 0.25; if (sc > bs) { bs = sc; best = { x, z }; }
+    }
+    if (!best) best = { x: site.x, z: site.z };
+    return { x: best.x, z: best.z, y: ground(best.x, best.z) };
+  }
   function validSite(x, z) {
     if (Math.hypot(x - site.x, z - site.z) > siteR) return 'out';
     for (const [rx, rz, s] of siteRocks) if (Math.hypot(x - rx, z - rz) < s + 0.35) return 'rock';

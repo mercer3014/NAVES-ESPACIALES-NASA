@@ -1,21 +1,20 @@
-/* HUD de vuelo único. El menú conserva sus fuentes y botones. */
+/* HUD de vuelo único: tarjeta oscura del plan (borde gris, franja naranja), Barlow para texto y Plex Mono para cifras. */
 .mhud, .expedition.mhud {
-  --mhud-ink: #e6eef1;
-  --mhud-dim: #93a4ab;
-  --mhud-line: rgba(186, 206, 212, .32);
-  --mhud-bg: rgba(7, 12, 16, .58);
-  --mhud-gold: #c6a36a;
-  --mhud-go: #8fbf9b;
-  --mhud-warn: #d4a24c;
-  --mhud-bad: #d36a5c;
-  font-family: Chakra, sans-serif;
+  --mhud-ink: #F2EFE6;
+  --mhud-dim: #A8A59C;
+  --mhud-line: #3A3D42;
+  --mhud-bg: rgba(11, 12, 14, .9);
+  --mhud-gold: #FF4F00;
+  --mhud-go: #F2EFE6;
+  --mhud-warn: #FFB000;
+  --mhud-bad: #E0201B;
+  font-family:var(--f-ui);
   color: var(--mhud-ink);
 }
-.mhud .phase-title, .mhud .banner, .mhud .banner small, .mhud .phase-tag,
-.phase-stamp, .phase-stamp b, .phase-stamp-k, .pause-screen, .pause-screen h2 {
-  font-family: Chakra, sans-serif;
-}
-.phase-stamp b { font-weight: 700; letter-spacing: .04em; }
+.mhud .banner small, .mhud .phase-tag, .phase-stamp-k { font-family: var(--f-mono); }
+.mhud .phase-title, .mhud .banner, .phase-stamp, .phase-stamp b, .pause-screen h2 { font-family: var(--f-title); }
+.pause-screen { font-family: var(--f-ui); }
+.phase-stamp b { font-family: var(--f-title); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
 .mhud-card {
   position: absolute;
   z-index: 4;
@@ -24,10 +23,9 @@
   width: min(280px, calc(100vw - 176px));
   background: var(--mhud-bg);
   border: 1px solid var(--mhud-line);
+  border-left: 3px solid var(--mhud-gold);
   color: var(--mhud-ink);
   pointer-events: auto;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
   animation: mhudIn .32s ease both;
 }
 .mhud-card-h {
@@ -47,6 +45,7 @@
 }
 .mhud-card-h:focus-visible { outline: 1px solid var(--mhud-gold); outline-offset: -1px; }
 .mhud-kicker {
+  font-family: var(--f-mono);
   font-size: 10px;
   letter-spacing: .16em;
   text-transform: uppercase;
@@ -59,12 +58,12 @@
 .mhud-card.is-shut .mhud-card-b { grid-template-rows: 0fr; opacity: 0; }
 .mhud-clip { overflow: hidden; min-height: 0; padding: 0 10px 8px; }
 .mhud-card.is-shut .mhud-clip { padding-bottom: 0; }
-.mhud .phase-title, .expedition.mhud .ex-stage { font-weight: 700; font-size: 15px; letter-spacing: .02em; line-height: 1.25; }
+.mhud .phase-title, .expedition.mhud .ex-stage { font-family: var(--f-title); text-transform: uppercase; font-weight: 700; font-size: 15px; letter-spacing: .02em; line-height: 1.25; }
 .mhud-note, .expedition.mhud .ex-hint, .expedition.mhud .ex-status, .expedition.mhud .ex-event {
   margin: 4px 0 0;
   font-size: 12px;
   line-height: 1.35;
-  color: #c5d0d4;
+  color: #CFCCC2;
 }
 .expedition.mhud .ex-status { color: var(--mhud-dim); font-size: 11px; letter-spacing: .04em; }
 .expedition.mhud .ex-hint, .expedition.mhud .ex-fineprint {
@@ -94,8 +93,8 @@
   border-radius: 0;
   min-width: 0;
   padding: 0;
-  backdrop-filter: none;
-  font-family: Chakra, sans-serif;
+  
+  font-family:var(--f-ui);
 }
 .mhud .tele::before, .mhud .tele::after { content: none; }
 .mhud .tele-grid, .expedition.mhud .ex-tele { display: flex; flex-direction: column; gap: 0; }
@@ -105,7 +104,7 @@
   align-items: baseline;
   gap: 12px;
   border: 0;
-  border-bottom: 1px solid rgba(186, 206, 212, .16);
+  border-bottom: 1px solid #3A3D42;
   padding: 3px 0;
   min-width: 0;
 }
@@ -117,15 +116,16 @@
   font-weight: 400;
 }
 .mhud .tele .v, .expedition.mhud .ex-cell b {
-  font-family: Chakra, sans-serif;
+  font-family:var(--f-mono);
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--mhud-ink);
 }
 .mhud .tele .v.good { color: var(--mhud-go); }
 .mhud .tele .v.warn { color: var(--mhud-warn); }
 .mhud .tele .v.bad { color: var(--mhud-bad); }
-.mhud .meter { height: 3px; border-radius: 0; background: rgba(186, 206, 212, .18); }
+.mhud .meter { height: 3px; border-radius: 0; background: #3A3D42; }
+.mhud .meter > i { background: var(--mhud-gold); }
 .mhud .vscue {
   max-width: 200px;
   font-size: 11px;
@@ -150,13 +150,13 @@
   background: var(--mhud-bg);
   border: 1px solid var(--mhud-line);
   pointer-events: none;
-  font-family: Chakra, sans-serif;
+  font-family:var(--f-ui);
   font-size: 13px;
   letter-spacing: .02em;
   animation: mhudIn .2s ease both;
 }
 .mhud-prompt kbd {
-  font-family: Chakra, sans-serif;
+  font-family:var(--f-mono);
   font-size: 11px;
   letter-spacing: .08em;
   border: 1px solid var(--mhud-gold);
@@ -172,21 +172,21 @@ html[data-touch] .mhud-prompt { bottom: calc(132px + var(--safe-b)); }
   color: var(--mhud-ink);
 }
 .mhud .icon-btn .mhud-svg { width: 14px; height: 14px; fill: currentColor; }
-.mhud .banner { font-weight: 700; letter-spacing: .04em; }
+.mhud .banner { font-family: var(--f-title); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
 .mhud .keyshelp { display: none !important; }
 .mhud .btn, .expedition.mhud .btn {
   border-radius: 2px;
-  background: rgba(7, 12, 16, .62);
+  background: rgba(11, 12, 14, .86);
   color: var(--mhud-ink);
-  border: 1px solid var(--mhud-line);
+  border: 1px solid var(--mhud-ink);
   box-shadow: none;
-  font-family: Chakra, sans-serif;
+  font-family:var(--f-ui);
   font-weight: 600;
   letter-spacing: .06em;
   min-height: 36px;
   padding: .45em .8em;
 }
-.mhud .btn:hover, .expedition.mhud .btn:hover { transform: none; box-shadow: none; background: rgba(16, 24, 28, .8); }
+.mhud .btn:hover, .expedition.mhud .btn:hover { transform: none; box-shadow: none; background: var(--mhud-ink); color: #0B0C0E; }
 .mhud .burnbtn { display: none; }
 html[data-touch] .mhud .burnbtn {
   display: grid;
@@ -195,44 +195,44 @@ html[data-touch] .mhud .burnbtn {
   width: 84px;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: rgba(7, 12, 16, .72);
-  border: 1px solid var(--mhud-gold);
+  background: rgba(11, 12, 14, .86);
+  border: 1.5px solid var(--mhud-gold);
   color: var(--mhud-ink);
 }
 .mhud .tc-btn {
   border-radius: 2px;
-  background: rgba(7, 12, 16, .62);
+  background: rgba(11, 12, 14, .86);
   border: 1px solid var(--mhud-line);
   box-shadow: none;
   color: var(--mhud-ink);
-  font-family: Chakra, sans-serif;
+  font-family:var(--f-ui);
 }
-.mhud .tc-btn.amber, .mhud .tc-btn.go { background: rgba(7, 12, 16, .72); color: var(--mhud-ink); border-color: var(--mhud-gold); }
+.mhud .tc-btn.amber, .mhud .tc-btn.go { background: rgba(11, 12, 14, .86); color: var(--mhud-ink); border-color: var(--mhud-gold); }
 .mhud .tc-stick {
-  background: rgba(7, 12, 16, .28);
+  background: rgba(11, 12, 14, .35);
   border: 1px solid var(--mhud-line);
 }
 .mhud .tc-stick i {
-  background: rgba(230, 238, 241, .88);
+  background: rgba(242, 239, 230, .9);
   box-shadow: none;
 }
 .mhud .adibox { pointer-events: none; }
-.mhud .adibox text { font-family: Chakra, sans-serif; }
+.mhud .adibox text { font-family:var(--f-ui); }
 .mhud .days {
   position: absolute;
   right: 14px;
   top: calc(54px + var(--safe-t));
   text-align: right;
-  font-family: Chakra, sans-serif;
+  font-family:var(--f-ui);
   border-left: 1px solid var(--mhud-gold);
   padding-left: 10px;
 }
 .mhud .days .d { font-size: 18px; font-weight: 700; }
 .mhud .etasks { min-width: 0; margin-top: 6px; }
-.mhud .task { display: flex; gap: 8px; align-items: flex-start; font-size: 12px; line-height: 1.3; margin: 4px 0; color: #c5d0d4; }
+.mhud .task { display: flex; gap: 8px; align-items: flex-start; font-size: 12px; line-height: 1.3; margin: 4px 0; color: var(--mhud-dim); }
 .mhud-tick { width: 11px; height: 11px; margin-top: 2px; border: 1px solid var(--mhud-line); flex: none; }
-.mhud .task.is-done { color: var(--mhud-go); }
-.mhud .task.is-done .mhud-tick { background: var(--mhud-go); border-color: var(--mhud-go); }
+.mhud .task.is-done { color: var(--mhud-ink); }
+.mhud .task.is-done .mhud-tick { background: var(--mhud-gold); border-color: var(--mhud-gold); }
 .mhud .eprompt {
   position: absolute;
   left: 50%;
@@ -249,7 +249,7 @@ html[data-touch] .mhud .burnbtn {
 }
 html[data-touch] .mhud .eprompt { bottom: calc(128px + var(--safe-b)); }
 .mhud .eprompt .ph1, .mhud .eprompt .ph2 {
-  font-family: Chakra, sans-serif;
+  font-family:var(--f-ui);
   font-size: 12px;
   letter-spacing: .03em;
   color: var(--mhud-ink);
@@ -258,9 +258,9 @@ html[data-touch] .mhud .eprompt { bottom: calc(128px + var(--safe-b)); }
   padding: 4px 8px;
 }
 .mhud .eprompt .ph1:empty, .mhud .eprompt .ph2:empty { display: none; }
-.expedition.mhud { font-family: Chakra, sans-serif; }
+.expedition.mhud { font-family:var(--f-ui); }
 .expedition.mhud .ex-head h2 {
-  font-family: Chakra, sans-serif;
+  font-family:var(--f-ui);
   font-size: 16px;
   font-weight: 700;
   letter-spacing: .04em;
@@ -283,12 +283,12 @@ html[data-touch] .mhud .eprompt { bottom: calc(128px + var(--safe-b)); }
   width: min(560px, calc(100% - 24px));
   max-height: calc(100% - 88px);
 }
-.expedition.mhud .ex-climate h3 { font-family: Chakra, sans-serif; font-size: 14px; color: var(--mhud-gold); }
-.expedition.mhud .ex-slider { font-family: Chakra, sans-serif; }
-.expedition.mhud .ex-slider output { font-family: Chakra, sans-serif; color: var(--mhud-ink); }
+.expedition.mhud .ex-climate h3 { font-family:var(--f-ui); font-size: 14px; color: var(--mhud-gold); }
+.expedition.mhud .ex-slider { font-family:var(--f-ui); }
+.expedition.mhud .ex-slider output { font-family:var(--f-ui); color: var(--mhud-ink); }
 .expedition.mhud .ho-radio { margin: 8px 0; padding: 6px 8px; background: transparent; border-left: 1px solid var(--mhud-gold); }
-.expedition.mhud .ho-radio small { font-family: Chakra, sans-serif; letter-spacing: .12em; color: var(--mhud-gold); }
-.expedition.mhud .ho-radio p { font-family: Chakra, sans-serif; font-size: 12px; min-height: 0; }
+.expedition.mhud .ho-radio small { font-family:var(--f-ui); letter-spacing: .12em; color: var(--mhud-gold); }
+.expedition.mhud .ho-radio p { font-family:var(--f-ui); font-size: 12px; min-height: 0; }
 .expedition.mhud .ho-go-buttons button { min-height: 40px; border-radius: 2px; }
 .expedition.mhud .ex-mapbox {
   top: auto;
@@ -316,13 +316,13 @@ html[data-touch] .expedition.mhud .ex-mapbox { bottom: calc(148px + var(--safe-b
   width: 104px;
   height: 104px;
   border: 1px solid var(--mhud-line);
-  background: rgba(7, 12, 16, .35);
+  background: rgba(11, 12, 14, .4);
   pointer-events: auto;
 }
 .expedition.mhud .ex-stick i {
   width: 34px;
   height: 34px;
-  background: rgba(230, 238, 241, .88);
+  background: rgba(242, 239, 230, .9);
   border: 0;
 }
 .expedition.mhud .ex-actions { pointer-events: none; display: flex; gap: 8px; justify-content: flex-end; }
@@ -330,7 +330,7 @@ html[data-touch] .expedition.mhud .ex-mapbox { bottom: calc(148px + var(--safe-b
 .expedition.mhud .ex-action { border-color: var(--mhud-gold); }
 .expedition.mhud .ex-keys { display: none !important; }
 .expedition.mhud .ex-loading {
-  font-family: Chakra, sans-serif;
+  font-family:var(--f-ui);
   background: var(--mhud-bg);
   border: 1px solid var(--mhud-line);
   border-radius: 0;
@@ -338,7 +338,7 @@ html[data-touch] .expedition.mhud .ex-mapbox { bottom: calc(148px + var(--safe-b
 }
 .expedition.mhud .ex-result .panel, .expedition.mhud .ex-error .panel {
   border-radius: 2px;
-  font-family: Chakra, sans-serif;
+  font-family:var(--f-ui);
 }
 @keyframes mhudIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 .mhud-prompt { animation-name: mhudPop; }
@@ -355,10 +355,10 @@ html[data-touch] .expedition.mhud .ex-mapbox { bottom: calc(148px + var(--safe-b
 }
 .expedition.mhud .ex-panel.is-shut { overflow: hidden; max-height: none; }
 .mhud .lamps { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
-.mhud .lampx { font-family: Chakra, sans-serif; font-size: 9px; letter-spacing: .08em; border: 1px solid var(--mhud-line); color: var(--mhud-dim); padding: 2px 4px; }
+.mhud .lampx { font-family:var(--f-ui); font-size: 9px; letter-spacing: .08em; border: 1px solid var(--mhud-line); color: var(--mhud-dim); padding: 2px 4px; }
 .mhud .lampx.on { color: var(--mhud-gold); border-color: var(--mhud-gold); }
 .mhud .ph1 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-.toast { font-family: Chakra, sans-serif; }
+.toast { font-family:var(--f-ui); }
 .toast .mhud-svg { width: 14px; height: 14px; vertical-align: -2px; fill: currentColor; }
 .expedition.mhud .ex-actions .btn { min-width: 0; }
 .expedition.mhud [hidden] { display: none !important; }
@@ -367,15 +367,15 @@ html[data-touch] .expedition.mhud .ex-mapbox { bottom: calc(148px + var(--safe-b
 .expedition.mhud.is-landing .ex-cine {
   display: flex; position: absolute; left: 50%; bottom: max(28px, env(safe-area-inset-bottom));
   transform: translateX(-50%); gap: 22px; align-items: flex-end; pointer-events: none;
-  text-shadow: 0 2px 10px #000; color: #f7f1e6;
+  text-shadow: 0 1px 4px #000; color: #F2EFE6;
 }
 .expedition.mhud .ex-cine small, .expedition.mhud .ex-fuel-label {
-  display: block; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: #f3d7b0;
+  display: block; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: #FFB000;
 }
 .expedition.mhud .ex-cine-metric b { font-size: 26px; font-weight: 500; line-height: 1.05; }
 .expedition.mhud .ex-fuel-label { margin-bottom: 5px; }
-.expedition.mhud .ex-fuel-track { width: 148px; height: 5px; background: rgba(255,255,255,.18); border-radius: 99px; overflow: hidden; }
-.expedition.mhud .ex-fuel-fill { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #a84828, #f0c27a); }
+.expedition.mhud .ex-fuel-track { width: 148px; height: 5px; background: #3A3D42; border-radius: 0; overflow: hidden; }
+.expedition.mhud .ex-fuel-fill { display: block; height: 100%; width: 0; background: var(--mhud-gold); }
 @media (prefers-reduced-motion: reduce) {
   .mhud-card, .mhud-rail, .mhud-prompt, .expedition.mhud .mhud-rail, .mhud-card-b, .mhud-card-h .mhud-svg, .phase-stamp {
     animation: none !important;
@@ -388,3 +388,10 @@ html[data-touch] .expedition.mhud .ex-mapbox { bottom: calc(148px + var(--safe-b
   .mhud .tele .k, .tele .k { font-size: 10.5px; letter-spacing: .12em; }
   .mhud .lampx { font-size: 10px; }
 }
+
+
+/* G5: la ficha «Persecución · C/V» ya no tapa V/S ni «Día». En escritorio se ve 2 s al cambiar de cámara; en táctil va baja, sobre el joystick. */
+.cam-cycle { background: rgba(11, 12, 14, .9) !important; border-color: var(--mhud-line, #3A3D42) !important; font-family: var(--f-mono) !important; font-size: .68rem !important; letter-spacing: .06em; min-height: 32px; padding: .3em .7em !important; text-transform: none; transition: opacity .3s; }
+body:not(.touch) .cam-cycle:not(.flash):not(:hover):not(:focus-visible) { opacity: 0; }
+body.touch .cam-cycle { top: auto !important; right: auto !important; left: 12px !important; bottom: calc(196px + var(--safe-b)) !important; opacity: .7; }
+body.touch .cam-cycle.flash { opacity: 1; }
