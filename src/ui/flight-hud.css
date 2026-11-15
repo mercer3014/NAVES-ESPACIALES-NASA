@@ -442,3 +442,11 @@ body.touch .cam-cycle.flash { opacity: 1; }
 .mhud .vscue.bad { color: #E0201B; font-weight: 600; }
 .mhud .vscue.warn { color: #FFB000; }
 .mhud .vscue.good { color: #7CDB8A; }
+
+/* Teléfono en horizontal (pantalla baja): la tarjeta del objetivo y la telemetría ocupaban ~1/3 de la vista */
+@media (max-height: 480px) and (orientation: landscape) {
+  .mhud-card, .expedition.mhud .ex-panel { zoom: .74; max-height: 70vh; }
+  .mhud-rail, .expedition.mhud .mhud-rail { zoom: .8; }
+  .mhud .ph1 { -webkit-line-clamp: 2; }
+  body.touch .cam-cycle { bottom: calc(158px + var(--safe-b, 0px)) !important; }
+}

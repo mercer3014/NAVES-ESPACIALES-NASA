@@ -74,7 +74,17 @@ const server = http.createServer(async (req, res) => {
       if (req.method === 'HEAD') return res.end();
       return fs.createReadStream(p, { start, end }).on('error', () => res.destroy()).pipe(res);
     }
-    if (GZ.has(ext) && /gzip/.test(req.headers['accept-encoding'] || '')) {
+    // Precomprimidos al compilar (tools/precompress.mjs): Brotli o gzip sin gastar CPU por petición
+    const ae = req.headers['accept-encoding'] || '';
+    if (GZ.has(ext)) for (const [enc, suf] of [['br', '.br'], ['gzip', '.gz']]) {
+      if (!new RegExp(`\\b${enc}\\b`).test(ae)) continue;
+      let cs; try { cs = fs.statSync(p + suf); } catch { continue; }
+      if (!cs.isFile() || cs.mtimeMs < stat.mtimeMs) continue;
+      res.writeHead(200, { ...headers, 'content-encoding': enc, vary: 'accept-encoding', 'content-length': cs.size });
+      if (req.method === 'HEAD') return res.end();
+      return fs.createReadStream(p + suf).on('error', () => res.destroy()).pipe(res);
+    }
+    if (GZ.has(ext) && /gzip/.test(ae)) {
       res.writeHead(200, { ...headers, 'content-encoding': 'gzip', vary: 'accept-encoding' });
       if (req.method === 'HEAD') return res.end();
       return fs.createReadStream(p).on('error', () => res.destroy()).pipe(zlib.createGzip({ level: 6 })).pipe(res);

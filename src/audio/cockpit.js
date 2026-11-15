@@ -42,6 +42,7 @@ export function placeCockpit(camera) {
   const x = camera.position.x + e[0] * 0.42;
   const y = camera.position.y + e[1] * 0.42 - 0.04;
   const z = camera.position.z + e[2] * 0.42;
+  if (![x, y, z].every(Number.isFinite)) return;
   if (p.positionX) { p.positionX.value = x; p.positionY.value = y; p.positionZ.value = z; }
   else p.setPosition(x, y, z);
 }

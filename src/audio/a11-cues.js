@@ -1,5 +1,6 @@
 // Clips del Apolo 11 que el juego puede reproducir. La clave es el nombre del archivo.
 // No incluye la frase en la que Armstrong dice que Karen cumplía nueve: cumplía diez (abril de 1959).
+import { showRadioSub } from '../ui/radio-subs.js';
 import { playA11, quindar } from './a11-voice.js';
 import { commsMode } from '../core/comms.js';
 
@@ -179,6 +180,7 @@ export function playChain(files, { radio = false, i = 0 } = {}) {
   if (radio && i === 0) quindar('in');
   const h = playA11(file);
   if (!h) return null;
+  showRadioSub(file, h);
   const last = i >= files.length - 1;
   h.once('end', () => {
     if (last && radio) quindar('out');
