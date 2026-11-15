@@ -1,0 +1,123 @@
+{
+ "boss-arena.glb": {
+  "MB": 0.091,
+  "tris": 11928,
+  "missingNodes": [],
+  "clips": [],
+  "missingClips": [],
+  "size": [
+   82.999,
+   13.778,
+   82.999
+  ],
+  "minY": -1
+ },
+ "eva-tools.glb": {
+  "MB": 0.027,
+  "tris": 1728,
+  "missingNodes": [],
+  "clips": [],
+  "missingClips": [],
+  "size": [
+   1.231,
+   0.68,
+   0.213
+  ],
+  "minY": 0
+ },
+ "guardian.glb": {
+  "MB": 0.285,
+  "tris": 5879,
+  "missingNodes": [],
+  "clips": [
+   "idle:3.5000",
+   "slam:2.5000",
+   "sweep:2.5000"
+  ],
+  "missingClips": [],
+  "size": [
+   13.188,
+   15.438,
+   12.711
+  ],
+  "minY": 0,
+  "bones": 20,
+  "missingBones": [],
+  "weights": {
+   "skinnedMeshes": 2,
+   "itemSizeOver4": 0,
+   "notNormalized": 0
+  },
+  "deform": {
+   "idle": {
+    "maxStretch": 2.532,
+    "minStretch": 0.879,
+    "worstT": 2.467,
+    "skinMinY": -0.004
+   },
+   "slam": {
+    "maxStretch": 8.848,
+    "minStretch": 0.031,
+    "worstT": 0.967,
+    "skinMinY": -0.004
+   },
+   "sweep": {
+    "maxStretch": 5.673,
+    "minStretch": 0.152,
+    "worstT": 1.467,
+    "skinMinY": -0.005
+   }
+  },
+  "rigid": {
+   "plate-shoulder-l": "upper-arm-l",
+   "plate-shoulder-r": "upper-arm-r",
+   "plate-knee-l": "shin-l",
+   "plate-knee-r": "shin-r",
+   "core-dsky": "core",
+   "fuel-tank": "spine-2"
+  }
+ },
+ "memorial-kit.glb": {
+  "MB": 0.048,
+  "tris": 2012,
+  "missingNodes": [],
+  "clips": [],
+  "missingClips": [],
+  "size": [
+   0.424,
+   0.004,
+   0.1
+  ],
+  "minY": 0
+ },
+ "o2-hose.glb": {
+  "MB": 0.018,
+  "tris": 920,
+  "missingNodes": [],
+  "clips": [
+   "flex:2.0000"
+  ],
+  "missingClips": [],
+  "size": [
+   0.048,
+   0.05,
+   2.044
+  ],
+  "minY": 0,
+  "bones": 6,
+  "missingBones": [],
+  "weights": {
+   "skinnedMeshes": 3,
+   "itemSizeOver4": 0,
+   "notNormalized": 0
+  },
+  "deform": {
+   "flex": {
+    "maxStretch": 1.073,
+    "minStretch": 0.932,
+    "worstT": 0.9,
+    "skinMinY": 0
+   }
+  }
+ }
+}

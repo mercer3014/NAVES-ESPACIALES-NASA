@@ -1,0 +1,257 @@
+{
+  "name": "reglas-p3",
+  "defaults": {
+    "maxMB": 1.5,
+    "maxBones": 60,
+    "maxWeightsPerVertex": 4
+  },
+  "files": {
+    "mocr-room": {
+      "footprint": {
+        "width": 20,
+        "depth": 15,
+        "tolerance": 2
+      },
+      "requiredNodes": [
+        "console-guido",
+        "console-flight",
+        "console-capcom",
+        "wall-screens",
+        "chalkboard",
+        "npc-spot-kranz",
+        "npc-spot-bales",
+        "npc-spot-duke",
+        "npc-spot-garman",
+        "npc-spot-extra-1",
+        "npc-spot-extra-2",
+        "npc-spot-extra-3",
+        "npc-spot-extra-4",
+        "npc-spot-extra-5",
+        "npc-spot-extra-6",
+        "npc-spot-extra-7",
+        "npc-spot-extra-8",
+        "npc-spot-extra-9",
+        "npc-spot-extra-10",
+        "npc-spot-extra-11",
+        "npc-spot-extra-12",
+        "npc-spot-extra-13",
+        "npc-spot-extra-14",
+        "npc-spot-extra-15",
+        "npc-spot-extra-16"
+      ]
+    },
+    "armstrong-house": {
+      "heightMeters": [
+        2.3,
+        2.7
+      ],
+      "requiredNodes": [
+        "tv-set",
+        "squawk-box",
+        "npc-spot-jan",
+        "npc-spot-rick",
+        "npc-spot-mark",
+        "npc-spot-neil",
+        "window-backdrop",
+        "window-day",
+        "window-night"
+      ],
+      "heightFrom": "nodeY:light-living"
+    },
+    "pacific-recovery": {
+      "footprint": {
+        "width": 200,
+        "depth": 200,
+        "tolerance": 20
+      },
+      "requiredNodes": [
+        "life-raft",
+        "cm-spot"
+      ],
+      "requiredClips": [
+        "waves"
+      ]
+    },
+    "lrl-room": {
+      "requiredNodes": [
+        "quarantine-glass",
+        "phone-inside",
+        "phone-outside"
+      ]
+    },
+    "earth-props": {
+      "requiredNodes": [
+        "toy-saturn-v",
+        "mission-patch",
+        "signed-envelopes",
+        "framed-photo",
+        "notebook",
+        "alarm-sheet",
+        "chalkboard"
+      ]
+    },
+    "civil-base-p3": {
+      "heightMeters": [
+        1.7,
+        1.9
+      ],
+      "requiredBones": [
+        "mixamorig:Hips"
+      ],
+      "requiredClips": [
+        "idle",
+        "walk",
+        "sit",
+        "talk",
+        "point",
+        "wave"
+      ],
+      "heightFrom": "bone:mixamorig:HeadTop_End"
+    },
+    "kranz": {
+      "heightMeters": [
+        1.7,
+        1.9
+      ],
+      "requiredBones": [
+        "mixamorig:Hips"
+      ],
+      "requiredClips": [
+        "idle",
+        "walk",
+        "sit",
+        "talk",
+        "point",
+        "wave"
+      ],
+      "heightFrom": "bone:mixamorig:HeadTop_End"
+    },
+    "bales": {
+      "heightMeters": [
+        1.7,
+        1.9
+      ],
+      "requiredBones": [
+        "mixamorig:Hips"
+      ],
+      "requiredClips": [
+        "idle",
+        "walk",
+        "sit",
+        "talk",
+        "point",
+        "wave"
+      ],
+      "heightFrom": "bone:mixamorig:HeadTop_End"
+    },
+    "duke": {
+      "heightMeters": [
+        1.7,
+        1.9
+      ],
+      "requiredBones": [
+        "mixamorig:Hips"
+      ],
+      "requiredClips": [
+        "idle",
+        "walk",
+        "sit",
+        "talk",
+        "point",
+        "wave"
+      ],
+      "heightFrom": "bone:mixamorig:HeadTop_End"
+    },
+    "garman": {
+      "heightMeters": [
+        1.7,
+        1.9
+      ],
+      "requiredBones": [
+        "mixamorig:Hips"
+      ],
+      "requiredClips": [
+        "idle",
+        "walk",
+        "sit",
+        "talk",
+        "point",
+        "wave"
+      ],
+      "heightFrom": "bone:mixamorig:HeadTop_End"
+    },
+    "jan": {
+      "heightMeters": [
+        1.57,
+        1.73
+      ],
+      "requiredBones": [
+        "mixamorig:Hips"
+      ],
+      "requiredClips": [
+        "idle",
+        "walk",
+        "sit",
+        "talk",
+        "point",
+        "wave"
+      ],
+      "heightFrom": "bone:mixamorig:HeadTop_End"
+    },
+    "rick": {
+      "heightMeters": [
+        1.42,
+        1.58
+      ],
+      "requiredBones": [
+        "mixamorig:Hips"
+      ],
+      "requiredClips": [
+        "idle",
+        "walk",
+        "sit",
+        "talk",
+        "point",
+        "wave"
+      ],
+      "heightFrom": "bone:mixamorig:HeadTop_End"
+    },
+    "mark": {
+      "heightMeters": [
+        1.07,
+        1.23
+      ],
+      "requiredBones": [
+        "mixamorig:Hips"
+      ],
+      "requiredClips": [
+        "idle",
+        "walk",
+        "sit",
+        "talk",
+        "point",
+        "wave"
+      ],
+      "heightFrom": "bone:mixamorig:HeadTop_End"
+    },
+    "controller-extra": {
+      "heightMeters": [
+        1.7,
+        1.9
+      ],
+      "maxTris": 2000,
+      "requiredBones": [
+        "mixamorig:Hips"
+      ],
+      "requiredClips": [
+        "idle",
+        "sit",
+        "talk"
+      ],
+      "requiredNodes": [
+        "shirt"
+      ],
+      "heightFrom": "bone:mixamorig:HeadTop_End"
+    }
+  }
+}

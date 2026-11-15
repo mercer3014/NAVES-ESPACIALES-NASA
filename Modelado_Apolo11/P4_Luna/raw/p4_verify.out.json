@@ -1,0 +1,306 @@
+[
+ {
+  "file": "eva-tools.glb",
+  "MB": 0.027,
+  "tris": 1728,
+  "nodes": {
+   "geo-hammer": {
+    "pos": [
+     0,
+     0.105,
+     0
+    ],
+    "size": [
+     0.185,
+     0.41,
+     0.035
+    ]
+   },
+   "core-tube-1": {
+    "pos": [
+     0.32,
+     0.375,
+     0
+    ],
+    "size": [
+     0.032,
+     0.415,
+     0.029
+    ]
+   },
+   "core-tube-2": {
+    "pos": [
+     0.38,
+     0.375,
+     0
+    ],
+    "size": [
+     0.032,
+     0.415,
+     0.029
+    ]
+   },
+   "hasselblad": {
+    "pos": [
+     0.69,
+     0.083,
+     0
+    ],
+    "size": [
+     0.101,
+     0.202,
+     0.213
+    ]
+   },
+   "lec-pulley": {
+    "pos": [
+     1.08,
+     0.66,
+     0
+    ],
+    "size": [
+     0.082,
+     0.649,
+     0.044
+    ]
+   }
+  },
+  "ext": [
+   "EXT_meshopt_compression",
+   "KHR_mesh_quantization"
+  ],
+  "images": [],
+  "minY": 0,
+  "bbox": [
+   1.231,
+   0.68,
+   0.213
+  ],
+  "materials": [
+   "aluminio",
+   "acero",
+   "anodizado-azul",
+   "anodizado-rojo",
+   "grip-negro",
+   "hasselblad-plata",
+   "negro-mate",
+   "lente",
+   "cinta-beta"
+  ],
+  "clips": {},
+  "ok": true,
+  "errs": []
+ },
+ {
+  "file": "memorial-kit.glb",
+  "MB": 0.048,
+  "tris": 2012,
+  "nodes": {
+   "apollo1-patch": {
+    "pos": [
+     0,
+     0,
+     0
+    ],
+    "size": [
+     0.1,
+     0.003,
+     0.1
+    ]
+   },
+   "medal-gagarin": {
+    "pos": [
+     0.1,
+     0,
+     0
+    ],
+    "size": [
+     0.035,
+     0.003,
+     0.04
+    ]
+   },
+   "medal-komarov": {
+    "pos": [
+     0.15,
+     0,
+     0
+    ],
+    "size": [
+     0.035,
+     0.004,
+     0.04
+    ]
+   },
+   "silicon-disc": {
+    "pos": [
+     0.21,
+     0,
+     0
+    ],
+    "size": [
+     0.041,
+     0.002,
+     0.041
+    ]
+   },
+   "olive-branch": {
+    "pos": [
+     0.26,
+     0,
+     0.01
+    ],
+    "size": [
+     0.114,
+     0.003,
+     0.036
+    ]
+   }
+  },
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "images": [
+   "image/webp"
+  ],
+  "minY": 0,
+  "bbox": [
+   0.424,
+   0.004,
+   0.1
+  ],
+  "materials": [
+   "apollo1-patch",
+   "tela-azul",
+   "oro",
+   "bronce",
+   "silicio",
+   "aluminio"
+  ],
+  "clips": {},
+  "ok": true,
+  "errs": []
+ },
+ {
+  "file": "o2-hose.glb",
+  "MB": 0.018,
+  "tris": 920,
+  "nodes": {
+   "o2-hose": {
+    "pos": [
+     0,
+     0,
+     0
+    ],
+    "size": [
+     0.048,
+     0.05,
+     2.044
+    ]
+   },
+   "o2-hose-geo": {
+    "pos": [
+     0,
+     0,
+     0
+    ],
+    "size": [
+     0.048,
+     0.05,
+     2.044
+    ]
+   },
+   "hose-0": {
+    "pos": [
+     0,
+     0.025,
+     0
+    ],
+    "size": null
+   },
+   "hose-1": {
+    "pos": [
+     0,
+     0.025,
+     0.333
+    ],
+    "size": null
+   },
+   "hose-2": {
+    "pos": [
+     0,
+     0.025,
+     0.667
+    ],
+    "size": null
+   },
+   "hose-3": {
+    "pos": [
+     0,
+     0.025,
+     1
+    ],
+    "size": null
+   },
+   "hose-4": {
+    "pos": [
+     0,
+     0.025,
+     1.333
+    ],
+    "size": null
+   },
+   "hose-5": {
+    "pos": [
+     0,
+     0.025,
+     1.667
+    ],
+    "size": null
+   }
+  },
+  "ext": [
+   "EXT_meshopt_compression",
+   "KHR_mesh_quantization"
+  ],
+  "images": [],
+  "minY": 0,
+  "bbox": [
+   0.048,
+   0.05,
+   2.044
+  ],
+  "materials": [
+   "manguera",
+   "conector-azul",
+   "aluminio"
+  ],
+  "bones": [
+   "hose-0",
+   "hose-1",
+   "hose-2",
+   "hose-3",
+   "hose-4",
+   "hose-5"
+  ],
+  "skinnedPrimitives": 3,
+  "maxInfluences": 2,
+  "badWeightSums": 0,
+  "rawBindPoseErr": 0,
+  "restBoxDiffVsRaw": 0.0001,
+  "tipRest": [
+   0.014,
+   0.02,
+   2.022
+  ],
+  "tipLoopErr": 0,
+  "tipMaxMove": 0.493,
+  "clips": {
+   "flex": 2
+  },
+  "ok": true,
+  "errs": []
+ }
+]

@@ -1,0 +1,196 @@
+{
+  "generatedAt": "sábado, 14 de noviembre de 2026, 7:24:39 p. m.",
+  "timeZone": "America/La_Paz",
+  "folder": "/tmp/p4val",
+  "rules": "reglas-p4 (guardian + boss-arena)",
+  "count": 2,
+  "models": [
+    {
+      "file": "boss-arena.glb",
+      "mb": 0.0914,
+      "bytes": 95884,
+      "tris": 11928,
+      "bbox": {
+        "min": [
+          -41.49956,
+          -1.00049,
+          -41.49956
+        ],
+        "max": [
+          41.49956,
+          12.77753,
+          41.49956
+        ],
+        "size": [
+          82.99913,
+          13.77801,
+          82.99913
+        ]
+      },
+      "heightMeasured": 13.778,
+      "materials": [
+        {
+          "name": "regolito"
+        }
+      ],
+      "textures": [],
+      "skins": [],
+      "bonesMax": 0,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [],
+      "meshopt": true,
+      "nodes": [
+        "arena-floor",
+        "rim-1",
+        "rim-2",
+        "rim-3",
+        "rim-4",
+        "rim-5",
+        "rim-6",
+        "rim-7",
+        "rim-8",
+        "boulder-1",
+        "boulder-2",
+        "boulder-3",
+        "boulder-4",
+        "boulder-5",
+        "spawn-player",
+        "spawn-guardian"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [],
+      "path": "/tmp/p4val/boss-arena.glb"
+    },
+    {
+      "file": "guardian.glb",
+      "mb": 0.293,
+      "bytes": 307228,
+      "tris": 6179,
+      "bbox": {
+        "min": [
+          -6.55285,
+          -1,
+          -4.28371
+        ],
+        "max": [
+          6.63541,
+          15.43785,
+          5.3036
+        ],
+        "size": [
+          13.18825,
+          16.43785,
+          9.58731
+        ]
+      },
+      "heightMeasured": 16.4379,
+      "materials": [
+        {
+          "name": "regolito-guardian"
+        },
+        {
+          "name": "cavidad"
+        },
+        {
+          "name": "core-dsky"
+        },
+        {
+          "name": "kapton"
+        },
+        {
+          "name": "basalto"
+        },
+        {
+          "name": "tanque"
+        },
+        {
+          "name": "tanque-banda"
+        }
+      ],
+      "textures": [
+        {
+          "name": "dsky-1202",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        }
+      ],
+      "skins": [
+        {
+          "name": "guardian",
+          "bones": 20
+        }
+      ],
+      "bonesMax": 20,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [
+        {
+          "name": "idle",
+          "duration": 3.5
+        },
+        {
+          "name": "slam",
+          "duration": 2.5
+        },
+        {
+          "name": "sweep",
+          "duration": 2.5
+        }
+      ],
+      "meshopt": true,
+      "nodes": [
+        "head",
+        "neck",
+        "core-dsky",
+        "core",
+        "hand-l",
+        "kapton-forearm-l-1",
+        "kapton-forearm-l-2",
+        "forearm-l",
+        "kapton-upper-l-1",
+        "kapton-upper-l-2",
+        "kapton-upper-l-3",
+        "plate-shoulder-l",
+        "upper-arm-l",
+        "hand-r",
+        "kapton-forearm-r-1",
+        "kapton-forearm-r-2",
+        "forearm-r",
+        "kapton-upper-r-1",
+        "kapton-upper-r-2",
+        "kapton-upper-r-3",
+        "plate-shoulder-r",
+        "upper-arm-r",
+        "spine-3",
+        "fuel-tank",
+        "spine-2",
+        "spine-1",
+        "foot-l",
+        "plate-knee-l",
+        "shin-l",
+        "thigh-l",
+        "foot-r",
+        "plate-knee-r",
+        "shin-r",
+        "thigh-r",
+        "hips",
+        "root",
+        "guardian-body",
+        "guardian"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "EXT_texture_webp",
+        "KHR_materials_emissive_strength",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [],
+      "path": "/tmp/p4val/guardian.glb"
+    }
+  ]
+}

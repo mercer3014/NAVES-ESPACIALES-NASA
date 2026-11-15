@@ -1,0 +1,2282 @@
+{
+  "generatedAt": "sábado, 14 de noviembre de 2026, 9:23:42 p. m.",
+  "timeZone": "America/La_Paz",
+  "folder": "/workspace/apolo11/Modelado_Apolo11/P3_Tierra/glb",
+  "rules": "reglas-p3",
+  "count": 16,
+  "models": [
+    {
+      "file": "armstrong-house.glb",
+      "mb": 0.1293,
+      "bytes": 135568,
+      "tris": 3088,
+      "bbox": {
+        "min": [
+          -4.64,
+          -1,
+          -4.84996
+        ],
+        "max": [
+          4.7,
+          3.39971,
+          3.38995
+        ],
+        "size": [
+          9.34,
+          4.39971,
+          8.2399
+        ]
+      },
+      "heightMeasured": 2.45,
+      "materials": [
+        {
+          "name": "chair-orange"
+        },
+        {
+          "name": "wood-teak"
+        },
+        {
+          "name": "wood-dark"
+        },
+        {
+          "name": "photo-frame"
+        },
+        {
+          "name": "paper"
+        },
+        {
+          "name": "sofa-olive"
+        },
+        {
+          "name": "curtain"
+        },
+        {
+          "name": "lamp-shade"
+        },
+        {
+          "name": "ashtray-glass"
+        },
+        {
+          "name": "door-wood"
+        },
+        {
+          "name": "wood-trim"
+        },
+        {
+          "name": "brass"
+        },
+        {
+          "name": "lamp-bulb"
+        },
+        {
+          "name": "kitchen-cabinet"
+        },
+        {
+          "name": "counter-formica"
+        },
+        {
+          "name": "chrome"
+        },
+        {
+          "name": "squawk-grille"
+        },
+        {
+          "name": "appliance-avocado"
+        },
+        {
+          "name": "black-plastic"
+        },
+        {
+          "name": "calendar"
+        },
+        {
+          "name": "cardboard"
+        },
+        {
+          "name": "packing-tape"
+        },
+        {
+          "name": "floor-wood"
+        },
+        {
+          "name": "floor-linoleum"
+        },
+        {
+          "name": "floor-linoleum-dark"
+        },
+        {
+          "name": "ceiling"
+        },
+        {
+          "name": "wood-paneling"
+        },
+        {
+          "name": "wall-paint"
+        },
+        {
+          "name": "phone-beige"
+        },
+        {
+          "name": "rug"
+        },
+        {
+          "name": "squawk-metal"
+        },
+        {
+          "name": "tv-screen"
+        },
+        {
+          "name": "day-trees-near"
+        },
+        {
+          "name": "day-sky"
+        },
+        {
+          "name": "day-sky-haze"
+        },
+        {
+          "name": "day-trees"
+        },
+        {
+          "name": "day-lawn"
+        },
+        {
+          "name": "day-house"
+        },
+        {
+          "name": "day-roof"
+        },
+        {
+          "name": "day-window-dark"
+        },
+        {
+          "name": "window-view"
+        }
+      ],
+      "textures": [
+        {
+          "name": "house-atlas",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        }
+      ],
+      "skins": [],
+      "bonesMax": 0,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [],
+      "meshopt": true,
+      "nodes": [
+        "armchair",
+        "bookshelf",
+        "ceiling-light-kitchen",
+        "ceiling-light-living",
+        "clutter",
+        "coffee-table",
+        "dining-table",
+        "door-front",
+        "door-hall",
+        "end-table",
+        "end-table-2",
+        "floor-lamp",
+        "kitchen",
+        "light-dining",
+        "light-floor-lamp",
+        "light-kitchen",
+        "light-living",
+        "light-moon-window",
+        "light-sun-window",
+        "light-tv-glow",
+        "moving-box-1",
+        "moving-box-2",
+        "moving-box-3",
+        "moving-box-4",
+        "moving-boxes",
+        "npc-spot-jan",
+        "npc-spot-mark",
+        "npc-spot-neil",
+        "npc-spot-rick",
+        "pendant-lamp",
+        "room-shell",
+        "rotary-phone",
+        "rug",
+        "sofa",
+        "squawk-box",
+        "tv-set",
+        "window-day-shrubs",
+        "window-day-view",
+        "window-day",
+        "window-night",
+        "window-backdrop",
+        "armstrong-house",
+        "dining-chair-instances"
+      ],
+      "extensions": [
+        "EXT_mesh_gpu_instancing",
+        "EXT_meshopt_compression",
+        "EXT_texture_webp",
+        "KHR_materials_emissive_strength",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [],
+      "path": "/workspace/apolo11/Modelado_Apolo11/P3_Tierra/glb/armstrong-house.glb"
+    },
+    {
+      "file": "bales.glb",
+      "mb": 0.1665,
+      "bytes": 174632,
+      "tris": 4793,
+      "bbox": {
+        "min": [
+          -0.98462,
+          -1,
+          -0.13782
+        ],
+        "max": [
+          0.98462,
+          1,
+          0.13782
+        ],
+        "size": [
+          1.96924,
+          2,
+          0.27564
+        ]
+      },
+      "heightMeasured": 1.8,
+      "materials": [
+        {
+          "name": "skin"
+        },
+        {
+          "name": "shoes"
+        },
+        {
+          "name": "shirt"
+        },
+        {
+          "name": "pants"
+        },
+        {
+          "name": "belt"
+        },
+        {
+          "name": "buckle"
+        },
+        {
+          "name": "tie"
+        },
+        {
+          "name": "hair"
+        },
+        {
+          "name": "eye-white"
+        },
+        {
+          "name": "iris"
+        },
+        {
+          "name": "pupil"
+        },
+        {
+          "name": "lash"
+        },
+        {
+          "name": "mouth"
+        },
+        {
+          "name": "lips"
+        },
+        {
+          "name": "glasses"
+        },
+        {
+          "name": "headset"
+        },
+        {
+          "name": "headset-ear"
+        }
+      ],
+      "textures": [],
+      "skins": [
+        {
+          "name": "armature",
+          "bones": 25
+        }
+      ],
+      "bonesMax": 25,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [
+        {
+          "name": "idle",
+          "duration": 4
+        },
+        {
+          "name": "point",
+          "duration": 2
+        },
+        {
+          "name": "sit",
+          "duration": 4
+        },
+        {
+          "name": "sit-floor",
+          "duration": 4
+        },
+        {
+          "name": "talk",
+          "duration": 3.2
+        },
+        {
+          "name": "walk",
+          "duration": 1.133
+        },
+        {
+          "name": "wave",
+          "duration": 2
+        }
+      ],
+      "meshopt": true,
+      "nodes": [
+        "mixamorig:HeadTop_End",
+        "mixamorig:Head",
+        "mixamorig:Neck",
+        "mixamorig:LeftHand",
+        "mixamorig:LeftForeArm",
+        "mixamorig:LeftArm",
+        "mixamorig:LeftShoulder",
+        "mixamorig:RightHand",
+        "mixamorig:RightForeArm",
+        "mixamorig:RightArm",
+        "mixamorig:RightShoulder",
+        "mixamorig:Spine2",
+        "mixamorig:Spine1",
+        "mixamorig:Spine",
+        "mixamorig:LeftToe_End",
+        "mixamorig:LeftToeBase",
+        "mixamorig:LeftFoot",
+        "mixamorig:LeftLeg",
+        "mixamorig:LeftUpLeg",
+        "mixamorig:RightToe_End",
+        "mixamorig:RightToeBase",
+        "mixamorig:RightFoot",
+        "mixamorig:RightLeg",
+        "mixamorig:RightUpLeg",
+        "mixamorig:Hips",
+        "bales",
+        "armature"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [],
+      "path": "/workspace/apolo11/Modelado_Apolo11/P3_Tierra/glb/bales.glb"
+    },
+    {
+      "file": "civil-base-p3.glb",
+      "mb": 0.1554,
+      "bytes": 162956,
+      "tris": 4701,
+      "bbox": {
+        "min": [
+          -0.98242,
+          -1,
+          -0.14502
+        ],
+        "max": [
+          0.98242,
+          1,
+          0.14502
+        ],
+        "size": [
+          1.96484,
+          2,
+          0.29005
+        ]
+      },
+      "heightMeasured": 1.8,
+      "materials": [
+        {
+          "name": "skin"
+        },
+        {
+          "name": "shoes"
+        },
+        {
+          "name": "shirt"
+        },
+        {
+          "name": "pants"
+        },
+        {
+          "name": "belt"
+        },
+        {
+          "name": "buckle"
+        },
+        {
+          "name": "hair"
+        },
+        {
+          "name": "eye-white"
+        },
+        {
+          "name": "iris"
+        },
+        {
+          "name": "pupil"
+        },
+        {
+          "name": "lash"
+        },
+        {
+          "name": "mouth"
+        },
+        {
+          "name": "lips"
+        }
+      ],
+      "textures": [],
+      "skins": [
+        {
+          "name": "armature",
+          "bones": 25
+        }
+      ],
+      "bonesMax": 25,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [
+        {
+          "name": "idle",
+          "duration": 4
+        },
+        {
+          "name": "point",
+          "duration": 2
+        },
+        {
+          "name": "sit",
+          "duration": 4
+        },
+        {
+          "name": "sit-floor",
+          "duration": 4
+        },
+        {
+          "name": "talk",
+          "duration": 3.2
+        },
+        {
+          "name": "walk",
+          "duration": 1.133
+        },
+        {
+          "name": "wave",
+          "duration": 2
+        }
+      ],
+      "meshopt": true,
+      "nodes": [
+        "mixamorig:HeadTop_End",
+        "mixamorig:Head",
+        "mixamorig:Neck",
+        "mixamorig:LeftHand",
+        "mixamorig:LeftForeArm",
+        "mixamorig:LeftArm",
+        "mixamorig:LeftShoulder",
+        "mixamorig:RightHand",
+        "mixamorig:RightForeArm",
+        "mixamorig:RightArm",
+        "mixamorig:RightShoulder",
+        "mixamorig:Spine2",
+        "mixamorig:Spine1",
+        "mixamorig:Spine",
+        "mixamorig:LeftToe_End",
+        "mixamorig:LeftToeBase",
+        "mixamorig:LeftFoot",
+        "mixamorig:LeftLeg",
+        "mixamorig:LeftUpLeg",
+        "mixamorig:RightToe_End",
+        "mixamorig:RightToeBase",
+        "mixamorig:RightFoot",
+        "mixamorig:RightLeg",
+        "mixamorig:RightUpLeg",
+        "mixamorig:Hips",
+        "civil-base-p3",
+        "armature"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [],
+      "path": "/workspace/apolo11/Modelado_Apolo11/P3_Tierra/glb/civil-base-p3.glb"
+    },
+    {
+      "file": "controller-extra.glb",
+      "mb": 0.096,
+      "bytes": 100712,
+      "tris": 1876,
+      "bbox": {
+        "min": [
+          -1,
+          -1,
+          -0.26334
+        ],
+        "max": [
+          1,
+          1,
+          0.26334
+        ],
+        "size": [
+          2,
+          2,
+          0.52669
+        ]
+      },
+      "heightMeasured": 1.8,
+      "materials": [
+        {
+          "name": "skin"
+        },
+        {
+          "name": "shoes"
+        },
+        {
+          "name": "pants"
+        },
+        {
+          "name": "belt"
+        },
+        {
+          "name": "buckle"
+        },
+        {
+          "name": "tie"
+        },
+        {
+          "name": "hair"
+        },
+        {
+          "name": "eye-white"
+        },
+        {
+          "name": "iris"
+        },
+        {
+          "name": "lash"
+        },
+        {
+          "name": "mouth"
+        },
+        {
+          "name": "lips"
+        },
+        {
+          "name": "headset"
+        },
+        {
+          "name": "headset-ear"
+        },
+        {
+          "name": "shirt-white"
+        },
+        {
+          "name": "shirt-blue"
+        },
+        {
+          "name": "shirt-tan"
+        }
+      ],
+      "textures": [],
+      "skins": [
+        {
+          "name": "armature",
+          "bones": 25
+        },
+        {
+          "name": "armature",
+          "bones": 25
+        }
+      ],
+      "bonesMax": 25,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [
+        {
+          "name": "idle",
+          "duration": 4
+        },
+        {
+          "name": "sit",
+          "duration": 4
+        },
+        {
+          "name": "talk",
+          "duration": 3.2
+        }
+      ],
+      "meshopt": true,
+      "nodes": [
+        "mixamorig:HeadTop_End",
+        "mixamorig:Head",
+        "mixamorig:Neck",
+        "mixamorig:LeftHand",
+        "mixamorig:LeftForeArm",
+        "mixamorig:LeftArm",
+        "mixamorig:LeftShoulder",
+        "mixamorig:RightHand",
+        "mixamorig:RightForeArm",
+        "mixamorig:RightArm",
+        "mixamorig:RightShoulder",
+        "mixamorig:Spine2",
+        "mixamorig:Spine1",
+        "mixamorig:Spine",
+        "mixamorig:LeftToe_End",
+        "mixamorig:LeftToeBase",
+        "mixamorig:LeftFoot",
+        "mixamorig:LeftLeg",
+        "mixamorig:LeftUpLeg",
+        "mixamorig:RightToe_End",
+        "mixamorig:RightToeBase",
+        "mixamorig:RightFoot",
+        "mixamorig:RightLeg",
+        "mixamorig:RightUpLeg",
+        "mixamorig:Hips",
+        "controller-extra",
+        "shirt",
+        "armature"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "KHR_materials_variants",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [],
+      "path": "/workspace/apolo11/Modelado_Apolo11/P3_Tierra/glb/controller-extra.glb"
+    },
+    {
+      "file": "duke.glb",
+      "mb": 0.1627,
+      "bytes": 170560,
+      "tris": 4793,
+      "bbox": {
+        "min": [
+          -0.98181,
+          -1,
+          -0.14393
+        ],
+        "max": [
+          0.98181,
+          1,
+          0.14393
+        ],
+        "size": [
+          1.96362,
+          2,
+          0.28785
+        ]
+      },
+      "heightMeasured": 1.8,
+      "materials": [
+        {
+          "name": "skin"
+        },
+        {
+          "name": "shoes"
+        },
+        {
+          "name": "shirt"
+        },
+        {
+          "name": "pants"
+        },
+        {
+          "name": "belt"
+        },
+        {
+          "name": "buckle"
+        },
+        {
+          "name": "tie"
+        },
+        {
+          "name": "hair"
+        },
+        {
+          "name": "eye-white"
+        },
+        {
+          "name": "iris"
+        },
+        {
+          "name": "pupil"
+        },
+        {
+          "name": "lash"
+        },
+        {
+          "name": "mouth"
+        },
+        {
+          "name": "lips"
+        },
+        {
+          "name": "headset"
+        },
+        {
+          "name": "headset-ear"
+        }
+      ],
+      "textures": [],
+      "skins": [
+        {
+          "name": "armature",
+          "bones": 25
+        }
+      ],
+      "bonesMax": 25,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [
+        {
+          "name": "idle",
+          "duration": 4
+        },
+        {
+          "name": "point",
+          "duration": 2
+        },
+        {
+          "name": "sit",
+          "duration": 4
+        },
+        {
+          "name": "sit-floor",
+          "duration": 4
+        },
+        {
+          "name": "talk",
+          "duration": 3.2
+        },
+        {
+          "name": "walk",
+          "duration": 1.133
+        },
+        {
+          "name": "wave",
+          "duration": 2
+        }
+      ],
+      "meshopt": true,
+      "nodes": [
+        "mixamorig:HeadTop_End",
+        "mixamorig:Head",
+        "mixamorig:Neck",
+        "mixamorig:LeftHand",
+        "mixamorig:LeftForeArm",
+        "mixamorig:LeftArm",
+        "mixamorig:LeftShoulder",
+        "mixamorig:RightHand",
+        "mixamorig:RightForeArm",
+        "mixamorig:RightArm",
+        "mixamorig:RightShoulder",
+        "mixamorig:Spine2",
+        "mixamorig:Spine1",
+        "mixamorig:Spine",
+        "mixamorig:LeftToe_End",
+        "mixamorig:LeftToeBase",
+        "mixamorig:LeftFoot",
+        "mixamorig:LeftLeg",
+        "mixamorig:LeftUpLeg",
+        "mixamorig:RightToe_End",
+        "mixamorig:RightToeBase",
+        "mixamorig:RightFoot",
+        "mixamorig:RightLeg",
+        "mixamorig:RightUpLeg",
+        "mixamorig:Hips",
+        "duke",
+        "armature"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [],
+      "path": "/workspace/apolo11/Modelado_Apolo11/P3_Tierra/glb/duke.glb"
+    },
+    {
+      "file": "earth-props.glb",
+      "mb": 0.0863,
+      "bytes": 90488,
+      "tris": 2162,
+      "bbox": {
+        "min": [
+          -0.995,
+          -0.00062,
+          -0.90005
+        ],
+        "max": [
+          0.995,
+          1.85004,
+          0.4895
+        ],
+        "size": [
+          1.99,
+          1.85065,
+          1.38955
+        ]
+      },
+      "heightMeasured": 1.8507,
+      "materials": [
+        {
+          "name": "props-atlas"
+        },
+        {
+          "name": "paper"
+        },
+        {
+          "name": "paint-black"
+        },
+        {
+          "name": "glass-amber"
+        },
+        {
+          "name": "metal-silver"
+        },
+        {
+          "name": "wood-dark"
+        },
+        {
+          "name": "wood-light"
+        },
+        {
+          "name": "slate-green"
+        },
+        {
+          "name": "chalk"
+        },
+        {
+          "name": "thread-gold"
+        },
+        {
+          "name": "book-red"
+        },
+        {
+          "name": "paint-white"
+        },
+        {
+          "name": "bakelite-black"
+        },
+        {
+          "name": "paint-red"
+        },
+        {
+          "name": "paint-gray"
+        }
+      ],
+      "textures": [
+        {
+          "name": "earth-props-atlas",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        }
+      ],
+      "skins": [],
+      "bonesMax": 0,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [],
+      "meshopt": true,
+      "nodes": [
+        "alarm-sheet-mesh",
+        "alarm-sheet",
+        "ashtray-mesh",
+        "ashtray",
+        "chalkboard-mesh",
+        "chalkboard",
+        "framed-photo-mesh",
+        "framed-photo",
+        "mission-patch-mesh",
+        "mission-patch",
+        "notebook-mesh",
+        "notebook",
+        "rotary-phone-mesh",
+        "rotary-phone",
+        "signed-envelopes-mesh",
+        "signed-envelopes",
+        "spacecraft-mesh",
+        "spacecraft",
+        "stage-1-mesh",
+        "stage-1",
+        "stage-2-mesh",
+        "stage-2",
+        "stage-3-mesh",
+        "stage-3",
+        "toy-saturn-v",
+        "earth-props"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "EXT_texture_webp",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [],
+      "path": "/workspace/apolo11/Modelado_Apolo11/P3_Tierra/glb/earth-props.glb"
+    },
+    {
+      "file": "garman.glb",
+      "mb": 0.1615,
+      "bytes": 169296,
+      "tris": 4730,
+      "bbox": {
+        "min": [
+          -0.98486,
+          -1,
+          -0.14246
+        ],
+        "max": [
+          0.98486,
+          1,
+          0.14246
+        ],
+        "size": [
+          1.96973,
+          2,
+          0.28492
+        ]
+      },
+      "heightMeasured": 1.8,
+      "materials": [
+        {
+          "name": "skin"
+        },
+        {
+          "name": "shoes"
+        },
+        {
+          "name": "shirt"
+        },
+        {
+          "name": "pants"
+        },
+        {
+          "name": "belt"
+        },
+        {
+          "name": "buckle"
+        },
+        {
+          "name": "tie"
+        },
+        {
+          "name": "hair"
+        },
+        {
+          "name": "eye-white"
+        },
+        {
+          "name": "iris"
+        },
+        {
+          "name": "pupil"
+        },
+        {
+          "name": "lash"
+        },
+        {
+          "name": "mouth"
+        },
+        {
+          "name": "lips"
+        },
+        {
+          "name": "glasses-metal"
+        }
+      ],
+      "textures": [],
+      "skins": [
+        {
+          "name": "armature",
+          "bones": 25
+        }
+      ],
+      "bonesMax": 25,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [
+        {
+          "name": "idle",
+          "duration": 4
+        },
+        {
+          "name": "point",
+          "duration": 2
+        },
+        {
+          "name": "sit",
+          "duration": 4
+        },
+        {
+          "name": "sit-floor",
+          "duration": 4
+        },
+        {
+          "name": "talk",
+          "duration": 3.2
+        },
+        {
+          "name": "walk",
+          "duration": 1.133
+        },
+        {
+          "name": "wave",
+          "duration": 2
+        }
+      ],
+      "meshopt": true,
+      "nodes": [
+        "mixamorig:HeadTop_End",
+        "mixamorig:Head",
+        "mixamorig:Neck",
+        "mixamorig:LeftHand",
+        "mixamorig:LeftForeArm",
+        "mixamorig:LeftArm",
+        "mixamorig:LeftShoulder",
+        "mixamorig:RightHand",
+        "mixamorig:RightForeArm",
+        "mixamorig:RightArm",
+        "mixamorig:RightShoulder",
+        "mixamorig:Spine2",
+        "mixamorig:Spine1",
+        "mixamorig:Spine",
+        "mixamorig:LeftToe_End",
+        "mixamorig:LeftToeBase",
+        "mixamorig:LeftFoot",
+        "mixamorig:LeftLeg",
+        "mixamorig:LeftUpLeg",
+        "mixamorig:RightToe_End",
+        "mixamorig:RightToeBase",
+        "mixamorig:RightFoot",
+        "mixamorig:RightLeg",
+        "mixamorig:RightUpLeg",
+        "mixamorig:Hips",
+        "garman",
+        "armature"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [],
+      "path": "/workspace/apolo11/Modelado_Apolo11/P3_Tierra/glb/garman.glb"
+    },
+    {
+      "file": "hotel-room-1967.glb",
+      "mb": 0.0365,
+      "bytes": 38240,
+      "tris": 1136,
+      "bbox": {
+        "min": [
+          -2.41989,
+          -0.0998,
+          -2.92
+        ],
+        "max": [
+          2.41989,
+          2.7998,
+          2.92
+        ],
+        "size": [
+          4.83978,
+          2.89959,
+          5.84
+        ]
+      },
+      "heightMeasured": 2.8996,
+      "materials": [
+        {
+          "name": "walnut"
+        },
+        {
+          "name": "bedspread-gold"
+        },
+        {
+          "name": "sheet-white"
+        },
+        {
+          "name": "lampshade"
+        },
+        {
+          "name": "brass"
+        },
+        {
+          "name": "armchair-teal"
+        },
+        {
+          "name": "frame-gold"
+        },
+        {
+          "name": "painting-landscape"
+        },
+        {
+          "name": "door-walnut"
+        },
+        {
+          "name": "mirror"
+        },
+        {
+          "name": "trim-white"
+        },
+        {
+          "name": "bakelite-black"
+        },
+        {
+          "name": "wallpaper-olive"
+        },
+        {
+          "name": "carpet-rust"
+        },
+        {
+          "name": "ceiling-plaster"
+        },
+        {
+          "name": "curtain-green"
+        },
+        {
+          "name": "window-dusk"
+        }
+      ],
+      "textures": [],
+      "skins": [],
+      "bonesMax": 0,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [],
+      "meshopt": true,
+      "nodes": [
+        "bed-mesh",
+        "bed",
+        "ceiling-fixture",
+        "furniture",
+        "lamp-light",
+        "light-ceiling",
+        "nightstands",
+        "npc-spot-bed",
+        "npc-spot-window",
+        "phone-mesh",
+        "phone",
+        "room-shell",
+        "window-mesh",
+        "window",
+        "hotel-room-1967"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "KHR_materials_emissive_strength",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [],
+      "path": "/workspace/apolo11/Modelado_Apolo11/P3_Tierra/glb/hotel-room-1967.glb"
+    },
+    {
+      "file": "jan.glb",
+      "mb": 0.1499,
+      "bytes": 157168,
+      "tris": 4733,
+      "bbox": {
+        "min": [
+          -0.94446,
+          -1,
+          -0.19642
+        ],
+        "max": [
+          0.94446,
+          1,
+          0.19642
+        ],
+        "size": [
+          1.88891,
+          2,
+          0.39283
+        ]
+      },
+      "heightMeasured": 1.65,
+      "materials": [
+        {
+          "name": "skin"
+        },
+        {
+          "name": "shoes"
+        },
+        {
+          "name": "dress"
+        },
+        {
+          "name": "hair"
+        },
+        {
+          "name": "eye-white"
+        },
+        {
+          "name": "iris"
+        },
+        {
+          "name": "pupil"
+        },
+        {
+          "name": "lash"
+        },
+        {
+          "name": "mouth"
+        },
+        {
+          "name": "lips"
+        },
+        {
+          "name": "sash"
+        }
+      ],
+      "textures": [],
+      "skins": [
+        {
+          "name": "armature",
+          "bones": 25
+        }
+      ],
+      "bonesMax": 25,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [
+        {
+          "name": "idle",
+          "duration": 4
+        },
+        {
+          "name": "point",
+          "duration": 2
+        },
+        {
+          "name": "sit",
+          "duration": 4
+        },
+        {
+          "name": "sit-floor",
+          "duration": 4
+        },
+        {
+          "name": "talk",
+          "duration": 3.2
+        },
+        {
+          "name": "walk",
+          "duration": 1.1
+        },
+        {
+          "name": "wave",
+          "duration": 2
+        }
+      ],
+      "meshopt": true,
+      "nodes": [
+        "mixamorig:HeadTop_End",
+        "mixamorig:Head",
+        "mixamorig:Neck",
+        "mixamorig:LeftHand",
+        "mixamorig:LeftForeArm",
+        "mixamorig:LeftArm",
+        "mixamorig:LeftShoulder",
+        "mixamorig:RightHand",
+        "mixamorig:RightForeArm",
+        "mixamorig:RightArm",
+        "mixamorig:RightShoulder",
+        "mixamorig:Spine2",
+        "mixamorig:Spine1",
+        "mixamorig:Spine",
+        "mixamorig:LeftToe_End",
+        "mixamorig:LeftToeBase",
+        "mixamorig:LeftFoot",
+        "mixamorig:LeftLeg",
+        "mixamorig:LeftUpLeg",
+        "mixamorig:RightToe_End",
+        "mixamorig:RightToeBase",
+        "mixamorig:RightFoot",
+        "mixamorig:RightLeg",
+        "mixamorig:RightUpLeg",
+        "mixamorig:Hips",
+        "jan",
+        "armature"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [],
+      "path": "/workspace/apolo11/Modelado_Apolo11/P3_Tierra/glb/jan.glb"
+    },
+    {
+      "file": "kranz.glb",
+      "mb": 0.1647,
+      "bytes": 172672,
+      "tris": 4836,
+      "bbox": {
+        "min": [
+          -0.99951,
+          -1,
+          -0.15809
+        ],
+        "max": [
+          0.99951,
+          1,
+          0.15809
+        ],
+        "size": [
+          1.99902,
+          2,
+          0.31617
+        ]
+      },
+      "heightMeasured": 1.8,
+      "materials": [
+        {
+          "name": "skin"
+        },
+        {
+          "name": "shoes"
+        },
+        {
+          "name": "shirt"
+        },
+        {
+          "name": "pants"
+        },
+        {
+          "name": "belt"
+        },
+        {
+          "name": "buckle"
+        },
+        {
+          "name": "vest"
+        },
+        {
+          "name": "button"
+        },
+        {
+          "name": "tie"
+        },
+        {
+          "name": "hair"
+        },
+        {
+          "name": "eye-white"
+        },
+        {
+          "name": "iris"
+        },
+        {
+          "name": "pupil"
+        },
+        {
+          "name": "lash"
+        },
+        {
+          "name": "mouth"
+        },
+        {
+          "name": "lips"
+        }
+      ],
+      "textures": [],
+      "skins": [
+        {
+          "name": "armature",
+          "bones": 25
+        }
+      ],
+      "bonesMax": 25,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [
+        {
+          "name": "idle",
+          "duration": 4
+        },
+        {
+          "name": "point",
+          "duration": 2
+        },
+        {
+          "name": "sit",
+          "duration": 4
+        },
+        {
+          "name": "sit-floor",
+          "duration": 4
+        },
+        {
+          "name": "talk",
+          "duration": 3.2
+        },
+        {
+          "name": "walk",
+          "duration": 1.133
+        },
+        {
+          "name": "wave",
+          "duration": 2
+        }
+      ],
+      "meshopt": true,
+      "nodes": [
+        "mixamorig:HeadTop_End",
+        "mixamorig:Head",
+        "mixamorig:Neck",
+        "mixamorig:LeftHand",
+        "mixamorig:LeftForeArm",
+        "mixamorig:LeftArm",
+        "mixamorig:LeftShoulder",
+        "mixamorig:RightHand",
+        "mixamorig:RightForeArm",
+        "mixamorig:RightArm",
+        "mixamorig:RightShoulder",
+        "mixamorig:Spine2",
+        "mixamorig:Spine1",
+        "mixamorig:Spine",
+        "mixamorig:LeftToe_End",
+        "mixamorig:LeftToeBase",
+        "mixamorig:LeftFoot",
+        "mixamorig:LeftLeg",
+        "mixamorig:LeftUpLeg",
+        "mixamorig:RightToe_End",
+        "mixamorig:RightToeBase",
+        "mixamorig:RightFoot",
+        "mixamorig:RightLeg",
+        "mixamorig:RightUpLeg",
+        "mixamorig:Hips",
+        "kranz",
+        "armature"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [],
+      "path": "/workspace/apolo11/Modelado_Apolo11/P3_Tierra/glb/kranz.glb"
+    },
+    {
+      "file": "lrl-room.glb",
+      "mb": 0.0604,
+      "bytes": 63352,
+      "tris": 2794,
+      "bbox": {
+        "min": [
+          -4.12,
+          -0.09991,
+          -4.12
+        ],
+        "max": [
+          4.12,
+          2.89991,
+          4.12
+        ],
+        "size": [
+          8.24,
+          2.99982,
+          8.24
+        ]
+      },
+      "heightMeasured": 2.9998,
+      "materials": [
+        {
+          "name": "aluminum-frame"
+        },
+        {
+          "name": "wood-formica"
+        },
+        {
+          "name": "steel-dark"
+        },
+        {
+          "name": "chair-vinyl-orange"
+        },
+        {
+          "name": "plant-green"
+        },
+        {
+          "name": "pot-brown"
+        },
+        {
+          "name": "fluorescent"
+        },
+        {
+          "name": "phone-black"
+        },
+        {
+          "name": "quarantine-glass"
+        },
+        {
+          "name": "wall-cream"
+        },
+        {
+          "name": "wall-green"
+        },
+        {
+          "name": "floor-vinyl-beige"
+        },
+        {
+          "name": "floor-vinyl-gray"
+        },
+        {
+          "name": "ceiling-tile"
+        },
+        {
+          "name": "door-gray"
+        },
+        {
+          "name": "sign-red"
+        },
+        {
+          "name": "wainscot-tan"
+        },
+        {
+          "name": "wainscot-green"
+        },
+        {
+          "name": "floor-tile-dark"
+        },
+        {
+          "name": "cork-board"
+        },
+        {
+          "name": "paper-white"
+        }
+      ],
+      "textures": [],
+      "skins": [],
+      "bonesMax": 0,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [],
+      "meshopt": true,
+      "nodes": [
+        "chairs",
+        "decor",
+        "fluorescent-fixtures",
+        "light-1",
+        "light-2",
+        "light-3",
+        "light-4",
+        "light-5",
+        "light-6",
+        "npc-spot-jan",
+        "npc-spot-mark",
+        "npc-spot-neil",
+        "npc-spot-rick",
+        "phone-inside-mesh",
+        "phone-inside",
+        "phone-outside-mesh",
+        "phone-outside",
+        "quarantine-glass",
+        "room-shell",
+        "table",
+        "wall-clock",
+        "lrl-room"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "KHR_materials_emissive_strength",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [],
+      "path": "/workspace/apolo11/Modelado_Apolo11/P3_Tierra/glb/lrl-room.glb"
+    },
+    {
+      "file": "mark.glb",
+      "mb": 0.1505,
+      "bytes": 157860,
+      "tris": 4780,
+      "bbox": {
+        "min": [
+          -0.94531,
+          -1,
+          -0.17359
+        ],
+        "max": [
+          0.94531,
+          1,
+          0.17359
+        ],
+        "size": [
+          1.89062,
+          2,
+          0.34718
+        ]
+      },
+      "heightMeasured": 1.15,
+      "materials": [
+        {
+          "name": "skin"
+        },
+        {
+          "name": "shoes"
+        },
+        {
+          "name": "tshirt"
+        },
+        {
+          "name": "shorts"
+        },
+        {
+          "name": "hair"
+        },
+        {
+          "name": "eye-white"
+        },
+        {
+          "name": "iris"
+        },
+        {
+          "name": "pupil"
+        },
+        {
+          "name": "lash"
+        },
+        {
+          "name": "mouth"
+        },
+        {
+          "name": "lips"
+        }
+      ],
+      "textures": [],
+      "skins": [
+        {
+          "name": "armature",
+          "bones": 25
+        }
+      ],
+      "bonesMax": 25,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [
+        {
+          "name": "idle",
+          "duration": 4
+        },
+        {
+          "name": "point",
+          "duration": 2
+        },
+        {
+          "name": "sit",
+          "duration": 4
+        },
+        {
+          "name": "sit-floor",
+          "duration": 4
+        },
+        {
+          "name": "talk",
+          "duration": 3.2
+        },
+        {
+          "name": "walk",
+          "duration": 0.867
+        },
+        {
+          "name": "wave",
+          "duration": 2
+        }
+      ],
+      "meshopt": true,
+      "nodes": [
+        "mixamorig:HeadTop_End",
+        "mixamorig:Head",
+        "mixamorig:Neck",
+        "mixamorig:LeftHand",
+        "mixamorig:LeftForeArm",
+        "mixamorig:LeftArm",
+        "mixamorig:LeftShoulder",
+        "mixamorig:RightHand",
+        "mixamorig:RightForeArm",
+        "mixamorig:RightArm",
+        "mixamorig:RightShoulder",
+        "mixamorig:Spine2",
+        "mixamorig:Spine1",
+        "mixamorig:Spine",
+        "mixamorig:LeftToe_End",
+        "mixamorig:LeftToeBase",
+        "mixamorig:LeftFoot",
+        "mixamorig:LeftLeg",
+        "mixamorig:LeftUpLeg",
+        "mixamorig:RightToe_End",
+        "mixamorig:RightToeBase",
+        "mixamorig:RightFoot",
+        "mixamorig:RightLeg",
+        "mixamorig:RightUpLeg",
+        "mixamorig:Hips",
+        "mark",
+        "armature"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [],
+      "path": "/workspace/apolo11/Modelado_Apolo11/P3_Tierra/glb/mark.glb"
+    },
+    {
+      "file": "mocr-room.glb",
+      "mb": 0.1262,
+      "bytes": 132372,
+      "tris": 1412,
+      "bbox": {
+        "min": [
+          -10.06,
+          -1,
+          -7.54997
+        ],
+        "max": [
+          10.06,
+          5.00034,
+          7.50018
+        ],
+        "size": [
+          20.12,
+          6.00034,
+          15.05015
+        ]
+      },
+      "heightMeasured": 6.0003,
+      "materials": [
+        {
+          "name": "wood-trim"
+        },
+        {
+          "name": "chalkboard"
+        },
+        {
+          "name": "chair-chrome"
+        },
+        {
+          "name": "chair-vinyl"
+        },
+        {
+          "name": "console-dark"
+        },
+        {
+          "name": "console-body"
+        },
+        {
+          "name": "console-desk"
+        },
+        {
+          "name": "console-keys"
+        },
+        {
+          "name": "crt-bezel"
+        },
+        {
+          "name": "crt-screen"
+        },
+        {
+          "name": "crt-screen-guido"
+        },
+        {
+          "name": "headset-plastic"
+        },
+        {
+          "name": "paper"
+        },
+        {
+          "name": "ashtray-glass"
+        },
+        {
+          "name": "cup"
+        },
+        {
+          "name": "screen-frame"
+        },
+        {
+          "name": "door"
+        },
+        {
+          "name": "viewing-glass"
+        },
+        {
+          "name": "floor-carpet"
+        },
+        {
+          "name": "riser-fascia"
+        },
+        {
+          "name": "wall-panel"
+        },
+        {
+          "name": "wall-pilaster"
+        },
+        {
+          "name": "wall-front"
+        },
+        {
+          "name": "ceiling"
+        },
+        {
+          "name": "ceiling-lamp"
+        },
+        {
+          "name": "wall-screen"
+        }
+      ],
+      "textures": [
+        {
+          "name": "mocr-atlas",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        }
+      ],
+      "skins": [],
+      "bonesMax": 0,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [],
+      "meshopt": true,
+      "nodes": [
+        "chalkboard",
+        "console-endcap-r1-l",
+        "console-endcap-r1-r",
+        "console-fido",
+        "console-guido",
+        "console-row-1",
+        "console-capcom",
+        "console-endcap-r2-l",
+        "console-endcap-r2-r",
+        "console-row-2",
+        "console-endcap-r3-l",
+        "console-endcap-r3-r",
+        "console-flight",
+        "console-row-3",
+        "console-endcap-r4-l",
+        "console-endcap-r4-r",
+        "console-row-4",
+        "desk-clutter",
+        "door-frame",
+        "door-main",
+        "light-ceiling-01",
+        "light-ceiling-02",
+        "light-ceiling-03",
+        "light-ceiling-04",
+        "light-ceiling-05",
+        "light-ceiling-06",
+        "light-ceiling-07",
+        "light-ceiling-08",
+        "light-ceiling-09",
+        "light-ceiling-10",
+        "light-ceiling-11",
+        "light-ceiling-12",
+        "light-ceiling-13",
+        "light-ceiling-14",
+        "light-ceiling-15",
+        "light-ceiling-16",
+        "light-screens-glow",
+        "npc-spot-bales",
+        "npc-spot-duke",
+        "npc-spot-extra-1",
+        "npc-spot-extra-10",
+        "npc-spot-extra-11",
+        "npc-spot-extra-12",
+        "npc-spot-extra-13",
+        "npc-spot-extra-14",
+        "npc-spot-extra-15",
+        "npc-spot-extra-16",
+        "npc-spot-extra-2",
+        "npc-spot-extra-3",
+        "npc-spot-extra-4",
+        "npc-spot-extra-5",
+        "npc-spot-extra-6",
+        "npc-spot-extra-7",
+        "npc-spot-extra-8",
+        "npc-spot-extra-9",
+        "npc-spot-garman",
+        "npc-spot-kranz",
+        "room-shell",
+        "mission-clocks",
+        "screen-data-left",
+        "screen-data-right",
+        "screen-map",
+        "wall-screens",
+        "mocr-room",
+        "swivel-chair-instances",
+        "console-bay-instances",
+        "headset-instances",
+        "swivel-chair-instances",
+        "console-bay-instances",
+        "headset-instances",
+        "swivel-chair-instances",
+        "console-bay-instances",
+        "headset-instances",
+        "swivel-chair-instances",
+        "console-bay-instances",
+        "headset-instances"
+      ],
+      "extensions": [
+        "EXT_mesh_gpu_instancing",
+        "EXT_meshopt_compression",
+        "EXT_texture_webp",
+        "KHR_materials_emissive_strength",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [],
+      "path": "/workspace/apolo11/Modelado_Apolo11/P3_Tierra/glb/mocr-room.glb"
+    },
+    {
+      "file": "pacific-recovery.glb",
+      "mb": 0.1744,
+      "bytes": 182856,
+      "tris": 4952,
+      "bbox": {
+        "min": [
+          -100,
+          0,
+          -100
+        ],
+        "max": [
+          100,
+          2.19784,
+          100
+        ],
+        "size": [
+          200,
+          2.19784,
+          200
+        ]
+      },
+      "heightMeasured": 2.1978,
+      "materials": [
+        {
+          "name": "buoy-white"
+        },
+        {
+          "name": "raft-orange"
+        },
+        {
+          "name": "raft-gray"
+        },
+        {
+          "name": "raft-rope"
+        },
+        {
+          "name": "sea-pacific"
+        }
+      ],
+      "textures": [],
+      "skins": [],
+      "bonesMax": 0,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [
+        {
+          "name": "waves",
+          "duration": 6
+        }
+      ],
+      "meshopt": true,
+      "nodes": [
+        "buoy-1-mesh",
+        "buoy-1",
+        "buoy-2-mesh",
+        "buoy-2",
+        "buoy-3-mesh",
+        "buoy-3",
+        "cm-spot",
+        "life-raft-mesh",
+        "life-raft",
+        "ocean",
+        "pacific-recovery"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [],
+      "path": "/workspace/apolo11/Modelado_Apolo11/P3_Tierra/glb/pacific-recovery.glb"
+    },
+    {
+      "file": "parade-street.glb",
+      "mb": 0.1546,
+      "bytes": 162116,
+      "tris": 14760,
+      "bbox": {
+        "min": [
+          -36.20115,
+          -0.19945,
+          -70.00887
+        ],
+        "max": [
+          36.20115,
+          83.59878,
+          70
+        ],
+        "size": [
+          72.4023,
+          83.79823,
+          140.00887
+        ]
+      },
+      "heightMeasured": 83.7982,
+      "materials": [
+        {
+          "name": "facade-0"
+        },
+        {
+          "name": "facade-1"
+        },
+        {
+          "name": "facade-2"
+        },
+        {
+          "name": "facade-3"
+        },
+        {
+          "name": "facade-4"
+        },
+        {
+          "name": "facade-5"
+        },
+        {
+          "name": "curb"
+        },
+        {
+          "name": "roof-tar"
+        },
+        {
+          "name": "confetti-white"
+        },
+        {
+          "name": "confetti-paper"
+        },
+        {
+          "name": "confetti-blue"
+        },
+        {
+          "name": "crowd-dark"
+        },
+        {
+          "name": "crowd-mid"
+        },
+        {
+          "name": "crowd-light"
+        },
+        {
+          "name": "car-black"
+        },
+        {
+          "name": "chrome"
+        },
+        {
+          "name": "car-seat-red"
+        },
+        {
+          "name": "asphalt"
+        },
+        {
+          "name": "sidewalk"
+        },
+        {
+          "name": "road-line"
+        },
+        {
+          "name": "lamp-green"
+        },
+        {
+          "name": "flag-white"
+        }
+      ],
+      "textures": [
+        {
+          "name": "parade-facade",
+          "mime": "image/webp",
+          "width": 512,
+          "height": 512
+        }
+      ],
+      "skins": [],
+      "bonesMax": 0,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [
+        {
+          "name": "confetti-fall",
+          "duration": 8
+        }
+      ],
+      "meshopt": true,
+      "nodes": [
+        "buildings",
+        "confetti-mesh",
+        "confetti",
+        "confetti-ground",
+        "crowd-left",
+        "crowd-right",
+        "crowd",
+        "npc-spot-car-1",
+        "npc-spot-car-2",
+        "npc-spot-car-3",
+        "parade-car-mesh",
+        "parade-car",
+        "street",
+        "street-furniture",
+        "parade-street"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "EXT_texture_webp",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [],
+      "path": "/workspace/apolo11/Modelado_Apolo11/P3_Tierra/glb/parade-street.glb"
+    },
+    {
+      "file": "rick.glb",
+      "mb": 0.1505,
+      "bytes": 157816,
+      "tris": 4601,
+      "bbox": {
+        "min": [
+          -0.95923,
+          -1,
+          -0.1427
+        ],
+        "max": [
+          0.95923,
+          1,
+          0.1427
+        ],
+        "size": [
+          1.91845,
+          2,
+          0.28541
+        ]
+      },
+      "heightMeasured": 1.5,
+      "materials": [
+        {
+          "name": "skin"
+        },
+        {
+          "name": "shoes"
+        },
+        {
+          "name": "tshirt"
+        },
+        {
+          "name": "shorts"
+        },
+        {
+          "name": "hair"
+        },
+        {
+          "name": "eye-white"
+        },
+        {
+          "name": "iris"
+        },
+        {
+          "name": "pupil"
+        },
+        {
+          "name": "lash"
+        },
+        {
+          "name": "mouth"
+        },
+        {
+          "name": "lips"
+        }
+      ],
+      "textures": [],
+      "skins": [
+        {
+          "name": "armature",
+          "bones": 25
+        }
+      ],
+      "bonesMax": 25,
+      "verticesOverFourWeights": 0,
+      "verticesUnnormalizedWeights": 0,
+      "clips": [
+        {
+          "name": "idle",
+          "duration": 4
+        },
+        {
+          "name": "point",
+          "duration": 2
+        },
+        {
+          "name": "sit",
+          "duration": 4
+        },
+        {
+          "name": "sit-floor",
+          "duration": 4
+        },
+        {
+          "name": "talk",
+          "duration": 3.2
+        },
+        {
+          "name": "walk",
+          "duration": 1.033
+        },
+        {
+          "name": "wave",
+          "duration": 2
+        }
+      ],
+      "meshopt": true,
+      "nodes": [
+        "mixamorig:HeadTop_End",
+        "mixamorig:Head",
+        "mixamorig:Neck",
+        "mixamorig:LeftHand",
+        "mixamorig:LeftForeArm",
+        "mixamorig:LeftArm",
+        "mixamorig:LeftShoulder",
+        "mixamorig:RightHand",
+        "mixamorig:RightForeArm",
+        "mixamorig:RightArm",
+        "mixamorig:RightShoulder",
+        "mixamorig:Spine2",
+        "mixamorig:Spine1",
+        "mixamorig:Spine",
+        "mixamorig:LeftToe_End",
+        "mixamorig:LeftToeBase",
+        "mixamorig:LeftFoot",
+        "mixamorig:LeftLeg",
+        "mixamorig:LeftUpLeg",
+        "mixamorig:RightToe_End",
+        "mixamorig:RightToeBase",
+        "mixamorig:RightFoot",
+        "mixamorig:RightLeg",
+        "mixamorig:RightUpLeg",
+        "mixamorig:Hips",
+        "rick",
+        "armature"
+      ],
+      "extensions": [
+        "EXT_meshopt_compression",
+        "KHR_mesh_quantization"
+      ],
+      "warnings": [],
+      "path": "/workspace/apolo11/Modelado_Apolo11/P3_Tierra/glb/rick.glb"
+    }
+  ]
+}

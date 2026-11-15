@@ -1,0 +1,5 @@
+6a7,8
+> // Apolo 11 (P4): Little West (33 m, 60 m al E del LM) y West Crater (180 m, ~400 m al E); en el juego +x = oeste. [cx, cz, r, prof. borde-fondo]
+> const CR_A11 = [[PAD.x - 66, 0, 16.5, 4], [PAD.x - 406, 0, 90, 20]];
+9a12
+>   for (const [cx, cz, r, d] of CR_A11) { const q = Math.hypot(x - cx, z - cz) / r; if (q < 1) h += d * (q * q - 0.75); else if (q < 1.6) h += d * 0.25 * Math.cos(((q - 1) / 0.6) * Math.PI / 2) ** 2; }

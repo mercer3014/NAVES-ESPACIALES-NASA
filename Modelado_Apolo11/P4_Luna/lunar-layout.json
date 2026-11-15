@@ -1,0 +1,210 @@
+{
+ "note": "Posiciones reales de Tranquility Base relativas al LM. east_m/north_m: metros reales. game_rel: (x, z) relativo al LM en ejes del juego (+x = oeste, +z = norte). game_abs: con el LM nominal en x = PAD.x - 6 = 244, z = 0 (en la EVA usar lx real: x = lx + game_rel.x). game_now_rel: donde lo pone hoy el juego (eva.js / easep-props.glb) para comparar. La P2 decide si mueve los pivotes (easep.js mueve pivotes con nombre, nunca los hijos *-geo).",
+ "axes": {
+  "x": "+oeste",
+  "z": "+norte",
+  "y": "arriba",
+  "evidence": "descenso en +x (E->O real), sol en -x (azimut real 88 grados, el del juego ~79), escalera del LM (+Z) mirando a +x (oeste real)"
+ },
+ "lm_heading": "Escalera/escotilla (+Z del LM) al oeste (azimut 270) = +x del juego (eva.js ya usa lmYaw = pi/2)",
+ "sun": {
+  "azimuth_deg": 88,
+  "elevation_deg": 15,
+  "source": "NASA/ALSJ a11_eva_thumbs"
+ },
+ "meters_per_degree": 30289.73,
+ "items": [
+  {
+   "id": "lm",
+   "label": "Lunar Module Eagle (centro del descenso)",
+   "east_m": 0.0,
+   "north_m": 0.0,
+   "dist_m": 0.0,
+   "azimuth_deg": 0.0,
+   "game_rel": {
+    "x": 0.0,
+    "z": 0.0
+   },
+   "game_abs": {
+    "x": 244.0,
+    "z": 0.0
+   },
+   "confidence": "alta",
+   "source": "LROC/Wagner 2017: 0.67416 N, 23.47314 E"
+  },
+  {
+   "id": "psep",
+   "label": "Passive Seismic Experiment Package",
+   "east_m": 0.3,
+   "north_m": -28.47,
+   "dist_m": 28.47,
+   "azimuth_deg": 179.4,
+   "game_rel": {
+    "x": -0.3,
+    "z": -28.47
+   },
+   "game_abs": {
+    "x": 243.7,
+    "z": -28.47
+   },
+   "confidence": "alta",
+   "source": "LROC \"Spacecraft Related Coordinates 2016\": PSE 0.67322 N, 23.47315 E (PSR: 16,8 m al sur del punto mas cercano del LM)",
+   "game_now_rel": {
+    "x": 15.0,
+    "z": 6.0
+   }
+  },
+  {
+   "id": "lrrr",
+   "label": "Laser Ranging RetroReflector",
+   "east_m": -6.36,
+   "north_m": -23.93,
+   "dist_m": 24.76,
+   "azimuth_deg": 194.9,
+   "game_rel": {
+    "x": 6.36,
+    "z": -23.93
+   },
+   "game_abs": {
+    "x": 250.36,
+    "z": -23.93
+   },
+   "confidence": "alta",
+   "source": "Coordenadas por laser lunar (Wagner 2017 / LROC shapefile): 0.67337 N, 23.47293 E; ALSJ: PSEP ~7,5 m mas alla en el mismo azimut",
+   "game_now_rel": {
+    "x": 12.5,
+    "z": 9.0
+   }
+  },
+  {
+   "id": "flag",
+   "label": "Bandera de EE. UU.",
+   "east_m": -6.47,
+   "north_m": 2.68,
+   "dist_m": 7.0,
+   "azimuth_deg": 292.5,
+   "game_rel": {
+    "x": 6.47,
+    "z": 2.68
+   },
+   "game_abs": {
+    "x": 250.47,
+    "z": 2.68
+   },
+   "confidence": "media",
+   "source": "NASA/ALSJ \"Magnificent Desolation\": bandera 7 m al oeste-noroeste del LM",
+   "game_now_rel": {
+    "x": 2.5,
+    "z": 12.5
+   }
+  },
+  {
+   "id": "swc",
+   "label": "Solar Wind Composition",
+   "east_m": -1.91,
+   "north_m": 4.62,
+   "dist_m": 5.0,
+   "azimuth_deg": 337.5,
+   "game_rel": {
+    "x": 1.91,
+    "z": 4.62
+   },
+   "game_abs": {
+    "x": 245.91,
+    "z": 4.62
+   },
+   "confidence": "media",
+   "source": "NASA/ALSJ: SWC 5 m al nor-noroeste del LM",
+   "game_now_rel": {
+    "x": -3.0,
+    "z": 8.0
+   }
+  },
+  {
+   "id": "tv-camera",
+   "label": "Camara de TV en tripode",
+   "east_m": -7.71,
+   "north_m": 9.19,
+   "dist_m": 12.0,
+   "azimuth_deg": 320.0,
+   "game_rel": {
+    "x": 7.71,
+    "z": 9.19
+   },
+   "game_abs": {
+    "x": 251.71,
+    "z": 9.19
+   },
+   "confidence": "baja",
+   "source": "Informe de mision PAO: ~40 ft (12 m) del LM; ALSJ: LRRR a 40 m de la camara. Azimut aprox. NO (PSR fig. 3-15), revisar",
+   "game_now_rel": {
+    "x": -7.0,
+    "z": 14.0
+   }
+  },
+  {
+   "id": "double-crater",
+   "label": "Crater doble (estacion panoramica 2)",
+   "east_m": -6.47,
+   "north_m": -2.68,
+   "dist_m": 7.0,
+   "azimuth_deg": 247.5,
+   "game_rel": {
+    "x": 6.47,
+    "z": -2.68
+   },
+   "game_abs": {
+    "x": 250.47,
+    "z": -2.68
+   },
+   "confidence": "media",
+   "source": "NASA/ALSJ: Aldrin a 7 m al oeste-suroeste del LM, en el borde del crater doble"
+  },
+  {
+   "id": "little-west",
+   "label": "Little West Crater (33 m, 4 m prof.)",
+   "east_m": 60.0,
+   "north_m": 0.0,
+   "dist_m": 60.0,
+   "azimuth_deg": 90.0,
+   "game_rel": {
+    "x": -60.0,
+    "z": 0.0
+   },
+   "game_abs": {
+    "x": 184.0,
+    "z": 0.0
+   },
+   "confidence": "alta",
+   "source": "ALSJ a11EastCraterRIP + NASA \"Magnificent Desolation\": 60 m al este del LM; LROC: ~50 m"
+  },
+  {
+   "id": "west-crater",
+   "label": "West Crater (180-190 m)",
+   "east_m": 400.0,
+   "north_m": 0.0,
+   "dist_m": 400.0,
+   "azimuth_deg": 90.0,
+   "game_rel": {
+    "x": -400.0,
+    "z": 0.0
+   },
+   "game_abs": {
+    "x": -156.0,
+    "z": 0.0
+   },
+   "confidence": "media",
+   "source": "LROC: el LM se poso ~500 m mas alla (al oeste) del punto previsto en el flanco NE de West Crater"
+  }
+ ],
+ "sources": [
+  "https://lroc.im-ldi.com/images/938",
+  "https://data.lroc.im-ldi.com/lroc/view_rdr/SHAPEFILE_ANTHROPOGENIC_OBJECTS",
+  "https://www.nasa.gov/wp-content/uploads/static/history/alsj/a11/a11_eva_thumbs.html",
+  "https://apollojournals.org/alsj/a11/a11LM2LWC.html",
+  "https://www.apollojournals.org/alsj/a11/A11_PAOMissionReport.html",
+  "https://www.apollojournals.org/alsj/a11/a11prsci3-15.html",
+  "https://www.nasa.gov/history/alsj/a11/a11EastCraterRIP.html",
+  "https://lroc.im-ldi.com/images/1115"
+ ]
+}

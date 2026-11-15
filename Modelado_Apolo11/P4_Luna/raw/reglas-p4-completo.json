@@ -1,0 +1,22 @@
+{
+  "name": "reglas-p4 (Luna completo)",
+  "defaults": { "maxMB": 1.5, "maxBones": 60, "maxWeightsPerVertex": 4 },
+  "files": {
+    "eva-tools": { "requiredNodes": ["geo-hammer", "core-tube-1", "core-tube-2", "hasselblad", "lec-pulley"] },
+    "memorial-kit": { "requiredNodes": ["apollo1-patch", "medal-gagarin", "medal-komarov", "silicon-disc", "olive-branch"] },
+    "o2-hose": {
+      "requiredNodes": ["o2-hose", "o2-hose-geo"],
+      "requiredClips": ["flex"],
+      "requiredBones": ["hose-0", "hose-1", "hose-2", "hose-3", "hose-4", "hose-5"]
+    },
+    "guardian": {
+      "requiredNodes": ["plate-shoulder-l", "plate-shoulder-r", "plate-knee-l", "plate-knee-r", "core-dsky", "fuel-tank", "guardian-body"],
+      "requiredClips": ["idle", "sweep", "slam"],
+      "requiredBones": ["root", "hips", "spine-1", "spine-2", "spine-3", "neck", "head", "upper-arm-l", "forearm-l", "hand-l", "upper-arm-r", "forearm-r", "hand-r", "thigh-l", "shin-l", "foot-l", "thigh-r", "shin-r", "foot-r"]
+    },
+    "boss-arena": {
+      "footprint": { "width": 83, "depth": 83, "tolerance": 6 },
+      "requiredNodes": ["arena-floor", "rim-1", "rim-2", "rim-3", "rim-4", "rim-5", "rim-6", "rim-7", "rim-8", "boulder-1", "boulder-2", "boulder-3", "boulder-4", "boulder-5", "spawn-player", "spawn-guardian"]
+    }
+  }
+}

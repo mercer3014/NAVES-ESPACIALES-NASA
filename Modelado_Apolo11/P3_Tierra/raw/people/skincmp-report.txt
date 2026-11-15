@@ -1,0 +1,9 @@
+civil-base-p3 | idle: alto 1.814 dif 1.4mm | walk: alto 1.775 dif 0.1mm | sit: alto 1.387 dif 1.0mm | sit-floor: alto 0.968 dif 0.2mm | point: alto 1.814 dif 0.2mm | wave: alto 1.890 dif 0.2mm | talk: alto 1.814 dif 0.4mm
+kranz | idle: alto 1.812 dif 1.3mm | walk: alto 1.770 dif 0.1mm | sit: alto 1.392 dif 0.5mm | sit-floor: alto 0.977 dif 0.2mm | point: alto 1.815 dif 0.2mm | wave: alto 1.896 dif 0.2mm | talk: alto 1.815 dif 0.4mm
+bales | idle: alto 1.812 dif 1.3mm | walk: alto 1.775 dif 0.1mm | sit: alto 1.385 dif 1.0mm | sit-floor: alto 0.962 dif 0.2mm | point: alto 1.812 dif 0.2mm | wave: alto 1.893 dif 0.2mm | talk: alto 1.812 dif 0.4mm
+duke | idle: alto 1.815 dif 1.4mm | walk: alto 1.780 dif 0.2mm | sit: alto 1.388 dif 0.9mm | sit-floor: alto 0.969 dif 0.2mm | point: alto 1.816 dif 0.2mm | wave: alto 1.891 dif 0.2mm | talk: alto 1.816 dif 0.4mm
+garman | idle: alto 1.810 dif 1.4mm | walk: alto 1.774 dif 0.1mm | sit: alto 1.384 dif 0.9mm | sit-floor: alto 0.965 dif 0.2mm | point: alto 1.811 dif 0.2mm | wave: alto 1.894 dif 0.2mm | talk: alto 1.811 dif 0.4mm
+jan | idle: alto 1.667 dif 0.8mm | walk: alto 1.632 dif 0.2mm | sit: alto 1.275 dif 0.8mm | sit-floor: alto 0.971 dif 0.2mm | point: alto 1.667 dif 0.2mm | wave: alto 1.724 dif 0.2mm | talk: alto 1.667 dif 0.4mm
+rick | idle: alto 1.505 dif 1.0mm | walk: alto 1.474 dif 0.2mm | sit: alto 1.161 dif 0.6mm | sit-floor: alto 0.818 dif 0.1mm | point: alto 1.505 dif 0.3mm | wave: alto 1.552 dif 0.3mm | talk: alto 1.505 dif 0.4mm
+mark | idle: alto 1.160 dif 0.6mm | walk: alto 1.138 dif 0.3mm | sit: alto 0.915 dif 0.6mm | sit-floor: alto 0.672 dif 0.1mm | point: alto 1.161 dif 0.1mm | wave: alto 1.161 dif 0.1mm | talk: alto 1.161 dif 0.2mm
+controller-extra | idle: alto 1.814 dif 1.2mm | sit: alto 1.388 dif 0.9mm | talk: alto 1.814 dif 0.5mm
