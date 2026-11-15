@@ -2,7 +2,8 @@
 import { THREE, renderer } from '../../core/engine.js';
 import { t, extend } from '../../core/i18n.js';
 import { $, $$, h, toast, achieve, clamp, damp, fmt } from '../../core/util.js';
-import { sfx, music, voice, engine, stopEngine, rumble, stopRumble } from '../../core/audio.js';
+import { sfx, music, engine, stopEngine, rumble, stopRumble } from '../../core/audio.js';
+import { clip, clips } from '../../audio/a11-cues.js';
 import { axis, down, pressed, bindBtn, bdown, bpressed, makeStick, makeThrottle, input } from '../../core/input.js';
 import { isTouch, DEBUG, dbg, AUTO } from '../../core/store.js';
 import { storyInPhase } from '../story/flow.js';
@@ -105,7 +106,7 @@ export default async function launch(ctx) {
     if ([cam.position.x, cam.position.y, cam.position.z, look.x, look.y, look.z].every(Number.isFinite)) cam.lookAt(look); } });
   const S = { phase: 'count', s: 0, alt: 0, vel: 0, vx: 0, vy: 0, pitch: 90, thr: 1, stage: 0, stress: 0, inCorr: 0, samples: 0, stageDelay: [], maxQ: 0, gust: 0 };
   let skip = false; $('.skipcd', el).onclick = () => (skip = true);
-  const v = voice('countdown', { vol: 0.9 }); ctx.onCleanup(() => v.stop());
+  const v = clips(['cap2_cuenta_regresiva_despegue'], { radio: true }); ctx.onCleanup(() => v?.stop?.());
   const LIFT = 17; let ct = 0;
   // ignición real: T-8.9 inicio de secuencia; motor central primero y luego los pares opuestos (1-2-2, ~300 ms); empuje pleno ~T-2; anclajes a T-0
   const T_ENG = [0, 0.3, 0.3, 0.6, 0.6], RAMP = 2.4, ks = [0, 0, 0, 0, 0]; let thrOk = false;
@@ -254,7 +255,7 @@ export default async function launch(ctx) {
   }));
   paintPrompt(el, null, '');
   W.setThrust(0); stopEngine(); stopRumble(); sfx('powerup'); music('cruise', { vol: 0.4 });
-  ctx.banner(t('l.orbit'), `${fmt(S.alt / 1000)} km · ${fmt(S.vel * 1.3)} m/s`, 2600); ctx.cc.log('l.orbit', null, 'ok');
+  ctx.banner(t('l.orbit'), `${fmt(S.alt / 1000)} km · ${fmt(S.vel * 1.3)} m/s`, 2600); ctx.cc.log('l.orbit', null, 'ok'); clip('cap2_go_para_orbita', { radio: true });
   let tt = 0; ctx.loop((dt) => { tt += dt; W.update(dt, ctx.time); });
   await ctx.wait(2.6);
   const corrPct = S.inCorr / Math.max(1, S.samples); const avgDelay = S.stageDelay.reduce((a, b) => a + b, 0) / Math.max(1, S.stageDelay.length);

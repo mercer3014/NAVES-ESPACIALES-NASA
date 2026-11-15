@@ -62,6 +62,7 @@ export default async function teiScene() {
     if (T > 19) { earthEl = Math.min(deg(-11), earthEl + dt * deg(1.6)); placeEarth(); }
     at(T, 21, () => a11sfx('c3_34_radio_vuelve_aos', 0.6));
     at(T, 22.5, () => playA11('nasa_real/cap7_houston_volviendo_a_casa_lrl'));
+    at(T, 28, () => playA11('voz_en_clonada/c7_71_collins_vuelve_a_casa_a_todo_trapo_en'));
   };
   const look = (el) => P(0, Math.sin(el) * 400, -Math.cos(el) * 400);
   try {

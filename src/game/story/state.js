@@ -35,6 +35,16 @@ export const historicRoute = () => Object.values(run.choices).every((c) => c.his
 export function setFlag(k, v = true) { run.flags[k] = v; save(); }
 export const flagOf = (k) => run.flags[k];
 
+// Pista de un evento oculto: se guarda en cuanto un personaje la dice, antes de ganar la tarjeta.
+const hinted = () => store.get('bitacoraHints') || {};
+export function hearHint(id) {
+  if (!CARDS[id]) return false;
+  const h = hinted(); if (h[id]) return false;
+  h[id] = { t: Date.now() }; store.set('bitacoraHints', h);
+  return true;
+}
+export const hintOf = (id) => hinted()[id] || null;
+
 // ---- Bitácora (colección global) ----
 const owned = () => store.get('bitacora') || {};
 export const hasCard = (id) => !!owned()[id];

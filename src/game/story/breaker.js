@@ -4,6 +4,7 @@
 import { THREE, model } from '../../core/engine.js';
 import { makeCabin } from '../../scenes/cabin.js';
 import { sfx } from '../../core/audio.js';
+import { clip } from '../../audio/a11-cues.js';
 import { runCine, tx } from './cine.js';
 
 const TITLE = ['CAP. 6 · EL DISYUNTOR', 'CH. 6 · THE CIRCUIT BREAKER'];
@@ -39,8 +40,8 @@ export default async function breakerScene() {
     async interactive(S) {
       S.subtitle('', tx(['Fin de la caminata. Aldrin entra primero; detrás, las mochilas rozan el panel.', 'End of the moonwalk. Aldrin climbs in first; behind him the backpacks brush the panel.']));
       await sleep(S, 3.2); tgt = LOOK.breaker;
-      S.subtitle('ALDRIN', tx(['Neil… mira esto.', 'Neil… look at this.'])); await sleep(S, 2.6);
-      S.subtitle('ARMSTRONG', tx(['Ese es el del motor de ascenso.', "That's the ascent engine one."])); await sleep(S, 2.8);
+      S.subtitle('ALDRIN', tx(['Neil… mira esto.', 'Neil… look at this.'])); clip('c5_57_aldrin_mira_esto_en'); await sleep(S, 2.6);
+      S.subtitle('ARMSTRONG', tx(['Ese es el del motor de ascenso.', "That's the ascent engine one."])); clip('c5_57_armstrong_motor_ascenso_en', { radio: true }); await sleep(S, 2.8);
       S.subtitle('', tx(['El disyuntor ENG ARM está roto. Hay que cerrarlo para despegar. No se puede tocar con los dedos.', 'The ENG ARM breaker is broken. It must be closed to lift off. It cannot be touched with fingers.']));
       tgt = LOOK.props;
       for (;;) {
@@ -50,7 +51,7 @@ export default async function breakerScene() {
           { id: 'pencil', label: ['Lápiz mecánico metálico', 'Metal mechanical pencil'] },
         ], ['¿Con qué empujas el disyuntor?', 'What do you push the breaker in with?']);
         if (pick === null) return;
-        if (pick === 'pencil') { sfx('error', { vol: 0.5 }); S.subtitle('HOUSTON', tx(['Negativo, Eagle. Nada conductor.', 'Negative, Eagle. Nothing conductive.'])); await sleep(S, 2.6); continue; }
+        if (pick === 'pencil') { sfx('error', { vol: 0.5 }); clip('c6_62_houston_nada_conductor_en', { radio: true }); S.subtitle('HOUSTON', tx(['Negativo, Eagle. Nada conductor.', 'Negative, Eagle. Nothing conductive.'])); await sleep(S, 2.6); continue; }
         break;
       }
       tgt = LOOK.breaker; fixed = true; sfx('switch'); S.subtitle('ALDRIN', tx(['Con la punta de fieltro… entra. Circuito cerrado.', 'With the felt tip… it goes in. Circuit closed.']));

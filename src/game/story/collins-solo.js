@@ -4,7 +4,7 @@
 // (clic/toque sobre la marca o F). Mundo: la cabina de night.js a oscuras y una Luna grande bajo la ventana de la escotilla.
 import { THREE, tex } from '../../core/engine.js';
 import { runCine, tx } from './cine.js';
-import { unlock, setFlag } from './state.js';
+import { unlock, setFlag, hearHint } from './state.js';
 import { ask } from './decisions.js';
 import { playA11 } from '../../audio/a11-voice.js';
 import { a11sfx } from '../../audio/a11-score.js';
@@ -57,6 +57,7 @@ export default async function collinsSolo() {
     const r = await runCine({
       id: 'collins-solo', world: W, title: TITLE,
       async interactive(S) {
+        hearHint('h-cartografo');
         S.subtitle('', tx(['Órbita lunar, 21 de julio de 1969. Eagle está en la superficie. Columbia pasa detrás de la Luna en cada vuelta.', 'Lunar orbit, July 21, 1969. Eagle is on the surface. Columbia passes behind the Moon every orbit.']));
         await wait(S, 4.2); if (S.done) return;
         a11sfx('c3_34_radio_corte_los', 0.8);

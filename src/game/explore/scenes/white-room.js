@@ -188,7 +188,7 @@ const scene = {
     ],
     'haise-1': [
       { who: 'haise', whoName: ['FRED HAISE', 'FRED HAISE'], text: ['Revisé los interruptores antes de que entrarais. Tacha la checklist del muslo: tres casillas, con E.', 'I checked the switches before you came in. Tick the cuff checklist: three boxes, with E.'] },
-      { who: 'haise', whoName: ['FRED HAISE', 'FRED HAISE'], text: ['Dicen que Neil podría posar ese bicho con 20 segundos de combustible…', 'They say Neil could set that thing down with 20 seconds of fuel left…'] },
+      { who: 'haise', whoName: ['FRED HAISE', 'FRED HAISE'], hint: 'h-45s', text: ['Dicen que Neil podría posar ese bicho con 20 segundos de combustible…', 'They say Neil could set that thing down with 20 seconds of fuel left…'] },
     ],
     'wendt-1': [
       { who: 'wendt', whoName: ['GUENTER WENDT', 'GUENTER WENDT'], text: ['Neil. Antes de la escotilla: la llave de la Luna. ¿Una broma, o las gracias?', 'Neil. Before the hatch: the key to the Moon. A joke, or a thank-you?'] },
@@ -198,7 +198,7 @@ const scene = {
       ] },
     ],
     'wendt-key': [
-      { who: 'wendt', whoName: ['GUENTER WENDT', 'GUENTER WENDT'], text: ['La media luna no abre nada: es suerte. Si ves a Garman en Houston, pregúntale por su hojita.', 'The crescent opens nothing: it is luck. If you see Garman in Houston, ask him about his little sheet.'] },
+      { who: 'wendt', whoName: ['GUENTER WENDT', 'GUENTER WENDT'], hint: 'h-hamilton', text: ['La media luna no abre nada: es suerte. Si ves a Garman en Houston, pregúntale por su hojita.', 'The crescent opens nothing: it is luck. If you see Garman in Houston, ask him about his little sheet.'] },
     ],
   },
   objectives: [

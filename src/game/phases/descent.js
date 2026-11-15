@@ -2,7 +2,8 @@
 import { THREE } from '../../core/engine.js';
 import { t, extend } from '../../core/i18n.js';
 import { $, h, clamp, damp, toast, achieve, fmt } from '../../core/util.js';
-import { sfx, music, voice, engine, stopEngine } from '../../core/audio.js';
+import { sfx, music, engine, stopEngine } from '../../core/audio.js';
+import { clip, clips } from '../../audio/a11-cues.js';
 import { axis, down, pressed, bindBtn, bdown, bpressed, makeStick, makeThrottle, input } from '../../core/input.js';
 import { isTouch, DEBUG, shared, AUTO, store } from '../../core/store.js';
 import { activePlan, computePlan, isNasaPlan } from '../design/plan.js';
@@ -159,8 +160,9 @@ export default async function descent(ctx) {
     const a = agl(s); $('.dustveil', el).style.opacity = clamp(W.dustAmount() * 0.45, 0, 0.38); if (a < 30 && !s.landed) shake = Math.max(shake, 0.05 * s.thr);
     camUpdate(dt0); drawHud();
     if (bpressed('view')) camRig.cycle();
-    if (mode === 'manual') { const sc = sec(); for (const c of [60, 30]) if (sc < c && !callouts[c]) { callouts[c] = 1; ctx.banner(t('d.' + c), '', 1500, c === 30 ? 'warn' : ''); sfx('beep'); if (c === 60) ctx.say('pa.fuel', { ms: 3000 }); ctx.cc.log('d.' + c, null, 'warn'); }
-      if (a < 1.6 && !s.landed && !callouts.c) { callouts.c = 1; $('.l-cont', tele).classList.add('on', 'blue'); W.contactL.intensity = 6; sfx('beep', { rate: 1.6 }); ctx.banner(t('d.contact'), '', 1200); } }
+    if (mode === 'manual') { const sc = sec(); for (const c of [60, 30]) if (sc < c && !callouts[c]) { callouts[c] = 1; ctx.banner(t('d.' + c), '', 1500, c === 30 ? 'warn' : ''); sfx('beep'); clip(c === 60 ? 'cap4_60_segundos' : 'cap4_30_segundos', { radio: true }); if (c === 60) ctx.say('pa.fuel', { ms: 3000 }); ctx.cc.log('d.' + c, null, 'warn'); }
+      if (a < 15 && !s.landed && !callouts.dust) { callouts.dust = 1; clip('cap4_aldrin_polvo_40_pies', { radio: true }); }
+      if (a < 1.6 && !s.landed && !callouts.c) { callouts.c = 1; $('.l-cont', tele).classList.add('on', 'blue'); W.contactL.intensity = 6; sfx('beep', { rate: 1.6 }); ctx.banner(t('d.contact'), '', 1200); clip('cap4_luz_de_contacto_apagado', { radio: true }); } }
     ctx.cc.snap({ alt: a, vs: s.vy, hs: s.vx, tilt: s.tilt, thr: s.thr, fuel: mode === 'manual' ? sec() : null, x: s.x, pad: PAD.x, mode, alarm: frozen });
   });
   // ---- 1) P63/P64 automático + alarma 1202 ----
@@ -168,7 +170,8 @@ export default async function descent(ctx) {
   if (sub === 'p66') { Object.assign(s, { x: -40, vx: 14, vy: -9 }); s.y = ground(s.x) + 299; st.alarmOk = true; st.alarmT = 0; }
   else {
     ctx.banner(t('d.p63'), isNasaPlan(PL.plan) ? 'Eagle' : 'Eagle · ' + t('d.site.' + PL.plan.site), 2000); ctx.cc.log('d.p63');
-    await ctx.until(() => agl(s) < 1000); prog('d.p64'); ctx.cc.log('d.p64');
+    clips(['cap4_go_pdi', 'c4_42_collins_relevo_go_descenso_en'], { radio: true });
+    await ctx.until(() => agl(s) < 1000); prog('d.p64'); ctx.cc.log('d.p64'); clip('c4_43_armstrong_vamos_largos_en', { radio: true });
     await ctx.until(() => agl(s) < 780);
     await alarm1202();
   }
@@ -189,7 +192,7 @@ export default async function descent(ctx) {
     await new Promise((res) => { landedCb = res; const off = ctx.loop(() => { if (s.out && agl(s) < 0.1) res(); }); ctx.onCleanup(off); });
     landedCb = null; mode = 'done'; stopEngine(); J = judge(s, D); st.result = J.res; W.setLM(s.x, s.y, s.tilt, 0, false);
     if (s.out && J.res === 'good') J.res = 'hard';
-    if (J.res === 'good') { sfx('thud'); voice('eagle'); ctx.banner(t('d.landed'), 'Tranquility Base', 3200, 'good'); ctx.say('pa.landed', { ms: 3500 }); ctx.cc.log('d.landed', null, 'ok'); playCue('eagle', { anchor: () => W.lm, ctx }); if (J.vs < 1 && J.pad < PAD.r) achieve('soft'); if (!rodUsed) achieve('noassist'); if (sec() > 60) achieve('fuel'); break; }
+    if (J.res === 'good') { sfx('thud'); clip('cap4_base_tranquilidad_eagle_aterrizado', { radio: true }); ctx.banner(t('d.landed'), 'Tranquility Base', 3200, 'good'); ctx.say('pa.landed', { ms: 3500 }); ctx.cc.log('d.landed', null, 'ok'); playCue('eagle', { anchor: () => W.lm, ctx }); if (J.vs < 1 && J.pad < PAD.r) achieve('soft'); if (!rodUsed) achieve('noassist'); if (sec() > 60) achieve('fuel'); break; }
     if (J.res === 'hard') { sfx('thud'); sfx('clunk'); shake = 0.8; st.hard = true; W.body.rotation.x = 0.08; ctx.banner(t('d.hard'), t('d.hardD'), 2800, 'warn'); ctx.cc.log('d.hard', null, 'warn'); break; }
     // crash
     st.crashes++; sfx('explosion'); shake = 2.2; W.body.visible = false; const why = J.why ? fill(t('d.why.' + J.why), { v: (J.why === 'vs' ? J.vs : J.why === 'hs' ? J.hs : J.why === 'tilt' ? J.tilt : J.slope).toFixed(1), m: J.L[J.why] && (+J.L[J.why]).toFixed(1) }) : t(s.out ? 'd.fuelout' : 'd.crashD');

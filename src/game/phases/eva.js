@@ -2,7 +2,8 @@
 import { THREE, renderer } from '../../core/engine.js';
 import { t, extend, lang } from '../../core/i18n.js';
 import { $, h, clamp, damp, achieve, toast } from '../../core/util.js';
-import { sfx, music, voice } from '../../core/audio.js';
+import { sfx, music } from '../../core/audio.js';
+import { clip, clips } from '../../audio/a11-cues.js';
 import { axis, pressed, down, bindBtn, bdown, bpressed, makeStick } from '../../core/input.js';
 import { attachLook } from '../../core/look.js';
 import { bindOrbitControls } from '../orbit-view.js';
@@ -25,7 +26,7 @@ import { addEvaProps } from '../../scenes/eva-props.js';
 import { setPaused } from '../../core/engine.js';
 import { storyInPhase } from '../story/flow.js';
 import { ask } from '../story/decisions.js';
-import { unlock } from '../story/state.js';
+import { unlock, hearHint, chose } from '../story/state.js';
 import { a11sfx } from '../../audio/a11-score.js';
 // Bitácora: tarjeta por experimento del EASEP; la Tierra (moonsurface.js) está en (900, 1100, −2600)
 const SCIENCE_CARD = { PSEP: 'sismometro', SWC: 'lamina-solar', LRRR: 'retrorreflector' };
@@ -296,6 +297,7 @@ export default async function eva(ctx) {
     sfx('ok'); ctx.banner(t('e.scienceDone'), t('e.' + task.name), 1600, 'good'); ctx.cc.log('e.' + task.name, null, 'ok');
     unlock(SCIENCE_CARD[task.name]); sciDone.push(task.name);
     // evento oculto «Un láser desde la Tierra»: el retrorreflector desplegado de frente a la Tierra (±25°)
+    if (task.name === 'LRRR') hearHint('h-laser');
     if (task.name === 'LRRR' && facing < 0.44 && unlock('h-laser')) a11sfx('e_e3_laser_retrorreflector', 0.5);
   };
   sb.onclick = deployScience; ctx.onCleanup(() => { sb.onclick = null; });
@@ -313,13 +315,15 @@ export default async function eva(ctx) {
   if (sub !== 'walk' && sub !== 'flag') {
     title('e.ladder'); prompt(t(isTouch ? 'e.ladderT' : 'e.ladderK')); actLabel('e.down'); P.mode = 'ladder'; P.yaw = Math.PI; camYaw = 0.5; camPitch = 0.15; camDist = 4.2;
     P.x = top.x; P.y = top.y - 0.36 + LAD.y; P.z = top.z - 0.2 + LAD.z; if (rungs.length > 1) ast.ladderStep = Math.abs(rungs[0].y - rungs[1].y) || 0.25; ast.root.position.set(P.x, P.y, P.z);
-    ctx.cc.log('e.ladder');
+    ctx.cc.log('e.ladder'); clips(['cap5_bajando_del_lem'], { radio: true }); hearHint('h-dejamos');
     for (let i = 0; i < 9; i++) {
       prompt(t('e.rung', { n: i }), t(isTouch ? 'e.ladderT' : 'e.ladderK'));
       await ctx.until(() => ladderWantsDown({ auto: AUTO(), act: ACT() || bdown('act'), held: down('KeyS', 'ArrowDown', 'Space'), tapped: pressed('KeyS', 'ArrowDown', 'Space') }));
       const from = new THREE.Vector3(P.x, P.y, P.z), to = rungs[i].clone().add(new THREE.Vector3(0, -0.36 + LAD.y, (eagle ? 0.42 : -0.12) + LAD.z)); P.act = 'climb'; sfx('clunk', { vol: 0.35, rate: 1 + i * 0.03 });
       await new Promise((res) => { let k = 0; const off = ctx.loop((dt) => { k = Math.min(1, k + dt / 0.38); P.actK = k; P.x = from.x + (to.x - from.x) * k; P.y = from.y + (to.y - from.y) * k; P.z = from.z + (to.z - from.z) * k; if (k >= 1) { off(); res(); } }); });
       ctx.cc.log('e.rung', { n: i + 1 });
+      if (i === 2) clip('cap5_armstrong_pie_escalera', { radio: true });
+      if (i === 5) clip('cap5_placa_lectura_armstrong', { radio: true });
     }
     // salto a la pata
     P.act = null; { const from = new THREE.Vector3(P.x, P.y, P.z); await new Promise((res) => { let k = 0; const off = ctx.loop((dt) => { k = Math.min(1, k + dt / 1.1); P.x = from.x + (padTop.x - from.x) * k; P.z = from.z + (padTop.z - from.z) * k; P.y = from.y + (padTop.y - from.y) * k + Math.sin(k * Math.PI) * 0.25; if (k >= 1) { off(); res(); } }); }); }
@@ -332,7 +336,7 @@ export default async function eva(ctx) {
     { const tz = padTop.z + 0.38; P.z = tz; P.y = ground(P.x, tz); P.act = 'step'; P.actK = 0; playCue('firststep', { anchor: () => ast.root, ctx }); await new Promise((res) => { let k = 0; const off = ctx.loop((dt) => { k = Math.min(1, k + dt / 4); P.actK = k; if (k >= 1) { off(); res(); } }); }); P.act = null; }
     footprint(P.x - 0.1, P.z + 0.05, 0, true); puff(P.x, P.z, 18, 0.8); sfx('step1'); st.step = true; achieve('first'); if (storyInPhase(ctx)) { music(null, { fade: 150 }); setTimeout(() => !ctx.dead && music('a11/music/mus_c5_magnifica_desolacion', { vol: 0.3, fade: 4000 }), 20000); } // el guion pide silencio total en el primer paso ctx.cc.log('e.quote', null, 'ok');
     const spoken = commsMode() !== 'off'; const qq = $('.quote', el);
-    if (spoken) { voice('smallstep'); qq.textContent = t('e.quote'); qq.style.display = ''; }
+    if (spoken) { clips(['cap5_un_pequeno_paso', 'cap5_superficie_fina_polvorienta', 'cap5_magnifica_desolacion'], { radio: true }); qq.textContent = t('e.quote'); qq.style.display = ''; }
     prompt('');
     await ctx.wait(AUTO() ? 1.5 : spoken ? 4 : 1.2); qq.style.display = 'none'; ctx.say('pa.eva', { ms: 2200 });
   } else { P.x = lx + 0.2; P.z = padTop.z + 1.3; P.y = ground(P.x, P.z); st.step = true; }
@@ -353,7 +357,7 @@ export default async function eva(ctx) {
     P.act = null; hb.style.display = 'none'; sampleRock.visible = false; st.sample = true; lidOpen?.(); tick('sample'); sfx('powerup'); ctx.banner(t('e.gotSample'), SITES[PL.plan.site].sample[lang() === 'es' ? 0 : 1], 2600, 'good'); ctx.cc.log('e.gotSample', null, 'ok');
   } else { st.sample = true; tick('sample'); P.x = site.x - 1; P.z = site.z - 2; }
   // 3b bandera: elegir sitio
-  title('e.t.flag'); prompt(t('e.site'));
+  title('e.t.flag'); prompt(t('e.site')); clip('c5_52_aldrin_un_poco_izquierda_en', { radio: true });
   // marcador sugerido (G10): el punto plantable con más holgura a las rocas (radio de exclusión ≥ 1,2 m) y cerca del centro de la zona
   const sugg = pickFlagSpot(); const sMark2 = mark(0x3ddc84); sMark2.position.set(sugg.x, sugg.y + 0.05, sugg.z); sMark2.scale.setScalar(0.9); ctx.loop((dt, tt) => { sMark2.visible = !st.flag && P.mode === 'walk'; sMark2.material.opacity = 0.55 + Math.sin(tt * 5) * 0.3; });
   if (DEBUG) window.__evaDbg.flagSpot = { ...sugg, valid: validSite(sugg.x, sugg.z), clearance: +clearance(sugg.x, sugg.z).toFixed(2) };
@@ -389,6 +393,7 @@ export default async function eva(ctx) {
   title('e.bar'); prompt(t('e.bar')); const hb = $('.hold', el); hb.style.display = ''; let e = 0, holding = false;
   await new Promise((res) => { const off = ctx.loop((dt) => { const d = ACTD() || down('Space') || (AUTO() && e < 0.6); if (d) { holding = true; e = Math.min(1, e + dt / 2.2); st.bar = e; $('.hold i', el).style.width = e * 100 + '%'; if (Math.random() < dt * 8) sfx('tick', { vol: 0.2 }); } if ((holding && !d) || e >= 1) { off(); res(); } }); });
   hb.style.display = 'none'; st.bar = e; sfx('clunk'); if (e > 0.3 && e < 0.85) { achieve('wrinkle'); ctx.banner(t('e.wrinkle'), '', 2600); } st.flag = true; tick('flag'); ctx.cc.log('e.done', null, 'ok');
+  clips(['cap5_nixon_hola_neil_buzz', 'cap5_nixon_momento_invaluable', 'cap5_armstrong_respuesta_nixon'], { radio: true });
   // 3e saludo y foto
   title('e.t.photo'); prompt(t('e.salute'));
   { // colócate al lado de la bandera, mirando a la cámara TV
@@ -413,7 +418,8 @@ export default async function eva(ctx) {
   await ctx.wait(AUTO() ? 2 : 2.4); P.act = 'wave'; await ctx.wait(AUTO() ? 0.2 : 2.6); golfLoop();
   unlock('bandera');
   // cap. 5.3: un momento a solas antes de volver al trabajo (la opción emotiva exige Confianza ≥ 70)
-  if (storyInPhase(ctx) && !ctx.dead) await askPaused('c5-moment');
+  clip('cap5_aldrin_mensaje_reflexion');
+  if (storyInPhase(ctx) && !ctx.dead) { await askPaused('c5-moment'); if (chose('c3-night') === 'hand') clip('c5_dec_armstrong_gracias_anoche_en', { radio: true }); }
   // puntaje
   const sciEarned = sciDone.reduce((a, n) => a + (Object.values(INSTRUMENTS).find((i) => i.task === n)?.sci || 0), 0)
     + (st.sample ? SITES[PL.plan.site].sci + PL.plan.payload.filter((id) => !INSTRUMENTS[id].task).reduce((a, id) => a + INSTRUMENTS[id].sci, 0) : 0) + EVA_TIMES[PL.plan.evaTime].sci;

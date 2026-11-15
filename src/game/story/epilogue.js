@@ -12,7 +12,8 @@ import { skySphere, earth, tickAll, glowSprite } from '../../scenes/space.js';
 import { PAD } from '../../sim/lander.js';
 import { a11sfx, stinger } from '../../audio/a11-score.js';
 import { playA11, stopVoiceLine } from '../../audio/a11-voice.js';
-import { run, chose, flagOf, unlock, hasCard, bitacoraProgress } from './state.js';
+import { clips } from '../../audio/a11-cues.js';
+import { run, chose, flagOf, unlock, hasCard, bitacoraProgress, hearHint } from './state.js';
 import { DECISIONS } from './decisions.js';
 import { CHAPTERS } from './cards.js';
 import { runCine, character, tx, L } from './cine.js';
@@ -98,6 +99,9 @@ function characterPages() {
       el.querySelector('.epi-n').textContent = `${i + 1} / ${list.length}`;
       const b = el.querySelector('.epi-next'); b.textContent = i === list.length - 1 ? (li ? 'Continue' : 'Continuar') : (li ? 'Next' : 'Siguiente'); b.focus();
       el.querySelector('.epi-card').classList.remove('in'); void el.offsetWidth; el.querySelector('.epi-card').classList.add('in');
+      if (i === 0) { clips(['cap1_kennedy_congreso_1961']); hearHint('historiador'); }
+      if (p.name.startsWith('STEVE') && chose('c4-1202') === 'timeout') clips(['e_e2_bales_me_quede_congelado_en']);
+      if (p.name.includes('FAMIL') && chose('c1-kids') === 'truth') clips(['c4_47_rick_papa_confiaba_en', 'c4_47_rick_lo_hizo_en', 'c4_47_jan_todavia_no_en']);
       timer = setTimeout(next, 11000);
     };
     const key = (e) => { if (e.repeat) return; if (e.code === 'Escape') { e.preventDefault(); e.stopPropagation(); end(true); } else if (e.code === 'Enter' || e.code === 'Space') { e.preventDefault(); e.stopPropagation(); next(); } };

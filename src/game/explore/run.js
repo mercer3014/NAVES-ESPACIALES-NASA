@@ -143,7 +143,7 @@ export async function runExplore(def, opts = {}) {
     const beat = currentBeat(talk.st);
     if (!beat) return endTalk();
     if (beat.choice) dialogUi.showChoices(beat.choice, L, pick);
-    else { dialogUi.showLine({ ...beat, who: beat.whoName || beat.who }, L); speakExplore({ vo: beat.vo, text: beat.text, lang: L }); }
+    else { dialogUi.showLine({ ...beat, who: beat.whoName || beat.who }, L); speakExplore({ vo: beat.vo, text: beat.text, lang: L }); if (beat.hint) import('../story/state.js').then(({ hearHint }) => hearHint(beat.hint)); }
   }
   function pick(id) {
     if (!talk) return;
